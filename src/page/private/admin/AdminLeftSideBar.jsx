@@ -1,26 +1,13 @@
 import { useState } from "react";
 import { CgDice4 } from "react-icons/cg";
 import { FaUsers } from "react-icons/fa";
-import { FiMenu, FiUsers, FiX } from "react-icons/fi";
-import { RiAdminLine } from "react-icons/ri";
+import { FiMenu, FiX } from "react-icons/fi";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const navLinksData = [
-  {
-    name: "Dashboard",
-    icon: <CgDice4 />,
-    path: "/admin/dashboard",
-  },
-  {
-    name: "User management",
-    icon: <FaUsers />,
-    path: "/admin/admin-user-management",
-  },
-  {
-    name: "User Edit",
-    icon: <FaUsers />,
-    path: "/admin/user-edit",
-  },
+  { name: "Dashboard", icon: <CgDice4 />, path: "/admin/dashboard" },
+  { name: "User management", icon: <FaUsers />, path: "/admin/admin-user-management" },
+  { name: "User Edit", icon: <FaUsers />, path: "/admin/user-edit" },
 ];
 
 export const AdminLeftSideBar = () => {
@@ -33,17 +20,17 @@ export const AdminLeftSideBar = () => {
   return (
     <div>
       {/* Mobile Top Bar */}
-      <div className="fixed z-50 flex w-full items-center justify-between bg-[#f5ceb5] px-4 py-3 text-white lg:hidden">
-        <button onClick={() => setIsOpen(true)}>
-          <FiMenu className="h-7 w-7" />
-        </button>
+      <div className="fixed z-50 flex w-full items-center justify-between bg-white px-4 py-3 shadow lg:hidden">
         <a href="/">
           <img
             src="/img/page/home/remove_preview.png"
             alt="Logo"
-            className="w-10 h-10"
+            className="w-10 h-10 object-cover"
           />
         </a>
+        <button onClick={() => setIsOpen(!isOpen)} className="text-gray-950 p-1">
+          {isOpen ? <FiX className="h-7 w-7" /> : <FiMenu className="h-7 w-7" />}
+        </button>
       </div>
 
       {/* Sidebar */}
@@ -53,24 +40,21 @@ export const AdminLeftSideBar = () => {
         }`}
       >
         {/* Sidebar Header */}
-        <div className="items-center border-b border-gray-700 p-4 lg:justify-center">
+        <div className="flex items-center justify-between border-b bg-white border-gray-200 p-4">
           <a href="/">
             <img
               src="/img/page/home/remove_preview.png"
               alt="Logo"
-              className="w-[80px] h-[56px] bg-cover object-cover p-2"
+              className="w-[80px] h-[56px] object-cover"
             />
           </a>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="text-white lg:hidden"
-          >
+          {/* <button onClick={() => setIsOpen(false)} className="text-gray-950 lg:hidden p-1">
             <FiX className="h-6 w-6" />
-          </button>
+          </button> */}
         </div>
 
         {/* Navigation Menu */}
-        <nav className="flex flex-col">
+        <nav className="flex flex-col mt-4">
           {navLinksData.map((link) => (
             <a
               key={link.name}
@@ -78,27 +62,20 @@ export const AdminLeftSideBar = () => {
                 navigate(link.path);
                 setIsOpen(false);
               }}
-              className={`relative flex cursor-pointer items-center gap-4 rounded-lg px-4 py-3 text-base font-normal Export CSVExport CSV capitalize transition-colors duration-200 ${
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg relative cursor-pointer transition-colors duration-200 ${
                 isActive(link.path)
-                  ? "text-[#000044] font-semibold bg-white"
-                  : "text-[#002244] hover:text-[#002244] font-medium"
+                  ? "bg-white font-semibold text-[#000044]"
+                  : "text-gray-700 hover:text-[#000044] font-medium"
               }`}
             >
-              {/* Left bar for active */}
+              {/* Active bar */}
               {isActive(link.path) && (
-                <div className="absolute top-2 left-0 h-10 w-1 rounded-tr-sm rounded-br-sm bg-[#F07400]" />
+                <div className="absolute left-0 top-0 h-full w-1 bg-[#F07400] rounded-tr-sm rounded-br-sm" />
               )}
 
-              {/* Icon bubble */}
-              <span
-                className={`rounded-lg p-2 transition-colors duration-200 w-6 h-6 ${
-                  isActive(link.path)
-                    ? "text-[#000044] font-semibold w-6 h-6"
-                    : "text-[#002244] hover:text-[#002244] font-medium w-6 h-6"
-                }`}
-              >
+              {/* Icon */}
+              <span className="w-6 h-6 flex items-center justify-center text-inherit">
                 {link.icon}
-                {/* <FaUsers className="w-6 h-6" /> */}
               </span>
 
               {/* Label */}
