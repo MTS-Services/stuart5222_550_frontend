@@ -9,6 +9,8 @@ import { UserManagementLayout } from "./../page/private/user/UserManagementLayou
 import { AdminDashboard } from "../page/private/admin/components/dashboard/AdminDashboard";
 import { UserDetailsPage } from "../page/private/admin/components/userManagements/components/UserDetailsPage";
 import { EditResponse } from "../page/private/admin/components/userEdit/components/EditResponse";
+import { Notification } from "../page/private/admin/components/userManagements/notification/Notification";
+import { UserDetails } from "../page/private/admin/components/userManagements/userDetails/UserDetails";
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +36,10 @@ export const router = createBrowserRouter([
     element: <AdminDashboardLayout />,
     children: [
       {
+        index: true,
+        element: <AdminDashboard />,
+      },
+      {
         path: "dashboard",
         element: <AdminDashboard />,
       },
@@ -52,6 +58,14 @@ export const router = createBrowserRouter([
       {
         path: "edit-response",
         element: <EditResponse />,
+      },
+      {
+        path: "notification",
+        element: <Notification />,
+      },
+      {
+        path: "notification-user-details",
+        element: <UserDetails />,
       },
     ],
   },

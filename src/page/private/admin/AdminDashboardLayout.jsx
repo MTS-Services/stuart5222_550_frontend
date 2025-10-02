@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { AdminLeftSideBar } from "./AdminLeftSideBar";
 import { FaRegBell, FaRegUser } from "react-icons/fa";
 
@@ -14,7 +14,9 @@ export const AdminDashboardLayout = () => {
       <div className="flex-1 w-full mt-[68px] lg:mt-0">
         <div className="flex items-center justify-end py-5">
           <div className="flex items-center gap-2 sm:gap-4 md:gap-5">
-            <FaRegBell />
+            <Link to={`/admin/notification`}>
+              <FaRegBell />
+            </Link>
             <FaRegUser />
             <div className="font-medium text-black/90">
               <h2 className="text-base font-semibold mb-1">John Davis</h2>
