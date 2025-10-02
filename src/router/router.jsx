@@ -8,6 +8,7 @@ import { UserEdit } from "./../page/private/admin/components/userEdit/UserEdit";
 import { UserManagementLayout } from "./../page/private/user/UserManagementLayout";
 import { AdminDashboard } from "../page/private/admin/components/dashboard/AdminDashboard";
 import { UserDetailsPage } from "../page/private/admin/components/userManagements/components/UserDetailsPage";
+import { EditResponse } from "../page/private/admin/components/userEdit/components/EditResponse";
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ export const router = createBrowserRouter([
       {
         path: "user-details",
         element: <UserDetailsPage />,
+      },
+      {
+        path: "edit-response",
+        element: <EditResponse />,
       },
     ],
   },
