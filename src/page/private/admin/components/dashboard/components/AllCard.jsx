@@ -9,19 +9,19 @@ const cardData = [
   },
   {
     id: 2,
-    title: "Total User",
+    title: "Revenue",
     price: "$2,847",
     parcent: "12%",
   },
   {
     id: 3,
-    title: "Total User",
+    title: "Edit Requested",
     price: "5,000",
     parcent: "12%",
   },
   {
     id: 4,
-    title: "Total User",
+    title: "Need approval",
     price: "8,000",
     parcent: "12%",
   },

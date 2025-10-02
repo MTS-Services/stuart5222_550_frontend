@@ -1,4 +1,6 @@
+import { FaRegCalendar } from "react-icons/fa";
 import { Bio } from "./Bio";
+import { GrLocation } from "react-icons/gr";
 
 const images = [
   { id: 1, image: "/img/page/admin/img1.png" },
@@ -34,7 +36,7 @@ export const EditResponse = () => {
           }
         />
       </div>
-      
+
       {/* After Bio */}
       <div className="my-8">
         <Bio
@@ -57,6 +59,44 @@ export const EditResponse = () => {
             "Smoking is a no-go for me. If you’re open-minded, kind-hearted, and know what you want, we might just get along beautifully."
           }
         />
+      </div>
+
+      <div className="relative my-6 rounded-2xl p-8 shadow-lg bg-gradient-to-b from-orange-200 via-amber-100 to-yellow-50 overflow-hidden">
+        {/* Gradient border overlay */}
+        <div
+          className="absolute top-0 left-0 w-full h-full rounded-2xl pointer-events-none border-t-4 border-l-4 border-r-4 border-transparent"
+          style={{
+            borderImage:
+              "linear-gradient(to bottom, #FED7AA, #FEF3C7, #FEF9C3) 1",
+          }}
+        ></div>
+
+        {/* Content */}
+        <h2 className="text-lg font-semibold text-gray-900 mb-6">
+          I am traveling and will be in:
+        </h2>
+
+        <div className="space-y-4">
+          <div className="flex items-start gap-3">
+            <span className="text-orange-600 text-xl mt-0.5">
+              <GrLocation />
+            </span>
+            <div className="flex gap-2">
+              <span className="font-semibold text-gray-900">Location:</span>
+              <span className="text-gray-900">Anywhere, USA</span>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <span className="text-orange-600 text-xl mt-0.5">
+              <FaRegCalendar />
+            </span>
+            <div className="flex gap-2">
+              <span className="font-semibold text-gray-900">End-Date:</span>
+              <span className="text-gray-900">October 20, 2025</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Image And Textarea Fiend */}
