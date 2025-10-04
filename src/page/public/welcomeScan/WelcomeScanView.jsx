@@ -1,26 +1,26 @@
 import { BsCheck } from "react-icons/bs";
+import { Link } from "react-router-dom";
+import { StuartImage } from "../../../components/allStuartImage/StuartImage";
 
 export const WelcomeScanView = () => {
   return (
-    <div className="bg-[#313132] md:h-screen py-16">
-      {/* Image */}
-      <div className="flex justify-center mb-6">
-        <img
-          src="/img/page/home/remove_preview.png"
-          alt="preview"
-          className="w-[146px] h-[104px] bg-cover object-cover"
-        />
-      </div>
-      <div className="flex items-center justify-center text-white px-4">
-        <div className="text-center max-w-[600px]">
+    <div className="p-2 sm:p-4 md:p-6 lg:p-8 font-raleway bg-[#3B3B3D] md:h-screen text-white">
+      <div className="flex items-center justify-center text-center">
+        <div className="text-center">
+          {/* Image */}
+          <StuartImage />
+
           {/* Heading */}
           <h1 className="font-raleway font-bold text-[20px] sm:text-[30px] md:text-[40px] text-center mb-4">
-            Welcome to Scan Me Maybe{" "}
-            <span className="font-medium block sm:inline">
+            Welcome to Scan Me Maybe <br />
+            <span className="font-medium inline-block">
               So…. you got the card.
             </span>
           </h1>
-
+        </div>
+      </div>
+      <div className="flex items-center justify-center">
+        <div className="">
           {/* Paragraph */}
           <p className="md:text-base text-xs font-normal font-raleway md:py-5 py-2.5 md:w-[600px] w-[361px]">
             If you’re reading this, it means I – or one of my wonderful friends
@@ -57,17 +57,21 @@ export const WelcomeScanView = () => {
             </div>
           </div>
 
-          <div className="">
-            <h2 className="font-raleway text-[26px] font-bold md:my-6 my-4">
+          <div className="md:mb-0 mb-10">
+            <h2 className="font-raleway text-[26px] font-bold md:my-6 my-4 text-center">
               It’s not a scam, it’s a Scan
             </h2>
             <div className="w-full flex items-center gap-4 mt-[20px] font-semibold font-raleway">
-              <button
-                type="submit"
-                className="w-full p-2.5 bg-orange-500 rounded-lg text-white text-base hover:bg-orange-600 transition"
-              >
-                Let’s go
-              </button>
+              <div className="w-full">
+                <Link to={`/cheryl-ann-view`}>
+                  <button
+                    type="submit"
+                    className="w-full p-2.5 bg-orange-500 rounded-lg text-white text-base hover:bg-orange-600 transition"
+                  >
+                    Let’s go
+                  </button>
+                </Link>
+              </div>
               <button
                 type="submit"
                 className="w-full p-2.5 bg-orange-500 rounded-lg text-white text-base hover:bg-orange-600 transition"

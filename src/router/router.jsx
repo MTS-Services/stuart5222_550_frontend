@@ -12,6 +12,10 @@ import { EditResponse } from "../page/private/admin/components/userEdit/componen
 import { Notification } from "../page/private/admin/components/userManagements/notification/Notification";
 import { UserDetails } from "../page/private/admin/components/userManagements/userDetails/UserDetails";
 import { WelcomeScanView } from "../page/public/welcomeScan/WelcomeScanView";
+import { CherylAnnView } from "../page/public/cherylAnn/CherylAnnView";
+import { SeeMorePhone } from "../page/public/Seemorephotos/SeeMorePhone";
+import { LetsConnect } from "../page/public/connect/LetsConnect";
+import { SignUpPick } from "../page/public/signUpPick/SignUpPick";
 
 export const router = createBrowserRouter([
   {
@@ -34,7 +38,23 @@ export const router = createBrowserRouter([
         path: "/welcome-scan",
         element: <WelcomeScanView />,
       },
+      {
+        path: "/cheryl-ann-view",
+        element: <CherylAnnView />,
+      },
+      {
+        path: "/sign-up-pick",
+        element: <SignUpPick />,
+      },
     ],
+  },
+  {
+    path: "/see-more-phone",
+    element: <SeeMorePhone />,
+  },
+  {
+    path: "/lets-connect",
+    element: <LetsConnect />,
   },
   {
     path: "/admin",

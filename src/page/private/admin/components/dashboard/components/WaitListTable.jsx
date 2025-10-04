@@ -1,4 +1,4 @@
-import { AllTableResponsiveStyle } from "../../../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle";
+import { AllTableResponsiveStyle } from "../../../../../../components/allTableResponsiveStyle/AllTableResponsiveStyle";
 
 export const WaitListTable = () => {
   const data = [

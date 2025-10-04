@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { StuartImage } from "../../../../components/allStuartImage/StuartImage";
 
 export const HeroSection = () => {
   return (
@@ -6,13 +7,7 @@ export const HeroSection = () => {
       <div className="flex items-center justify-center">
         <div className="text-center">
           {/* Image */}
-          <div className="flex justify-center mb-6">
-            <img
-              src="/img/page/home/remove_preview.png"
-              alt="preview"
-              className="w-[146px] h-[104px] bg-cover object-cover"
-            />
-          </div>
+          <StuartImage />
 
           {/* Heading */}
           <h1 className="text-[32px] sm:text-[40px] md:text-[50px] lg:text-[60px] font-bold text-white max-w-[600px] mx-auto my-[40px]">
