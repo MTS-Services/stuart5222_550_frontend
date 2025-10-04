@@ -11,6 +11,7 @@ import { UserDetailsPage } from "../page/private/admin/components/userManagement
 import { EditResponse } from "../page/private/admin/components/userEdit/components/EditResponse";
 import { Notification } from "../page/private/admin/components/userManagements/notification/Notification";
 import { UserDetails } from "../page/private/admin/components/userManagements/userDetails/UserDetails";
+import { WelcomeScanView } from "../page/public/welcomeScan/WelcomeScanView";
 
 export const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
       {
         path: "/secondView",
         element: <SecondView />,
+      },
+      {
+        path: "/welcome-scan",
+        element: <WelcomeScanView />,
       },
     ],
   },

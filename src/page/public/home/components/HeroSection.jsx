@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export const HeroSection = () => {
   return (
     <div className="px-4 py-6">
@@ -76,12 +78,16 @@ export const HeroSection = () => {
                 />
 
                 {/* Button */}
-                <button
-                  type="submit"
-                  className="w-full p-2.5 bg-orange-500 rounded-lg text-white text-base font-semibold hover:bg-orange-600 transition"
-                >
-                  Join the waitlist
-                </button>
+                <div className="w-full">
+                  <Link to={`welcome-scan`}>
+                    <button
+                      type="submit"
+                      className="w-full p-2.5 bg-orange-500 rounded-lg text-white text-base font-semibold hover:bg-orange-600 transition"
+                    >
+                      Join the waitlist
+                    </button>
+                  </Link>
+                </div>
               </form>
             </div>
           </div>
