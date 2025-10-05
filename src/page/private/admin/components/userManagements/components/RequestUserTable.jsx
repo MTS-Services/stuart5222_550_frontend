@@ -1,39 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PiCheckBold } from "react-icons/pi";
 import { FiX } from "react-icons/fi";
 import { AllTableResponsiveStyle } from "../../../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle";
 import { Link } from "react-router-dom";
+import { getData } from "../../../../../../utils/axiosInstance";
 
 export const RequestUserTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState("");
+  const [requestUser, setRequestUser] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const data = [
-    {
-      date: "Jul 5, 2025",
-      name: "Bessie Cooper",
-      email: "bill.sanders@example.com",
-      subscription: "Annually",
-    },
-    {
-      date: "Jul 6, 2025",
-      name: "John Doe",
-      email: "john.doe@example.com",
-      subscription: "Annually",
-    },
-    {
-      date: "Jul 7, 2025",
-      name: "Jane Smith",
-      email: "jane.smith@example.com",
-      subscription: "Monthly",
-    },
-    {
-      date: "Jul 8, 2025",
-      name: "Michael Brown",
-      email: "michael.brown@example.com",
-      subscription: "Annually",
-    },
-  ];
+  // pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  useEffect(() => {
+    fetchHistory();
+  }, []);
+
+  const fetchHistory = async () => {
+    try {
+      setLoading(true);
+      const data = await getData(`requestuser.json`);
+      setRequestUser(data || []);
+    } catch (err) {
+      console.error("Failed to fetch data:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const openModal = (email) => {
     setSelectedEmail(email);
@@ -50,73 +46,122 @@ export const RequestUserTable = () => {
     closeModal();
   };
 
+  // pagination calculations
+  const totalPages = Math.ceil(requestUser.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentData = requestUser.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePrevious = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
   return (
     <div className="font-inter">
-      <div className="relative overflow-x-auto md:overflow-x-visible">
-        <table className="min-w-full table-fixed text-left text-xs sm:text-sm md:text-base">
-          <thead className="bg-white text-black text-lg font-normal">
-            <tr>
-              <th className="px-7 py-3 w-1/5 whitespace-nowrap">Date</th>
-              <th className="px-5 py-3 w-1/5 whitespace-nowrap">Name</th>
-              <th className="px-5 py-3 w-1/5 whitespace-nowrap">
-                Subscription
-              </th>
-              <th className="px-5 py-3 w-1/5 whitespace-nowrap">Email</th>
-              <th className="px-5 py-3 w-1/5 whitespace-nowrap">Action</th>
-            </tr>
-          </thead>
-          <tbody className="text-black text-base font-normal cursor-pointer">
-            {data.map((row, index) => (
-              <tr
-                key={index}
-                className={
-                  index % 2 === 0 ? "bg-yellow-50" : "bg-white cursor-pointer"
+      {/* Loading UI */}
+      {loading ? (
+        <div className="flex justify-center items-center py-20">
+          <div className="w-12 h-12 border-4 border-orange-400 border-dashed rounded-full animate-spin"></div>
+          <span className="ml-4 text-orange-500 font-medium">Loading...</span>
+        </div>
+      ) : (
+        <>
+          <div className="relative overflow-x-auto md:overflow-x-visible">
+            <table className="min-w-full table-fixed text-left text-xs sm:text-sm md:text-base">
+              <thead className="bg-white text-black text-lg font-normal">
+                <tr>
+                  <th className="px-7 py-3 w-1/5 whitespace-nowrap">Date</th>
+                  <th className="px-5 py-3 w-1/5 whitespace-nowrap">Name</th>
+                  <th className="px-5 py-3 w-1/5 whitespace-nowrap">
+                    Subscription
+                  </th>
+                  <th className="px-5 py-3 w-1/5 whitespace-nowrap">Email</th>
+                  <th className="px-5 py-3 w-1/5 whitespace-nowrap">Action</th>
+                </tr>
+              </thead>
+              <tbody className="text-black text-base font-normal cursor-pointer">
+                {currentData.map((row, index) => (
+                  <tr
+                    key={index}
+                    className={
+                      index % 2 === 0
+                        ? "bg-yellow-50"
+                        : "bg-white cursor-pointer"
+                    }
+                  >
+                    <td className="px-7 py-3 w-1/5 whitespace-nowrap">
+                      {row.date}
+                    </td>
+                    <td className="px-5 py-3 w-1/5 whitespace-nowrap">
+                      {row.name}
+                    </td>
+                    <td className="px-5 py-3 w-1/5 whitespace-nowrap">
+                      {row.plan}
+                    </td>
+                    <td className="px-5 py-3 w-1/5 whitespace-nowrap">
+                      {row.email}
+                    </td>
+                    <td className="px-7 py-2.5 whitespace-nowrap flex items-center gap-3">
+                      <FiX
+                        className="w-5 h-5 text-red-500 cursor-pointer"
+                        onClick={() => openModal(row.email)}
+                      />
+                      <PiCheckBold className="w-5 h-5 text-green-500" />
+                      <Link to={`/admin/user-details`}>
+                        <button className="bg-[#F07400] text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap">
+                          See Details
+                        </button>
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <AllTableResponsiveStyle />
+
+          {/* Pagination */}
+          <div className="flex items-center text-gray-600 justify-between mt-8 text-base font-poppins font-normal">
+            <p className="font-inter">
+              Showing {startIndex + 1} to {startIndex + currentData.length} of{" "}
+              {requestUser.length} results
+            </p>
+            <div className="flex gap-4 sm:gap-5 md:gap-6 lg:gap-7">
+              <button
+                className={`border rounded-xl px-5 py-2 ${
+                  currentPage === 1 || requestUser.length <= itemsPerPage
+                    ? "border-gray-300 text-gray-400 cursor-not-allowed"
+                    : "border-gray-600"
+                }`}
+                onClick={handlePrevious}
+                disabled={currentPage === 1 || requestUser.length <= itemsPerPage}
+              >
+                Previous
+              </button>
+              <button
+                className={`border rounded-xl px-5 py-2 ${
+                  currentPage === totalPages ||
+                  requestUser.length <= itemsPerPage ||
+                  totalPages === 0
+                    ? "border-gray-300 text-gray-400 cursor-not-allowed"
+                    : "border-gray-600"
+                }`}
+                onClick={handleNext}
+                disabled={
+                  currentPage === totalPages ||
+                  requestUser.length <= itemsPerPage ||
+                  totalPages === 0
                 }
               >
-                <td className="px-7 py-3 w-1/5 whitespace-nowrap">
-                  {row.date}
-                </td>
-                <td className="px-5 py-3 w-1/5 whitespace-nowrap">
-                  {row.name}
-                </td>
-                <td className="px-5 py-3 w-1/5 whitespace-nowrap">
-                  {row.subscription}
-                </td>
-                <td className="px-5 py-3 w-1/5 whitespace-nowrap">
-                  {row.email}
-                </td>
-                <td className="px-7 py-2.5 whitespace-nowrap flex items-center gap-3">
-                  <FiX
-                    className="w-5 h-5 text-red-500 cursor-pointer"
-                    onClick={() => openModal(row.email)}
-                  />
-                  <PiCheckBold className="w-5 h-5 text-green-500" />
-                  <Link to={`/admin/user-details`}>
-                    <button className="bg-[#F07400] text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap">
-                      See Details
-                    </button>
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <AllTableResponsiveStyle />
-
-      {/* Pagination */}
-      <div className="flex items-center text-gray-600 justify-between mt-8 text-base font-poppins font-normal">
-        <p className="font-inter">Showing 1 to 4 of 4 results</p>
-        <div className="flex gap-4 sm:gap-5 md:gap-6 lg:gap-7">
-          <button className="border border-gray-600 rounded-xl px-5 py-2">
-            Previous
-          </button>
-          <button className="border border-gray-600 rounded-xl px-5 py-2">
-            Next
-          </button>
-        </div>
-      </div>
+                Next
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Modal */}
       {isModalOpen && (
