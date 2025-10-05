@@ -1,10 +1,20 @@
 import { MdOutlineContentCopy } from "react-icons/md";
 import { StuartImage } from "../../../components/allStuartImage/StuartImage";
+import { IoMdArrowBack } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 export const LetsConnect = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="p-2 sm:p-4 md:p-6 lg:p-8 bg-[#3B3B3D] h-screen">
       <div className="max-w-[600px] mx-auto">
+        <h3
+          onClick={() => navigate(-1)} 
+          className="flex items-center gap-2 text-white mb-3 cursor-pointer"
+        >
+          <IoMdArrowBack /> Back
+        </h3>
         <div className="">
           <StuartImage />
           <div className="flex justify-center text-center">
