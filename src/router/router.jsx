@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router";
 import { MainLayout } from "./../layout/main/MainLayout";
 import { HomeView } from "./../page/public/home/HomeView";
-import { SecondView } from "./../page/public/second/SecondView";
 import { AdminDashboardLayout } from "../layout/admin/AdminDashboardLayout";
 import { UserManagement } from "../page/private/admin/components/userManagements/UserManagement";
 import { UserEdit } from "./../page/private/admin/components/userEdit/UserEdit";
@@ -30,10 +29,6 @@ export const router = createBrowserRouter([
         path: "/",
         element: <HomeView />,
       },
-      // {
-      //   path: "/secondView",
-      //   element: <SecondView />,
-      // },
       {
         path: "/welcome-scan",
         element: <WelcomeScanView />,

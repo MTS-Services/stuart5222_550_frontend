@@ -3,7 +3,7 @@
 import axios from "axios";
 
 
-const BASE_URL = "/fakejsondata"; // public/fakejsondata will be served from /fakejsondata
+const BASE_URL = "/fakejsondata";
 
 const instance = axios.create({
   baseURL: BASE_URL,
@@ -25,7 +25,6 @@ export const getData = async (endpoint, id = null, params = {}) => {
   }
 };
 
-// postData, updateData এবং deleteData ফাংশনগুলোও একইভাবে ঠিক করা প্রয়োজন।
 export const postData = async (endpoint, payload) => {
   try {
     const response = await instance.post(`${endpoint}`, payload);

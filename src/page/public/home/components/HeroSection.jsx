@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { StuartImage } from "../../../../components/allStuartImage/StuartImage";
+import { JoinWaitlist } from "./JoinWaitlist";
 
 export const HeroSection = () => {
   return (
@@ -57,33 +58,7 @@ export const HeroSection = () => {
                 least expect them.
               </p>
               {/* Form */}
-              <form className="w-full flex flex-col justify-start items-start gap-6 mt-8">
-                {/* Name Input */}
-                <input
-                  type="text"
-                  placeholder="Name"
-                  className="w-full h-11 p-2.5 bg-white text-neutral-700 text-base font-semibold rounded-lg outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
-                />
-
-                {/* Email Input */}
-                <input
-                  type="email"
-                  placeholder="E-mail"
-                  className="w-full h-11 p-2.5 bg-white text-neutral-700 text-base font-semibold rounded-lg outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
-                />
-
-                {/* Button */}
-                <div className="w-full">
-                  <Link to={`welcome-scan`}>
-                    <button
-                      type="submit"
-                      className="w-full p-2.5 bg-orange-500 rounded-lg text-white text-base font-semibold hover:bg-orange-600 transition"
-                    >
-                      Join the waitlist
-                    </button>
-                  </Link>
-                </div>
-              </form>
+              <JoinWaitlist/>
             </div>
           </div>
         </div>
