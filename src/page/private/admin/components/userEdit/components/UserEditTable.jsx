@@ -70,7 +70,7 @@ export const UserEditTable = ({
       <AllTableResponsiveStyle />
 
       {/* Pagination */}
-      <div className="flex items-center text-gray-600 justify-between mt-8 md:text-base text-sm font-poppins font-normal">
+      <div className="flex items-center text-gray-600 justify-between mt-8 md:text-base text-sm font-poppins font-normal md:gap-0 gap-2">
         <p className="font-inter">
           Showing {startIndex + 1} to {startIndex + currentData.length} of{" "}
           {filteredData.length} results

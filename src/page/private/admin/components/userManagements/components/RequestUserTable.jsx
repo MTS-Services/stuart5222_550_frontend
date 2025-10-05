@@ -124,14 +124,14 @@ export const RequestUserTable = () => {
           <AllTableResponsiveStyle />
 
           {/* Pagination */}
-          <div className="flex items-center text-gray-600 justify-between mt-8 text-base font-poppins font-normal">
+          <div className="flex items-center text-gray-600 justify-between mt-8 text-base font-poppins font-normal md:gap-0 gap-2">
             <p className="font-inter">
               Showing {startIndex + 1} to {startIndex + currentData.length} of{" "}
               {requestUser.length} results
             </p>
             <div className="flex gap-4 sm:gap-5 md:gap-6 lg:gap-7">
               <button
-                className={`border rounded-xl px-5 py-2 ${
+                className={`border rounded-xl md:px-5 px-4 md:py-2 py-1.5 ${
                   currentPage === 1 || requestUser.length <= itemsPerPage
                     ? "border-gray-300 text-gray-400 cursor-not-allowed"
                     : "border-gray-600"
@@ -142,7 +142,7 @@ export const RequestUserTable = () => {
                 Previous
               </button>
               <button
-                className={`border rounded-xl px-5 py-2 ${
+                className={`border rounded-xl md:px-5 px-4 md:py-2 py-1.5 ${
                   currentPage === totalPages ||
                   requestUser.length <= itemsPerPage ||
                   totalPages === 0
