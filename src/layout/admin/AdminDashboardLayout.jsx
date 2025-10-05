@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-import { AdminLeftSideBar } from "./AdminLeftSideBar";
+import { AdminLeftSideBar } from "../../page/private/admin/AdminLeftSideBar";
 import { FaRegBell, FaRegUser } from "react-icons/fa";
 
 export const AdminDashboardLayout = () => {
