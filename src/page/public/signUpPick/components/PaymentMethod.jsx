@@ -29,7 +29,7 @@ export const PaymentMethod = () => {
               tabIndex={0}
               onClick={() => setSelectedPlan(plan.id)}
               onKeyDown={(e) => e.key === "Enter" && setSelectedPlan(plan.id)}
-              className={`flex-1 rounded-xl md:p-5 p-3 cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(212,163,115,0.3)] ${
+              className={`flex-1 rounded-xl md:p-5 p-[14px] cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(212,163,115,0.3)] ${
                 selectedPlan === plan.id
                   ? "border-2 border-[#ff8c42]"
                   : "border-2 border-[#d4a373]"

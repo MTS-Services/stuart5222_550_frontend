@@ -381,6 +381,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { PaymentMethod } from "./components/PaymentMethod";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { MdOutlinePrivacyTip } from "react-icons/md";
 
 export const SignUpPick = () => {
   const [signUp, setSignUp] = useState([]);
@@ -474,20 +475,20 @@ export const SignUpPick = () => {
           </div>
 
           {/* Price Section */}
-          <div className="border-t-2 border-[#F07400] rounded-lg bg-[#434343] p-6 md:mt-6 mt-4">
-            <div className="bg-[#FFFFFF33] p-4 rounded-lg">
+          <div className="border-t-2 border-[#F07400] rounded-xl bg-[#434343] p-8 md:mt-6 mt-4">
+            <div className="bg-[#FFFFFF33] p-6 rounded-xl">
               <h2 className="text-[32px] font-semibold">
-                $69/{" "}
+                $69/
                 <span className="text-base font-semibold">
                   Initial setup fee
                 </span>
               </h2>
               <hr className="my-6 text-[#BFBFBF]" />
               {[
+                "50 unique QR code cards",
                 "Delivery of cards",
                 "Profile page setup & review",
                 "Secure contact sharing",
-                "50 unique QR code cards",
               ].map((item, index) => (
                 <h3
                   key={index}
@@ -507,8 +508,10 @@ export const SignUpPick = () => {
 
           {/* Form Fields */}
           <div className="md:my-20 my-10">
-            <div className="self-stretch flex flex-col gap-2">
-              <label className="text-white text-xl font-medium">Name</label>
+            <div className="self-stretch flex flex-col gap-2 my-5">
+              <label className="text-white text-xl font-medium mb-4">
+                Name
+              </label>
               <input
                 type="text"
                 name="firstName"
@@ -517,7 +520,7 @@ export const SignUpPick = () => {
               />
             </div>
             <div className="self-stretch flex flex-col gap-2 my-5">
-              <label className="text-white text-xl font-medium">Age</label>
+              <label className="text-white text-xl font-medium mb-4">Age</label>
               <input
                 type="text"
                 name="age"
@@ -536,7 +539,7 @@ export const SignUpPick = () => {
 
             <div className="flex items-center gap-4 w-full my-5">
               <div className="self-stretch flex flex-col gap-2 w-full">
-                <label className="text-white text-xl font-medium ">
+                <label className="text-white text-xl font-medium mb-[8px]">
                   Height
                 </label>
                 <input
@@ -547,7 +550,7 @@ export const SignUpPick = () => {
                 />
               </div>
               <div className="self-stretch flex flex-col gap-2 w-full">
-                <label className="text-white text-xl font-medium">
+                <label className="text-white text-xl font-medium mb-[8px]">
                   Body Type
                 </label>
                 <input
@@ -559,7 +562,9 @@ export const SignUpPick = () => {
               </div>
             </div>
             <div className="self-stretch flex flex-col gap-2 w-full">
-              <label className="text-white text-xl font-medium">Area</label>
+              <label className="text-white text-xl font-medium mb-[8px]">
+                Area
+              </label>
               <input
                 type="text"
                 name="area"
@@ -568,7 +573,7 @@ export const SignUpPick = () => {
               />
             </div>
             <div className="self-stretch flex flex-col gap-2 w-full my-5">
-              <label className="text-white text-xl font-medium">
+              <label className="text-white text-xl font-medium mb-[8px]">
                 Dealbreakers
               </label>
               <input
@@ -579,7 +584,7 @@ export const SignUpPick = () => {
               />
             </div>
             <div className="self-stretch flex flex-col gap-2 w-full my-5">
-              <label className="text-white text-xl font-medium mb-1">
+              <label className="text-white text-xl font-medium mb-[8px]">
                 Tell ‘em About You
               </label>
               <textarea
@@ -593,8 +598,8 @@ export const SignUpPick = () => {
           </div>
 
           {/* Travel Mode */}
-          <div className="bg-[#434343] md:px-5 px-2 py-8 rounded-lg">
-            <h2 className="font-bold text-2xl">Travel Mode</h2>
+          <div className="bg-[#434343] px-3 py-8 rounded-lg">
+            <h2 className="font-bold text-2xl text-center">Travel Mode</h2>
             <div className="w-full flex items-center md:gap-5 gap-3 my-6">
               <div className="self-stretch flex flex-col gap-2 w-[48%]">
                 <label className="text-white text-base font-semibold">
@@ -632,10 +637,23 @@ export const SignUpPick = () => {
             </div>
           </div>
 
+          {/* Add Images */}
+          <div className="my-10 font-raleway">
+            <h2 className="font-medium text-xl">Add Images</h2>
+            <div className="px-3 py-8 flex items-center gap-4 bg-[#FFFFFF33] rounded-lg my-6">
+              <BiErrorCircle className="w-10 h-10 text-[#FF5E00]" />
+              <p className="font-normal text-base">
+                One showing eyes, one showing a toothy grin and one showing full
+                body. Be classy, not trashy. No nudes. G or PG rated photos
+                only.
+              </p>
+            </div>
+          </div>
+
           {/* File Upload */}
-          <div className="flex items-center justify-center p-4">
-            <div className="w-full max-w-md space-y-4">
-              <div className="bg-white rounded-2xl p-12 flex flex-col items-center justify-center shadow-md">
+          <div className="flex items-center justify-center">
+            <div className="w-full space-y-4">
+              <div className="bg-white rounded-xl p-12 flex flex-col items-center justify-center shadow-md">
                 <div
                   className="w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mb-4 cursor-pointer hover:bg-orange-600 transition"
                   onClick={handleClick}
@@ -668,8 +686,38 @@ export const SignUpPick = () => {
             </div>
           </div>
 
+          {/* Your safety */}
+          {/* <Yoursafety /> */}
+          <div className="">
+            <div className="bg-[#FFFFFF33] p-5 rounded-lg my-8">
+              <div className="w-10 h-10 relative bg-orange-500 rounded overflow-hidden p-1 flex justify-center text-center mx-auto mb-5">
+                <MdOutlinePrivacyTip className="w-full h-full  text-white left-[5px] top-[5px]" />
+              </div>
+              <p className="font-normal text-lg text-center">
+                Your safety is what inspired us. You don’t know anything about
+                the person you or your friend have given the card to. Please be
+                smart about what information you share. Choose a means that
+                gives you a level of protection - ie: a unique email and
+                dedicated phone number (google voice){" "}
+              </p>
+            </div>
+            <p className="font-medium text-center text-xl md:my-[100px] my-4 px-3">
+              If you can’t find your person with 50 cards, you’ll need to order
+              more cards from us. There’s a re-order card included in your
+              original card order, so be sure not to hand that one out.
+            </p>
+            <div className="px-3 py-8 flex items-center gap-4 bg-[#FFFFFF33] rounded-lg my-10">
+              <RiDeleteBinLine className="w-14 h-14 text-[#FF5E00]" />
+              <p className="font-normal text-base">
+                Your cards will be sent to you after your profile has been
+                approved for not violating decency standards. Once the cards are
+                mailed to you, we delete your information
+              </p>
+            </div>
+          </div>
+
           {/* Person to person */}
-          <div className="bg-[#434343] px-4 py-8 rounded-lg my-12">
+          <div className="bg-[#434343] px-4 py-8 rounded-lg mt-12 mb-[100px]">
             <div className="max-w-[340px] mx-auto">
               <div className="self-stretch flex flex-col gap-2">
                 <label className="text-white text-base font-semibold">

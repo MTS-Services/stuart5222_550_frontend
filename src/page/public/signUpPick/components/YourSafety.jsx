@@ -3,6 +3,9 @@ import { RiDeleteBinLine } from "react-icons/ri";
 export const Yoursafety = () => {
   return (
     <div className="">
+      <div className="w-10 h-10 relative bg-orange-500 rounded overflow-hidden p-1 flex justify-center">
+        <MdOutlinePrivacyTip className="w-full h-full  text-white left-[5px] top-[5px]" />
+      </div>
       <div className="bg-[#FFFFFF33] p-5 rounded-lg my-8">
         <p className="font-normal text-lg">
           Your safety is what inspired us. You don’t know anything about the
