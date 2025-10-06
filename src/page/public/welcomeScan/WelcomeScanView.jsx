@@ -7,7 +7,7 @@ export const WelcomeScanView = () => {
 
   return (
     <div className="px-[10px] py-2 sm:py-4 md:py-6 lg:py-8 font-raleway bg-[#3B3B3D] md:h-screen text-white">
-      <div className="flex items-center justify-center text-center">
+      <div className="flex items-center justify-center text-center max-w-[600px] mx-auto">
         <div className="text-center">
           {/* Image */}
           <StuartImage />
@@ -21,10 +21,10 @@ export const WelcomeScanView = () => {
           </h1>
         </div>
       </div>
-      <div className="flex items-center justify-center">
-        <div className="">
+      <div className="flex items-center justify-center max-w-[600px] mx-auto">
+        <div className="w-full">
           {/* Paragraph */}
-          <p className="md:text-base text-xs font-normal font-raleway md:py-5 py-2.5 md:w-[600px] w-[361px] text-center">
+          <p className="md:text-base text-xs font-normal text-center mx-auto font-raleway md:py-5 py-2.5 md:w-[600px] w-[391px]">
             If you’re reading this, it means I – or one of my wonderful friends
             – saw something in you. Maybe it was your smile, your energy, or the
             way you carried yourself. You weren’t obviously partnered, and if
@@ -60,10 +60,10 @@ export const WelcomeScanView = () => {
           </div>
 
           <div className="md:mb-0 mb-10">
-            <h2 className="font-raleway text-[26px] font-bold md:my-6 my-4 text-center">
+            <h2 className="font-raleway md:text-[26px] text-base font-bold md:my-6 my-4 text-center">
               It’s not a scam, it’s a Scan
             </h2>
-            <div className="w-full flex items-center gap-4 mt-[20px] font-semibold font-raleway">
+            <div className="md:w-full w-[70%] flex mx-auto items-center gap-4 mt-[20px] font-semibold font-raleway">
               <div className="w-full">
                 <Link to={`/cheryl-ann-view`}>
                   <button
@@ -76,7 +76,7 @@ export const WelcomeScanView = () => {
               </div>
               <button
                 type="button"
-                onClick={() => navigate(-1)} // ✅ আগের পেজে নিয়ে যাবে
+                onClick={() => navigate(-1)}
                 className="w-full p-2.5 bg-orange-500 rounded-lg text-white text-base hover:bg-orange-600 transition"
               >
                 No Thanks

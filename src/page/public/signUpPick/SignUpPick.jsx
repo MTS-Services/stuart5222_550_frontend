@@ -664,8 +664,9 @@ export const SignUpPick = () => {
                 <h2 className="text-gray-800 font-semibold text-lg mb-2">
                   Upload Photos
                 </h2>
-                <p className="text-gray-500 text-sm text-center mb-4">
-                  A minimum of 3 required photos and up to 10 additional images
+                <p className="text-gray-500 text-[10px] text-center mb-4 max-w-[288px] mx-auto">
+                  a minimum of the 3 required photos and up to 10 additional
+                  images
                 </p>
                 <input
                   type="file"
@@ -699,7 +700,7 @@ export const SignUpPick = () => {
                 the person you or your friend have given the card to. Please be
                 smart about what information you share. Choose a means that
                 gives you a level of protection - ie: a unique email and
-                dedicated phone number (google voice){" "}
+                dedicated phone number (google voice)
               </p>
             </div>
             <p className="font-medium text-center text-xl md:my-[100px] my-4 px-3">
@@ -719,6 +720,15 @@ export const SignUpPick = () => {
 
           {/* Person to person */}
           <div className="bg-[#434343] px-4 py-8 rounded-lg mt-12 mb-[100px]">
+            <div className="max-w-[330px]  mx-auto mb-6">
+              <h2 className="font-semibold text-xl mb-4">
+                Person to person dating, but with a safer approach.
+              </h2>
+              <p className="font-normal text-base">
+                This is your “safe share” zone – just the details you choose to
+                pass along.
+              </p>
+            </div>
             <div className="max-w-[340px] mx-auto">
               <div className="self-stretch flex flex-col gap-2">
                 <label className="text-white text-base font-semibold">

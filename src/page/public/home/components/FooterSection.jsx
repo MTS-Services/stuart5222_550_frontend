@@ -1,7 +1,7 @@
 export const FooterSection = () => {
   return (
     <div className="flex items-center justify-center bg-[#505050] px-4 py-6">
-      <div className="w-full md:w-[568px] md:my-10 mt-[10px] md:mt-0 mb-[40px] md:mb-0">
+      <div className="w-full md:w-[640px] md:my-10 mt-[10px] md:mt-0 mb-[40px] md:mb-0">
         {/* Feature header */}
         <div className="self-stretch flex flex-col justify-start items-start gap-5">
           <img
