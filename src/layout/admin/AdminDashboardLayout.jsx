@@ -4,7 +4,7 @@ import { FaRegBell, FaRegUser } from "react-icons/fa";
 
 export const AdminDashboardLayout = () => {
   return (
-    <section className="flex min-h-screen">
+    <section className="flex min-h-screen px-[10px]">
       {/* Sidebar */}
       <div className="fixed z-10 h-screen lg:relative lg:w-[260px]">
         <AdminLeftSideBar />

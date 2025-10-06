@@ -33,12 +33,12 @@ export const UserEditTable = ({
                 <th className="px-5 py-3 w-1/5 whitespace-nowrap">Action</th>
               </tr>
             </thead>
-            <tbody className="text-black text-base font-normal cursor-pointer">
+            <tbody className="text-black text-base font-normal">
               {currentData.map((row, index) => (
                 <tr
                   key={index}
                   className={
-                    index % 2 === 0 ? "bg-yellow-50" : "bg-white cursor-pointer"
+                    index % 2 === 0 ? "bg-yellow-50" : "bg-white"
                   }
                 >
                   <td className="px-7 py-3 w-1/5 whitespace-nowrap">

@@ -3,7 +3,7 @@ import { HeroSection } from "./components/HeroSection";
 
 export const HomeView = () => {
   return (
-    <div className="p-2 sm:p-4 md:p-6 lg:p-8 font-raleway bg-[#3B3B3D]">
+    <div className="px-[10px] font-raleway bg-[#3B3B3D] gap-[60px]">
       <HeroSection />
       <AboutSection/>
     </div>

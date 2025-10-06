@@ -10,7 +10,7 @@ import { SlPlane } from "react-icons/sl";
 
 export default function AboutSection() {
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center pb-6">
       <div className="text-center px-4 py-6 inline-flex flex-col justify-start items-center gap-8">
         {/* Section Title */}
         <div className="self-stretch flex flex-col justify-start items-start gap-4">
@@ -51,8 +51,7 @@ export default function AboutSection() {
             <p className="self-stretch text-center text-white text-base font-normal leading-normal">
               Photos loaded to your profile page will have the location data
               scrubbed. Once your cards are mailed, we delete your information.
-              Only contact information you are comfortable with is shared when
-              someone matches with you.
+              The only contact information shared is that which you provide.
             </p>
           </div>
         </div>
@@ -126,8 +125,9 @@ export default function AboutSection() {
               Travel Mode
             </h3>
             <p className="self-stretch text-center text-white text-base font-normal leading-normal">
-              Sometimes it’s waiting on your next adventure. Use Travel Mode to
-              share where and when you’ll be exploring.
+              Love doesn’t always live next door – sometimes it’s waiting on
+              your next adventure. Use Travel Mode to share when and where
+              you’ll be exploring.
             </p>
           </div>
         </div>

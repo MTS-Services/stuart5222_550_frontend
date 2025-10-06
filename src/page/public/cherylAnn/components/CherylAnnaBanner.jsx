@@ -30,28 +30,30 @@ export const CherylAnnaBanner = () => {
           ></div>
 
           {/* Content */}
-          <h2 className="text-lg font-semibold text-gray-900 mb-6">
+          <h2 className="text-[32px] font-bold text-start text-gray-900 mb-[21px]">
             I am traveling and will be in:
           </h2>
 
           <div className="space-y-4">
-            <div className="flex items-start gap-3">
-              <span className="text-orange-600 text-xl mt-0.5">
-                <GrLocation />
-              </span>
-              <div className="flex gap-2">
-                <span className="font-semibold text-gray-900">Location:</span>
-                <span className="text-gray-900">Anywhere, USA</span>
+            <div className="">
+              <div className="flex items-center gap-3">
+                <span className="text-orange-600 text-xl mt-0.5">
+                  <FaRegCalendar />
+                </span>
+                <div className="flex gap-2 font-medium text-2xl text-black">
+                  Start-Date: October 1, 2025
+                </div>
+              </div>
+              <div className="flex gap-2 font-medium text-2xl text-black ml-8">
+                  End-Date: October 20, 2025
               </div>
             </div>
 
             <div className="flex items-start gap-3">
               <span className="text-orange-600 text-xl mt-0.5">
-                <FaRegCalendar />
+                <GrLocation />
               </span>
-              <div className="flex gap-2">
-                <span className="font-semibold text-gray-900">End-Date:</span>
-                <span className="text-gray-900">October 20, 2025</span>
+              <div className="flex gap-2 font-medium text-2xl text-black">Location: Anywhere, USA
               </div>
             </div>
           </div>
@@ -131,7 +133,7 @@ export const CherylAnnaBanner = () => {
             It's not a scam, it's a Scan.
           </h2>
 
-          <Link to={`/lets-connect`}>
+          <Link to={`/sign-up-pick`}>
             <button
               type="submit"
               className="w-full md:my-4 my-2 p-2.5 bg-orange-500 rounded-lg text-white text-base font-semibold hover:bg-orange-600 transition"

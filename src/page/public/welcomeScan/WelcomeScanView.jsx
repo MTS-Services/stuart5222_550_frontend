@@ -1,10 +1,12 @@
 import { BsCheck } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; 
 import { StuartImage } from "../../../components/allStuartImage/StuartImage";
 
 export const WelcomeScanView = () => {
+  const navigate = useNavigate(); // ✅ Hook use
+
   return (
-    <div className="p-2 sm:p-4 md:p-6 lg:p-8 font-raleway bg-[#3B3B3D] md:h-screen text-white">
+    <div className="px-[10px] py-2 sm:py-4 md:py-6 lg:py-8 font-raleway bg-[#3B3B3D] md:h-screen text-white">
       <div className="flex items-center justify-center text-center">
         <div className="text-center">
           {/* Image */}
@@ -22,7 +24,7 @@ export const WelcomeScanView = () => {
       <div className="flex items-center justify-center">
         <div className="">
           {/* Paragraph */}
-          <p className="md:text-base text-xs font-normal font-raleway md:py-5 py-2.5 md:w-[600px] w-[361px]">
+          <p className="md:text-base text-xs font-normal font-raleway md:py-5 py-2.5 md:w-[600px] w-[361px] text-center">
             If you’re reading this, it means I – or one of my wonderful friends
             – saw something in you. Maybe it was your smile, your energy, or the
             way you carried yourself. You weren’t obviously partnered, and if
@@ -73,7 +75,8 @@ export const WelcomeScanView = () => {
                 </Link>
               </div>
               <button
-                type="submit"
+                type="button"
+                onClick={() => navigate(-1)} // ✅ আগের পেজে নিয়ে যাবে
                 className="w-full p-2.5 bg-orange-500 rounded-lg text-white text-base hover:bg-orange-600 transition"
               >
                 No Thanks

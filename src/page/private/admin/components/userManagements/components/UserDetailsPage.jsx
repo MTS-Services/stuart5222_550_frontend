@@ -13,7 +13,7 @@ console.log(images);
 
 export const UserDetailsPage = () => {
   return (
-    <div className="p-8">
+    <div className="md:p-8 p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="w-[80px] h-[80px]">
