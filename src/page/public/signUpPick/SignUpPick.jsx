@@ -382,6 +382,7 @@ import { PaymentMethod } from "./components/PaymentMethod";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MdOutlinePrivacyTip } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 export const SignUpPick = () => {
   const [signUp, setSignUp] = useState([]);
@@ -755,12 +756,14 @@ export const SignUpPick = () => {
                   className="h-11 px-3 bg-white text-neutral-700 text-sm font-medium rounded-lg outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
                 />
               </div>
-              <button
-                type="submit"
-                className="w-full mt-6 p-2.5 bg-orange-500 rounded-lg text-white text-base font-semibold hover:bg-orange-600 transition"
-              >
-                Submit for Review
-              </button>
+              <Link to={`/oops-sorry`}>
+                <button
+                  type="submit"
+                  className="w-full mt-6 p-2.5 bg-orange-500 rounded-lg text-white text-base font-semibold hover:bg-orange-600 transition"
+                >
+                  Submit for Review
+                </button>
+              </Link>
             </div>
           </div>
         </div>
