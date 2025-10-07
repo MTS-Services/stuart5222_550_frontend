@@ -2,12 +2,6 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-// ===========code by shakil munshi=========
-// Server run comment: npx json-server --watch bd.json --port 3011
-// ===========code by shakil munshi=========
-
-// ================================================
-
 const BASE_URL = 'http://localhost:5000';
 
 // ===========code by shakil munshi=========

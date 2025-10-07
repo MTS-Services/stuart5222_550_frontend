@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { getData } from '../../../../../utils/axiosInstance';
 import { UserEditTable } from './components/UserEditTable';
@@ -80,7 +81,7 @@ export const UserEdit = () => {
 
   return (
 
-    <div className="text-black p-8">
+    <div className="text-black md:p-8 p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl text-[#002244] font-semibold font-poppins">
          All User list

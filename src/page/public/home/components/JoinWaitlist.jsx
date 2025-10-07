@@ -95,11 +95,13 @@ export const JoinWaitlist = () => {
         result = await registerUser(userData);
       }
 
+
       if (result.success) {
         console.log(
           `${isLogin ? 'Login' : 'Registration'} successful:`,
           result.user
         );
+
 
         // Success message
         toast.success(

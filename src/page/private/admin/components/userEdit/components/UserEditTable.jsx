@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { AllTableResponsiveStyle } from "../../../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle";
+import { Loading } from "../../../../../../components/ui/loading";
 
 export const UserEditTable = ({
   loading,
@@ -17,7 +18,7 @@ export const UserEditTable = ({
     <div className="font-inter">
       <div className="relative overflow-x-auto md:overflow-x-visible">
         {loading ? (
-          <p className="text-center py-10 text-gray-500">Loading...</p>
+         <Loading/>
         ) : error ? (
           <p className="text-center py-10 text-red-500">{error}</p>
         ) : currentData.length === 0 ? (

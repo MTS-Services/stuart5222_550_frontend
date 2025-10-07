@@ -4,7 +4,7 @@ import { WaitListTable } from "./components/WaitListTable";
 
 export const AdminDashboard = () => {
   return (
-    <div className="text-black p-8">
+    <div className="text-black md:p-8 p-6">
       <div className="">
         <h2 className="text-2xl text-[#002244] font-semibold font-poppins">
           Dashboard Overview
