@@ -1,12 +1,20 @@
 import { createBrowserRouter } from "react-router";
-import { MainLayout } from './../layout/main/MainLayout';
-import { HomeView } from './../page/public/home/HomeView';
-import { SecondView } from './../page/public/second/SecondView';
-import { AdminDashboardLayout } from "../page/private/admin/AdminDashboardLayout";
+import { MainLayout } from "./../layout/main/MainLayout";
+import { HomeView } from "./../page/public/home/HomeView";
+import { AdminDashboardLayout } from "../layout/admin/AdminDashboardLayout";
 import { UserManagement } from "../page/private/admin/components/userManagements/UserManagement";
-import { UserEdit } from './../page/private/admin/components/userEdit/UserEdit';
-import { UserManagementLayout } from './../page/private/user/UserManagementLayout';
+import { UserEdit } from "./../page/private/admin/components/userEdit/UserEdit";
+import { UserManagementLayout } from "./../page/private/user/UserManagementLayout";
 import { AdminDashboard } from "../page/private/admin/components/dashboard/AdminDashboard";
+import { UserDetailsPage } from "../page/private/admin/components/userManagements/components/UserDetailsPage";
+import { EditResponse } from "../page/private/admin/components/userEdit/components/EditResponse";
+import { Notification } from "../page/private/admin/components/userManagements/notification/Notification";
+import { UserDetails } from "../page/private/admin/components/userManagements/userDetails/UserDetails";
+import { WelcomeScanView } from "../page/public/welcomeScan/WelcomeScanView";
+import { CherylAnnView } from "../page/public/cherylAnn/CherylAnnView";
+import { SeeMorePhone } from "../page/public/Seemorephotos/SeeMorePhone";
+import { LetsConnect } from "../page/public/connect/LetsConnect";
+import { SignUpPick } from "../page/public/signUpPick/SignUpPick";
 
 export const router = createBrowserRouter([
   {
@@ -22,26 +30,62 @@ export const router = createBrowserRouter([
         element: <HomeView />,
       },
       {
-        path: "/secondView",
-        element: <SecondView />,
+        path: "/welcome-scan",
+        element: <WelcomeScanView />,
+      },
+      {
+        path: "/cheryl-ann-view",
+        element: <CherylAnnView />,
+      },
+      {
+        path: "/sign-up-pick",
+        element: <SignUpPick />,
       },
     ],
+  },
+  {
+    path: "/see-more-phone",
+    element: <SeeMorePhone />,
+  },
+  {
+    path: "/lets-connect",
+    element: <LetsConnect />,
   },
   {
     path: "/admin",
     element: <AdminDashboardLayout />,
     children: [
       {
-        path: "admin-user-management",
-        element: <UserManagement />,
+        index: true,
+        element: <AdminDashboard />,
       },
       {
         path: "dashboard",
         element: <AdminDashboard />,
       },
       {
+        path: "admin-user-management",
+        element: <UserManagement />,
+      },
+      {
         path: "user-edit",
         element: <UserEdit />,
+      },
+      {
+        path: "user-details",
+        element: <UserDetailsPage />,
+      },
+      {
+        path: "edit-response",
+        element: <EditResponse />,
+      },
+      {
+        path: "notification",
+        element: <Notification />,
+      },
+      {
+        path: "notification-user-details",
+        element: <UserDetails />,
       },
     ],
   },
