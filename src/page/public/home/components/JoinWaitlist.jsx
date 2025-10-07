@@ -89,7 +89,7 @@ export const JoinWaitlist = () => {
       setLoading(true);
       console.log("Submitting data:", formData);
 
-      const response = await postData("postdata.json", formData);
+      const response = await postData("scan_me", formData);
       console.log("Server Response:", response);
 
       // Success toast

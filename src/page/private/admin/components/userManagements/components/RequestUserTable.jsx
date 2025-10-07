@@ -4,6 +4,7 @@ import { FiX } from 'react-icons/fi';
 import { AllTableResponsiveStyle } from '../../../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
 import { Link } from 'react-router-dom';
 import { getData } from '../../../../../../utils/axiosInstance';
+import { Loading } from '../../../../../../components/ui/loading';
 
 export const RequestUserTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -62,10 +63,7 @@ export const RequestUserTable = () => {
     <div className='font-inter'>
       {/* Loading UI */}
       {loading ? (
-        <div className='flex justify-center items-center py-20'>
-          <div className='w-12 h-12 border-4 border-orange-400 border-dashed rounded-full animate-spin'></div>
-          <span className='ml-4 text-orange-500 font-medium'>Loading...</span>
-        </div>
+        <Loading/>
       ) : (
         <>
           <div className='relative overflow-x-auto md:overflow-x-visible'>

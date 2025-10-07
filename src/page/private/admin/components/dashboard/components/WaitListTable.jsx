@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AllTableResponsiveStyle } from '../../../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
 import { getData } from '../../../../../../utils/axiosInstance';
+import { Loading } from '../../../../../../components/ui/loading';
 
 export const WaitListTable = () => {
   const [waitListTable, setWaitListTable] = useState([]);
@@ -45,10 +46,7 @@ export const WaitListTable = () => {
     <div className='font-inter'>
       {/* Loading */}
       {loading ? (
-        <div className='flex justify-center items-center py-20'>
-          <div className='w-10 h-10 border-4 border-orange-400 border-dashed rounded-full animate-spin'></div>
-          <span className='ml-3 text-orange-500 font-medium'>Loading...</span>
-        </div>
+       <Loading/>
       ) : (
         <>
           <div className='relative overflow-x-auto md:overflow-x-visible'>

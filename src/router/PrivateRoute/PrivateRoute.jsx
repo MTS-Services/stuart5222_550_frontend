@@ -1,8 +1,9 @@
 // src/router/PrivateRoute.jsx
 
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../../featured/auth/AuthContext';
+import { Loading } from '../../components/ui/loading';
 
 // PrivateRoute to check if a user is logged in AND has active Subscription/Trial
 const PrivateRoute = ({ children }) => {
@@ -10,9 +11,7 @@ const PrivateRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className='flex min-h-screen items-center justify-center bg-gray-100'>
-        <div className='text-xl font-semibold text-gray-700'>Loading...</div>
-      </div>
+    <Loading/>
     );
   }
 
@@ -38,9 +37,7 @@ const PrivateAdminRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className='flex min-h-screen items-center justify-center bg-gray-100'>
-        <div className='text-xl font-semibold text-gray-700'>Loading...</div>
-      </div>
+     <Loading/>
     );
   }
 
