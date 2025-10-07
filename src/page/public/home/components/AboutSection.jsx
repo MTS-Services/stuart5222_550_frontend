@@ -10,8 +10,8 @@ import { SlPlane } from "react-icons/sl";
 
 export default function AboutSection() {
   return (
-    <div className="flex items-center justify-center pb-6">
-      <div className="text-center px-4 py-6 inline-flex flex-col justify-start items-center gap-8">
+    <div className="flex items-center justify-center pb-6 max-w-[600px] mx-auto">
+      <div className="text-center sm:py-6 mt-6 mb-10 inline-flex flex-col justify-start items-center gap-8">
         {/* Section Title */}
         <div className="self-stretch flex flex-col justify-start items-start gap-4">
           <h2 className="self-stretch text-center text-orange-500 text-3xl font-bold capitalize">

@@ -15,6 +15,7 @@ import { CherylAnnView } from "../page/public/cherylAnn/CherylAnnView";
 import { SeeMorePhone } from "../page/public/Seemorephotos/SeeMorePhone";
 import { LetsConnect } from "../page/public/connect/LetsConnect";
 import { SignUpPick } from "../page/public/signUpPick/SignUpPick";
+import { Oops } from "../page/public/ops/Oops";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([
       {
         path: "/sign-up-pick",
         element: <SignUpPick />,
+      },
+      {
+        path: "/oops-sorry",
+        element: <Oops />,
       },
     ],
   },

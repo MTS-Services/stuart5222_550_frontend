@@ -3,14 +3,14 @@ import { JoinWaitlist } from "./JoinWaitlist";
 
 export const HeroSection = () => {
   return (
-    <div className="md:py-6 py-4">
+    <div className="md:py-6 py-4 max-w-[600px] mx-auto">
       <div className="flex items-center justify-center">
         <div className="text-center">
           {/* Image */}
           <StuartImage />
 
           {/* Heading */}
-          <h1 className="text-[32px] sm:text-[40px] md:text-[50px] lg:text-[60px] font-bold text-white max-w-[600px] mx-auto my-[40px]">
+          <h1 className="text-[32px] sm:text-[40px] md:text-[50px] lg:text-[60px] font-bold text-white my-[40px]">
             Why “Scan Me Maybe”?
           </h1>
         </div>
@@ -49,7 +49,7 @@ export const HeroSection = () => {
             <h2 className="font-bold text-[24px] mt-9 mb-6">
               It’s not a scam, it’s a Scan
             </h2>
-            <div className="bg-[#434343] px-4 py-8 rounded-lg">
+            <div className="bg-[#434343] px-4 sm:py-8 py-[74px]  rounded-lg">
               <h2 className="text-[32px] font-bold mb-4">Scan Me Maybe</h2>
               <p className="text-base font-medium max-w-[568px] mb-[40px]">
                 Revolutionizing dating through personalized cards and genuine

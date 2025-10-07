@@ -382,6 +382,7 @@ import { PaymentMethod } from "./components/PaymentMethod";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MdOutlinePrivacyTip } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 export const SignUpPick = () => {
   const [signUp, setSignUp] = useState([]);
@@ -663,8 +664,9 @@ export const SignUpPick = () => {
                 <h2 className="text-gray-800 font-semibold text-lg mb-2">
                   Upload Photos
                 </h2>
-                <p className="text-gray-500 text-sm text-center mb-4">
-                  A minimum of 3 required photos and up to 10 additional images
+                <p className="text-gray-500 text-[10px] text-center mb-4 max-w-[288px] mx-auto">
+                  a minimum of the 3 required photos and up to 10 additional
+                  images
                 </p>
                 <input
                   type="file"
@@ -698,7 +700,7 @@ export const SignUpPick = () => {
                 the person you or your friend have given the card to. Please be
                 smart about what information you share. Choose a means that
                 gives you a level of protection - ie: a unique email and
-                dedicated phone number (google voice){" "}
+                dedicated phone number (google voice)
               </p>
             </div>
             <p className="font-medium text-center text-xl md:my-[100px] my-4 px-3">
@@ -718,6 +720,15 @@ export const SignUpPick = () => {
 
           {/* Person to person */}
           <div className="bg-[#434343] px-4 py-8 rounded-lg mt-12 mb-[100px]">
+            <div className="max-w-[330px]  mx-auto mb-6">
+              <h2 className="font-semibold text-xl mb-4">
+                Person to person dating, but with a safer approach.
+              </h2>
+              <p className="font-normal text-base">
+                This is your “safe share” zone – just the details you choose to
+                pass along.
+              </p>
+            </div>
             <div className="max-w-[340px] mx-auto">
               <div className="self-stretch flex flex-col gap-2">
                 <label className="text-white text-base font-semibold">
@@ -755,12 +766,14 @@ export const SignUpPick = () => {
                   className="h-11 px-3 bg-white text-neutral-700 text-sm font-medium rounded-lg outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
                 />
               </div>
-              <button
-                type="submit"
-                className="w-full mt-6 p-2.5 bg-orange-500 rounded-lg text-white text-base font-semibold hover:bg-orange-600 transition"
-              >
-                Submit for Review
-              </button>
+              <Link to={`/oops-sorry`}>
+                <button
+                  type="submit"
+                  className="w-full mt-6 p-2.5 bg-orange-500 rounded-lg text-white text-base font-semibold hover:bg-orange-600 transition"
+                >
+                  Submit for Review
+                </button>
+              </Link>
             </div>
           </div>
         </div>

@@ -4,10 +4,10 @@ import { UserManagementDateDropDown } from "./components/UserManagementDateDropD
 
 export const UserManagement = () => {
   return (
-    <div className="bg-[#F9FAFB] px-[10px] py-8">
+    <div className="bg-[#F9FAFB] md:p-8 p-2">
       <div className="">
         <h2 className="text-2xl text-[#002244] font-semibold font-poppins">
-          User Management
+          Dashboard Overview
         </h2>
         <p className="justify-start text-[#464646] text-base font-normal font-lato leading-normal mb-4 mt-1">
           Monitor your user performance

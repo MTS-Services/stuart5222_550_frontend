@@ -79,10 +79,12 @@ export const UserEdit = () => {
   };
 
   return (
-    <div className='text-black p-8'>
-      <div className='flex items-center justify-between mb-6'>
-        <h2 className='text-2xl text-[#002244] font-semibold font-poppins'>
-          Dashboard Overview
+
+    <div className="text-black p-8">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl text-[#002244] font-semibold font-poppins">
+         All User list
+ 
         </h2>
 
         {/* Search Field */}

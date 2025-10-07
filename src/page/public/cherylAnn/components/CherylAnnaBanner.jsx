@@ -5,14 +5,14 @@ import { Link } from "react-router-dom";
 
 export const CherylAnnaBanner = () => {
   return (
-    <div className="font-raleway text-white px-4 py-6">
+    <div className="font-raleway text-white px-2 py-6">
       <div className="flex items-center justify-center">
         <div className="text-center">
           {/* Image */}
           <StuartImage />
 
           {/* Heading */}
-          <h1 className="font-raleway font-bold text-[20px] sm:text-[30px] md:text-[40px] text-center mb-4">
+          <h1 className="font-raleway font-bold text-[40px] text-center mb-4">
             Cheryl Ann
           </h1>
         </div>
@@ -30,21 +30,21 @@ export const CherylAnnaBanner = () => {
           ></div>
 
           {/* Content */}
-          <h2 className="text-[32px] font-bold text-start text-gray-900 mb-[21px]">
+          <h2 className="md:text-[32px] text-xl font-bold text-start text-gray-900 mb-[21px]">
             I am traveling and will be in:
           </h2>
 
           <div className="space-y-4">
             <div className="">
               <div className="flex items-center gap-3">
-                <span className="text-orange-600 text-xl mt-0.5">
+                <span className="text-orange-600 mt-0.5">
                   <FaRegCalendar />
                 </span>
-                <div className="flex gap-2 font-medium text-2xl text-black">
+                <div className="flex gap-2 font-medium md:text-2xl text-xl text-black">
                   Start-Date: October 1, 2025
                 </div>
               </div>
-              <div className="flex gap-2 font-medium text-2xl text-black ml-8">
+              <div className="flex gap-2 font-medium md:text-2xl text-xl text-black ml-8">
                   End-Date: October 20, 2025
               </div>
             </div>
@@ -53,7 +53,7 @@ export const CherylAnnaBanner = () => {
               <span className="text-orange-600 text-xl mt-0.5">
                 <GrLocation />
               </span>
-              <div className="flex gap-2 font-medium text-2xl text-black">Location: Anywhere, USA
+              <div className="flex gap-2 font-medium md:text-2xl text-xl text-black">Location: Anywhere, USA
               </div>
             </div>
           </div>
@@ -98,18 +98,18 @@ export const CherylAnnaBanner = () => {
               Profile Details
             </h2>
             <div className="bg-[#505050] p-6 rounded-lg my-4">
-              <p className="font-raleway font-normal text-2xl">
+              <p className="font-raleway font-normal md:text-2xl text-xl">
                 Name : Cheryl Ann
               </p>
-              <p className="font-raleway font-normal text-2xl my-5">Age : 56</p>
-              <p className="font-raleway font-normal text-2xl">Height : 5’7</p>
-              <p className="font-raleway font-normal text-2xl my-5">
+              <p className="font-raleway font-normal md:text-2xl text-xl my-5">Age : 56</p>
+              <p className="font-raleway font-normal md:text-2xl text-xl">Height : 5’7</p>
+              <p className="font-raleway font-normal md:text-2xl text-xl my-5">
                 Body type : Curvy
               </p>
-              <p className="font-raleway font-normal text-2xl">
+              <p className="font-raleway font-normal md:text-2xl text-xl">
                 Area : Hamilton, Montana
               </p>
-              <p className="font-raleway font-normal text-2xl my-5">
+              <p className="font-raleway font-normal md:text-2xl text-xl my-5">
                 Dealbreakers : Smokers
               </p>
             </div>
@@ -117,7 +117,7 @@ export const CherylAnnaBanner = () => {
 
           <h2 className="font-raleway font-medium text-xl mt-10">Bio</h2>
           <div className="bg-[#FFFFFF14] rounded-lg my-4">
-            <p className="font-medium font-raleway text-base p-4">
+            <p className="font-medium font-raleway md:text-base text-xs p-4">
               “Hi, I’m Cheryl Ann, 56, standing 5’7 with a curvy body type. I
               enjoy genuine connections and meaningful conversations. Looking to
               meet someone authentic — dealbreaker for me is smoking.”
