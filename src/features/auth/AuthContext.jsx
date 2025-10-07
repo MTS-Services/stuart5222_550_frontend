@@ -1,11 +1,11 @@
-import React from 'react';
+// auth/AuthContext.js
+import { createContext, useContext } from 'react';
 
-const AuthContext = () => {
-  return (
-    <div>
-      <h4>AuthContext.jsxAuthContext.jsx</h4>
-    </div>
-  );
+// 1. Creating AuthContext
+// This Context allows any component in the application to access authentication status.
+export const AuthContext = createContext(null);
+
+// This provides a simple way to consume AuthContext.
+export const useAuth = () => {
+  return useContext(AuthContext);
 };
-
-export default AuthContext;
