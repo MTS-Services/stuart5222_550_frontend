@@ -4,7 +4,7 @@ import { UserManagementDateDropDown } from "./components/UserManagementDateDropD
 
 export const UserManagement = () => {
   return (
-    <div className="bg-[#F9FAFB] px-[10px] py-8">
+    <div className="bg-[#F9FAFB] md:p-8 p-2">
       <div className="">
         <h2 className="text-2xl text-[#002244] font-semibold font-poppins">
           Dashboard Overview
