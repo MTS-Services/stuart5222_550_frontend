@@ -1,9 +1,8 @@
-// src/providers/AuthProvider.jsx
-
 import { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
+// Path check: Assuming src/providers/AuthProvider.jsx needs to step up one level (..) to reach src/utils/axiosInstance.js
+import { AuthContext, useAuth } from '../auth/AuthContext';
 import instance from '../../utils/axiosInstance';
-import { AuthContext } from './AuthContext';
 
 const COOKIE_NAME = 'token';
 
@@ -14,13 +13,12 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ===========code by shakil munshi=========
-  // Set and clear tokens in cookies
-  // ================================================
+  // Helper functions for token management
   const setToken = (token) => {
+    // Setting user ID (token) in cookie for session management, synced with axiosInstance
     Cookies.set(COOKIE_NAME, token, {
       expires: 7,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'Lax',
     });
   };
@@ -29,14 +27,22 @@ const AuthProvider = ({ children }) => {
     Cookies.remove(COOKIE_NAME);
   };
 
-  // ===========code by shakil munshi=========
-  // Fetch user data on component mount
-  // ================================================
+  // Check if subscription is valid based on end date
+  const isSubscribed = () => {
+    if (!user || !user.subscriptionEndDate) return false;
+    const now = new Date();
+    const endDate = new Date(user.subscriptionEndDate);
+    // User is subscribed if the current date is before the subscription end date
+    return now < endDate;
+  };
+
+  // Fetch user details based on token (runs on mount)
   useEffect(() => {
     const fetchUser = async () => {
       const token = Cookies.get(COOKIE_NAME);
       if (token) {
         try {
+          // json-server: token is the user ID
           const res = await instance.get(`/users/${token}`);
           const currentUser = res.data;
 
@@ -58,16 +64,16 @@ const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  // ===========code by shakil munshi=========
-  // User authentication functions
-  // ================================================
+  // Login function (GET with query params for json-server)
   const login = async (email, password) => {
     setLoading(true);
     try {
+      // Find user by email and password
       const res = await instance.get(
         `/users?email=${email}&password=${password}`
       );
-      const userData = res.data[0];
+      const userData = res.data[0]; // json-server returns an array
+
       if (userData) {
         setToken(userData.id);
         setUser(userData);
@@ -91,9 +97,11 @@ const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
   };
 
+  // Register function (uses POST request)
   const registerUser = async (userData) => {
     setLoading(true);
     try {
+      // 1. Check if user already exists
       const existingUser = await instance.get(`/users?email=${userData.email}`);
       if (existingUser.data.length > 0) {
         setLoading(false);
@@ -103,9 +111,26 @@ const AuthProvider = ({ children }) => {
         };
       }
 
-      const res = await instance.post('/users', userData);
+      // 2. Add default subscription status and initial data
+      const newUser = {
+        ...userData,
+        // Default properties for new users
+        isSubscribed: false,
+        planType: 'free', // Set default plan to free
+        subscriptionEndDate: null,
+      };
+
+      // 3. Post new user data (json-server automatically assigns ID)
+      const res = await instance.post('/users', newUser);
+
+      // Automatically log in the new user
+      const loggedInUser = res.data;
+      setToken(loggedInUser.id);
+      setUser(loggedInUser);
+      setIsAuthenticated(true);
+
       setLoading(false);
-      return { success: true, user: res.data };
+      return { success: true, user: loggedInUser };
     } catch (error) {
       setLoading(false);
       console.error('Registration failed:', error);
@@ -116,123 +141,41 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // ===========code by shakil munshi=========
-  // Password reset and OTP functions
-  // ================================================
-  const requestPasswordResetOTP = async (email) => {
-    console.log(`Password reset OTP requested for: ${email}`);
-    return {
-      success: true,
-      message: 'An OTP has been sent to your email.',
-      otp: '123456',
-    };
-  };
+  // Subscription functions (Paid only)
+  const subscribe = async (planDetails) => {
+    setLoading(true);
+    if (!user) {
+      setLoading(false);
+      return { success: false, message: 'No user is logged in.' };
+    }
 
-  const verifyOTPForReset = async (email, otp) => {
-    console.log(`Verifying OTP for ${email}: ${otp}`);
-    if (otp === '123456') {
-      return {
-        success: true,
-        message: 'OTP verified. You can now reset your password.',
-      };
+    let durationInDays;
+    let planType;
+
+    // Define plan logic (Removed 'trial' logic)
+    if (planDetails.type === 'monthly') {
+      durationInDays = 30;
+      planType = 'monthly';
+    } else if (planDetails.type === 'annual') {
+      durationInDays = 365;
+      planType = 'annual';
     } else {
-      return { success: false, message: 'Invalid OTP. Please try again.' };
-    }
-  };
-
-  const resetPassword = async (email, newPassword) => {
-    try {
-      const res = await instance.get(`/users?email=${email}`);
-      const userToUpdate = res.data[0];
-      if (!userToUpdate) {
-        return { success: false, message: 'User not found.' };
-      }
-      const updatedUser = { ...userToUpdate, password: newPassword };
-      await instance.put(`/users/${userToUpdate.id}`, updatedUser);
-      return {
-        success: true,
-        message: 'Password has been reset successfully.',
-      };
-    } catch (error) {
-      console.error('Password reset failed:', error);
-      return {
-        success: false,
-        message: 'An error occurred during password reset.',
-      };
-    }
-  };
-
-  const verifyRegistrationOTP = async (otp, token) => {
-    console.log('Verifying registration OTP:', otp);
-    return {
-      success: true,
-      message: 'Registration successful. You can now log in.',
-    };
-  };
-
-  const resendOTP = async (email) => {
-    console.log(`Resending OTP to: ${email}`);
-    return { success: true, message: 'New OTP sent successfully!' };
-  };
-
-  const deleteAccount = async () => {
-    try {
-      if (user) {
-        await instance.delete(`/users/${user.id}`);
-        logout();
-        return { success: true, message: 'Account deleted successfully.' };
-      }
-      return { success: false, message: 'No user is logged in.' };
-    } catch (error) {
-      console.error('Account deletion failed:', error);
-      return { success: false, message: 'Failed to delete account.' };
-    }
-  };
-
-  // ===========code by shakil munshi=========
-  // Subscription functions (Trial and Paid)
-  // ================================================
-  const startTrial = async () => {
-    setLoading(true);
-    if (!user) {
       setLoading(false);
-      return { success: false, message: 'No user is logged in.' };
+      return { success: false, message: 'Invalid plan type.' };
     }
+
+    // Prepare updated user object
     const updatedUser = {
       ...user,
       isSubscribed: true,
-      planType: 'trial',
-      hasUsedTrial: true,
-      subscriptionEndDate: new Date(Date.now() + 3 * 60 * 1000).toISOString(),
-    };
-    try {
-      const res = await instance.put(`/users/${user.id}`, updatedUser);
-      setUser(res.data);
-      setLoading(false);
-      return { success: true, user: res.data };
-    } catch (error) {
-      setLoading(false);
-      console.error('Failed to start trial:', error);
-      return { success: false, message: 'Failed to start trial.' };
-    }
-  };
-
-  const subscribe = async (plan) => {
-    setLoading(true);
-    if (!user) {
-      setLoading(false);
-      return { success: false, message: 'No user is logged in.' };
-    }
-    const durationInDays = plan.id === 1 ? 30 : 365;
-    const updatedUser = {
-      ...user,
-      isSubscribed: true,
-      planType: plan.id === 1 ? 'monthly' : 'annual',
+      planType: planType,
       subscriptionEndDate: new Date(
         Date.now() + durationInDays * 24 * 60 * 60 * 1000
       ).toISOString(),
     };
+
     try {
+      // Update user data on json-server
       const res = await instance.put(`/users/${user.id}`, updatedUser);
       setUser(res.data);
       setLoading(false);
@@ -244,9 +187,7 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // ===========code by shakil munshi=========
   // Value object for the context provider
-  // ================================================
   const value = {
     isAuthenticated,
     user,
@@ -254,19 +195,38 @@ const AuthProvider = ({ children }) => {
     login,
     logout,
     registerUser,
-    requestPasswordResetOTP,
-    verifyOTPForReset,
-    resetPassword,
-    verifyRegistrationOTP,
-    resendOTP,
-    deleteAccount,
-    startTrial,
     subscribe,
+    isSubscribed,
   };
 
   return (
     <AuthContext.Provider value={value}>
+      {/* We only render children once the initial loading is complete */}
       {!loading && children}
+      {/* Basic Loading Indicator */}
+      {loading && (
+        <div className='flex items-center justify-center h-screen bg-gray-900 text-white text-lg font-semibold'>
+          <svg
+            className='animate-spin h-6 w-6 mr-3 text-pink-500'
+            viewBox='0 0 24 24'
+          >
+            <circle
+              className='opacity-25'
+              cx='12'
+              cy='12'
+              r='10'
+              stroke='currentColor'
+              strokeWidth='4'
+            ></circle>
+            <path
+              className='opacity-75'
+              fill='currentColor'
+              d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
+            ></path>
+          </svg>
+          Authentication Loading...
+        </div>
+      )}
     </AuthContext.Provider>
   );
 };

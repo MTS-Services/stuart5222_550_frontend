@@ -1,5 +1,4 @@
 import { StuartImage } from "../../../../components/allStuartImage/StuartImage";
-import { JoinWaitlist } from "./JoinWaitlist";
 
 export const HeroSection = () => {
   return (

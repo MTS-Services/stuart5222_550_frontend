@@ -2,11 +2,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-// ===========code by shakil munshi=========
-// এই কমান্ডটি টার্মিনালে রান করতে ভুলবেন না
-// ===========code by shakil munshi=========
-
-// ✅ Base URL: JSON Server-এর সঠিক পোর্ট 3011 সেট করা হলো
+// ===========code by shakil munshi========
 // ================================================
 
 const BASE_URL = 'http://localhost:5000';
@@ -25,7 +21,7 @@ const instance = axios.create({
 });
 
 // ===========code by shakil munshi=========
-// 🔐 Request Interceptor (অপরিবর্তিত)
+// 🔐 Request Interceptor
 // ================================================
 
 instance.interceptors.request.use(
@@ -51,7 +47,6 @@ instance.interceptors.request.use(
 
 export const getData = async (endpoint, id = null, params = {}) => {
   try {
-    // endpoint-এর আগে `/` স্বয়ংক্রিয়ভাবে baseURL-এর সাথে যুক্ত হবে
     const url = id ? `${endpoint}/${id}` : `${endpoint}`;
     const response = await instance.get(url, { params });
     return response.data;
