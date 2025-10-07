@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { PiCheckBold } from "react-icons/pi";
-import { FiX } from "react-icons/fi";
-import { AllTableResponsiveStyle } from "../../../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle";
-import { Link } from "react-router-dom";
-import { getData } from "../../../../../../utils/axiosInstance";
+import { useEffect, useState } from 'react';
+import { PiCheckBold } from 'react-icons/pi';
+import { FiX } from 'react-icons/fi';
+import { AllTableResponsiveStyle } from '../../../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
+import { Link } from 'react-router-dom';
+import { getData } from '../../../../../../utils/axiosInstance';
 
 export const RequestUserTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEmail, setSelectedEmail] = useState("");
+  const [selectedEmail, setSelectedEmail] = useState('');
   const [requestUser, setRequestUser] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,10 +22,10 @@ export const RequestUserTable = () => {
   const fetchHistory = async () => {
     try {
       setLoading(true);
-      const data = await getData(`requestuser.json`);
+      const data = await getData(`subscriptions`);
       setRequestUser(data || []);
     } catch (err) {
-      console.error("Failed to fetch data:", err);
+      console.error('Failed to fetch data:', err);
     } finally {
       setLoading(false);
     }
@@ -38,7 +38,7 @@ export const RequestUserTable = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedEmail("");
+    setSelectedEmail('');
   };
 
   const handleSend = () => {
@@ -59,58 +59,54 @@ export const RequestUserTable = () => {
   };
 
   return (
-    <div className="font-inter">
+    <div className='font-inter'>
       {/* Loading UI */}
       {loading ? (
-        <div className="flex justify-center items-center py-20">
-          <div className="w-12 h-12 border-4 border-orange-400 border-dashed rounded-full animate-spin"></div>
-          <span className="ml-4 text-orange-500 font-medium">Loading...</span>
+        <div className='flex justify-center items-center py-20'>
+          <div className='w-12 h-12 border-4 border-orange-400 border-dashed rounded-full animate-spin'></div>
+          <span className='ml-4 text-orange-500 font-medium'>Loading...</span>
         </div>
       ) : (
         <>
-          <div className="relative overflow-x-auto md:overflow-x-visible">
-            <table className="min-w-full table-fixed text-left text-xs sm:text-sm md:text-base">
-              <thead className="bg-white text-black text-lg font-normal">
+          <div className='relative overflow-x-auto md:overflow-x-visible'>
+            <table className='min-w-full table-fixed text-left text-xs sm:text-sm md:text-base'>
+              <thead className='bg-white text-black text-lg font-normal'>
                 <tr>
-                  <th className="px-7 py-3 w-1/5 whitespace-nowrap">Date</th>
-                  <th className="px-5 py-3 w-1/5 whitespace-nowrap">Name</th>
-                  <th className="px-5 py-3 w-1/5 whitespace-nowrap">
+                  <th className='px-7 py-3 w-1/5 whitespace-nowrap'>Date</th>
+                  <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Name</th>
+                  <th className='px-5 py-3 w-1/5 whitespace-nowrap'>
                     Subscription
                   </th>
-                  <th className="px-5 py-3 w-1/5 whitespace-nowrap">Email</th>
-                  <th className="px-5 py-3 w-1/5 whitespace-nowrap">Action</th>
+                  <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Email</th>
+                  <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Action</th>
                 </tr>
               </thead>
-              <tbody className="text-black text-base font-normal">
+              <tbody className='text-black text-base font-normal'>
                 {currentData.map((row, index) => (
                   <tr
                     key={index}
-                    className={
-                      index % 2 === 0
-                        ? "bg-yellow-50"
-                        : "bg-white"
-                    }
+                    className={index % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}
                   >
-                    <td className="px-7 py-3 w-1/5 whitespace-nowrap">
+                    <td className='px-7 py-3 w-1/5 whitespace-nowrap'>
                       {row.date}
                     </td>
-                    <td className="px-5 py-3 w-1/5 whitespace-nowrap">
+                    <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
                       {row.name}
                     </td>
-                    <td className="px-5 py-3 w-1/5 whitespace-nowrap">
+                    <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
                       {row.plan}
                     </td>
-                    <td className="px-5 py-3 w-1/5 whitespace-nowrap">
+                    <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
                       {row.email}
                     </td>
-                    <td className="px-7 py-2.5 whitespace-nowrap flex items-center gap-3">
+                    <td className='px-7 py-2.5 whitespace-nowrap flex items-center gap-3'>
                       <FiX
-                        className="w-5 h-5 text-red-500 cursor-pointer"
+                        className='w-5 h-5 text-red-500 cursor-pointer'
                         onClick={() => openModal(row.email)}
                       />
-                      <PiCheckBold className="w-5 h-5 text-green-500" />
+                      <PiCheckBold className='w-5 h-5 text-green-500' />
                       <Link to={`/admin/user-details`}>
-                        <button className="bg-[#F07400] text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap">
+                        <button className='bg-[#F07400] text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap'>
                           See Details
                         </button>
                       </Link>
@@ -124,20 +120,22 @@ export const RequestUserTable = () => {
           <AllTableResponsiveStyle />
 
           {/* Pagination */}
-          <div className="flex items-center text-gray-600 justify-between mt-8 text-base font-poppins font-normal md:gap-0 gap-2">
-            <p className="font-inter">
-              Showing {startIndex + 1} to {startIndex + currentData.length} of{" "}
+          <div className='flex items-center text-gray-600 justify-between mt-8 text-base font-poppins font-normal md:gap-0 gap-2'>
+            <p className='font-inter'>
+              Showing {startIndex + 1} to {startIndex + currentData.length} of{' '}
               {requestUser.length} results
             </p>
-            <div className="flex gap-4 sm:gap-5 md:gap-6 lg:gap-7">
+            <div className='flex gap-4 sm:gap-5 md:gap-6 lg:gap-7'>
               <button
                 className={`border rounded-xl md:px-5 px-4 md:py-2 py-1.5 ${
                   currentPage === 1 || requestUser.length <= itemsPerPage
-                    ? "border-gray-300 text-gray-400 cursor-not-allowed"
-                    : "border-gray-600"
+                    ? 'border-gray-300 text-gray-400 cursor-not-allowed'
+                    : 'border-gray-600'
                 }`}
                 onClick={handlePrevious}
-                disabled={currentPage === 1 || requestUser.length <= itemsPerPage}
+                disabled={
+                  currentPage === 1 || requestUser.length <= itemsPerPage
+                }
               >
                 Previous
               </button>
@@ -146,8 +144,8 @@ export const RequestUserTable = () => {
                   currentPage === totalPages ||
                   requestUser.length <= itemsPerPage ||
                   totalPages === 0
-                    ? "border-gray-300 text-gray-400 cursor-not-allowed"
-                    : "border-gray-600"
+                    ? 'border-gray-300 text-gray-400 cursor-not-allowed'
+                    : 'border-gray-600'
                 }`}
                 onClick={handleNext}
                 disabled={
@@ -165,24 +163,24 @@ export const RequestUserTable = () => {
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg w-full max-w-md mx-auto p-6 relative">
+        <div className='fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4'>
+          <div className='bg-white rounded-lg w-full max-w-md mx-auto p-6 relative'>
             <button
-              className="absolute top-3 right-3 text-gray-500 hover:text-black"
+              className='absolute top-3 right-3 text-gray-500 hover:text-black'
               onClick={closeModal}
             >
               ✕
             </button>
-            <h3 className="text-lg font-semibold mb-4">Cancel with Feedback</h3>
-            <p className="text-gray-600 text-sm mb-2 break-all">
+            <h3 className='text-lg font-semibold mb-4'>Cancel with Feedback</h3>
+            <p className='text-gray-600 text-sm mb-2 break-all'>
               {selectedEmail}
             </p>
             <textarea
-              className="w-full max-h-[195px] min-h-[195px] p-2 border border-gray-300 bg-[#E6EEF6] rounded-[6px] mb-4 focus:outline-none focus:ring-1 focus:ring-orange-300"
-              placeholder="Write a review message here..."
+              className='w-full max-h-[195px] min-h-[195px] p-2 border border-gray-300 bg-[#E6EEF6] rounded-[6px] mb-4 focus:outline-none focus:ring-1 focus:ring-orange-300'
+              placeholder='Write a review message here...'
             />
             <button
-              className="w-full bg-[#FF8C00] py-2.5 text-black rounded-lg hover:bg-orange-600"
+              className='w-full bg-[#FF8C00] py-2.5 text-black rounded-lg hover:bg-orange-600'
               onClick={handleSend}
             >
               Send
