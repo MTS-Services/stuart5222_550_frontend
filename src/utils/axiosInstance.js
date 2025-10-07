@@ -3,7 +3,6 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 // ===========code by shakil munshi=========
-// Server run comment: npx json-server --watch db.json --port 5000
 // এই কমান্ডটি টার্মিনালে রান করতে ভুলবেন না
 // ===========code by shakil munshi=========
 

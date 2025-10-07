@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { getData } from '../../../../../utils/axiosInstance';
 import { UserEditTable } from './components/UserEditTable';
@@ -79,17 +80,12 @@ export const UserEdit = () => {
   };
 
   return (
-<<<<<<< HEAD
+
     <div className="text-black p-8">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl text-[#002244] font-semibold font-poppins">
          All User list
-=======
-    <div className='text-black p-8'>
-      <div className='flex items-center justify-between mb-6'>
-        <h2 className='text-2xl text-[#002244] font-semibold font-poppins'>
-          Dashboard Overview
->>>>>>> 11e34c9c097f5a5494eeafde4c69c3613ac108d9
+ 
         </h2>
 
         {/* Search Field */}
