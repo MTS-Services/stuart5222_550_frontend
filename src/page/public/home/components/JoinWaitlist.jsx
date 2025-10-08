@@ -1,129 +1,84 @@
-import { useEffect, useState } from 'react';
-import { AllTableResponsiveStyle } from '../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
-import { getData } from '../../../../utils/axiosInstance';
+import { useState } from 'react';
+import { postData } from '../../../../utils/axiosInstance';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-export const WaitListTable = () => {
-  const [waitListTable, setWaitListTable] = useState([]);
-  const [loading, setLoading] = useState(true);
+export const JoinWaitlist = () => {
+  const [formData, setFormData] = useState({ name: '', email: '' });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  // pagination states
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-  useEffect(() => {
-    fetchHistory();
-  }, []);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
 
-  const fetchHistory = async () => {
+    if (!formData.name || !formData.email) {
+      setError('Please fill out all fields.');
+      return;
+    }
+
     try {
       setLoading(true);
-      const data = await getData(`subscriptions`);
-      setWaitListTable(data || []);
+      console.log('Submitting data:', formData);
+
+      const response = await postData('scan_me');
+      console.log('Server Response:', response);
+
+      // Success toast
+      toast.success('Successfully joined the waitlist!');
+
+      // Navigate after delay
+      setTimeout(() => {
+        navigate('/welcome-scan');
+      }, 1500);
     } catch (err) {
-      console.error('Failed to fetch data:', err);
+      console.error('Failed to submit:', err);
+      toast.error('Failed to submit. Please try again later.');
     } finally {
       setLoading(false);
     }
   };
 
-  // pagination calculation
-  const totalPages = Math.ceil(waitListTable.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentData = waitListTable.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
-
-  const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
   return (
-    <div className='font-inter'>
-      {/* Loading */}
-      {loading ? (
-        <div className='flex justify-center items-center py-20'>
-          <div className='w-10 h-10 border-4 border-orange-400 border-dashed rounded-full animate-spin'></div>
-          <span className='ml-3 text-orange-500 font-medium'>Loading...</span>
-        </div>
-      ) : (
-        <>
-          <div className='relative overflow-x-auto md:overflow-x-visible'>
-            <table className='min-w-full table-fixed text-left text-xs sm:text-sm md:text-base'>
-              <thead className='bg-white text-black text-lg font-normal'>
-                <tr>
-                  <th className='px-5 py-3 w-1/3 whitespace-nowrap'>Date</th>
-                  <th className='px-5 py-3 w-1/3 whitespace-nowrap'>Name</th>
-                  <th className='px-5 py-3 w-1/3 whitespace-nowrap'>Email</th>
-                </tr>
-              </thead>
-              <tbody className='text-black text-base font-normal'>
-                {currentData.map((row, index) => (
-                  <tr
-                    key={index}
-                    className={index % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}
-                  >
-                    <td className='px-7 py-3 w-1/3 whitespace-nowrap'>
-                      {row.date}
-                    </td>
-                    <td className='px-7 py-3 w-1/3 whitespace-nowrap'>
-                      {row.name}
-                    </td>
-                    <td className='px-7 py-3 w-1/3 whitespace-nowrap'>
-                      {row.email}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+    <form
+      onSubmit={handleSubmit}
+      className='w-full flex flex-col justify-start items-start gap-6 mt-8'
+    >
+      <input
+        type='text'
+        name='name'
+        placeholder='Name'
+        value={formData.name}
+        onChange={handleChange}
+        className='w-full h-11 p-2.5 bg-white text-neutral-700 text-base font-semibold rounded-lg outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400'
+      />
 
-          <AllTableResponsiveStyle />
+      <input
+        type='email'
+        name='email'
+        placeholder='E-mail'
+        value={formData.email}
+        onChange={handleChange}
+        className='w-full h-11 p-2.5 bg-white text-neutral-700 text-base font-semibold rounded-lg outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400'
+      />
 
-          {/* Pagination */}
-          <div className='flex items-center text-gray-600 justify-between mt-8 text-base font-poppins font-normal md:gap-0 gap-2'>
-            <p className='font-inter'>
-              Showing {startIndex + 1} to {startIndex + currentData.length} of{' '}
-              {waitListTable.length} results
-            </p>
-            <div className='flex gap-4 sm:gap-5 md:gap-6 lg:gap-7'>
-              <button
-                className={`border rounded-xl  md:px-5 px-4 md:py-2 py-1.5 ${
-                  currentPage === 1 || waitListTable.length <= itemsPerPage
-                    ? 'border-gray-300 text-gray-400 cursor-not-allowed'
-                    : 'border-gray-600'
-                }`}
-                onClick={handlePrevious}
-                disabled={
-                  currentPage === 1 || waitListTable.length <= itemsPerPage
-                }
-              >
-                Previous
-              </button>
-              <button
-                className={`border rounded-xl  md:px-5 px-4 md:py-2 py-1.5 ${
-                  currentPage === totalPages ||
-                  waitListTable.length <= itemsPerPage ||
-                  totalPages === 0
-                    ? 'border-gray-300 text-gray-400 cursor-not-allowed'
-                    : 'border-gray-600'
-                }`}
-                onClick={handleNext}
-                disabled={
-                  currentPage === totalPages ||
-                  waitListTable.length <= itemsPerPage ||
-                  totalPages === 0
-                }
-              >
-                Next
-              </button>
-            </div>
-          </div>
-        </>
-      )}
-    </div>
+      {error && <p className='text-red-500 text-sm'>{error}</p>}
+
+      <div className='w-full'>
+        <button
+          type='submit'
+          disabled={loading}
+          className='w-full p-2.5 bg-orange-500 rounded-lg text-white text-base font-semibold hover:bg-orange-600 transition disabled:opacity-50'
+        >
+          {loading ? 'Submitting...' : 'Join the waitlist'}
+        </button>
+      </div>
+    </form>
   );
 };
+

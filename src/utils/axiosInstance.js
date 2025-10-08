@@ -2,9 +2,6 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-// ===========code by shakil munshi========
-// ================================================
-
 const BASE_URL = 'http://localhost:5000';
 
 // ===========code by shakil munshi=========
