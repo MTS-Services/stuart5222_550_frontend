@@ -83,7 +83,7 @@ export const UserEdit = () => {
 
     <div className="text-black md:p-8 p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl text-[#002244] font-semibold font-poppins">
+        <h2 className="text-2xl text-[#002244] font-semibold font-raleway">
          All User list
  
         </h2>

@@ -43,7 +43,7 @@ export const WaitListTable = () => {
   };
 
   return (
-    <div className='font-inter'>
+    <div className='font-raleway'>
       {/* Loading */}
       {loading ? (
        <Loading/>
@@ -82,8 +82,8 @@ export const WaitListTable = () => {
           <AllTableResponsiveStyle />
 
           {/* Pagination */}
-          <div className='flex items-center text-gray-600 justify-between mt-8 text-base font-poppins font-normal md:gap-0 gap-2'>
-            <p className='font-inter'>
+          <div className='flex items-center text-gray-600 justify-between mt-8 text-base font-normal md:gap-0 gap-2'>
+            <p className='font-raleway'>
               Showing {startIndex + 1} to {startIndex + currentData.length} of{' '}
               {waitListTable.length} results
             </p>

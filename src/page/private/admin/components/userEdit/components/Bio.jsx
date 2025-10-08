@@ -13,8 +13,8 @@ export const Bio = ({
   paragraph3,
 }) => {
   return (
-    <div className="bg-white rounded-sm p-4">
-      <h2 className="text-2xl text-[#002244] font-semibold font-poppins">
+    <div className="bg-white rounded-sm p-4 font-raleway">
+      <h2 className="text-2xl text-[#002244] font-semibold">
         {type}
       </h2>
       <div className="flex items-center justify-between">
@@ -28,29 +28,29 @@ export const Bio = ({
           </div>
           <div className="flex items-center gap-4">
             <div className="">
-              <h3 className="text-base text-[#252525] font-poppins font-medium">
+              <h3 className="text-base text-[#252525] font-medium">
                 {title}
               </h3>
-              <p className="text-[#242424] font-lato font-normal text-sm my-1.5">
+              <p className="text-[#242424] font-normal text-sm my-1.5">
                 {email}
               </p>
-              <p className="text-[#464646] text-xs font-lato font-normal">
+              <p className="text-[#464646] text-xs font-normal">
                 {number}
               </p>
             </div>
           </div>
         </div>
         <div className="">
-          <p className="text-[#404040] font-lato font-medium text-xs">
+          <p className="text-[#404040] font-medium text-xs">
             Age: {age}
           </p>
-          <p className="text-[#404040] font-lato font-medium text-xs my-1.5">
+          <p className="text-[#404040] font-medium text-xs my-1.5">
             Height: {height}
           </p>
-          <p className="text-[#404040] font-lato font-medium text-xs">
+          <p className="text-[#404040] font-medium text-xs">
             Body type: {bodyType}
           </p>
-          <p className="text-[#404040] font-lato font-medium text-xs my-1.5">
+          <p className="text-[#404040] font-medium text-xs my-1.5">
             Dealbreakers: {deal}
           </p>
         </div>

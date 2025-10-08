@@ -1,4 +1,5 @@
 import { StuartImage } from "../../../../components/allStuartImage/StuartImage";
+import { JoinWaitList } from "./JoinWaitlist";
 
 export const HeroSection = () => {
   return (
@@ -16,12 +17,16 @@ export const HeroSection = () => {
       </div>
       <div className="text-white flex items-center justify-center">
         <div className="">
-          <p className="md:text-2xl text-base font-normal md:mb-6 mb-[16px]">Let’s be honest:</p>
+          <p className="md:text-2xl text-base font-normal md:mb-6 mb-[16px]">
+            Let’s be honest:
+          </p>
           <p className="md:text-2xl text-base font-semibold my-5">
             Dating apps? A disaster.
           </p>
           <div className="md:ml-0 ml-4">
-            <p className="md:text-2xl text-base font-medium my-5">-fake profiles</p>
+            <p className="md:text-2xl text-base font-medium my-5">
+              -fake profiles
+            </p>
             <p className="md:text-2xl text-base font-medium">-ghosting</p>
             <p className="md:text-2xl text-base font-medium  my-5">
               -long -distance pen pals
@@ -56,7 +61,7 @@ export const HeroSection = () => {
                 least expect them.
               </p>
               {/* Form */}
-              <JoinWaitlist/>
+              <JoinWaitList />
             </div>
           </div>
         </div>

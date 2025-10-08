@@ -29,15 +29,15 @@ const cardData = [
 
 export const UserManagementAllCard = () => {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8 mt-2">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8 mt-2 font-raleway">
       {cardData.map((data) => (
         <div className="rounded-lg border border-white/100 bg-white p-2 sm:p-4 md:p-5 col-span-1">
           <div className="flex-col justify-center items-start gap-2">
-            <div className="justify-start text-White-800 text-xs font-normal font-lato leading-none">
+            <div className="justify-start text-White-800 text-xs font-normal leading-none">
               {data.title}
             </div>
             <div className="flex items-center justify-between my-1">
-              <div className="justify-start text-White-800 text-lg sm:text-xl md:text-2xl font-semibold font-poppins leading-9">
+              <div className="justify-start text-White-800 text-lg sm:text-xl md:text-2xl font-semibold leading-9">
                 {data.price}
               </div>
               <div className="bg-green-50 p-2 sm:p-2.5 md:p-3 rounded-lg">
@@ -45,10 +45,10 @@ export const UserManagementAllCard = () => {
               </div>
             </div>
             <div className="justify-start">
-              <span className="text-green-600 text-xs font-normal font-lato leading-none">
+              <span className="text-green-600 text-xs font-normal leading-none">
                 {data.parcent}
               </span>
-              <span className="text-White-600 text-xs font-normal font-lato leading-none ml-2">
+              <span className="text-White-600 text-xs font-normal leading-none ml-2">
                 vs last month
               </span>
             </div>

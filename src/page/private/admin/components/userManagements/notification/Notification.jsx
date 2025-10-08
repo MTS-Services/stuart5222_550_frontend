@@ -57,17 +57,17 @@ export const Notification = () => {
   console.log(waitListTable);
 
   return (
-    <div className="text-black p-4 md:p-8">
+    <div className="text-black p-4 md:p-8 font-raleway">
       {/* Loading */}
       {loading ? (
         <Loading />
       ) : (
         <>
           <div className="flex flex-wrap justify-between items-center mb-8 gap-4">
-            <h2 className="text-2xl text-[#002244] font-semibold font-poppins">
+            <h2 className="text-2xl text-[#002244] font-semibold">
               Notifications
             </h2>
-            <div className="flex items-center gap-3 font-inter font-normal text-lg">
+            <div className="flex items-center gap-3 font-normal text-lg">
               Mark All Read
               <IoCheckmarkDoneOutline className="w-6 h-6" />
             </div>
@@ -76,7 +76,7 @@ export const Notification = () => {
             {waitListTable.length > 0 ? (
               waitListTable.map((notification, index) => (
                 <div key={index} className="bg-white border-b border-gray-200 last:border-b-0 py-4 px-4 md:px-6">
-                  <div className="font-inter flex items-center gap-2">
+                  <div className="flex items-center gap-2">
                     <img
                       className="w-[40px] h-[40px] rounded-full flex-shrink-0"
                       src={notification.image || "/img/page/admin/img1.png"}

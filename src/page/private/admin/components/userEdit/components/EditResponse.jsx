@@ -12,7 +12,7 @@ const images = [
 
 export const EditResponse = () => {
   return (
-    <div className="text-black p-8">
+    <div className="text-black p-8 font-raleway">
       {/* Before Bio */}
       <div className="">
         <Bio
@@ -102,7 +102,7 @@ export const EditResponse = () => {
       {/* Image And Textarea Fiend */}
       <div className="">
         <div className="">
-          <h3 className="text-2xl text-[#252525] font-raleway font-semibold mb-5">
+          <h3 className="text-2xl text-[#252525] font-semibold mb-5">
             Images
           </h3>
           <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 grid-cols-2 gap-4">
@@ -118,11 +118,11 @@ export const EditResponse = () => {
           </div>
         </div>
         <div className="p-4 border border-gray-100 bg-white rounded-lg my-6">
-          <h3 className="text-xl text-[#252525] font-raleway font-medium mb-4">
+          <h3 className="text-xl text-[#252525] font-medium mb-4">
             Cancel With Feedback.
           </h3>
           <textarea
-            className="w-full max-h-[195px] min-h-[195px] font-raleway p-2 border border-gray-300 bg-[#E6EEF6] rounded-[6px] mb-4 focus:outline-none focus:ring-1 focus:ring-orange-300"
+            className="w-full max-h-[195px] min-h-[195px] p-2 border border-gray-300 bg-[#E6EEF6] rounded-[6px] mb-4 focus:outline-none focus:ring-1 focus:ring-orange-300"
             placeholder="Write a review message here..."
           />
           <button className="bg-[#FF8C00] text-black w-full py-2 rounded-[4px] mb-6">

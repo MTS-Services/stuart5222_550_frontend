@@ -15,7 +15,7 @@ export const UserEditTable = ({
   totalPages,
 }) => {
   return (
-    <div className="font-inter">
+    <div className="font-raleway">
       <div className="relative overflow-x-auto md:overflow-x-visible">
         {loading ? (
          <Loading/>
@@ -71,8 +71,8 @@ export const UserEditTable = ({
       <AllTableResponsiveStyle />
 
       {/* Pagination */}
-      <div className="flex items-center text-gray-600 justify-between mt-8 md:text-base text-sm font-poppins font-normal md:gap-0 gap-2">
-        <p className="font-inter">
+      <div className="flex items-center text-gray-600 justify-between mt-8 md:text-base text-sm font-normal md:gap-0 gap-2">
+        <p className="">
           Showing {startIndex + 1} to {startIndex + currentData.length} of{" "}
           {filteredData.length} results
         </p>

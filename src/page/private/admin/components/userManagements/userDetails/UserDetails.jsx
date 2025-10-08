@@ -28,16 +28,15 @@
 //       newPassword: form.newPassword.value,
 //       confirmPassword: form.confirmPassword.value,
 //     };
-//     console.log(data);
 //   };
 
 //   return (
 //     <div className="bg-[#F9FAFB] md:p-8 p-3">
 //       <div className="">
-//         <h2 className="text-2xl text-[#002244] font-semibold font-poppins">
+//         <h2 className="text-2xl text-[#002244] font-semibold">
 //           Settings
 //         </h2>
-//         <p className="justify-start text-[#464646] text-base font-normal font-lato leading-normal mb-4 mt-1">
+//         <p className="justify-start text-[#464646] text-base font-normal leading-normal mb-4 mt-1">
 //           Manage your account settings and preferences
 //         </p>
 //       </div>
@@ -49,7 +48,7 @@
 //               {/* Personal Details Section */}
 //               <div className="bg-white rounded-lg p-8 shadow-sm">
 //                 <div className="flex items-center justify-between mb-8">
-//                   <h2 className="text-2xl font-poppins font-semibold text-gray-900">
+//                   <h2 className="text-2xl font-semibold text-gray-900">
 //                     Personal Details
 //                   </h2>
 //                   <button className="text-gray-600 hover:text-gray-900">
@@ -60,7 +59,7 @@
 //                 <div className="space-y-6">
 //                   <div className="grid grid-cols-2 gap-4">
 //                     <div>
-//                       <label className="block text-sm font-p font-medium text-gray-700 mb-2">
+//                       <label className="block text-sm font-medium text-gray-700 mb-2">
 //                         First Name
 //                       </label>
 //                       <input
@@ -225,10 +224,10 @@ import { useState } from "react";
 import { FiEdit } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { postData } from "../../../../../../utils/axiosInstance";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 export const UserDetails = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const [personalDetails, setPersonalDetails] = useState({
     firstName: "Jenny",
@@ -299,12 +298,12 @@ export const UserDetails = () => {
   };
 
   return (
-    <div className="bg-[#F9FAFB] md:p-8 p-3">
+    <div className="bg-[#F9FAFB] md:p-8 p-3 font-raleway">
       <div>
-        <h2 className="text-2xl text-[#002244] font-semibold font-poppins">
+        <h2 className="text-2xl text-[#002244] font-semibold">
           Settings
         </h2>
-        <p className="justify-start text-[#464646] text-base font-normal font-lato leading-normal mb-4 mt-1">
+        <p className="justify-start text-[#464646] text-base font-normal leading-normal mb-4 mt-1">
           Manage your account settings and preferences
         </p>
       </div>
@@ -316,7 +315,7 @@ export const UserDetails = () => {
               {/* Personal Details Section */}
               <div className="bg-white rounded-lg p-8 shadow-sm">
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-2xl font-poppins font-semibold text-gray-900">
+                  <h2 className="text-2xl font-semibold text-gray-900">
                     Personal Details
                   </h2>
                   <button className="text-gray-600 hover:text-gray-900">
