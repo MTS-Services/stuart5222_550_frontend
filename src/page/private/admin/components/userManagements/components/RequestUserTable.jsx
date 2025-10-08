@@ -190,6 +190,9 @@
 //   );
 // };
 
+
+
+
 import { useEffect, useState } from "react";
 import { PiCheckBold } from "react-icons/pi";
 import { FiX } from "react-icons/fi";
@@ -202,25 +205,22 @@ import { toast } from "react-toastify";
 export const RequestUserTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState("");
-  // IMPORTANT: State to hold the feedback text from the textarea
   const [feedbackText, setFeedbackText] = useState("");
   const [requestUser, setRequestUser] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isSending, setIsSending] = useState(false);
 
-  // Pagination
+  // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Fetch users/notifications
+  // Fetch subscriptions (users)
   const fetchHistory = async () => {
     try {
       setLoading(true);
-      const data = await getData("notifications");
+      const data = await getData("subscriptions");
       setRequestUser(data || []);
     } catch (err) {
       console.error("Failed to fetch data:", err);
-      toast.error("Failed to load data. Try again later.");
     } finally {
       setLoading(false);
     }
@@ -230,58 +230,53 @@ export const RequestUserTable = () => {
     fetchHistory();
   }, []);
 
+  // Modal handlers
   const openModal = (email) => {
     setSelectedEmail(email);
-    setFeedbackText(""); // Clear feedback text when opening modal
+    setFeedbackText("");
     setIsModalOpen(true);
-    console.log("Modal opened for:", email);
+    console.log("Modal opened for email:", email);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedEmail("");
-    setFeedbackText(""); // Clear feedback text on close
+    setFeedbackText("");
+    console.log("Modal closed");
   };
 
-  // Handler for text area changes
-  const handleTextareaChange = (e) => {
-    setFeedbackText(e.target.value);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // 1. **CORRECTION:** Use the state variable `feedbackText` instead of reading from the form element by name.
-    // 2. **CORRECTION:** The server might expect a more descriptive key than 'textArea'. I've changed it to 'feedbackMessage' for clarity and API-friendliness, but you should confirm the correct key with your backend API.
-    const payload = {
-      email: selectedEmail, // Include the email of the user
-      feedbackMessage: feedbackText, // Use the state value
-    };
-
-    console.log("Sending payload:", payload);
+  // Send feedback to backend
+  const handleSend = async () => {
+    if (!feedbackText.trim()) {
+      toast("Please enter feedback before sending.");
+      return;
+    }
 
     try {
-      setIsSending(true);
+      setLoading(true);
 
-      // The API endpoint should likely be more specific, perhaps including the email or an ID, but for now, we use "feedback" as in your original code.
-      // NOTE: You are POSTing to 'feedback' but the server response message seems to imply you are performing a cancellation, e.g., 'cancel-request'. I've kept 'feedback' but be aware of this potential inconsistency.
-      const response = await postData("feedback", payload);
+      const payload = {
+        email: selectedEmail,
+        feedback: feedbackText,
+      };
+      console.log("Sending feedback payload:", payload);
+
+      const response = await postData("userManagement", payload);
       console.log("Server response:", response);
 
-      toast.success(`Feedback sent to ${selectedEmail}.`);
+      toast(`Feedback sent for ${selectedEmail}`);
+      setFeedbackText("");
+      fetchHistory(); // refresh user list after sending feedback
       closeModal();
-      fetchHistory(); // Refresh the table data
     } catch (err) {
-      // 3. **CORRECTION:** The issue might be a **CORS error** or a **server error (4xx/5xx)** which prevents the `postData` from completing successfully, but your UI still shows a success toast due to the line before `closeModal()`.
-      // By wrapping the toast inside `try/catch`, we ensure the error toast shows on failure.
-      console.error("Failed to submit:", err.response ? err.response.data : err.message);
-      toast.error("Failed to send feedback. Check console for details.");
+      console.error("Failed to send feedback:", err);
+      toast("Failed to send feedback. Please try again.");
     } finally {
-      setIsSending(false);
+      setLoading(false);
     }
   };
 
-  // Pagination logic
+  // Pagination calculations
   const totalPages = Math.ceil(requestUser.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = requestUser.slice(startIndex, startIndex + itemsPerPage);
@@ -295,7 +290,7 @@ export const RequestUserTable = () => {
   };
 
   return (
-    <div>
+    <div className="">
       {loading ? (
         <Loading />
       ) : (
@@ -306,7 +301,9 @@ export const RequestUserTable = () => {
                 <tr>
                   <th className="px-7 py-3 w-1/5 whitespace-nowrap">Date</th>
                   <th className="px-5 py-3 w-1/5 whitespace-nowrap">Name</th>
-                  <th className="px-5 py-3 w-1/5 whitespace-nowrap">Title</th>
+                  <th className="px-5 py-3 w-1/5 whitespace-nowrap">
+                    Subscription
+                  </th>
                   <th className="px-5 py-3 w-1/5 whitespace-nowrap">Email</th>
                   <th className="px-5 py-3 w-1/5 whitespace-nowrap">Action</th>
                 </tr>
@@ -321,10 +318,10 @@ export const RequestUserTable = () => {
                       {row.date}
                     </td>
                     <td className="px-5 py-3 w-1/5 whitespace-nowrap">
-                      {row.firstname} {row.lastname}
+                      {row.name}
                     </td>
                     <td className="px-5 py-3 w-1/5 whitespace-nowrap">
-                      {row.title}
+                      {row.plan}
                     </td>
                     <td className="px-5 py-3 w-1/5 whitespace-nowrap">
                       {row.email}
@@ -405,25 +402,18 @@ export const RequestUserTable = () => {
             <p className="text-gray-600 text-sm mb-2 break-all">
               {selectedEmail}
             </p>
-            <form onSubmit={handleSubmit}>
-              <textarea
-                type="text"
-                name="textArea"
-                placeholder="Write a review message here..."
-                // CORRECTION: Use value and onChange to control the textarea with React state
-                value={feedbackText}
-                onChange={handleTextareaChange}
-                className="w-full max-h-[195px] min-h-[195px] p-2 border border-gray-300 bg-[#E6EEF6] rounded-[6px] mb-4 focus:outline-none focus:ring-1 focus:ring-orange-300"
-              />
-              <button
-                type="submit"
-                // CORRECTION: Use trim() to check if the input is not just empty spaces
-                disabled={isSending || !feedbackText.trim()}
-                className="w-full bg-[#FF8C00] py-2.5 text-black rounded-lg hover:bg-orange-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
-              >
-                {isSending ? "Sending..." : "Send"}
-              </button>
-            </form>
+            <textarea
+              value={feedbackText}
+              onChange={(e) => setFeedbackText(e.target.value)}
+              className="w-full max-h-[195px] min-h-[195px] p-2 border border-gray-300 bg-[#E6EEF6] rounded-[6px] mb-4 focus:outline-none focus:ring-1 focus:ring-orange-300"
+              placeholder="Write a review message here..."
+            />
+            <button
+              onClick={handleSend}
+              className="w-full bg-[#FF8C00] py-2.5 text-black rounded-lg hover:bg-orange-600"
+            >
+              Send
+            </button>
           </div>
         </div>
       )}

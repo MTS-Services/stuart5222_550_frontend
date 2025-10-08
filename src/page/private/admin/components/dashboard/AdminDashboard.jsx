@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { AllCard } from "./components/AllCard";
-import { DateDropDown } from "./components/DateDropDown";
-import { WaitListTable } from "./components/WaitListTable";
-import { getData } from "../../../../../utils/axiosInstance";
+// Import postData for the cancellation/feedback logic
+import { getData, postData } from "../../../../../utils/axiosInstance";
 import { FaUsers } from "react-icons/fa";
 import { FiCalendar, FiChevronDown } from "react-icons/fi";
 import { toast, ToastContainer } from "react-toastify";
@@ -11,6 +9,9 @@ import "react-toastify/dist/ReactToastify.css";
 export const AdminDashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState("");
+  const [feedbackText, setFeedbackText] = useState("");
+  const [isSending, setIsSending] = useState(false);
+
   const [dashboard, setDashboard] = useState([]);
   const [loading, setLoading] = useState(true);
   const [waitListTable, setWaitListTable] = useState([]);
@@ -38,6 +39,7 @@ export const AdminDashboard = () => {
       setDashboard(data || []);
     } catch (err) {
       console.error("Failed to fetch profiles:", err);
+      toast.error("Failed to load dashboard data.");
     } finally {
       setLoading(false);
     }
@@ -58,6 +60,7 @@ export const AdminDashboard = () => {
       }
     } catch (err) {
       console.error("Failed to fetch subscriptions:", err);
+      toast.error("Failed to load waitlist data.");
     } finally {
       setLoading(false);
     }
@@ -77,7 +80,12 @@ export const AdminDashboard = () => {
   const totalUsers = dashboard?.length || 0;
 
   const cardData = [
-    { id: 1, title: "Total User", price: totalUsers.toLocaleString(), parcent: "12%" },
+    {
+      id: 1,
+      title: "Total User",
+      price: totalUsers.toLocaleString(),
+      parcent: "12%",
+    },
     { id: 2, title: "Revenue", price: "$2,847", parcent: "12%" },
     { id: 3, title: "Edit Requested", price: "5,000", parcent: "12%" },
     { id: 4, title: "Need approval", price: "8,000", parcent: "12%" },
@@ -86,7 +94,10 @@ export const AdminDashboard = () => {
   // pagination
   const totalPages = Math.ceil(waitListTable.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentData = waitListTable.slice(startIndex, startIndex + itemsPerPage);
+  const currentData = waitListTable.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
   const handlePrevious = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
@@ -100,15 +111,49 @@ export const AdminDashboard = () => {
   // modal handlers
   const openModal = (email) => {
     setSelectedEmail(email);
+    setFeedbackText("");
     setIsModalOpen(true);
   };
+
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedEmail("");
+    setFeedbackText("");
   };
-  const handleSend = () => {
-    toast.success(`Feedback sent for ${selectedEmail}`);
-    closeModal();
+
+  const handleTextareaChange = (e) => {
+    setFeedbackText(e.target.value);
+  };
+
+  const handleSubmitFeedback = async (e) => {
+    e.preventDefault();
+
+    const payload = {
+      email: selectedEmail,
+      feedbackMessage: feedbackText,
+    };
+
+    console.log("Sending cancellation payload:", payload);
+
+    try {
+      setIsSending(true);
+      const response = await postData("feedback", payload);
+      console.log("Server response:", response);
+
+      toast.success(
+        `Feedback sent and request cancelled for ${selectedEmail}.`
+      );
+      closeModal();
+      fetchSubscriptions();
+    } catch (err) {
+      console.error(
+        "Failed to submit feedback:",
+        err.response ? err.response.data : err.message
+      );
+      toast.error("Failed to send feedback.");
+    } finally {
+      setIsSending(false);
+    }
   };
 
   // approve handler
@@ -142,7 +187,9 @@ export const AdminDashboard = () => {
             <FiCalendar className="text-gray-500" size={16} />
             <span>{selected}</span>
             <FiChevronDown
-              className={`text-gray-500 transition-transform ${open ? "rotate-180" : ""}`}
+              className={`text-gray-500 transition-transform ${
+                open ? "rotate-180" : ""
+              }`}
               size={16}
             />
           </button>
@@ -174,7 +221,10 @@ export const AdminDashboard = () => {
       {/* Cards */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8 mt-2">
         {cardData.map((data) => (
-          <div key={data.id} className="rounded-lg border border-white/100 bg-white p-5 col-span-1">
+          <div
+            key={data.id}
+            className="rounded-lg border border-white/100 bg-white p-5 col-span-1"
+          >
             <div className="flex-col justify-center items-start gap-2">
               <div className="justify-start text-White-800 text-xs font-normal leading-none">
                 {data.title}
@@ -215,18 +265,37 @@ export const AdminDashboard = () => {
                 <table className="min-w-full table-fixed text-left text-xs sm:text-sm md:text-base">
                   <thead className="bg-white text-black text-lg font-normal">
                     <tr>
-                      <th className="px-5 py-3 w-1/3 whitespace-nowrap">Date</th>
-                      <th className="px-5 py-3 w-1/3 whitespace-nowrap">Name</th>
-                      <th className="px-5 py-3 w-1/3 whitespace-nowrap">Email</th>
-                      <th className="px-5 py-3 w-1/3 whitespace-nowrap">Action</th>
+                      <th className="px-5 py-3 w-1/3 whitespace-nowrap">
+                        Date
+                      </th>
+                      <th className="px-5 py-3 w-1/3 whitespace-nowrap">
+                        Name
+                      </th>
+                      <th className="px-5 py-3 w-1/3 whitespace-nowrap">
+                        Email
+                      </th>
+                      <th className="px-5 py-3 w-1/3 whitespace-nowrap">
+                        Action
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="text-black text-base font-normal">
                     {currentData.map((row, index) => (
-                      <tr key={index} className={index % 2 === 0 ? "bg-yellow-50" : "bg-white"}>
-                        <td className="px-7 py-3 w-1/3 whitespace-nowrap">{row.date}</td>
-                        <td className="px-7 py-3 w-1/3 whitespace-nowrap">{row.name}</td>
-                        <td className="px-7 py-3 w-1/3 whitespace-nowrap">{row.email}</td>
+                      <tr
+                        key={index}
+                        className={
+                          index % 2 === 0 ? "bg-yellow-50" : "bg-white"
+                        }
+                      >
+                        <td className="px-7 py-3 w-1/3 whitespace-nowrap">
+                          {row.date}
+                        </td>
+                        <td className="px-7 py-3 w-1/3 whitespace-nowrap">
+                          {row.name}
+                        </td>
+                        <td className="px-7 py-3 w-1/3 whitespace-nowrap">
+                          {row.email}
+                        </td>
                         <td className="px-7 py-3 w-1/3 whitespace-nowrap flex items-center gap-4">
                           <button
                             onClick={() => handleApprove(row.email)}
@@ -237,7 +306,9 @@ export const AdminDashboard = () => {
                                 : "bg-[#F07400] text-white"
                             }`}
                           >
-                            {approvedUsers.includes(row.email) ? "Approved" : "Approve"}
+                            {approvedUsers.includes(row.email)
+                              ? "Approved"
+                              : "Approve"}
                           </button>
 
                           <button
@@ -256,7 +327,8 @@ export const AdminDashboard = () => {
               {/* Pagination */}
               <div className="flex items-center text-gray-600 justify-between mt-8 text-base font-normal md:gap-0 gap-2">
                 <p>
-                  Showing {startIndex + 1} to {startIndex + currentData.length} of {waitListTable.length} results
+                  Showing {startIndex + 1} to {startIndex + currentData.length}{" "}
+                  of {waitListTable.length} results
                 </p>
                 <div className="flex gap-4 sm:gap-5 md:gap-6 lg:gap-7">
                   <button
@@ -266,19 +338,25 @@ export const AdminDashboard = () => {
                         : "border-gray-600"
                     }`}
                     onClick={handlePrevious}
-                    disabled={currentPage === 1 || waitListTable.length <= itemsPerPage}
+                    disabled={
+                      currentPage === 1 || waitListTable.length <= itemsPerPage
+                    }
                   >
                     Previous
                   </button>
                   <button
                     className={`border rounded-xl md:px-5 px-4 md:py-2 py-1.5 ${
-                      currentPage === totalPages || waitListTable.length <= itemsPerPage || totalPages === 0
+                      currentPage === totalPages ||
+                      waitListTable.length <= itemsPerPage ||
+                      totalPages === 0
                         ? "border-gray-300 text-gray-400 cursor-not-allowed"
                         : "border-gray-600"
                     }`}
                     onClick={handleNext}
                     disabled={
-                      currentPage === totalPages || waitListTable.length <= itemsPerPage || totalPages === 0
+                      currentPage === totalPages ||
+                      waitListTable.length <= itemsPerPage ||
+                      totalPages === 0
                     }
                   >
                     Next
@@ -303,21 +381,27 @@ export const AdminDashboard = () => {
               ✕
             </button>
             <h3 className="text-lg font-semibold mb-4">Cancel with Feedback</h3>
-            <p className="text-gray-600 text-sm mb-2 break-all">{selectedEmail}</p>
-            <textarea
-              className="w-full max-h-[195px] min-h-[195px] p-2 border border-gray-300 bg-[#E6EEF6] rounded-[6px] mb-4 focus:outline-none focus:ring-1 focus:ring-orange-300"
-              placeholder="Write a review message here..."
-            />
-            <button
-              className="w-full bg-[#FF8C00] py-2.5 text-black rounded-lg hover:bg-orange-600"
-              onClick={handleSend}
-            >
-              Send
-            </button>
+            <p className="text-gray-600 text-sm mb-2 break-all">
+              {selectedEmail}
+            </p>
+            <form onSubmit={handleSubmitFeedback}>
+              <textarea
+                value={feedbackText}
+                onChange={handleTextareaChange}
+                className="w-full max-h-[195px] min-h-[195px] p-2 border border-gray-300 bg-[#E6EEF6] rounded-[6px] mb-4 focus:outline-none focus:ring-1 focus:ring-orange-300"
+                placeholder="Write a review message here..."
+              />
+              <button
+                type="submit"
+                disabled={isSending || !feedbackText.trim()}
+                className="w-full bg-[#FF8C00] py-2.5 text-black rounded-lg hover:bg-orange-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
+              >
+                {isSending ? "Sending..." : "Send"}
+              </button>
+            </form>
           </div>
         </div>
       )}
     </div>
   );
 };
-
