@@ -10,7 +10,7 @@ const PrivateRoute = ({ children }) => {
 
   if (loading) return <Loading />;
 
-  if (!user) return <Navigate to="/go-login" replace />;
+  if (!user) return <Navigate to="/login" replace />;
 
   if (!user.canAccessServices) return <Navigate to="/" replace />;
 
@@ -23,7 +23,7 @@ const PrivateAdminRoute = ({ children }) => {
 
   if (loading) return <Loading />;
 
-  if (!user) return <Navigate to="/go-login" replace />;
+  if (!user) return <Navigate to="/login" replace />;
 
   const isAdmin = user.role?.toUpperCase() === 'ADMIN';
 

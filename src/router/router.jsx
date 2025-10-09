@@ -59,7 +59,7 @@ export const router = createBrowserRouter([
     element: <LetsConnect />,
   },
   {
-    path: "/go-login",
+    path: "/login",
     element: <AdminLogin />,
   },
   {
