@@ -53,7 +53,7 @@ export const UserEditTable = ({
                     {row.height}
                   </td>
                   <td className="px-7 py-2.5 whitespace-nowrap flex items-center gap-3">
-                    <Link to={`/admin/edit-response`}>
+                    <Link to={`/admin/edit-response/${row.id}`}>
                       <button className="bg-[#F07400] text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap">
                         See Details
                       </button>
