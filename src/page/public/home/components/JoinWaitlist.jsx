@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export const JoinWaitList = () => {
+  const [formData, setFormData] = useState({ name: "", email: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -16,23 +17,23 @@ export const JoinWaitList = () => {
     e.preventDefault();
     setError(null);
 
-    const form = e.currentTarget;
-    const value = {
-      name: form.name.value,
-      email: form.email.value,
-    };
+    const { name, email } = formData;
+
+    // ✅ Prevent submit if fields are empty
+    if (!name.trim() || !email.trim()) {
+      toast.warn("Please fill in all fields before submitting.");
+      return;
+    }
 
     try {
       setLoading(true);
-      console.log("Submitting data:", value);
+      console.log("Submitting data:", formData);
 
-      const response = await postData("feedback", value);
+      const response = await postData("scan_me", formData);
       console.log("Server Response:", response);
 
-      // Success toast
       toast.success("Successfully joined the waitlist!");
 
-      // Navigate after delay
       setTimeout(() => {
         navigate("/welcome-scan");
       }, 1500);
@@ -53,6 +54,7 @@ export const JoinWaitList = () => {
         type="text"
         name="name"
         placeholder="Name"
+        value={formData.name}
         onChange={handleChange}
         className="w-full h-11 p-2.5 bg-white text-neutral-700 text-base font-semibold rounded-lg outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
       />
@@ -61,6 +63,7 @@ export const JoinWaitList = () => {
         type="email"
         name="email"
         placeholder="E-mail"
+        value={formData.email}
         onChange={handleChange}
         className="w-full h-11 p-2.5 bg-white text-neutral-700 text-base font-semibold rounded-lg outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
       />
@@ -70,8 +73,7 @@ export const JoinWaitList = () => {
       <div className="w-full">
         <button
           type="submit"
-          disabled={loading}
-          className="w-full p-2.5 bg-orange-500 rounded-lg text-white text-base font-semibold hover:bg-orange-600 transition disabled:opacity-50"
+          className="w-full p-2.5 bg-orange-500 rounded-lg text-white text-base font-semibold hover:bg-orange-600 transition"
         >
           {loading ? "Submitting..." : "Join the waitlist"}
         </button>

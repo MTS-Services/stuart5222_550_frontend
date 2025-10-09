@@ -10,7 +10,7 @@ import { SlPlane } from "react-icons/sl";
 
 export default function AboutSection() {
   return (
-    <div className="flex items-center justify-center pb-6 max-w-[600px] mx-auto">
+    <div className="flex items-center justify-center p-6 max-w-[600px] mx-auto">
       <div className="text-center sm:py-6 mt-6 mb-10 inline-flex flex-col justify-start items-center gap-8">
         {/* Section Title */}
         <div className="self-stretch flex flex-col justify-start items-start gap-4">
@@ -71,7 +71,7 @@ export default function AboutSection() {
           </div>
         </div>
 
-        <div className="w-full md:w-[568px] p-5 rounded-lg outline outline-1 outline-orange-500 flex flex-col justify-start items-center gap-2.5">
+        <div className="w-full md:w-[568px] py-6 px-4 rounded-lg outline outline-1 outline-orange-500 flex flex-col justify-start items-center gap-2.5">
           <div className="w-10 h-10 relative bg-orange-500 rounded overflow-hidden p-1">
             <RiHeartsFill className="w-full h-full text-white left-[5px] top-[5px]" />
           </div>

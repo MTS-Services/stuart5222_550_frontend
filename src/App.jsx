@@ -1,6 +1,6 @@
-import { RouterProvider } from 'react-router-dom';
-import { router } from './router/router';
-import AuthProvider from './features/auth/AuthProvider';
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router/router";
+import AuthProvider from "./features/auth/AuthProvider";
 
 function App() {
   return (
@@ -8,7 +8,6 @@ function App() {
       <AuthProvider>
         <RouterProvider router={router} />
       </AuthProvider>
-      ;
     </>
   );
 }

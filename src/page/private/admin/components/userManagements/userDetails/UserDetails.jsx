@@ -52,10 +52,10 @@ export const UserDetails = () => {
     };
 
     try {
-      console.log("📦 Submitting data:", data);
+      console.log("Submitting data:", data);
 
-      // ✅ POST to scan_me route (backend ready)
-      const response = await postData("submit_user", data);
+      // POST to scan_me route (backend ready)
+      const response = await postData("adminSetting", data);
       console.log("Server Response:", response);
 
       toast.success("Your data has been submitted successfully!", {
@@ -67,7 +67,7 @@ export const UserDetails = () => {
         draggable: true,
       });
 
-      // ✅ Reset form
+      // Reset form
       form.reset();
       setPersonalDetails({
         firstName: "",
@@ -81,7 +81,7 @@ export const UserDetails = () => {
         confirmPassword: "",
       });
 
-      // ✅ Navigate after success
+      // Navigate after success
       // setTimeout(() => navigate("/welcome-scan"), 1500);
     } catch (err) {
       console.error("Failed to submit data:", err);

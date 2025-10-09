@@ -3,8 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { getData, postData } from "../../../../../utils/axiosInstance";
 import { FaUsers } from "react-icons/fa";
 import { FiCalendar, FiChevronDown } from "react-icons/fi";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 export const AdminDashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -133,8 +132,6 @@ export const AdminDashboard = () => {
       feedbackMessage: feedbackText,
     };
 
-    console.log("Sending cancellation payload:", payload);
-
     try {
       setIsSending(true);
       const response = await postData("feedback", payload);
@@ -164,8 +161,6 @@ export const AdminDashboard = () => {
 
   return (
     <div className="text-black md:p-8 p-6">
-      <ToastContainer position="top-center" autoClose={2000} hideProgressBar />
-
       <div>
         <h2 className="text-2xl text-[#002244] font-semibold ">
           Dashboard Overview
