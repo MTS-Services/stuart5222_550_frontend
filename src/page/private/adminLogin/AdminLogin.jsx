@@ -62,7 +62,6 @@ export const AdminLogin = () => {
         <div className="p-6 bg-white rounded-lg">
           <div className="p-4">
             <form onSubmit={handleAdminSubmit}>
-
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Email
@@ -87,7 +86,7 @@ export const AdminLogin = () => {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <div
-                  className="absolute top-[38px] right-3 cursor-pointer text-gray-700"
+                  className="absolute top-[44px] right-3 cursor-pointer text-gray-700"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
