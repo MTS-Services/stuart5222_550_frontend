@@ -1,47 +1,44 @@
 import { useState } from "react";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { toast } from "react-toastify";
-import { postData } from "../../../utils/axiosInstance";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../features/auth/AuthContext";
 
 export const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleAdminSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
 
-    const value = {
-      email: form.email.value,
-      password: form.password.value,
-    };
+    const email = form.email.value;
+    const password = form.password.value;
 
-    // 2. Frontend validation check
-    if (!value.email || !value.password) {
+    if (!email || !password) {
       toast.error("Email and Password are required!", {
         position: "top-right",
       });
       return;
     }
 
-    try {
-      console.log("Submitting data:", value);
+    const res = await login(email, password);
 
-      // POST request to backend
-      const response = await postData("adminLogin", value);
-      console.log("Server Response:", response);
-
+    if (res.success) {
       toast.success("Login successful!", {
         position: "top-right",
         autoClose: 3000,
       });
 
-      // Optionally, navigate after success
-      // setTimeout(() => navigate("/admin-dashboard"), 1500);
-    } catch (err) {
-      console.error("Failed to login:", err);
-      const errorMessage =
-        err.response?.data?.message || "Invalid credentials. Please try again.";
-      toast.error(errorMessage, {
+      // Redirect according to role
+      if (res.user.role?.toUpperCase() === "ADMIN") {
+        navigate("/admin");
+      } else {
+        navigate("/admin");
+      }
+    } else {
+      toast.error(res.message, {
         position: "top-right",
         autoClose: 3000,
       });

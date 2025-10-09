@@ -17,6 +17,7 @@ import { LetsConnect } from "../page/public/connect/LetsConnect";
 import { Oops } from "../page/public/ops/Oops";
 import { SignUpPick } from "../page/public/signUpPick/SignUpPick";
 import { AdminLogin } from "../page/private/adminLogin/AdminLogin";
+import { PrivateRoute } from "./PrivateRoute/PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -58,12 +59,16 @@ export const router = createBrowserRouter([
     element: <LetsConnect />,
   },
   {
-    path: "/admin-login",
+    path: "/go-login",
     element: <AdminLogin />,
   },
   {
     path: "/admin",
-    element: <AdminDashboardLayout />,
+    element: (
+      <PrivateRoute>
+        <AdminDashboardLayout />
+      </PrivateRoute>
+    ),
     children: [
       {
         index: true,
