@@ -8,9 +8,9 @@ import 'react-toastify/dist/ReactToastify.css'; // ✅ import toastify CSS
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />
-    <ToastContainer 
-      position="top-right"
-      autoClose={3000} 
+    <ToastContainer
+      position='top-right'
+      autoClose={3000}
       hideProgressBar={false}
       newestOnTop={false}
       closeOnClick
@@ -18,8 +18,7 @@ createRoot(document.getElementById('root')).render(
       pauseOnFocusLoss
       draggable
       pauseOnHover
-      theme="light"
+      theme='light'
     />
-  </StrictMode>,
+  </StrictMode>
 );
-
