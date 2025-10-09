@@ -85,7 +85,6 @@ export const router = createBrowserRouter([
         element: <UserDetailsPage />,
         loader: ({ params }) =>
           fetch(`http://localhost:5000/profiles/${params.id}`),
-        // loader: ({ params }) => fetch(`${getData}/profiles/${params.id}`),
       },
       {
         path: "edit-response/:id",

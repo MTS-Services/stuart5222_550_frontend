@@ -18,7 +18,7 @@ export const WaitListTable = () => {
   const fetchHistory = async () => {
     try {
       setLoading(true);
-      const data = await getData(`subscriptions`);
+      const data = await getData(`profiles`);
       setWaitListTable(data || []);
     } catch (err) {
       console.error('Failed to fetch data:', err);

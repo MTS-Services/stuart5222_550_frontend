@@ -10,7 +10,6 @@ export const UserDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const [textArea, setTextArea] = useState("");
   const data = useLoaderData();
-  console.log(data);
 
   // when loader data available, stop loading
   useEffect(() => {
