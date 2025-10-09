@@ -51,6 +51,7 @@ const AuthProvider = ({ children }) => {
       setLoading(false);
       return { success: true, user: userData };
     } catch (err) {
+      console.log(err);
       setLoading(false);
       return { success: false, message: 'Invalid credentials. Please try again.' };
     }
