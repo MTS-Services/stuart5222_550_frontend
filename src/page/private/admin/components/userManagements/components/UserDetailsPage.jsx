@@ -3,14 +3,8 @@ import { Loading } from "../../../../../../components/ui/loading";
 import { toast } from "react-toastify";
 import { useLoaderData } from "react-router-dom";
 import { postData } from "../../../../../../utils/axiosInstance";
-
-const images = [
-  { id: 1, image: "/img/page/admin/img1.png" },
-  { id: 2, image: "/img/page/admin/img2.png" },
-  { id: 3, image: "/img/page/admin/img3.png" },
-  { id: 4, image: "/img/page/admin/img4.png" },
-  { id: 5, image: "/img/page/admin/img5.png" },
-];
+import { FaRegCalendar } from "react-icons/fa";
+import { GrLocation } from "react-icons/gr";
 
 export const UserDetailsPage = () => {
   const [loading, setLoading] = useState(true);
@@ -44,7 +38,7 @@ export const UserDetailsPage = () => {
 
       console.log("Sending feedback payload:", payload);
 
-      const response = await postData(`/userManagement/feedback`, payload);
+      const response = await postData(`feedback`, payload);
       console.log("Server response:", response);
 
       toast.success("Feedback sent successfully!");
@@ -68,6 +62,9 @@ export const UserDetailsPage = () => {
     dealBreaks,
     bio,
     images,
+    startDate,
+    endDate,
+    location,
   } = data;
 
   // ======= RENDER UI =======
@@ -126,12 +123,56 @@ export const UserDetailsPage = () => {
             </p>
           </div>
 
+          {/* traveling card */}
+          <div className="flex justify-center items-center text-center w-full">
+            <div className="relative w-full my-6 rounded-2xl p-8 shadow-lg bg-gradient-to-b from-orange-200 via-amber-50 to-yellow-50 overflow-hidden">
+              {/* Gradient border overlay */}
+              <div
+                className="absolute top-0 left-0 w-full h-full rounded-2xl pointer-events-none border-t-4 border-l-4 border-r-4 border-transparent"
+                style={{
+                  borderImage:
+                    "linear-gradient(to bottom, #FED7AA, #FEF3C7, #FEF9C3) 1",
+                }}
+              ></div>
+
+              {/* Content */}
+              <h2 className="md:text-xl text-lg font-bold text-start text-gray-900 mb-[21px]">
+                I am traveling and will be in:
+              </h2>
+
+              <div className="space-y-4">
+                <div className="">
+                  <div className="flex items-center gap-3">
+                    <span className="text-orange-600 mt-0.5">
+                      <FaRegCalendar />
+                    </span>
+                    <div className="flex gap-2 font-medium md:text-xl text-lg text-black">
+                      Start-Date: {startDate}
+                    </div>
+                  </div>
+                  <div className="flex gap-2 font-medium md:text-xl text-lg text-black ml-8">
+                    End-Date: {endDate}
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <span className="text-orange-600 text-xl mt-0.5">
+                    <GrLocation />
+                  </span>
+                  <div className="flex gap-2 font-medium md:text-xl text-lg text-black">
+                    Location: {location}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* ========= IMAGE GALLERY ========= */}
           <div>
             <h3 className="text-2xl text-[#252525] font-raleway font-semibold mb-5">
               Images
             </h3>
-            <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 grid-cols-2 gap-4">
+            <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 grid-cols-2 gap-6">
               {images.map((img) => (
                 <div key={img.name} className="overflow-hidden rounded-lg">
                   <img

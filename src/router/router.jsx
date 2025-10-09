@@ -16,7 +16,6 @@ import { SeeMorePhone } from "../page/public/Seemorephotos/SeeMorePhone";
 import { LetsConnect } from "../page/public/connect/LetsConnect";
 import { Oops } from "../page/public/ops/Oops";
 import { SignUpPick } from "../page/public/signUpPick/SignUpPick";
-import { getData } from "../utils/axiosInstance";
 
 export const router = createBrowserRouter([
   {

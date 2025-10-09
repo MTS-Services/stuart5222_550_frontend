@@ -33,5 +33,5 @@ export const FooterSection = () => {
         </p>
       </div>
     </div>
-  );
-};
+  )
+}
