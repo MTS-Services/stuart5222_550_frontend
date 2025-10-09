@@ -18,7 +18,7 @@ export const UserEditTable = ({
     <div className="font-raleway">
       <div className="relative overflow-x-auto md:overflow-x-visible">
         {loading ? (
-         <Loading/>
+          <Loading />
         ) : error ? (
           <p className="text-center py-10 text-red-500">{error}</p>
         ) : currentData.length === 0 ? (
@@ -38,9 +38,7 @@ export const UserEditTable = ({
               {currentData.map((row, index) => (
                 <tr
                   key={index}
-                  className={
-                    index % 2 === 0 ? "bg-yellow-50" : "bg-white"
-                  }
+                  className={index % 2 === 0 ? "bg-yellow-50" : "bg-white"}
                 >
                   <td className="px-7 py-3 w-1/5 whitespace-nowrap">
                     {row.date}

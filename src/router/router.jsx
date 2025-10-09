@@ -1,25 +1,26 @@
-import { createBrowserRouter } from 'react-router';
-import { MainLayout } from './../layout/main/MainLayout';
-import { HomeView } from './../page/public/home/HomeView';
-import { AdminDashboardLayout } from '../layout/admin/AdminDashboardLayout';
-import { UserManagement } from '../page/private/admin/components/userManagements/UserManagement';
-import { UserEdit } from './../page/private/admin/components/userEdit/UserEdit';
-import { UserManagementLayout } from './../page/private/user/UserManagementLayout';
-import { AdminDashboard } from '../page/private/admin/components/dashboard/AdminDashboard';
-import { UserDetailsPage } from '../page/private/admin/components/userManagements/components/UserDetailsPage';
-import { EditResponse } from '../page/private/admin/components/userEdit/components/EditResponse';
-import { Notification } from '../page/private/admin/components/userManagements/notification/Notification';
-import { UserDetails } from '../page/private/admin/components/userManagements/userDetails/UserDetails';
-import { WelcomeScanView } from '../page/public/welcomeScan/WelcomeScanView';
-import { CherylAnnView } from '../page/public/cherylAnn/CherylAnnView';
-import { SeeMorePhone } from '../page/public/Seemorephotos/SeeMorePhone';
-import { LetsConnect } from '../page/public/connect/LetsConnect';
-import { Oops } from '../page/public/ops/Oops';
-import { SignUpPick } from '../page/public/signUpPick/SignUpPick';
+import { createBrowserRouter } from "react-router";
+import { MainLayout } from "./../layout/main/MainLayout";
+import { HomeView } from "./../page/public/home/HomeView";
+import { AdminDashboardLayout } from "../layout/admin/AdminDashboardLayout";
+import { UserManagement } from "../page/private/admin/components/userManagements/UserManagement";
+import { UserEdit } from "./../page/private/admin/components/userEdit/UserEdit";
+import { UserManagementLayout } from "./../page/private/user/UserManagementLayout";
+import { AdminDashboard } from "../page/private/admin/components/dashboard/AdminDashboard";
+import { UserDetailsPage } from "../page/private/admin/components/userManagements/components/UserDetailsPage";
+import { EditResponse } from "../page/private/admin/components/userEdit/components/EditResponse";
+import { Notification } from "../page/private/admin/components/userManagements/notification/Notification";
+import { UserDetails } from "../page/private/admin/components/userManagements/userDetails/UserDetails";
+import { WelcomeScanView } from "../page/public/welcomeScan/WelcomeScanView";
+import { CherylAnnView } from "../page/public/cherylAnn/CherylAnnView";
+import { SeeMorePhone } from "../page/public/Seemorephotos/SeeMorePhone";
+import { LetsConnect } from "../page/public/connect/LetsConnect";
+import { Oops } from "../page/public/ops/Oops";
+import { SignUpPick } from "../page/public/signUpPick/SignUpPick";
+import { getData } from "../utils/axiosInstance";
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <MainLayout />,
     children: [
       {
@@ -27,37 +28,37 @@ export const router = createBrowserRouter([
         element: <HomeView />,
       },
       {
-        path: '/',
+        path: "/",
         element: <HomeView />,
       },
       {
-        path: '/welcome-scan',
+        path: "/welcome-scan",
         element: <WelcomeScanView />,
       },
       {
-        path: '/cheryl-ann-view',
+        path: "/cheryl-ann-view",
         element: <CherylAnnView />,
       },
       {
-        path: '/sign-up-pick',
+        path: "/sign-up-pick",
         element: <SignUpPick />,
       },
       {
-        path: '/oops-sorry',
+        path: "/oops-sorry",
         element: <Oops />,
       },
     ],
   },
   {
-    path: '/see-more-phone',
+    path: "/see-more-phone",
     element: <SeeMorePhone />,
   },
   {
-    path: '/lets-connect',
+    path: "/lets-connect",
     element: <LetsConnect />,
   },
   {
-    path: '/admin',
+    path: "/admin",
     element: <AdminDashboardLayout />,
     children: [
       {
@@ -65,37 +66,44 @@ export const router = createBrowserRouter([
         element: <AdminDashboard />,
       },
       {
-        path: 'dashboard',
+        path: "dashboard",
         element: <AdminDashboard />,
       },
       {
-        path: 'admin-user-management',
+        path: "admin-user-management",
         element: <UserManagement />,
       },
       {
-        path: 'user-edit',
+        path: "user-edit",
         element: <UserEdit />,
       },
       {
-        path: 'user-details',
+        path: "user-details",
         element: <UserDetailsPage />,
       },
       {
-        path: 'edit-response',
+        path: "user-details/:id",
+        element: <UserDetailsPage />,
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/profiles/${params.id}`),
+        // loader: ({ params }) => fetch(`${getData}/profiles/${params.id}`),
+      },
+      {
+        path: "edit-response",
         element: <EditResponse />,
       },
       {
-        path: 'notification',
+        path: "notification",
         element: <Notification />,
       },
       {
-        path: 'notification-user-details',
+        path: "notification-user-details",
         element: <UserDetails />,
       },
     ],
   },
   {
-    path: '/user',
+    path: "/user",
     element: <UserManagementLayout />,
   },
 ]);

@@ -22,7 +22,7 @@ export const RequestUserTable = () => {
   const fetchHistory = async () => {
     try {
       setLoading(true);
-      const data = await getData("subscriptions");
+      const data = await getData("profiles");
       setRequestUser(data || []);
     } catch (err) {
       console.error("Failed to fetch data:", err);
@@ -137,7 +137,7 @@ export const RequestUserTable = () => {
                         onClick={() => openModal(row.email)}
                       />
                       <PiCheckBold className="w-5 h-5 text-green-500" />
-                      <Link to={`/admin/user-details`}>
+                      <Link to={`/admin/user-details/${row.id}`}>
                         <button className="bg-[#F07400] text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap">
                           See Details
                         </button>

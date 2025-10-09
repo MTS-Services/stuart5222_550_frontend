@@ -277,7 +277,7 @@ export const UserDetails = () => {
   const [userDetails, setUserDetails] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchUserDetails = async () => {
+  const fetchHistory = async () => {
     try {
       setLoading(true);
       const data = await getData("subscriptions");
@@ -290,7 +290,7 @@ export const UserDetails = () => {
   };
 
   useEffect(() => {
-    fetchUserDetails();
+    fetchHistory();
   }, []);
 
   const [passwordDetails, setPasswordDetails] = useState({
@@ -314,9 +314,9 @@ export const UserDetails = () => {
     };
 
     try {
-      console.log("Submitting data:", data);
+      console.log("📦 Submitting data:", data);
 
-      //  POST to scan_me route (backend ready)
+      // ✅ POST to scan_me route (backend ready)
       const response = await postData("submit_user", data);
       console.log("Server Response:", response);
 
@@ -329,7 +329,7 @@ export const UserDetails = () => {
         draggable: true,
       });
 
-      //  Reset form
+      // ✅ Reset form
       form.reset();
       setPersonalDetails({
         firstName: "",
@@ -343,7 +343,7 @@ export const UserDetails = () => {
         confirmPassword: "",
       });
 
-      //  Navigate after success
+      // ✅ Navigate after success
       // setTimeout(() => navigate("/welcome-scan"), 1500);
     } catch (err) {
       console.error("Failed to submit data:", err);
@@ -356,191 +356,187 @@ export const UserDetails = () => {
 
   return (
     <div className="bg-[#F9FAFB] md:p-8 p-3 font-raleway">
-      {loading ? (
-        <Loading />
-      ) : (
-        <>
-          <div>
-            <h2 className="text-2xl text-[#002244] font-semibold">Settings</h2>
-            <p className="justify-start text-[#464646] text-base font-normal leading-normal mb-4 mt-1">
-              Manage your account settings and preferences
-            </p>
-          </div>
+    {loading ? <Loading/> :
+    <>
+      <div>
+        <h2 className="text-2xl text-[#002244] font-semibold">Settings</h2>
+        <p className="justify-start text-[#464646] text-base font-normal leading-normal mb-4 mt-1">
+          Manage your account settings and preferences
+        </p>
+      </div>
 
-          <div className="min-h-screen bg-gray-50 md:p-8 p-4">
-            <div className="max-w-7xl mx-auto">
-              <form onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* Personal Details Section */}
-                  <div className="bg-white rounded-lg p-8 shadow-sm">
-                    <div className="flex items-center justify-between mb-8">
-                      <h2 className="text-2xl font-semibold text-gray-900">
-                        Personal Details
-                      </h2>
-                      <button className="text-gray-600 hover:text-gray-900">
-                        <FiEdit className="w-5 h-5" />
-                      </button>
-                    </div>
-
-                    <div className="space-y-6">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            First Name
-                          </label>
-                          <input
-                            type="text"
-                            name="firstName"
-                            value={personalDetails.firstName}
-                            onChange={(e) =>
-                              setPersonalDetails({
-                                ...personalDetails,
-                                firstName: e.target.value,
-                              })
-                            }
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Last Name
-                          </label>
-                          <input
-                            type="text"
-                            name="lastName"
-                            value={personalDetails.lastName}
-                            onChange={(e) =>
-                              setPersonalDetails({
-                                ...personalDetails,
-                                lastName: e.target.value,
-                              })
-                            }
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Email
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          value={personalDetails.email}
-                          onChange={(e) =>
-                            setPersonalDetails({
-                              ...personalDetails,
-                              email: e.target.value,
-                            })
-                          }
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Phone Number
-                        </label>
-                        <input
-                          type="tel"
-                          name="tel"
-                          value={personalDetails.phone}
-                          onChange={(e) =>
-                            setPersonalDetails({
-                              ...personalDetails,
-                              phone: e.target.value,
-                            })
-                          }
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Account Password Section */}
-                  <div className="bg-white rounded-lg md:p-8 p-4 shadow-sm">
-                    <div className="flex items-center justify-between mb-8">
-                      <h2 className="text-2xl font-semibold text-gray-900">
-                        Account Password
-                      </h2>
-                      <button className="text-gray-600 hover:text-gray-900">
-                        <FiEdit className="w-5 h-5" />
-                      </button>
-                    </div>
-
-                    <div className="space-y-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Old Password
-                        </label>
-                        <input
-                          type="password"
-                          name="oldPassword"
-                          value={passwordDetails.oldPassword}
-                          onChange={(e) =>
-                            setPasswordDetails({
-                              ...passwordDetails,
-                              oldPassword: e.target.value,
-                            })
-                          }
-                          placeholder="******"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          New Password
-                        </label>
-                        <input
-                          type="password"
-                          name="newPassword"
-                          value={passwordDetails.newPassword}
-                          onChange={(e) =>
-                            setPasswordDetails({
-                              ...passwordDetails,
-                              newPassword: e.target.value,
-                            })
-                          }
-                          placeholder="******"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Confirm New Password
-                        </label>
-                        <input
-                          type="password"
-                          name="confirmPassword"
-                          value={passwordDetails.confirmPassword}
-                          onChange={(e) =>
-                            setPasswordDetails({
-                              ...passwordDetails,
-                              confirmPassword: e.target.value,
-                            })
-                          }
-                          placeholder="******"
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                      </div>
-                    </div>
-                  </div>
+      <div className="min-h-screen bg-gray-50 md:p-8 p-4">
+        <div className="max-w-7xl mx-auto">
+          <form onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Personal Details Section */}
+              <div className="bg-white rounded-lg p-8 shadow-sm">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-2xl font-semibold text-gray-900">
+                    Personal Details
+                  </h2>
+                  <button className="text-gray-600 hover:text-gray-900">
+                    <FiEdit className="w-5 h-5" />
+                  </button>
                 </div>
 
-                <button
-                  type="submit"
-                  className="bg-[#FF8C00] text-black w-full py-2 rounded-[4px] mt-14"
-                >
-                  Send
-                </button>
-              </form>
+                <div className="space-y-6">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        First Name
+                      </label>
+                      <input
+                        type="text"
+                        name="firstName"
+                        value={personalDetails.firstName}
+                        onChange={(e) =>
+                          setPersonalDetails({
+                            ...personalDetails,
+                            firstName: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Last Name
+                      </label>
+                      <input
+                        type="text"
+                        name="lastName"
+                        value={personalDetails.lastName}
+                        onChange={(e) =>
+                          setPersonalDetails({
+                            ...personalDetails,
+                            lastName: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={personalDetails.email}
+                      onChange={(e) =>
+                        setPersonalDetails({
+                          ...personalDetails,
+                          email: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      name="tel"
+                      value={personalDetails.phone}
+                      onChange={(e) =>
+                        setPersonalDetails({
+                          ...personalDetails,
+                          phone: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Account Password Section */}
+              <div className="bg-white rounded-lg md:p-8 p-4 shadow-sm">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-2xl font-semibold text-gray-900">
+                    Account Password
+                  </h2>
+                  <button className="text-gray-600 hover:text-gray-900">
+                    <FiEdit className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Old Password
+                    </label>
+                    <input
+                      type="password"
+                      name="oldPassword"
+                      value={passwordDetails.oldPassword}
+                      onChange={(e) =>
+                        setPasswordDetails({
+                          ...passwordDetails,
+                          oldPassword: e.target.value,
+                        })
+                      }
+                      placeholder="******"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      New Password
+                    </label>
+                    <input
+                      type="password"
+                      name="newPassword"
+                      value={passwordDetails.newPassword}
+                      onChange={(e) =>
+                        setPasswordDetails({
+                          ...passwordDetails,
+                          newPassword: e.target.value,
+                        })
+                      }
+                      placeholder="******"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Confirm New Password
+                    </label>
+                    <input
+                      type="password"
+                      name="confirmPassword"
+                      value={passwordDetails.confirmPassword}
+                      onChange={(e) =>
+                        setPasswordDetails({
+                          ...passwordDetails,
+                          confirmPassword: e.target.value,
+                        })
+                      }
+                      placeholder="******"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </>
-      )}
+
+            <button
+              type="submit"
+              className="bg-[#FF8C00] text-black w-full py-2 rounded-[4px] mt-14"
+            >
+              Send
+            </button>
+          </form>
+        </div>
+      </div></>}
     </div>
   );
 };
