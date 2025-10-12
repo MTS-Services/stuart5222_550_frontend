@@ -17,8 +17,8 @@ export const Bio = ({
       <h2 className="text-2xl text-[#002244] font-semibold">
         {type}
       </h2>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="md:flex items-center md:justify-between">
+        <div className="flex items-center gap-4 sm:mb-0 mb-4">
           <div className="w-[80px] h-[80px]">
             <img
               className="rounded-full bg-cover object-cover"

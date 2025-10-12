@@ -74,8 +74,8 @@ export const UserDetailsPage = () => {
       ) : (
         <>
           {/* ========= USER INFO ========= */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+          <div className="md:flex items-center justify-between">
+            <div className="flex items-center gap-4 md:mb-0 mb-4">
               <div className="w-[80px] h-[80px]">
                 <img
                   className="rounded-full bg-cover object-cover"

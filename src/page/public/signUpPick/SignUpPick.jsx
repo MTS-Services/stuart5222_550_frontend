@@ -145,7 +145,7 @@ export const SignUpPick = () => {
       };
 
       await postData("profiles", payload);
-      toast.success("🎉 Your profile has been submitted successfully!");
+      toast.success("Your profile has been submitted successfully!");
 
       form.reset();
       setFiles([]);
@@ -153,16 +153,16 @@ export const SignUpPick = () => {
     } catch (err) {
       if (err.response) {
         toast.error(
-          `❌ Server Error: ${err.response.status} - ${
+          `Server Error: ${err.response.status} - ${
             err.response.data?.message || "Please try again!"
           }`
         );
       } else if (err.request) {
         toast.error(
-          "🌐 Network Error: Please check if JSON Server is running on http://localhost:5000"
+          "Network Error: Please check if JSON Server is running on http://localhost:5000"
         );
       } else {
-        toast.error("❌ Failed to submit your profile. Please try again!");
+        toast.error("Failed to submit your profile. Please try again!");
       }
     } finally {
       setSubmitLoading(false);

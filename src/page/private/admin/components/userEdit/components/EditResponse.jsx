@@ -57,7 +57,7 @@ export const EditResponse = () => {
   };
 
   return (
-    <div className="text-black p-8 font-raleway">
+    <div className="text-black md:p-8 p-4 font-raleway">
       {/* Before Bio */}
       <div>
         <Bio
@@ -75,7 +75,7 @@ export const EditResponse = () => {
       </div>
 
       {/* After Bio */}
-      <div className="my-8">
+      <div className="md:my-8 my-6">
         <Bio
           type={"After"}
           image={"/img/page/admin/Image-80.png"}
