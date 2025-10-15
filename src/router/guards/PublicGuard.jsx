@@ -1,8 +1,9 @@
 import { Navigate, Outlet } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const PublicGuard = () => {
-  const isAuth = false;
-  return isAuth ? <Navigate to='/admin' /> : <Outlet />;
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  return isAuthenticated ? <Navigate to='/admin' /> : <Outlet />;
 };
 
 export default PublicGuard;

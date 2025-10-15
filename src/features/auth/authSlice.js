@@ -1,13 +1,18 @@
 // src/features/auth/authSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 import { loginUser } from './authFetch';
+import { STORAGE } from '../../config/storage/auth/authStorage';
+
+const token = STORAGE.getToken();
+
+console.log('token: ', token);
 
 const initialState = {
   user: null,
-  token: null,
+  token: token || null,
   loading: false,
   error: null,
-  isAuthenticated: false,
+  isAuthenticated: !!token,
 };
 
 const authSlice = createSlice({

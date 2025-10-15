@@ -1,8 +1,9 @@
 import { Navigate, Outlet } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const PrivateGuard = () => {
-  const isAuth = false; // replace with selector from Redux
-  return isAuth ? <Outlet /> : <Navigate to='/' />;
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  return isAuthenticated ? <Outlet /> : <Navigate to='/' />;
 };
 
 export default PrivateGuard;
