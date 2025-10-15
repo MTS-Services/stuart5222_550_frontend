@@ -1,14 +1,13 @@
-import { Outlet } from "react-router-dom";
-// import FooterCard from "../../page/public/home/components/FooterCard";
-import { FooterSection } from "../../page/public/home/components/FooterSection";
+import { Outlet } from 'react-router-dom';
+import Footer from './Footer';
 
-export const MainLayout = () => {
+const MainLayout = () => {
   return (
     <div>
-      {/* <h2 className="text-2xl">Header Section</h2> */}
       <Outlet />
-      {/* <FooterCard/> */}
-      <FooterSection/>
+      <Footer />
     </div>
   );
 };
+
+export default MainLayout;

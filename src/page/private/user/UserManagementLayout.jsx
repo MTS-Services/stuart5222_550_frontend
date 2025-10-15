@@ -1,6 +1,3 @@
-
 export const UserManagementLayout = () => {
-  return (
-    <div>UserManagementLayout</div>
-  )
-}
+  return <div>UserManagementLayout</div>;
+};

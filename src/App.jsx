@@ -1,14 +1,13 @@
+import { Suspense } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './router/router';
-import AuthProvider from './features/auth/AuthProvider';
+import { Loading } from './components/ui/loading';
 
 function App() {
   return (
-    <>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
-    </>
+    <Suspense fallback={<Loading />}>
+      <RouterProvider router={router} />
+    </Suspense>
   );
 }
 

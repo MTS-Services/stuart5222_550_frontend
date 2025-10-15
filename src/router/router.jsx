@@ -1,101 +1,52 @@
-import { createBrowserRouter } from 'react-router';
-import { MainLayout } from './../layout/main/MainLayout';
-import { HomeView } from './../page/public/home/HomeView';
-import { AdminDashboardLayout } from '../layout/admin/AdminDashboardLayout';
-import { UserManagement } from '../page/private/admin/components/userManagements/UserManagement';
-import { UserEdit } from './../page/private/admin/components/userEdit/UserEdit';
-import { UserManagementLayout } from './../page/private/user/UserManagementLayout';
-import { AdminDashboard } from '../page/private/admin/components/dashboard/AdminDashboard';
-import { UserDetailsPage } from '../page/private/admin/components/userManagements/components/UserDetailsPage';
-import { EditResponse } from '../page/private/admin/components/userEdit/components/EditResponse';
-import { Notification } from '../page/private/admin/components/userManagements/notification/Notification';
-import { UserDetails } from '../page/private/admin/components/userManagements/userDetails/UserDetails';
-import { WelcomeScanView } from '../page/public/welcomeScan/WelcomeScanView';
-import { CherylAnnView } from '../page/public/cherylAnn/CherylAnnView';
-import { SeeMorePhone } from '../page/public/Seemorephotos/SeeMorePhone';
-import { LetsConnect } from '../page/public/connect/LetsConnect';
-import { Oops } from '../page/public/ops/Oops';
-import { SignUpPick } from '../page/public/signUpPick/SignUpPick';
+import React, { lazy } from 'react';
+import {
+  Route,
+  createBrowserRouter,
+  createRoutesFromElements,
+} from 'react-router-dom';
 
-export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <MainLayout />,
-    children: [
-      {
-        index: true,
-        element: <HomeView />,
-      },
-      {
-        path: '/',
-        element: <HomeView />,
-      },
-      {
-        path: '/welcome-scan',
-        element: <WelcomeScanView />,
-      },
-      {
-        path: '/cheryl-ann-view',
-        element: <CherylAnnView />,
-      },
-      {
-        path: '/sign-up-pick',
-        element: <SignUpPick />,
-      },
-      {
-        path: '/oops-sorry',
-        element: <Oops />,
-      },
-    ],
-  },
-  {
-    path: '/see-more-phone',
-    element: <SeeMorePhone />,
-  },
-  {
-    path: '/lets-connect',
-    element: <LetsConnect />,
-  },
-  {
-    path: '/admin',
-    element: <AdminDashboardLayout />,
-    children: [
-      {
-        index: true,
-        element: <AdminDashboard />,
-      },
-      {
-        path: 'dashboard',
-        element: <AdminDashboard />,
-      },
-      {
-        path: 'admin-user-management',
-        element: <UserManagement />,
-      },
-      {
-        path: 'user-edit',
-        element: <UserEdit />,
-      },
-      {
-        path: 'user-details',
-        element: <UserDetailsPage />,
-      },
-      {
-        path: 'edit-response',
-        element: <EditResponse />,
-      },
-      {
-        path: 'notification',
-        element: <Notification />,
-      },
-      {
-        path: 'notification-user-details',
-        element: <UserDetails />,
-      },
-    ],
-  },
-  {
-    path: '/user',
-    element: <UserManagementLayout />,
-  },
-]);
+// Guards
+import PrivateRoute from './guards/PrivateRoute';
+import PublicRoute from './guards/PublicRoute';
+
+// Layouts
+const AdminLayout = lazy(() => import('../layout/admin/AdminLayout'));
+const MainLayout = lazy(() => import('../layout/main/MainLayout'));
+const ErrorView = lazy(() => import('../page/public/error/ErrorView'));
+
+// 🔓 Public Pages
+const HomeView = lazy(() => import('../page/public/home/HomeView'));
+const LetsConnectView = lazy(() =>
+  import('../page/public/connect/ConnectView')
+);
+
+// 🔒 Private Pages
+const AdminView = lazy(() => import('../page/private/admin/AdminView'));
+const UserManageView = lazy(() =>
+  import('../page/private/userManagements/UserManageView')
+);
+
+export const router = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+      {/* 🔓 Public Routes */}
+      <Route element={<PublicRoute />}>
+        <Route path='/' element={<MainLayout />}>
+          <Route index element={<HomeView />} />
+          <Route path='connect' element={<LetsConnectView />} />
+        </Route>
+      </Route>
+
+      {/* 🔒 Private Routes */}
+      <Route element={<PrivateRoute />}>
+        <Route path='/admin' element={<AdminLayout />}>
+          <Route index element={<AdminView />} />
+          <Route path='user-management' element={<UserManageView />} />
+        </Route>
+      </Route>
+
+      {/* ⚠️ 404 */}
+      <Route path='*' element={<ErrorView />} />
+    </>
+  )
+);
