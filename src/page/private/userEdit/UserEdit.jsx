@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { getData } from '../../../../utils/axiosInstance';
 import { UserEditTable } from './components/UserEditTable';
 
-export const UserEdit = () => {
+const UserEdit = () => {
   const [editData, setEditData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,7 +20,7 @@ export const UserEdit = () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await getData(`profiles`);
+      // const data = await getData(`profiles`);
       setEditData(data || []);
     } catch (err) {
       console.error('Failed to fetch data:', err);
@@ -156,3 +155,5 @@ export const UserEdit = () => {
     </div>
   );
 };
+
+export default UserEdit;

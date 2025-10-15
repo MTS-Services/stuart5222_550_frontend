@@ -1,26 +1,31 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { CgDice4 } from 'react-icons/cg';
-import { FaAd, FaUsers } from 'react-icons/fa';
+import { FaUsers, FaUsersCog } from 'react-icons/fa';
+import { FaGear } from 'react-icons/fa6';
 import { FiMenu, FiX } from 'react-icons/fi';
 
 /* ---------------- NAV LINKS DATA ---------------- */
 const navLinks = [
-  { name: 'Dashboard', icon: <CgDice4 />, path: '/admin' },
+  { name: 'Dashboard', icon: <CgDice4 size={18} />, path: '/admin' },
   {
     name: 'User Management',
-    icon: <FaUsers />,
+    icon: <FaUsers size={20} />,
     path: '/admin/user-management',
   },
-  { name: 'User Edit', icon: <FaUsers />, path: '/admin/user-edit' },
-  { name: 'Settings', icon: <FaAd />, path: '/admin/settings' },
+  {
+    name: 'User Edit',
+    icon: <FaUsersCog size={20} />,
+    path: '/admin/user-edit',
+  },
+  { name: 'Settings', icon: <FaGear size={20} />, path: '/admin/settings' },
 ];
 
 /* ---------------- SIDEBAR LINK COMPONENT ---------------- */
 const SidebarLink = ({ link, active, onClick }) => (
   <button
     onClick={onClick}
-    className={`flex items-center gap-3 px-4 py-3 rounded-lg relative w-full text-left transition-colors duration-200 ${
+    className={`flex items-center gap-3 px-4 py-3  relative w-full text-left transition-colors duration-200 ${
       active
         ? 'bg-white font-semibold text-[#000044]'
         : 'text-gray-700 hover:text-[#000044] font-medium'
@@ -29,9 +34,7 @@ const SidebarLink = ({ link, active, onClick }) => (
     {active && (
       <div className='absolute left-0 top-0 h-full w-1 bg-[#F07400] rounded-tr-sm rounded-br-sm' />
     )}
-    <span className='w-6 h-6 flex items-center justify-center'>
-      {link.icon}
-    </span>
+    <span className='flex items-center justify-center'>{link.icon}</span>
     <span className='whitespace-nowrap'>{link.name}</span>
   </button>
 );
