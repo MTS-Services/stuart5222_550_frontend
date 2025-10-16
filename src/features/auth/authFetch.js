@@ -11,6 +11,8 @@ export const loginUser = createAsyncThunk(
     try {
       const res = await POST(endpoints.auth.LOGIN, { email, password });
 
+      console.log('Login Response:', res);
+
       if (res?.access_token) {
         STORAGE.setToken(res.access_token);
       }

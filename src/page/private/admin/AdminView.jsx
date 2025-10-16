@@ -1,8 +1,19 @@
-import { AllCard } from "./components/AllCard";
-import { DateDropDown } from "./components/DateDropDown";
-import { WaitListTable } from "./components/WaitListTable";
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AllCard } from './components/AllCard';
+import { DateDropDown } from './components/DateDropDown';
+import { WaitListTable } from './components/WaitListTable';
+import { usersWaitlist } from '../../../features/users-management/usersFetch';
 
 const AdminDashboard = () => {
+  const { users, loading } = useSelector((state) => state.userWaitlist);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(usersWaitlist({ page: 2, limit: 10 }));
+  }, [dispatch]);
+
   return (
     <div className="text-black md:p-8 p-6">
       <div className="">
@@ -23,7 +34,7 @@ const AdminDashboard = () => {
         <h2 className="text-[28px] font-semibold font-poppins text-black my-3 sm:my-4 md:my-5 lg:my-6 xl:my-7">
           Wait list
         </h2>
-        <WaitListTable />
+        <WaitListTable waitListData={users} loading={loading} />
       </div>
     </div>
   );

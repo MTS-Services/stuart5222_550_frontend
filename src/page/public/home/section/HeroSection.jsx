@@ -1,7 +1,4 @@
-import { JoinWaitlist } from '../components/common/JoinWaitlist';
-
-import { useDispatch, useSelector } from 'react-redux';
-import { increment } from '../../../../features/counter/counterSlice';
+import { JoinWaitlist } from '../components/JoinWaitlist';
 
 const HeroSection = () => {
   return (

@@ -1,18 +1,16 @@
 // src/api/axiosInstance.js
 import axios from 'axios';
+import { STORAGE } from '../storage/auth/authStorage';
 
 const api = axios.create({
-  // baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api',
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://staurt5backend.mtscorporate.com',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 10000, // ⏱ optional safety timeout
 });
 
 // =============== Request Interceptor ===============
 api.interceptors.request.use(
   (config) => {
-    // const token = localStorage.getItem('access_token');
-    const token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbWdvdmFudzcwMDAwZG5mamYzczU4bjJ1IiwiZW1haWwiOiJuYXllbUBleGFtcGxlLmNvbSIsInJvbGUiOiJVU0VSIiwicmVtZW1iZXJNZSI6ZmFsc2UsImlhdCI6MTc2MDQyMTA2NiwiZXhwIjoxNzYwNTA3NDY2fQ.KwrBQD7ZwaW9E5EAibDlN3JrqflSNIZV2cN_7O3_ih4';
+    const token = STORAGE.getToken();
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

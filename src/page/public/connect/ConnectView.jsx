@@ -1,7 +1,7 @@
 import { MdOutlineContentCopy } from 'react-icons/md';
-import { StuartImage } from '../../../components/allStuartImage/StuartImage';
 import { IoMdArrowBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
+import Image from '../../../components/ui/Image';
 
 const LetsConnectView = () => {
   const navigate = useNavigate();
@@ -16,13 +16,20 @@ const LetsConnectView = () => {
           <IoMdArrowBack /> Back
         </h3>
         <div className=''>
-          <StuartImage />
+          <Image
+            src='/img/page/home/remove_preview.png'
+            alt='Random pic'
+            width='120px'
+            height='120px'
+            className='mx-auto'
+          />
           <div className='flex justify-center text-center'>
             <h2 className='md:text-[40px] text-[32px] font-raleway font-semibold text-[#F07400] w-[440px]'>
               Here’s how to reach me
             </h2>
           </div>
         </div>
+
         <div className='text-[#FFFFFF] text-base font-medium bg-[#FFFFFF14] p-4 rounded-lg mt-3'>
           <p className='flex items-center justify-between'>
             Name : Cheryl Ann

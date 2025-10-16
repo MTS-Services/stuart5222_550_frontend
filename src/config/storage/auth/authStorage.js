@@ -32,6 +32,11 @@ export const STORAGE = {
   setToken: (token) => setItem(storageKeys.TOKEN, token),
   clearToken: () => removeItem(storageKeys.TOKEN),
 
+  // === WAITLIST ===
+  getWaitlist: () => getJSON(storageKeys.WAITLIST),
+  setWaitlist: (waitlist) => setJSON(storageKeys.WAITLIST, waitlist),
+  clearWaitlist: () => removeItem(storageKeys.WAITLIST),
+
   // === CLEAR ALL (logout / app reset) ===
   clearAll: () => {
     Object.values(storageKeys).forEach((key) => removeItem(key));

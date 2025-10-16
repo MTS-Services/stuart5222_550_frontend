@@ -1,46 +1,26 @@
-import { useState } from 'react';
-// import { postData } from '../../../../../utils/axiosInstance';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { requestWaitlist } from '../../../../features/user/userFetch';
 
 export const JoinWaitlist = () => {
-  const [formData, setFormData] = useState({ name: '', email: '' });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({ name: '', email: '' });
+  const { success, loading, error } = useSelector((state) => state.user);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-
-    if (!formData.name || !formData.email) {
-      setError('Please fill out all fields.');
-      return;
-    }
-
     try {
-      setLoading(true);
-      console.log('Submitting data:', formData);
-
-      const response = await postData('');
-      console.log('Server Response:', response);
-
-      // Success toast
-      toast.success('Successfully joined the waitlist!');
-
-      // Navigate after delay
-      setTimeout(() => {
-        navigate('/welcome-scan');
-      }, 1500);
+      await dispatch(requestWaitlist(formData)).unwrap();
+      console.log('✅ Request submitted successfully!');
     } catch (err) {
-      console.error('Failed to submit:', err);
-      toast.error('Failed to submit. Please try again later.');
-    } finally {
-      setLoading(false);
+      console.error('❌ Request submission failed:', err);
     }
   };
 

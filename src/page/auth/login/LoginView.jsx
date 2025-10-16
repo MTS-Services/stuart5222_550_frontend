@@ -8,11 +8,11 @@ import { useNavigate } from 'react-router-dom';
 const LoginView = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const { user, loading, error, isAuthenticated } = useSelector(
     (state) => state.auth
   );
 
-  const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
 
   // ✅ Reset error on mount/unmount
