@@ -65,9 +65,9 @@ export const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
-      // <PrivateRoute>
+      <PrivateRoute>
         <AdminDashboardLayout />
-      // </PrivateRoute>
+      </PrivateRoute>
     ),
     children: [
       {

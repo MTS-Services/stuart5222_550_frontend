@@ -1,5 +1,3 @@
-// src/features/auth/authAPI.js
-
 import { postData } from "../../utils/axiosInstance";
 
 // ===================================================
@@ -7,7 +5,7 @@ import { postData } from "../../utils/axiosInstance";
 // ===================================================
 export const LOGIN_API = async ({ email, password }) => {
   try {
-    const res = await postData("auth/login", { email, password }); // ✅ adjust if backend endpoint differs
+    const res = await postData("auth/admin/login", { email, password });
 
     // Expecting backend returns { success, message, token, user }
     if (res?.token) {

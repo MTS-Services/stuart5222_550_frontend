@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://staurt5backend.mtscorporate.com";
 const COOKIE_NAME = 'token';
 
 const instance = axios.create({
