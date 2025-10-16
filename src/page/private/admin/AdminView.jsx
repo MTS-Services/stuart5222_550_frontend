@@ -34,7 +34,7 @@ const AdminDashboard = () => {
         <h2 className="text-[28px] font-semibold font-poppins text-black my-3 sm:my-4 md:my-5 lg:my-6 xl:my-7">
           Wait list
         </h2>
-        <WaitListTable waitListData={users} loading={loading} />
+        <WaitListTable waitListData={users} loading={loading} users={users} />
       </div>
     </div>
   );
