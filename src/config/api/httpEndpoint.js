@@ -3,7 +3,13 @@ export const endpoints = {
     LOGIN: '/auth/admin/login',
     REGISTER: '/auth/register',
   },
+  admin: {
+    GET_ALL_USERS: '/admin/users/pending',
+  },
   user: {
+    LOGIN: '/auth/login',
+    REGISTER: '/auth/register',
+    WAITLIST: '/auth/register',
     PROFILE: '/user/profile',
     SETTINGS: '/user/settings',
   },

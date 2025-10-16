@@ -6,4 +6,5 @@ const APP_PREFIX = 'app_';
 export const storageKeys = {
   USER: `${APP_PREFIX}user`,
   TOKEN: `${APP_PREFIX}token`,
+  WAITLIST: `${APP_PREFIX}waitlist`,
 };

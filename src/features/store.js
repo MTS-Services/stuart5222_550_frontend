@@ -1,14 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
-import checksReducer from '../features/checks/checksSlice';
+
 import authReducer from '../features/auth/authSlice';
+import userReducer from '../features/user/userSlice';
+import usersWaitlistSlice from '../features/users-management/usersSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    counter: counterReducer, // add more slices later
-    checks: checksReducer,
+    user: userReducer,
+    userWaitlist: usersWaitlistSlice,
   },
+
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

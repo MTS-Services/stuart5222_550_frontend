@@ -1,4 +1,5 @@
-// src/features/auth/authSlice.js
+// src/features/auth/authSlice.js -> authFetch.js -> httpEndpoint.js
+
 import { createSlice } from '@reduxjs/toolkit';
 import { loginUser } from './authFetch';
 import { STORAGE } from '../../config/storage/auth/authStorage';

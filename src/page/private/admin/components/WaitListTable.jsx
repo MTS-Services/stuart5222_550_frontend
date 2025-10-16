@@ -1,39 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { AllTableResponsiveStyle } from '../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
 import { Loading } from '../../../../components/ui/loading';
 
-export const WaitListTable = () => {
-  const [waitListTable, setWaitListTable] = useState([]);
-  const [loading, setLoading] = useState(true);
+export const WaitListTable = (waitListData, loading) => {
+  console.log('waitListData', waitListData);
 
   // pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-
-  useEffect(() => {
-    fetchHistory();
-  }, []);
-
-  const fetchHistory = async () => {
-    try {
-      setLoading(true);
-      const data = await getData(`subscriptions`);
-      setWaitListTable(data || []);
-    } catch (err) {
-      console.error('Failed to fetch data:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // pagination calculation
-  const totalPages = Math.ceil(waitListTable.length / itemsPerPage);
+  const totalPages = Math.ceil(waitListData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentData = waitListTable.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
+  // const currentData = waitListData.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePrevious = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
@@ -58,7 +37,7 @@ export const WaitListTable = () => {
                   <th className='px-5 py-3 w-1/3 whitespace-nowrap'>Email</th>
                 </tr>
               </thead>
-              <tbody className='text-black text-base font-normal'>
+              {/* <tbody className='text-black text-base font-normal'>
                 {currentData.map((row, index) => (
                   <tr
                     key={index}
@@ -75,7 +54,7 @@ export const WaitListTable = () => {
                     </td>
                   </tr>
                 ))}
-              </tbody>
+              </tbody> */}
             </table>
           </div>
 
@@ -83,20 +62,20 @@ export const WaitListTable = () => {
 
           {/* Pagination */}
           <div className='flex items-center text-gray-600 justify-between mt-8 text-base font-poppins font-normal md:gap-0 gap-2'>
-            <p className='font-inter'>
+            {/* <p className='font-inter'>
               Showing {startIndex + 1} to {startIndex + currentData.length} of{' '}
-              {waitListTable.length} results
-            </p>
+              {waitListData.length} results
+            </p> */}
             <div className='flex gap-4 sm:gap-5 md:gap-6 lg:gap-7'>
               <button
                 className={`border rounded-xl  md:px-5 px-4 md:py-2 py-1.5 ${
-                  currentPage === 1 || waitListTable.length <= itemsPerPage
+                  currentPage === 1 || waitListData.length <= itemsPerPage
                     ? 'border-gray-300 text-gray-400 cursor-not-allowed'
                     : 'border-gray-600'
                 }`}
                 onClick={handlePrevious}
                 disabled={
-                  currentPage === 1 || waitListTable.length <= itemsPerPage
+                  currentPage === 1 || waitListData.length <= itemsPerPage
                 }
               >
                 Previous
@@ -104,7 +83,7 @@ export const WaitListTable = () => {
               <button
                 className={`border rounded-xl  md:px-5 px-4 md:py-2 py-1.5 ${
                   currentPage === totalPages ||
-                  waitListTable.length <= itemsPerPage ||
+                  waitListData.length <= itemsPerPage ||
                   totalPages === 0
                     ? 'border-gray-300 text-gray-400 cursor-not-allowed'
                     : 'border-gray-600'
@@ -112,7 +91,7 @@ export const WaitListTable = () => {
                 onClick={handleNext}
                 disabled={
                   currentPage === totalPages ||
-                  waitListTable.length <= itemsPerPage ||
+                  waitListData.length <= itemsPerPage ||
                   totalPages === 0
                 }
               >
