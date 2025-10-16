@@ -3,15 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AllCard } from './components/AllCard';
 import { DateDropDown } from './components/DateDropDown';
 import { WaitListTable } from './components/WaitListTable';
-import { usersWaitlist } from '../../../features/users-management/usersFetch';
+import { adminWaitlist } from '../../../features/admin/wait-list/waitListFetch';
 
 const AdminDashboard = () => {
-  const { users, loading } = useSelector((state) => state.userWaitlist);
+  const { users, loading } = useSelector((state) => state.adminWaitlist);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(usersWaitlist({ page: 2, limit: 10 }));
+    dispatch(adminWaitlist({ page: 2, limit: 10 }));
   }, [dispatch]);
 
   return (
