@@ -1,7 +1,7 @@
 // src/features/auth/authSlice.js -> authFetch.js -> httpEndpoint.js
 
 import { createSlice } from '@reduxjs/toolkit';
-import { usersWaitlist } from './usersFetch';
+import { adminWaitlist } from './waitListFetch';
 
 const initialState = {
   users: [],
@@ -9,8 +9,8 @@ const initialState = {
   error: null,
 };
 
-const usersWaitlistSlice = createSlice({
-  name: 'usersWaitlist',
+const adminWaitlistSlice = createSlice({
+  name: 'waitList',
   initialState,
   reducers: {
     resetUsersError: (state) => {
@@ -20,21 +20,21 @@ const usersWaitlistSlice = createSlice({
   extraReducers: (builder) => {
     builder
       // ===== User Wait-list Request in HOMEPAGE =====
-      .addCase(usersWaitlist.pending, (state) => {
+      .addCase(adminWaitlist.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(usersWaitlist.fulfilled, (state, action) => {
+      .addCase(adminWaitlist.fulfilled, (state, action) => {
         state.loading = false;
         state.users = action.payload.users;
         state.error = null;
       })
-      .addCase(usersWaitlist.rejected, (state, action) => {
+      .addCase(adminWaitlist.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
-export const { resetUsersError } = usersWaitlistSlice.actions;
-export default usersWaitlistSlice.reducer;
+export const { resetUsersError } = adminWaitlistSlice.actions;
+export default adminWaitlistSlice.reducer;

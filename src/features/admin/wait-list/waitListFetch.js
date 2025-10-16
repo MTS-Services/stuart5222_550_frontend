@@ -1,10 +1,10 @@
 // src/features/user/userFetch.js
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { endpoints } from '../../config/api/httpEndpoint';
-import { GET, POST } from '../../config/api/httpMethods';
+import { endpoints } from '../../../config/api/httpEndpoint';
+import { GET, POST } from '../../../config/api/httpMethods';
 
 // ========== GET Wait-list ==========
-export const usersWaitlist = createAsyncThunk(
+export const adminWaitlist = createAsyncThunk(
   'user/waitlist',
   async ({ page, limit }, { rejectWithValue }) => {
     try {
