@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { adminApprove } from '../../../../features/admin/management/usreFetch';
+import { requestWaitlist } from '../../../../features/public/user/userFetch';
+ 
 
 export const JoinWaitlist = () => {
   const dispatch = useDispatch();
@@ -17,7 +19,7 @@ export const JoinWaitlist = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(adminApprove(formData)).unwrap();
+      await dispatch(requestWaitlist(formData)).unwrap();
       console.log('✅ Request submitted successfully!');
     } catch (err) {
       console.error('❌ Request submission failed:', err);
