@@ -10,6 +10,7 @@ import PrivateGuard from './guards/PrivateGuard';
 import PublicGuard from './guards/PublicGuard';
 import AuthGuard from './guards/AuthGuard';
 import AuthLayout from '../layout/auth/authLayout';
+import UserDetailsView from '../page/private/userDetails/UserDetailsView';
 
 // Layouts
 const AdminLayout = lazy(() => import('../layout/admin/AdminLayout'));
@@ -28,10 +29,12 @@ const AdminView = lazy(() => import('../page/private/admin/AdminView'));
 const UserManageView = lazy(() =>
   import('../page/private/userManagements/UserManageView')
 );
-const UserEdit = lazy(() => import('../page/private/userEdit/UserEdit'));
-const Settings = lazy(() => import('../page/private/settings/Settings'));
-const Notification = lazy(() =>
-  import('../page/private/notification/Notification')
+const UserEditView = lazy(() => import('../page/private/userEdit/UserEdit'));
+const SettingsView = lazy(() =>
+  import('../page/private/settings/SettingsView')
+);
+const NotificationView = lazy(() =>
+  import('../page/private/notification/Notification.jsx')
 );
 
 export const router = createBrowserRouter(
@@ -57,9 +60,10 @@ export const router = createBrowserRouter(
         <Route path='/admin' element={<AdminLayout />}>
           <Route index element={<AdminView />} />
           <Route path='user-management' element={<UserManageView />} />
-          <Route path='user-edit' element={<UserEdit />} />
-          <Route path='settings' element={<Settings />} />
-          <Route path='notifications' element={<Notification />} />
+          <Route path='user-management/:id' element={<UserDetailsView />} />
+          <Route path='notifications' element={<NotificationView />} />
+          <Route path='user-edit' element={<UserEditView />} />
+          <Route path='settings' element={<SettingsView />} />
         </Route>
       </Route>
 

@@ -1,10 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FiEdit } from 'react-icons/fi';
 import { toast } from 'react-toastify';
-import { postData } from '../../../../../../utils/axiosInstance';
-import { useNavigate } from 'react-router-dom';
+// import { postData } from '../../../../../../utils/axiosInstance';
 
-export const UserDetails = () => {
+const SettingsView = () => {
   const navigate = useNavigate();
 
   const [personalDetails, setPersonalDetails] = useState({
@@ -84,8 +84,8 @@ export const UserDetails = () => {
         </p>
       </div>
 
-      <div className='min-h-screen bg-gray-50 md:p-8 p-4'>
-        <div className='max-w-7xl mx-auto'>
+      <div className=' bg-gray-50 '>
+        <div className=''>
           <form onSubmit={handleSubmit}>
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
               {/* Personal Details Section */}
@@ -259,3 +259,5 @@ export const UserDetails = () => {
     </div>
   );
 };
+
+export default SettingsView;

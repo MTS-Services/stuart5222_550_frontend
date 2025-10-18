@@ -1,40 +1,31 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { AllCard } from './components/AllCard';
+import { AllCard } from '../common/AllCard';
+
 import { DateDropDown } from './components/DateDropDown';
 import { WaitListTable } from './components/WaitListTable';
-import { adminWaitlist } from '../../../features/admin/wait-list/waitListFetch';
 
 const AdminDashboard = () => {
-  const { users, loading } = useSelector((state) => state.adminWaitlist);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(adminWaitlist({ page: 2, limit: 10 }));
-  }, [dispatch]);
-
   return (
     <div className='text-black md:p-8 p-6'>
-      <div className=''>
+      <div>
         <h2 className='text-2xl text-[#002244] font-semibold font-poppins'>
           Dashboard Overview
         </h2>
-        <p className='justify-start text-[#464646] text-base font-normal font-lato leading-normal mb-4 mt-1'>
+        <p className='text-[#464646] text-base font-normal font-lato mb-4 mt-1'>
           Monitor your user performance
         </p>
-        <h3 className="justify-center text-[#111827] text-base font-normal font-['Poppins'] leading-normal">
+        <h3 className='text-[#111827] text-base font-normal font-poppins leading-normal'>
           Last 30 days overview
         </h3>
         <DateDropDown />
       </div>
+
       <AllCard />
 
-      <div className=''>
-        <h2 className='text-[28px] font-semibold font-poppins text-black my-3 sm:my-4 md:my-5 lg:my-6 xl:my-7'>
+      <div>
+        <h2 className='text-[28px] font-semibold font-poppins text-black my-3'>
           Wait list
         </h2>
-        <WaitListTable waitListData={users} loading={loading} />
+        <WaitListTable />
       </div>
     </div>
   );

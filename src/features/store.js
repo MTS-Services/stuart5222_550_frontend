@@ -2,13 +2,16 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import authReducer from '../features/auth/authSlice';
 import userReducer from '../features/public/user/userSlice';
-import adminWaitlistReducer from '../features/admin/wait-list/waitListSlice';
+import dashboardReducer from './admin/home/dashboardSlice';
+import adminUserManagementReducer from '../features/admin/management/usreSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     user: userReducer,
-    adminWaitlist: adminWaitlistReducer,
+    dashboard: dashboardReducer,
+    adminUsers: adminUserManagementReducer,
+    // Add other reducers here
   },
 
   middleware: (getDefaultMiddleware) =>

@@ -1,9 +1,21 @@
+import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import AdminNavbar from './AdminNavbar';
 import AdminSidebar from './AdminSidebar';
+import { useDispatch } from 'react-redux';
+
+import { fetchDashboardData } from '../../features/admin/home/dashboardFetch';
+import { adminUserList } from '../../features/admin/management/usreFetch';
 
 /* ---------------- MAIN LAYOUT ---------------- */
 const AdminLayout = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(adminUserList({ page: 1, limit: 50, status: 'VERIFIED' }));
+    dispatch(fetchDashboardData());
+  }, [dispatch]);
+
   return (
     <div className='flex h-screen bg-gray-50'>
       {/* Sidebar */}

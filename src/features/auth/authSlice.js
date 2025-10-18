@@ -6,8 +6,6 @@ import { STORAGE } from '../../config/storage/auth/authStorage';
 
 const token = STORAGE.getToken();
 
-console.log('token: ', token);
-
 const initialState = {
   user: null,
   token: token || null,

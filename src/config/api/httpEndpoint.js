@@ -4,7 +4,11 @@ export const endpoints = {
     REGISTER: '/auth/register',
   },
   admin: {
-    GET_ALL_USERS: '/admin/users/pending',
+    HOME_DATA: '/admin/dashboard',
+    GET_ALL_USERS: '/admin/users/all',
+    GET_PENDING_USERS: '/admin/users/pending',
+    APPROVE_USER: `/admin/users/approve`,
+    REJECT_USER: `/admin/users/reject`,
   },
   user: {
     LOGIN: '/auth/login',

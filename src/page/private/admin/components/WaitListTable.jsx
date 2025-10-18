@@ -1,106 +1,100 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  adminApprove,
+  adminReject,
+} from '../../../../features/admin/management/usreFetch';
 
-import { AllTableResponsiveStyle } from '../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
-import { Loading } from '../../../../components/ui/loading';
+export const WaitListTable = () => {
+  const dispatch = useDispatch();
+  const { users, isLoading } = useSelector((state) => state.adminUsers);
 
-export const WaitListTable = (waitListData, loading) => {
-  console.log('waitListData', waitListData);
+  // 🔹 Track which row is loading
+  const [loadingRow, setLoadingRow] = useState({ approve: null, reject: null });
 
-  // pagination states
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-  // pagination calculation
-  const totalPages = Math.ceil(waitListData.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  // const currentData = waitListData.slice(startIndex, startIndex + itemsPerPage);
-
-  const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  const handleApprove = async (userId) => {
+    setLoadingRow({ ...loadingRow, approve: userId });
+    try {
+      await dispatch(adminApprove({ user_id: userId })).unwrap();
+      console.log(`✅ User ${userId} approved`);
+    } catch (err) {
+      console.error('❌ Approval failed:', err);
+    } finally {
+      setLoadingRow({ ...loadingRow, approve: null });
+    }
   };
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+
+  const handleReject = async (userId) => {
+    setLoadingRow({ ...loadingRow, reject: userId });
+    try {
+      await dispatch(adminReject({ user_id: userId })).unwrap();
+      console.log(`❌ User ${userId} rejected`);
+    } catch (err) {
+      console.error('❌ Rejection failed:', err);
+    } finally {
+      setLoadingRow({ ...loadingRow, reject: null });
+    }
+  };
+
+  const renderRows = () => {
+    if (isLoading) {
+      return (
+        <tr>
+          <td colSpan='5' className='text-center p-4'>
+            Loading...
+          </td>
+        </tr>
+      );
+    }
+
+    if (!users.length) {
+      return (
+        <tr>
+          <td colSpan='5' className='text-center p-4 text-gray-500'>
+            No users in waitlist.
+          </td>
+        </tr>
+      );
+    }
+
+    return users.map((user) => (
+      <tr key={user.id} className='hover:bg-gray-50'>
+        <td className='p-2 border'>{user.id}</td>
+        <td className='p-2 border'>{user.name}</td>
+        <td className='p-2 border'>{user.email}</td>
+        <td className='p-2 border text-center'>{user.createdAt}</td>
+        <td className='p-2 border text-center flex justify-center gap-2'>
+          <button
+            onClick={() => handleApprove(user.id)}
+            className='bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded transition'
+            disabled={loadingRow.approve === user.id}
+          >
+            {loadingRow.approve === user.id ? 'Loading...' : '✓ Approve'}
+          </button>
+          <button
+            onClick={() => handleReject(user.id)}
+            className='bg-red-100 hover:bg-red-300 text-white px-3 py-1 rounded transition'
+            disabled={loadingRow.reject === user.id}
+          >
+            {loadingRow.reject === user.id ? 'Loading...' : '❌'}
+          </button>
+        </td>
+      </tr>
+    ));
   };
 
   return (
-    <div className='font-inter'>
-      {/* Loading */}
-      {loading ? (
-        <Loading />
-      ) : (
-        <>
-          <div className='relative overflow-x-auto md:overflow-x-visible'>
-            <table className='min-w-full table-fixed text-left text-xs sm:text-sm md:text-base'>
-              <thead className='bg-white text-black text-lg font-normal'>
-                <tr>
-                  <th className='px-5 py-3 w-1/3 whitespace-nowrap'>Date</th>
-                  <th className='px-5 py-3 w-1/3 whitespace-nowrap'>Name</th>
-                  <th className='px-5 py-3 w-1/3 whitespace-nowrap'>Email</th>
-                </tr>
-              </thead>
-              {/* <tbody className='text-black text-base font-normal'>
-                {currentData.map((row, index) => (
-                  <tr
-                    key={index}
-                    className={index % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}
-                  >
-                    <td className='px-7 py-3 w-1/3 whitespace-nowrap'>
-                      {row.date}
-                    </td>
-                    <td className='px-7 py-3 w-1/3 whitespace-nowrap'>
-                      {row.name}
-                    </td>
-                    <td className='px-7 py-3 w-1/3 whitespace-nowrap'>
-                      {row.email}
-                    </td>
-                  </tr>
-                ))}
-              </tbody> */}
-            </table>
-          </div>
-
-          <AllTableResponsiveStyle />
-
-          {/* Pagination */}
-          <div className='flex items-center text-gray-600 justify-between mt-8 text-base font-poppins font-normal md:gap-0 gap-2'>
-            {/* <p className='font-inter'>
-              Showing {startIndex + 1} to {startIndex + currentData.length} of{' '}
-              {waitListData.length} results
-            </p> */}
-            <div className='flex gap-4 sm:gap-5 md:gap-6 lg:gap-7'>
-              <button
-                className={`border rounded-xl  md:px-5 px-4 md:py-2 py-1.5 ${
-                  currentPage === 1 || waitListData.length <= itemsPerPage
-                    ? 'border-gray-300 text-gray-400 cursor-not-allowed'
-                    : 'border-gray-600'
-                }`}
-                onClick={handlePrevious}
-                disabled={
-                  currentPage === 1 || waitListData.length <= itemsPerPage
-                }
-              >
-                Previous
-              </button>
-              <button
-                className={`border rounded-xl  md:px-5 px-4 md:py-2 py-1.5 ${
-                  currentPage === totalPages ||
-                  waitListData.length <= itemsPerPage ||
-                  totalPages === 0
-                    ? 'border-gray-300 text-gray-400 cursor-not-allowed'
-                    : 'border-gray-600'
-                }`}
-                onClick={handleNext}
-                disabled={
-                  currentPage === totalPages ||
-                  waitListData.length <= itemsPerPage ||
-                  totalPages === 0
-                }
-              >
-                Next
-              </button>
-            </div>
-          </div>
-        </>
-      )}
-    </div>
+    <table className='w-full border-collapse border border-gray-200 text-left'>
+      <thead>
+        <tr className='bg-gray-100'>
+          <th className='p-2 border'>ID</th>
+          <th className='p-2 border'>Name</th>
+          <th className='p-2 border'>Email</th>
+          <th className='p-2 border text-center'>Date</th>
+          <th className='p-2 border text-center'>Action</th>
+        </tr>
+      </thead>
+      <tbody>{renderRows()}</tbody>
+    </table>
   );
 };

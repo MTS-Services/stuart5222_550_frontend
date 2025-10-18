@@ -11,8 +11,6 @@ export const requestWaitlist = createAsyncThunk(
     try {
       const res = await POST(endpoints.user.REGISTER, { name, email });
 
-      console.log('Waitlist Response:', res.message);
-
       return res;
     } catch (err) {
       return rejectWithValue(

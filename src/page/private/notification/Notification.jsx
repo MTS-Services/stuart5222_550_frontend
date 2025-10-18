@@ -33,7 +33,7 @@ import { IoCheckmarkDoneOutline } from 'react-icons/io5';
 import { useEffect, useState } from 'react';
 import { Loading } from '../../../components/ui/loading';
 
-const Notification = () => {
+const NotificationView = () => {
   const [waitListTable, setWaitListTable] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -109,4 +109,4 @@ const Notification = () => {
   );
 };
 
-export default Notification;
+export default NotificationView;

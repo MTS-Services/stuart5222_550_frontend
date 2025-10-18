@@ -1,5 +1,5 @@
+import { AllCard } from '../common/AllCard';
 import { RequestUserTable } from './components/RequestUserTable';
-import { UserManagementAllCard } from './components/UserManagementAllCard';
 import { UserManagementDateDropDown } from './components/UserManagementDateDropDown';
 
 const UserManageView = () => {
@@ -17,7 +17,7 @@ const UserManageView = () => {
         </h3>
         <UserManagementDateDropDown />
       </div>
-      <UserManagementAllCard />
+      <AllCard />
       <div className=''>
         <h2 className='text-[28px] font-semibold font-poppins text-black my-3 sm:my-4 md:my-5 lg:my-6 xl:my-7'>
           Requested User
