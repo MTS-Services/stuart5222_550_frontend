@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { CgDice4 } from 'react-icons/cg';
 import { FaUsers, FaUsersCog } from 'react-icons/fa';
 import { FaGear } from 'react-icons/fa6';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { FiMenu, FiX, FiBell } from 'react-icons/fi';
+import { useNotification } from '../../context/NotificationContext';
 
 /* ---------------- NAV LINKS DATA ---------------- */
-const navLinks = [
+const getNavLinks = (unreadCount) => [
   { name: 'Dashboard', icon: <CgDice4 size={18} />, path: '/admin' },
   {
     name: 'User Management',
@@ -17,6 +18,12 @@ const navLinks = [
     name: 'User Edit',
     icon: <FaUsersCog size={20} />,
     path: '/admin/user-edit',
+  },
+  { 
+    name: 'Notifications', 
+    icon: <FiBell size={18} />, 
+    path: '/admin/notifications',
+    badge: unreadCount > 0 ? unreadCount : null
   },
   { name: 'Settings', icon: <FaGear size={20} />, path: '/admin/settings' },
 ];
@@ -34,7 +41,14 @@ const SidebarLink = ({ link, active, onClick }) => (
     {active && (
       <div className='absolute left-0 top-0 h-full w-1 bg-[#F07400] rounded-tr-sm rounded-br-sm' />
     )}
-    <span className='flex items-center justify-center'>{link.icon}</span>
+    <span className='flex items-center justify-center relative'>
+      {link.icon}
+      {link.badge && (
+        <span className='absolute -top-2 -right-2 bg-[#FF8C00] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold'>
+          {link.badge > 99 ? '99+' : link.badge}
+        </span>
+      )}
+    </span>
     <span className='whitespace-nowrap'>{link.name}</span>
   </button>
 );
@@ -43,6 +57,9 @@ const AdminSidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const { unreadCount } = useNotification();
+
+  const navLinks = getNavLinks(unreadCount);
 
   const handleNavigate = (path) => {
     navigate(path);

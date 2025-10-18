@@ -12,6 +12,8 @@ export const endpoints = {
     GET_PROFILE: '/admin/profile',
     UPDATE_PROFILE: '/admin/profile',
     UPDATE_PASSWORD: '/admin/profile/password',
+    GET_NOTIFICATIONS: '/admin/notifications',
+    GET_UNREAD_COUNT: '/admin/notifications/unread-count',
   },
   user: {
     LOGIN: '/auth/login',
