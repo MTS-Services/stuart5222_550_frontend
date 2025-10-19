@@ -22,6 +22,8 @@ export const adminUserList = createAsyncThunk(
   }
 );
 
+// ========== GET Wait-list ==========
+
 // ========== POST Wait-list ==========
 export const adminApprove = createAsyncThunk(
   'admin/approve',
@@ -66,14 +68,13 @@ export const adminReject = createAsyncThunk(
   }
 );
 
-// ========== GET User Details ==========
+// ========== GET Single User Details ==========
 export const adminUserDetails = createAsyncThunk(
   'admin/userDetails',
   async ({ user_id }, { rejectWithValue }) => {
     try {
-      const res = await GET(
-        `${endpoints.admin.GET_USER_DETAILS}?user_id=${user_id}`
-      );
+      const res = await GET(`${endpoints.admin.GET_USER_DETAILS}/${user_id}`);
+      console.log('User details response:', res);
       return res;
     } catch (err) {
       return rejectWithValue(
@@ -83,17 +84,16 @@ export const adminUserDetails = createAsyncThunk(
   }
 );
 
-// ========== POST Update User Details ==========
-export const adminUserProfile = createAsyncThunk(
-  'admin/adminUserProfile',
+// ========== GET_USER_VERIFIED_PROFILE ==========
+export const adminUserVerifiedProfile = createAsyncThunk(
+  'admin/adminUserVerifiedProfile',
   async ({ page = 1, limit }, { rejectWithValue }) => {
     try {
-      const res = await GET(endpoints.admin.USER_PROFILE, {
+      const res = await GET(endpoints.admin.GET_USER_VERIFIED_PROFILE, {
         page,
         limit,
       });
 
-      console.log('User Profile response:', res);
       return res;
     } catch (err) {
       return rejectWithValue(

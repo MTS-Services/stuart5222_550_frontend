@@ -33,7 +33,9 @@ const AdminView = lazy(() => import('../page/private/admin/AdminView'));
 const UserManageView = lazy(() =>
   import('../page/private/userManagements/UserManageView')
 );
-const UserEditView = lazy(() => import('../page/private/userEdit/UserEdit'));
+const UserEditView = lazy(() =>
+  import('../page/private/userEdit/UserEditView.jsx')
+);
 const SettingsView = lazy(() =>
   import('../page/private/settings/SettingsView')
 );
@@ -43,9 +45,7 @@ const NotificationView = lazy(() =>
 const SetupProfileView = lazy(() =>
   import('../page/auth/setup-profile/SetupProfileView.jsx')
 );
-const EditResponse = lazy(() =>
-  import('../page/private/userEdit/components/EditResponse.jsx')
-);
+
 const UserView = lazy(() => import('../page/public/profile/UserView.jsx'));
 const GalleryView = lazy(() =>
   import('../page/public/gallery/GalleryView.jsx')

@@ -11,7 +11,7 @@ const SettingsView = () => {
     firstName: 'Jenny',
     lastName: 'Wilson',
     email: 'alma.lawson@example.com',
-    phone: '0412 345 678',
+    phone: '+0412 345 678',
   });
 
   const [passwordDetails, setPasswordDetails] = useState({

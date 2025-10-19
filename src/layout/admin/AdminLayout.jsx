@@ -12,7 +12,7 @@ import {
 } from '../../features/admin/notifications/notificationsFetch';
 import {
   adminUserList,
-  adminUserProfile,
+  adminUserVerifiedProfile,
 } from '../../features/admin/management/usreFetch';
 
 /* ---------------- MAIN LAYOUT ---------------- */
@@ -21,7 +21,7 @@ const AdminLayout = () => {
 
   useEffect(() => {
     dispatch(adminUserList({ page: 1, limit: 50, status: 'ALL' }));
-    dispatch(adminUserProfile({ page: 1, limit: 50 }));
+    dispatch(adminUserVerifiedProfile({ page: 1, limit: 10 }));
     dispatch(fetchDashboardData());
     // dispatch(markAllNotificationsRead());
     dispatch(getUnreadNotificationsCount());

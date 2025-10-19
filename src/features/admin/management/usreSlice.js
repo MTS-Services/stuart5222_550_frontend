@@ -2,10 +2,11 @@
 import { createSlice, isRejected } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import {
-  adminApprove,
   adminReject,
+  adminApprove,
   adminUserList,
-  adminUserProfile,
+  adminUserDetails,
+  adminUserVerifiedProfile,
 } from './usreFetch';
 
 const initialState = {
@@ -36,6 +37,21 @@ const adminUserManagementSlice = createSlice({
         state.error = null;
       })
       .addCase(adminUserList.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      // ===== User Details Request in HOMEPAGE =====
+      .addCase(adminUserDetails.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(adminUserDetails.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.userProfile = action.payload;
+        state.error = null;
+      })
+      .addCase(adminUserDetails.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
@@ -79,16 +95,16 @@ const adminUserManagementSlice = createSlice({
       })
 
       // ===== User Profile Request in HOMEPAGE =====
-      .addCase(adminUserProfile.pending, (state) => {
+      .addCase(adminUserVerifiedProfile.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(adminUserProfile.fulfilled, (state, action) => {
+      .addCase(adminUserVerifiedProfile.fulfilled, (state, action) => {
         state.isLoading = false;
         state.userProfile = action.payload.profiles;
         state.error = null;
       })
-      .addCase(adminUserProfile.rejected, (state, action) => {
+      .addCase(adminUserVerifiedProfile.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });

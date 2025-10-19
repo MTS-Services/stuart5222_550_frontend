@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { UserEditTable } from './components/UserEditTable';
 
-const UserEdit = () => {
+const UserEditView = () => {
   const [searchInput, setSearchInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -85,4 +85,4 @@ const UserEdit = () => {
   );
 };
 
-export default UserEdit;
+export default UserEditView;

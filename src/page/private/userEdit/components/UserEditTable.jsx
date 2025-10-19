@@ -19,7 +19,6 @@ export const UserEditTable = () => {
   const totalPages = Math.ceil(allUsers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = allUsers.slice(startIndex, startIndex + itemsPerPage);
-
   // ✅ Pagination handlers
   const handlePrevious = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
@@ -37,14 +36,14 @@ export const UserEditTable = () => {
           <Loading />
         ) : error ? (
           <p className='text-center py-10 text-red-500'>{error}</p>
-        ) : allUsers.length === 0 ? (
+        ) : currentData.length === 0 ? (
           <p className='text-center py-10 text-gray-500'>No data found.</p>
         ) : (
           <table className='min-w-full table-fixed text-left text-xs sm:text-sm md:text-base'>
             <thead className='bg-white text-black text-lg font-normal'>
               <tr>
                 <th className='px-7 py-3 w-1/5 whitespace-nowrap'>Date</th>
-                <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Location</th>
+                <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Name</th>
                 <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Age</th>
                 <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Height</th>
                 <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Action</th>
@@ -62,10 +61,11 @@ export const UserEditTable = () => {
                       : '—'}
                   </td>
                   <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
-                    {row.location || '—'}
+                    {row.user.name || '—'}
                   </td>
                   <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
-                    {row.age || '—'}
+                    {row.age || '—'}{' '}
+                    <span className='text-gray-500'>(years)</span>
                   </td>
                   <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
                     {row.height || '—'}
