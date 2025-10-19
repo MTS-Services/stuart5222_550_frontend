@@ -7,7 +7,7 @@ const LetsConnectView = () => {
   const navigate = useNavigate();
 
   return (
-    <div className='px-[10px] py-2 sm:py-4 md:py-6 lg:py-8 bg-[#3B3B3D] h-screen'>
+    <div className='px-[10px] py-2 sm:py-4 md:py-6 lg:py-8 bg-[#3B3B3D] min-h-screen'>
       <div className='max-w-[600px] mx-auto'>
         <h3
           onClick={() => navigate(-1)}

@@ -1,7 +1,7 @@
 // const // src/features/user/userFetch.js
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { endpoints } from '../../../config/api/httpEndpoint';
-import { GET } from '../../../config/api/httpMethods';
+import { GET, POST } from '../../../config/api/httpMethods';
 
 // ========== GET User-list ==========
 export const adminUserList = createAsyncThunk(
@@ -27,11 +27,19 @@ export const adminApprove = createAsyncThunk(
   'admin/approve',
   async ({ user_id }, { rejectWithValue }) => {
     try {
-      const res = await POST(endpoints.admin.APPROVE_USER, { user_id });
+      const res = await POST(
+        `${endpoints.admin.APPROVE_USER}?user_id=${user_id}`,
+        {}
+      );
+
+      console.log('Approve response:', res);
       return res;
     } catch (err) {
+      console.error('Approve error:', err.response?.data || err.message);
       return rejectWithValue(
-        err.response?.data?.message || 'Failed to join wait list'
+        err.response?.data?.message ||
+          err.response?.data?.error ||
+          'Approval failed, check server logs.'
       );
     }
   }
@@ -42,11 +50,17 @@ export const adminReject = createAsyncThunk(
   'admin/reject',
   async ({ user_id }, { rejectWithValue }) => {
     try {
-      const res = await POST(endpoints.admin.REJECT_USER, { user_id });
+      const res = await POST(
+        `${endpoints.admin.REJECT_USER}?user_id=${user_id}`,
+        {}
+      );
       return res;
     } catch (err) {
+      console.error('Reject error:', err.response?.data || err.message);
       return rejectWithValue(
-        err.response?.data?.message || 'Failed to join wait list'
+        err.response?.data?.message ||
+          err.response?.data?.error ||
+          'Rejection failed, check server logs.'
       );
     }
   }

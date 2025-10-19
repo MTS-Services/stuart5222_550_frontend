@@ -13,6 +13,7 @@ export const WaitListTable = () => {
   const [loadingRow, setLoadingRow] = useState({ approve: null, reject: null });
 
   const handleApprove = async (userId) => {
+    console.log('Approving user:', userId);
     setLoadingRow({ ...loadingRow, approve: userId });
     try {
       await dispatch(adminApprove({ user_id: userId })).unwrap();
@@ -25,6 +26,7 @@ export const WaitListTable = () => {
   };
 
   const handleReject = async (userId) => {
+    console.log('Rejecting user:', userId);
     setLoadingRow({ ...loadingRow, reject: userId });
     try {
       await dispatch(adminReject({ user_id: userId })).unwrap();

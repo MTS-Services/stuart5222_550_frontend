@@ -9,18 +9,23 @@ import {
 import PrivateGuard from './guards/PrivateGuard';
 import PublicGuard from './guards/PublicGuard';
 import AuthGuard from './guards/AuthGuard';
-import AuthLayout from '../layout/auth/authLayout';
-import UserDetailsView from '../page/private/userDetails/UserDetailsView';
+import SetupProfileView from '../page/auth/setup-profile/SetupProfileView.jsx';
 
 // Layouts
+const AuthLayout = lazy(() => import('../layout/auth/authLayout'));
 const AdminLayout = lazy(() => import('../layout/admin/AdminLayout'));
 const MainLayout = lazy(() => import('../layout/main/MainLayout'));
-const ErrorView = lazy(() => import('../page/public/error/ErrorView'));
 
 // 🔓 Public Pages
+const ErrorView = lazy(() => import('../page/public/error/ErrorView'));
 const HomeView = lazy(() => import('../page/public/home/HomeView'));
 const LetsConnectView = lazy(() =>
   import('../page/public/connect/ConnectView')
+);
+
+// 🛂 Auth Pages
+const CheckoutView = lazy(() =>
+  import('../page/auth/checkout/CheckoutView.jsx')
 );
 const LoginView = lazy(() => import('../page/auth/login/LoginView'));
 
@@ -37,6 +42,17 @@ const NotificationView = lazy(() =>
   import('../page/private/notification/Notification.jsx')
 );
 
+const UserView = lazy(() => import('../page/public/profile/UserView.jsx'));
+const GalleryView = lazy(() =>
+  import('../page/public/gallery/GalleryView.jsx')
+);
+const UserDetailsView = lazy(() =>
+  import('../page/private/userDetails/UserDetailsView')
+);
+const WelcomeScanView = lazy(() =>
+  import('../page/public/welcomeScan/WelcomeScanView.jsx')
+);
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -44,7 +60,13 @@ export const router = createBrowserRouter(
       <Route element={<PublicGuard />}>
         <Route path='/' element={<MainLayout />}>
           <Route index element={<HomeView />} />
-          <Route path='connect' element={<LetsConnectView />} />
+
+          <Route path='welcome/:id' element={<WelcomeScanView />} />
+          <Route path='user-profile' element={<UserView />} />
+          <Route path='user-profile/gallery' element={<GalleryView />} />
+          <Route path='user-profile/connect' element={<LetsConnectView />} />
+          <Route path='checkout' element={<CheckoutView />} />
+          <Route path='checkout/setup-profile' element={<SetupProfileView />} />
         </Route>
       </Route>
 

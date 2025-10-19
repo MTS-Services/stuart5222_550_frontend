@@ -1,22 +1,32 @@
+import { useEffect } from 'react';
 import { BsCheck } from 'react-icons/bs';
-import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { qrCodeRequest } from '../../../features/public/QR-code/qrCodeFetch';
 
-export const WelcomeScanView = () => {
-  const navigate = useNavigate(); // ✅ Hook use
+const WelcomeScanView = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    dispatch(qrCodeRequest({ qr_code: id }));
+  }, [dispatch]);
 
   return (
-    <div className='px-[10px] py-2 sm:py-4 md:py-6 lg:py-8 font-raleway bg-[#3B3B3D] md:h-screen text-white'>
-      <div className='flex items-center justify-center text-center max-w-[600px] mx-auto'>
+    <div className='px-[10px] py-2 sm:py-4 md:py-6 lg:py-8 font-raleway bg-[#3B3B3D] min-h-screen text-white'>
+      <div className='flex items-center justify-center text-center '>
         <div className='text-center'>
           {/* Image */}
-          <Image
-            src='/img/home/remove_preview.png'
-            alt='Random pic'
-            width='300px'
-            height='200px'
-            className='shadow-lg'
-            fallback='/images/placeholder.jpg'
-          />
+          <div className='flex items-center justify-center py-6'>
+            {/* Image */}
+            <img
+              src='/img/page/home/remove_preview.png'
+              alt='preview'
+              className='w-24 bg-cover object-cover'
+            />
+          </div>
 
           {/* Heading */}
           <h1 className='font-raleway font-bold text-[20px] sm:text-[30px] md:text-[40px] text-center mb-4'>
@@ -31,7 +41,7 @@ export const WelcomeScanView = () => {
       <div className='flex items-center justify-center max-w-[600px] mx-auto'>
         <div className='w-full'>
           {/* Paragraph */}
-          <p className='md:text-base text-xs font-normal text-center mx-auto font-raleway md:py-5 py-2.5 md:w-[600px] w-[391px]'>
+          <p className='md:text-base text-xs font-normal text-center mx-auto font-raleway md:py-5 py-2.5'>
             If you’re reading this, it means I – or one of my wonderful friends
             – saw something in you. Maybe it was your smile, your energy, or the
             way you carried yourself. You weren’t obviously partnered, and if
@@ -72,7 +82,7 @@ export const WelcomeScanView = () => {
             </h2>
             <div className='md:w-full w-[70%] flex mx-auto items-center gap-4 mt-[20px] font-semibold font-raleway'>
               <div className='w-full'>
-                <Link to={`/cheryl-ann-view`}>
+                <Link to={`/user-profile`}>
                   <button
                     type='submit'
                     className='w-full p-2.5 bg-orange-500 rounded-lg text-white text-base hover:bg-orange-600 transition'
@@ -95,3 +105,5 @@ export const WelcomeScanView = () => {
     </div>
   );
 };
+
+export default WelcomeScanView;

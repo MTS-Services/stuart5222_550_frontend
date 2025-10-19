@@ -3,7 +3,7 @@ import Footer from './Footer';
 
 const MainLayout = () => {
   return (
-    <div>
+    <div className='bg-[#3B3B3D]'>
       <Outlet />
       <Footer />
     </div>

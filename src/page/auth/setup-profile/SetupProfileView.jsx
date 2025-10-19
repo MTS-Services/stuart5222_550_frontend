@@ -4,25 +4,22 @@ import { BiErrorCircle } from 'react-icons/bi';
 import { Upload } from 'lucide-react';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { MdOutlinePrivacyTip } from 'react-icons/md';
+import { PaymentMethod } from '../checkout/components/PaymentMethod';
 import { Link } from 'react-router-dom';
-import { postData } from '../../../utils/axiosInstance';
 
-export const SignUpPick = () => {
-  const [loading, setLoading] = useState(false);
+const SetupProfileView = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
-  const fileInputRef = useRef(null);
-  const [files, setFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
+  const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
+  const fileInputRef = useRef(null);
 
   // ============================================
   // 📸 Image Upload Handler with Preview
   // ============================================
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-
     console.log('🖼️ Files selected initially:', selectedFiles.length);
-
     // Validation: Max 13 images (3 required + 10 optional)
     if (selectedFiles.length > 13) {
       alert('⚠️ Maximum 13 images allowed (3 required + 10 optional)');
@@ -341,43 +338,21 @@ export const SignUpPick = () => {
   }, [imagePreviews]);
 
   return (
-    <div className='px-[10px] py-2 sm:py-4 md:py-6 lg:py-8 bg-[#3B3B3D] min-h-screen text-white font-sans'>
+    <div className='px-[10px] py-10 sm:py-4 md:py-6 lg:py-8 bg-[#3B3B3D] min-h-screen text-white font-sans'>
       <form onSubmit={handleSubmit}>
         <div className='max-w-[600px] mx-auto'>
           {/* Header */}
+          <div className='flex justify-center mb-6'>
+            <img
+              src='/img/page/home/remove_preview.png'
+              alt='preview'
+              className='w-[146px] h-[104px] bg-cover object-cover'
+            />
+          </div>
           <div className='text-center mb-6'>
             <h2 className='font-bold md:text-[32px] text-xl'>
-              Sign Up and Pick your Plan
+              Setup Your Profile
             </h2>
-          </div>
-
-          {/* Price Section */}
-          <div className='border-t-2 border-orange-500 rounded-xl bg-[#434343] p-8 md:mt-6 mt-4'>
-            <div className='bg-[#FFFFFF33] p-6 rounded-xl'>
-              <h2 className='text-[32px] font-semibold'>
-                $69/
-                <span className='text-base font-semibold'>
-                  Initial setup fee
-                </span>
-              </h2>
-              <hr className='my-6 text-gray-400' />
-              {[
-                '50 unique QR code cards',
-                'Delivery of cards',
-                'Profile page setup & review',
-                'Secure contact sharing',
-              ].map((item, index) => (
-                <h3
-                  key={index}
-                  className='flex items-center gap-3 font-medium text-base my-3 first:mt-0'
-                >
-                  <span className='rounded-lg p-2 bg-orange-500 w-7 h-7 text-white flex items-center justify-center'>
-                    <GiCheckMark className='w-6 h-6 font-semibold' />
-                  </span>
-                  {item}
-                </h3>
-              ))}
-            </div>
           </div>
 
           {/* Form Fields */}
@@ -490,7 +465,7 @@ export const SignUpPick = () => {
 
             <div className='self-stretch flex flex-col gap-2 w-full my-5'>
               <label className='text-white text-xl font-medium mb-[8px]'>
-                Tell 'em About You <span className='text-red-500'>*</span>
+                Tell Me About You <span className='text-red-500'>*</span>
               </label>
               <textarea
                 rows='5'
@@ -710,7 +685,7 @@ export const SignUpPick = () => {
           </div>
 
           {/* Contact Information */}
-          <div className='bg-[#434343] px-4 py-8 rounded-lg mt-12 mb-[100px]'>
+          <div className='bg-[#434343] px-4 py-6 rounded-lg '>
             <div className='max-w-[330px] mx-auto mb-6'>
               <h2 className='font-semibold text-xl mb-4'>
                 Person to person dating, but with a safer approach.
@@ -770,22 +745,30 @@ export const SignUpPick = () => {
                   className='h-11 px-3 bg-white text-gray-700 text-sm font-medium rounded-lg outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400'
                 />
               </div>
-
-              <button
-                type='submit'
-                disabled={submitLoading}
-                className={`w-full mt-6 p-2.5 rounded-lg text-white text-base font-semibold transition ${
-                  submitLoading
-                    ? 'bg-gray-500 cursor-not-allowed'
-                    : 'bg-orange-500 hover:bg-orange-600'
-                }`}
-              >
-                {submitLoading ? '⏳ Submitting...' : 'Submit for Review'}
-              </button>
             </div>
+
+            <Link
+              to='/welcome'
+              className='rounded-lg text-white text-base font-semibold transition'
+            >
+              After
+            </Link>
           </div>
+          <button
+            type='submit'
+            disabled={submitLoading}
+            className={`w-full mt-6 p-2.5 rounded-lg text-white text-base font-semibold transition ${
+              submitLoading
+                ? 'bg-gray-500 cursor-not-allowed'
+                : 'bg-orange-500 hover:bg-orange-600'
+            }`}
+          >
+            {submitLoading ? '⏳ Submitting...' : 'Submit for Review'}
+          </button>
         </div>
       </form>
     </div>
   );
 };
+
+export default SetupProfileView;
