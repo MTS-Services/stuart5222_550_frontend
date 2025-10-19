@@ -43,9 +43,7 @@ const NotificationView = lazy(() =>
 const SetupProfileView = lazy(() =>
   import('../page/auth/setup-profile/SetupProfileView.jsx')
 );
-const EditResponse = lazy(() =>
-  import('../page/private/userEdit/components/EditResponse.jsx')
-);
+
 const UserView = lazy(() => import('../page/public/profile/UserView.jsx'));
 const GalleryView = lazy(() =>
   import('../page/public/gallery/GalleryView.jsx')
