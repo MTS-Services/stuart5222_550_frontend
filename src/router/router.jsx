@@ -89,7 +89,7 @@ export const router = createBrowserRouter(
           <Route path='user-management/:id' element={<UserDetailsView />} />
           <Route path='notifications' element={<NotificationView />} />
           <Route path='user-edit' element={<UserEditView />} />
-          <Route path='user-edit/:id' element={<EditResponse />} />
+          <Route path='user-edit/:id' element={<UserDetailsView />} />
           <Route path='settings' element={<SettingsView />} />
         </Route>
       </Route>

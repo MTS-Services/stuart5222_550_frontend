@@ -23,7 +23,7 @@ const AdminLayout = () => {
     dispatch(adminUserList({ page: 1, limit: 50, status: 'ALL' }));
     dispatch(adminUserProfile({ page: 1, limit: 50 }));
     dispatch(fetchDashboardData());
-    dispatch(markAllNotificationsRead());
+    // dispatch(markAllNotificationsRead());
     dispatch(getUnreadNotificationsCount());
     dispatch(getAdminNotifications({ page: 1, limit: 20 }));
   }, [dispatch]);

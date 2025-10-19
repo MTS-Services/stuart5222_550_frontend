@@ -1,7 +1,8 @@
 import { FaRegCalendar } from 'react-icons/fa';
 
 import { GrLocation } from 'react-icons/gr';
-import { Bio } from '../userEdit/components/Bio';
+import { Bio } from './components/Bio';
+import Traveling from './components/Traveling';
 
 const images = [
   { id: 1, image: '/img/page/admin/img1.png' },
@@ -13,36 +14,13 @@ const images = [
 
 const UserDetailsView = () => {
   return (
-    <div className='text-black p-8'>
+    <div className='text-black'>
       {/* Before Bio */}
-      <div className=''>
-        <Bio
-          type={'Before'}
-          image={'/img/page/admin/Image-80.png'}
-          title={'Albert Flores'}
-          email={'albertflores@gmail.com'}
-          number={'(319) 555-0115'}
-          age={'56'}
-          height={'5’7'}
-          bodyType={'Curvy'}
-          deal={'Smokers'}
-          paragraph1={
-            'Hi, I’m Cheryl Ann — 56 years young, standing tall at 5’7” with a naturally curvy figure. I’m a warm, down-to-earth woman who values kindness, honesty, and meaningful connections over superficial small talk. I love spending my time with people who can make me laugh, share their passions, and hold deep, genuine conversations that go beyond the surface.'
-          }
-          paragraph2={
-            'I enjoy cozy coffee dates, spontaneous weekend getaways, and evenings filled with good food and even better company. I’m looking to meet someone authentic and emotionally mature — someone who’s ready to build something real, not just swipe endlessly.'
-          }
-          paragraph3={
-            'Smoking is a no-go for me. If you’re open-minded, kind-hearted, and know what you want, we might just get along beautifully.'
-          }
-        />
-      </div>
 
       {/* After Bio */}
-      <div className='my-8'>
+      <div className=''>
         <Bio
-          type={'After'}
-          image={'/img/page/admin/Image-80.png'}
+          image={'/img/page/admin/img5.png'}
           title={'Albert Flores'}
           email={'albertflores@gmail.com'}
           number={'(319) 555-0115'}
@@ -62,46 +40,10 @@ const UserDetailsView = () => {
         />
       </div>
 
-      <div className='relative my-6 rounded-2xl p-8 shadow-lg bg-gradient-to-b from-orange-200 via-amber-100 to-yellow-50 overflow-hidden'>
-        {/* Gradient border overlay */}
-        <div
-          className='absolute top-0 left-0 w-full h-full rounded-2xl pointer-events-none border-t-4 border-l-4 border-r-4 border-transparent'
-          style={{
-            borderImage:
-              'linear-gradient(to bottom, #FED7AA, #FEF3C7, #FEF9C3) 1',
-          }}
-        ></div>
-
-        {/* Content */}
-        <h2 className='text-lg font-semibold text-gray-900 mb-6'>
-          I am traveling and will be in:
-        </h2>
-
-        <div className='space-y-4'>
-          <div className='flex items-start gap-3'>
-            <span className='text-orange-600 text-xl mt-0.5'>
-              <GrLocation />
-            </span>
-            <div className='flex gap-2'>
-              <span className='font-semibold text-gray-900'>Location:</span>
-              <span className='text-gray-900'>Anywhere, USA</span>
-            </div>
-          </div>
-
-          <div className='flex items-start gap-3'>
-            <span className='text-orange-600 text-xl mt-0.5'>
-              <FaRegCalendar />
-            </span>
-            <div className='flex gap-2'>
-              <span className='font-semibold text-gray-900'>End-Date:</span>
-              <span className='text-gray-900'>October 20, 2025</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Traveling />
 
       {/* Image And Textarea Fiend */}
-      <div className=''>
+      <div className='pt-8'>
         <div className=''>
           <h3 className='text-2xl text-[#252525] font-raleway font-semibold mb-5'>
             Images

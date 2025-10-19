@@ -8,7 +8,7 @@ import {
 const initialState = {
   notifications: [],
   unreadCount: 0,
-  unread: [],
+  unread: 0,
   pagination: { page: 1, limit: 20, totalCount: 0 },
   loading: false,
   error: null,
@@ -59,7 +59,7 @@ const notificationsSlice = createSlice({
       })
       .addCase(getUnreadNotificationsCount.fulfilled, (state, action) => {
         state.loading = false;
-        state.unreadCount = action.payload?.unread;
+        state.unread = action.payload?.unread || 0;
         state.error = null;
       })
       .addCase(getUnreadNotificationsCount.rejected, (state, action) => {

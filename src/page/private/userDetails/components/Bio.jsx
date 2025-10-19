@@ -13,7 +13,7 @@ export const Bio = ({
   paragraph3,
 }) => {
   return (
-    <div className='bg-white rounded-sm p-4'>
+    <div className='rounded-sm p-4'>
       <h2 className='text-2xl text-[#002244] font-semibold font-poppins'>
         {type}
       </h2>

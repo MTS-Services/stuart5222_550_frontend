@@ -3,10 +3,10 @@ import { FaRegBell, FaRegUser } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
 const AdminNavbar = () => {
-  const { unread } = useSelector((state) => state.notifications);
+  const { unreadCount } = useSelector((state) => state.notifications);
 
   // If your notifications are an array, you can count unread ones like this:
-  const unreadCount = unread?.filter((n) => !n.isRead)?.length || 0;
+  // const unreadCount = unread?.filter((n) => !n.isRead)?.length || 0;
 
   return (
     <nav className='sticky top-0 z-30 flex items-center justify-end bg-white border-b border-gray-200 px-6 py-6'>
@@ -19,9 +19,9 @@ const AdminNavbar = () => {
           <FaRegBell size={18} />
 
           {/* 🔴 Badge */}
-          {unread > 0 && (
+          {unreadCount > 0 && (
             <span className='absolute -top-2.5 -right-2 bg-red-500 text-white text-[11px] font-bold rounded-full w-5 h-5 flex items-center justify-center'>
-              {unread > 9 ? '9+' : unread}
+              {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
         </Link>

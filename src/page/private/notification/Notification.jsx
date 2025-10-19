@@ -39,11 +39,11 @@ const NotificationView = () => {
 
             {unreadCount > 0 && (
               <button
-                onClick={handleMarkAllRead}
-                disabled={markingAllRead}
+                // onClick={handleMarkAllRead}
+                // disabled={markingAllRead}
                 className='flex items-center gap-3 font-inter font-normal text-lg hover:text-[#FF8C00] transition-colors duration-200 disabled:opacity-50'
               >
-                {markingAllRead ? 'Marking...' : 'Mark All Read'}
+                {} 'Mark All Read'
                 <IoCheckmarkDoneOutline className='w-6 h-6' />
               </button>
             )}
