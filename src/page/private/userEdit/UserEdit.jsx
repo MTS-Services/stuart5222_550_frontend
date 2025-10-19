@@ -2,79 +2,19 @@ import { useEffect, useState } from 'react';
 import { UserEditTable } from './components/UserEditTable';
 
 const UserEdit = () => {
-  const [editData, setEditData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Pagination & search
-  const [currentPage, setCurrentPage] = useState(1);
   const [searchInput, setSearchInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const itemsPerPage = 10;
-
-  useEffect(() => {
-    fetchHistory();
-  }, []);
-
-  const fetchHistory = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      // const data = await getData(`profiles`);
-      setEditData(data || []);
-    } catch (err) {
-      console.error('Failed to fetch data:', err);
-      setError('Failed to load data. Please try again later.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Real-time search: typing triggers filtering immediately
   const handleInputChange = (value) => {
     setSearchInput(value);
     setSearchQuery(value);
-    setCurrentPage(1);
   };
 
   // Clear search
   const handleClearSearch = () => {
     setSearchInput('');
     setSearchQuery('');
-    setCurrentPage(1);
-  };
-
-  // Filter data using searchQuery
-  const filteredData = editData.filter((row) =>
-    row.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // Pagination
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentData = filteredData.slice(startIndex, startIndex + itemsPerPage);
-
-  const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
-  // Highlight matched text
-  const highlightText = (text) => {
-    if (!searchQuery) return text;
-    const regex = new RegExp(`(${searchQuery})`, 'gi');
-    return text.split(regex).map((part, index) =>
-      regex.test(part) ? (
-        <span key={index} className=''>
-          {part}
-        </span>
-      ) : (
-        part
-      )
-    );
   };
 
   return (
@@ -140,18 +80,7 @@ const UserEdit = () => {
       </div>
 
       {/* Table */}
-      <UserEditTable
-        loading={loading}
-        error={error}
-        currentData={currentData}
-        highlightText={highlightText}
-        startIndex={startIndex}
-        filteredData={filteredData}
-        handlePrevious={handlePrevious}
-        currentPage={currentPage}
-        handleNext={handleNext}
-        totalPages={totalPages}
-      />
+      <UserEditTable />
     </div>
   );
 };

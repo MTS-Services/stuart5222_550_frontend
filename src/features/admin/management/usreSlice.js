@@ -1,10 +1,16 @@
 // src/features/auth/authSlice.js -> authFetch.js -> httpEndpoint.js
 import { createSlice, isRejected } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { adminApprove, adminReject, adminUserList } from './usreFetch';
+import {
+  adminApprove,
+  adminReject,
+  adminUserList,
+  adminUserProfile,
+} from './usreFetch';
 
 const initialState = {
   users: [],
+  userProfile: [],
   isLoading: false,
   error: null,
 };
@@ -70,6 +76,21 @@ const adminUserManagementSlice = createSlice({
         state.isRejected = false;
         state.error = action.payload;
         toast.error(action.payload);
+      })
+
+      // ===== User Profile Request in HOMEPAGE =====
+      .addCase(adminUserProfile.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(adminUserProfile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.userProfile = action.payload.profiles;
+        state.error = null;
+      })
+      .addCase(adminUserProfile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
   },
 });

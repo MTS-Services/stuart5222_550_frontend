@@ -9,32 +9,28 @@ export const WaitListTable = () => {
   const dispatch = useDispatch();
   const { users, isLoading } = useSelector((state) => state.adminUsers);
 
+  const filterUsers = users?.filter((user) => user.status === 'WAITLIST') || [];
+
   // 🔹 Track which row is loading
   const [loadingRow, setLoadingRow] = useState({ approve: null, reject: null });
 
   const handleApprove = async (userId) => {
-    console.log('Approving user:', userId);
-    setLoadingRow({ ...loadingRow, approve: userId });
+    setLoadingRow((prev) => ({ ...prev, approve: userId }));
     try {
       await dispatch(adminApprove({ user_id: userId })).unwrap();
-      console.log(`✅ User ${userId} approved`);
     } catch (err) {
-      console.error('❌ Approval failed:', err);
     } finally {
-      setLoadingRow({ ...loadingRow, approve: null });
+      setLoadingRow((prev) => ({ ...prev, approve: null }));
     }
   };
 
   const handleReject = async (userId) => {
-    console.log('Rejecting user:', userId);
-    setLoadingRow({ ...loadingRow, reject: userId });
+    setLoadingRow((prev) => ({ ...prev, reject: userId }));
     try {
       await dispatch(adminReject({ user_id: userId })).unwrap();
-      console.log(`❌ User ${userId} rejected`);
     } catch (err) {
-      console.error('❌ Rejection failed:', err);
     } finally {
-      setLoadingRow({ ...loadingRow, reject: null });
+      setLoadingRow((prev) => ({ ...prev, reject: userId }));
     }
   };
 
@@ -49,7 +45,7 @@ export const WaitListTable = () => {
       );
     }
 
-    if (!users.length) {
+    if (!filterUsers.length) {
       return (
         <tr>
           <td colSpan='5' className='text-center p-4 text-gray-500'>
@@ -59,7 +55,7 @@ export const WaitListTable = () => {
       );
     }
 
-    return users.map((user) => (
+    return filterUsers.map((user) => (
       <tr key={user.id} className='hover:bg-gray-50'>
         <td className='p-2 border'>{user.id}</td>
         <td className='p-2 border'>{user.name}</td>

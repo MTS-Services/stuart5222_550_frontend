@@ -5,14 +5,18 @@ import AdminSidebar from './AdminSidebar';
 import { useDispatch } from 'react-redux';
 
 import { fetchDashboardData } from '../../features/admin/home/dashboardFetch';
-import { adminUserList } from '../../features/admin/management/usreFetch';
+import {
+  adminUserList,
+  adminUserProfile,
+} from '../../features/admin/management/usreFetch';
 
 /* ---------------- MAIN LAYOUT ---------------- */
 const AdminLayout = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(adminUserList({ page: 1, limit: 50, status: 'WAITLIST' }));
+    dispatch(adminUserList({ page: 1, limit: 50, status: 'ALL' }));
+    dispatch(adminUserProfile({ page: 1, limit: 50 }));
     dispatch(fetchDashboardData());
   }, [dispatch]);
 

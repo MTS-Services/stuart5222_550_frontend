@@ -198,7 +198,10 @@ export const RequestUserTable = () => {
   const itemsPerPage = 10;
   const totalPages = Math.ceil((users?.length || 0) / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentData = users?.slice(startIndex, startIndex + itemsPerPage) || [];
+  const currentData =
+    users
+      ?.filter((user) => user.status === 'ACTIVE')
+      .slice(startIndex, startIndex + itemsPerPage) || [];
 
   const handlePrevious = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
@@ -221,9 +224,8 @@ export const RequestUserTable = () => {
                 <tr>
                   <th className='px-7 py-3 w-1/5 whitespace-nowrap'>Date</th>
                   <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Name</th>
-                  <th className='px-5 py-3 w-1/5 whitespace-nowrap'>
-                    Subscription
-                  </th>
+                  <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Status</th>
+                  <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Plan</th>
                   <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Email</th>
                   <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Action</th>
                 </tr>
@@ -236,13 +238,16 @@ export const RequestUserTable = () => {
                       className={index % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}
                     >
                       <td className='px-7 py-3 w-1/5 whitespace-nowrap'>
-                        {row.date || '—'}
+                        {new Date(row.createdAt).toLocaleDateString() || '—'}
                       </td>
                       <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
                         {row.name || '—'}
                       </td>
                       <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
-                        {row.plan || 'Free'}
+                        {row.status || '--'}
+                      </td>
+                      <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
+                        {row.paidSetupFee || 'Frees Trial'}
                       </td>
                       <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
                         {row.email || '—'}

@@ -10,6 +10,7 @@ import PrivateGuard from './guards/PrivateGuard';
 import PublicGuard from './guards/PublicGuard';
 import AuthGuard from './guards/AuthGuard';
 import SetupProfileView from '../page/auth/setup-profile/SetupProfileView.jsx';
+import { EditResponse } from '../page/private/userEdit/components/EditResponse.jsx';
 
 // Layouts
 const AuthLayout = lazy(() => import('../layout/auth/authLayout'));
@@ -85,6 +86,7 @@ export const router = createBrowserRouter(
           <Route path='user-management/:id' element={<UserDetailsView />} />
           <Route path='notifications' element={<NotificationView />} />
           <Route path='user-edit' element={<UserEditView />} />
+          <Route path='user-edit/:id' element={<EditResponse />} />
           <Route path='settings' element={<SettingsView />} />
         </Route>
       </Route>

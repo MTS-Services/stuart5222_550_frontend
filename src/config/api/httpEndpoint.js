@@ -9,6 +9,7 @@ export const endpoints = {
     GET_PENDING_USERS: '/admin/users/pending',
     APPROVE_USER: `/admin/users/approve`,
     REJECT_USER: `/admin/users/reject`,
+    USER_PROFILE: `/admin/profiles/verified`,
   },
   user: {
     LOGIN: '/auth/login',

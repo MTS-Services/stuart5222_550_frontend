@@ -65,3 +65,40 @@ export const adminReject = createAsyncThunk(
     }
   }
 );
+
+// ========== GET User Details ==========
+export const adminUserDetails = createAsyncThunk(
+  'admin/userDetails',
+  async ({ user_id }, { rejectWithValue }) => {
+    try {
+      const res = await GET(
+        `${endpoints.admin.GET_USER_DETAILS}?user_id=${user_id}`
+      );
+      return res;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || 'Failed to fetch user details'
+      );
+    }
+  }
+);
+
+// ========== POST Update User Details ==========
+export const adminUserProfile = createAsyncThunk(
+  'admin/adminUserProfile',
+  async ({ page = 1, limit }, { rejectWithValue }) => {
+    try {
+      const res = await GET(endpoints.admin.USER_PROFILE, {
+        page,
+        limit,
+      });
+
+      console.log('User Profile response:', res);
+      return res;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || 'Failed to update user details'
+      );
+    }
+  }
+);
