@@ -9,8 +9,6 @@ import {
 import PrivateGuard from './guards/PrivateGuard';
 import PublicGuard from './guards/PublicGuard';
 import AuthGuard from './guards/AuthGuard';
-import SetupProfileView from '../page/auth/setup-profile/SetupProfileView.jsx';
-import { EditResponse } from '../page/private/userEdit/components/EditResponse.jsx';
 
 // Layouts
 const AuthLayout = lazy(() => import('../layout/auth/authLayout'));
@@ -42,7 +40,12 @@ const SettingsView = lazy(() =>
 const NotificationView = lazy(() =>
   import('../page/private/notification/Notification.jsx')
 );
-
+const SetupProfileView = lazy(() =>
+  import('../page/auth/setup-profile/SetupProfileView.jsx')
+);
+const EditResponse = lazy(() =>
+  import('../page/private/userEdit/components/EditResponse.jsx')
+);
 const UserView = lazy(() => import('../page/public/profile/UserView.jsx'));
 const GalleryView = lazy(() =>
   import('../page/public/gallery/GalleryView.jsx')

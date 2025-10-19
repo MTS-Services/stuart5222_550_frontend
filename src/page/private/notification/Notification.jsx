@@ -1,57 +1,13 @@
-// AllTableResponsiveStyle.jsx
-export const AllTableResponsiveStyle = () => {
-  return (
-    <style>{`
-      .overflow-x-auto {
-        scrollbar-width: thin;
-        scrollbar-color: #cbd5e1 #f1f5f9;
-      }
-      
-      .overflow-x-auto::-webkit-scrollbar {
-        height: 8px;
-      }
-      
-      .overflow-x-auto::-webkit-scrollbar-track {
-        background: #f1f5f9;
-        border-radius: 4px;
-      }
-      
-      .overflow-x-auto::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 4px;
-      }
-      
-      .overflow-x-auto::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
-      }
-    `}</style>
-  );
-};
-
 // Notification.jsx
 import { IoCheckmarkDoneOutline } from 'react-icons/io5';
-import { useEffect, useState } from 'react';
 import { Loading } from '../../../components/ui/loading';
+import { useSelector } from 'react-redux';
+import { AllTableResponsiveStyle } from '../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
 
 const NotificationView = () => {
-  const [waitListTable, setWaitListTable] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchHistory();
-  }, []);
-
-  const fetchHistory = async () => {
-    try {
-      setLoading(true);
-      // const data = await getData(`notifications`);
-      setWaitListTable(data || []);
-    } catch (err) {
-      console.error('Failed to fetch data:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { notifications, loading } = useSelector(
+    (state) => state.notifications
+  );
 
   return (
     <div className='text-black p-4 md:p-8'>
@@ -70,8 +26,8 @@ const NotificationView = () => {
             </div>
           </div>
           <div className='rounded-sm relative overflow-x-auto md:overflow-x-visible'>
-            {waitListTable.length > 0 ? (
-              waitListTable.map((notification, index) => (
+            {notifications.length > 0 ? (
+              notifications.map((notification, index) => (
                 <div
                   key={index}
                   className='bg-white border-b border-gray-200 last:border-b-0 py-4 px-4 md:px-6'

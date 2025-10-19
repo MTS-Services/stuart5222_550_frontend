@@ -10,6 +10,13 @@ export const endpoints = {
     APPROVE_USER: `/admin/users/approve`,
     REJECT_USER: `/admin/users/reject`,
     USER_PROFILE: `/admin/profiles/verified`,
+
+    GET_PROFILE: '/admin/profile',
+    UPDATE_PROFILE: '/admin/profile/update',
+    UPDATE_PASSWORD: '/admin/profile/update-password',
+
+    GET_NOTIFICATIONS: '/admin/notifications',
+    GET_UNREAD_COUNT: '/admin/notifications/unread-count',
   },
   user: {
     LOGIN: '/auth/login',
