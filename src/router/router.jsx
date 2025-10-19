@@ -33,7 +33,9 @@ const AdminView = lazy(() => import('../page/private/admin/AdminView'));
 const UserManageView = lazy(() =>
   import('../page/private/userManagements/UserManageView')
 );
-const UserEditView = lazy(() => import('../page/private/userEdit/UserEdit'));
+const UserEditView = lazy(() =>
+  import('../page/private/userEdit/UserEditView.jsx')
+);
 const SettingsView = lazy(() =>
   import('../page/private/settings/SettingsView')
 );

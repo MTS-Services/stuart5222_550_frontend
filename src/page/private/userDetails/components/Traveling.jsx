@@ -1,4 +1,6 @@
 import React from 'react';
+import { FaRegCalendar } from 'react-icons/fa';
+import { GrLocation } from 'react-icons/gr';
 
 const Traveling = () => {
   return (

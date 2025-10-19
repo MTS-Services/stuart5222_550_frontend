@@ -3,37 +3,62 @@ import { useSelector } from 'react-redux';
 import Skeleton from '../../../components/ui/Skeleton';
 
 export const AllCard = () => {
-  const { dashboardData: overviewData, loading } = useSelector(
-    (state) => state.dashboard
-  );
-  const data = overviewData?.overview;
-  const waitLists = overviewData?.userStatus;
+  const { dashboardData, loading } = useSelector((state) => state.dashboard);
+
   const cardData = [
     {
       id: 1,
       title: 'Total Users',
-      value: data?.totalUsers ?? '--',
+      value: dashboardData?.totalUsers ?? '--',
       icon: <FaUsers className='w-5 h-5 text-gray-800' />,
       color: 'bg-blue-50',
     },
     {
       id: 2,
-      title: 'Waitlist Users',
-      value: waitLists?.waitlist ?? '--',
+      title: 'Wait List',
+      value: dashboardData?.waitlistUsers ?? '--',
       icon: <FaClock className='w-5 h-5 text-gray-800' />,
       color: 'bg-yellow-50',
     },
     {
       id: 3,
+      title: 'Active Users',
+      value: dashboardData?.userStatus?.active ?? '--',
+      icon: <FaClock className='w-5 h-5 text-gray-800' />,
+      color: 'bg-yellow-50',
+    },
+    {
+      id: 4,
       title: 'Verified Profiles',
-      value: data?.totalProfiles ?? '--',
+      value: dashboardData?.verifiedProfiles ?? '--',
       icon: <FaCheckCircle className='w-5 h-5 text-gray-800' />,
       color: 'bg-green-50',
     },
     {
-      id: 4,
+      id: 5,
       title: 'Active Cards',
-      value: data?.totalCards ?? '--',
+      value: dashboardData?.activeCards ?? '--',
+      icon: <FaIdCard className='w-5 h-5 text-gray-800' />,
+      color: 'bg-purple-50',
+    },
+    {
+      id: 6,
+      title: 'Total Scans',
+      value: dashboardData?.totalScans ?? '--',
+      icon: <FaIdCard className='w-5 h-5 text-gray-800' />,
+      color: 'bg-purple-50',
+    },
+    {
+      id: 7,
+      title: 'Total Revenue',
+      value: dashboardData?.overview?.totalRevenue ?? '--',
+      icon: <FaIdCard className='w-5 h-5 text-gray-800' />,
+      color: 'bg-purple-50',
+    },
+    {
+      id: 8,
+      title: 'Active Subscriptions',
+      value: dashboardData?.overview?.activeSubscriptions ?? '--',
       icon: <FaIdCard className='w-5 h-5 text-gray-800' />,
       color: 'bg-purple-50',
     },
@@ -61,7 +86,7 @@ export const AllCard = () => {
   }
 
   return (
-    <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-2'>
+    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 mt-2'>
       {cardData.map((item) => (
         <div
           key={item.id}

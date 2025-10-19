@@ -6,10 +6,13 @@ export const endpoints = {
   admin: {
     HOME_DATA: '/admin/dashboard',
     GET_ALL_USERS: '/admin/users/all',
+    GET_WAITLIST: '/admin/users/waitlist',
     GET_PENDING_USERS: '/admin/users/pending',
     APPROVE_USER: `/admin/users/approve`,
     REJECT_USER: `/admin/users/reject`,
-    USER_PROFILE: `/admin/profiles/verified`,
+    GET_USER_VERIFIED_PROFILE: `/admin/profiles/verified`,
+
+    GET_USER_DETAILS: `/admin/users`,
 
     GET_PROFILE: '/admin/profile',
     UPDATE_PROFILE: '/admin/profile/update',

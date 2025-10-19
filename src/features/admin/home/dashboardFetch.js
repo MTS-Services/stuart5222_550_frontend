@@ -7,6 +7,7 @@ export const fetchDashboardData = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await GET(endpoints.admin.HOME_DATA);
+      console.log(res);
       return res;
     } catch (error) {
       return rejectWithValue(error.message);
