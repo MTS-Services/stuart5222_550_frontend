@@ -1,6 +1,7 @@
+// notificationsFetch.js
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { endpoints } from '../../../config/api/httpEndpoint';
-import { GET } from '../../../config/api/httpMethods';
+import { GET, UPDATE } from '../../../config/api/httpMethods';
 
 // Get admin notifications with pagination
 export const getAdminNotifications = createAsyncThunk(
@@ -11,10 +12,17 @@ export const getAdminNotifications = createAsyncThunk(
         page,
         limit,
       });
-      return response; // this will be your payload
+
+      // Return only the data (serializable)
+      return response;
     } catch (error) {
       console.error('Error fetching admin notifications:', error);
-      return rejectWithValue(error?.response || error.message);
+
+      // Return a simple serializable object for rejected case
+      return rejectWithValue({
+        message: error.response?.data?.message || error.message,
+        status: error.response?.status || 500,
+      });
     }
   }
 );
@@ -25,6 +33,7 @@ export const getUnreadNotificationsCount = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await GET(endpoints.admin.GET_UNREAD_COUNT);
+      console.log('UNREAD: ', response);
       return response;
     } catch (error) {
       console.error('Error fetching unread notifications count:', error);
@@ -33,18 +42,24 @@ export const getUnreadNotificationsCount = createAsyncThunk(
   }
 );
 
-// Mark all notifications as read (if endpoint exists)
+// Mark all notifications as read
 export const markAllNotificationsRead = createAsyncThunk(
   'notifications/markAllNotificationsRead',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await GET(
+      const response = await UPDATE(
         `${endpoints.admin.GET_NOTIFICATIONS}/mark-all-read`
       );
+
+      // Return only serializable data
       return response;
     } catch (error) {
       console.error('Error marking notifications as read:', error);
-      return rejectWithValue(error?.response || error.message);
+
+      return rejectWithValue({
+        message: error.response?.data?.message || error.message,
+        status: error.response?.status || 500,
+      });
     }
   }
 );

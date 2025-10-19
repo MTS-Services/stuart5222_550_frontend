@@ -5,7 +5,11 @@ import AdminSidebar from './AdminSidebar';
 import { useDispatch } from 'react-redux';
 
 import { fetchDashboardData } from '../../features/admin/home/dashboardFetch';
-import { getAdminNotifications } from '../../features/admin/notifications/notificationsFetch';
+import {
+  getAdminNotifications,
+  getUnreadNotificationsCount,
+  markAllNotificationsRead,
+} from '../../features/admin/notifications/notificationsFetch';
 import {
   adminUserList,
   adminUserProfile,
@@ -19,6 +23,8 @@ const AdminLayout = () => {
     dispatch(adminUserList({ page: 1, limit: 50, status: 'ALL' }));
     dispatch(adminUserProfile({ page: 1, limit: 50 }));
     dispatch(fetchDashboardData());
+    dispatch(markAllNotificationsRead());
+    dispatch(getUnreadNotificationsCount());
     dispatch(getAdminNotifications({ page: 1, limit: 20 }));
   }, [dispatch]);
 
