@@ -2,8 +2,72 @@ import { GrLocation } from 'react-icons/gr';
 import { FaRegCalendar } from 'react-icons/fa';
 
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserProfile } from '../../../features/public/profile/profileFetch';
 
 const UserView = () => {
+  const dispatch = useDispatch();
+
+  // Get QR code data (contains profile email)
+  const { data: qrData } = useSelector((state) => state.qrcode);
+
+  // Get actual profile data
+  const { userProfile, fetchLoading, error } = useSelector(
+    (state) => state.profile
+  );
+
+  const userEmail = qrData?.profile?.contactEmail;
+
+  console.log('🔍 QR Data:', qrData);
+  console.log('📧 User Email:', userEmail);
+  console.log('👤 User Profile:', userProfile);
+
+  useEffect(() => {
+    if (userEmail) {
+      console.log('🚀 Fetching profile for:', userEmail);
+      dispatch(fetchUserProfile({ userMail: userEmail }));
+    }
+  }, [dispatch, userEmail]);
+
+  // Show loading state
+  if (fetchLoading) {
+    return (
+      <div className='px-[10px] py-2 sm:py-4 md:py-6 lg:py-8 bg-[#3B3B3D] min-h-screen flex items-center justify-center'>
+        <div className='text-white text-center'>
+          <div className='text-2xl mb-4'>⏳</div>
+          <p className='text-xl'>Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className='px-[10px] py-2 sm:py-4 md:py-6 lg:py-8 bg-[#3B3B3D] min-h-screen flex items-center justify-center'>
+        <div className='text-white text-center'>
+          <div className='text-2xl mb-4'>❌</div>
+          <p className='text-xl text-red-400'>Error loading profile</p>
+          <p className='text-sm mt-2'>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show message if no profile data
+  if (!userProfile || !userProfile.user) {
+    return (
+      <div className='px-[10px] py-2 sm:py-4 md:py-6 lg:py-8 bg-[#3B3B3D] min-h-screen flex items-center justify-center'>
+        <div className='text-white text-center'>
+          <div className='text-2xl mb-4'>👤</div>
+          <p className='text-xl'>No profile found</p>
+          <p className='text-sm mt-2'>Please scan a valid QR code first</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='px-[10px] py-2 sm:py-4 md:py-6 lg:py-8 bg-[#3B3B3D]'>
       <div className='font-raleway text-white px-2 py-6'>
@@ -15,7 +79,9 @@ const UserView = () => {
             className='w-24 bg-cover object-cover'
           />
         </div>
-        <h1 className='font-bold text-2xl text-center py-6'>Cheryl Ann</h1>
+        <h1 className='font-bold text-2xl text-center py-6'>
+          {userProfile.user?.name || 'Anonymous User'}
+        </h1>
 
         <div className='flex justify-center items-center text-center w-full'>
           <div className='relative w-[600px] my-6 rounded-2xl p-8 shadow-lg bg-gradient-to-b from-orange-200 via-amber-50 to-yellow-50 overflow-hidden'>
@@ -64,22 +130,43 @@ const UserView = () => {
         <div className=''>
           <div className='flex justify-center items-center text-center'>
             <div className='flex flex-col gap-5'>
+              {/* Main photo */}
               <div className='flex items-center justify-center'>
                 <img
-                  src='/img/page/chery/img1.jpg'
-                  alt='preview'
+                  src={
+                    userProfile.facePhoto
+                      ? `${import.meta.env.VITE_API_BASE_URL}${
+                          userProfile.facePhoto
+                        }`
+                      : '/img/page/home/remove_preview.png'
+                  }
+                  alt='Profile photo'
                   className='w-full h-full bg-cover object-cover rounded-xl'
                 />
               </div>
+
+              {/* Secondary photos */}
               <div className='flex items-center w-full gap-5'>
                 <img
-                  src='/img/page/chery/img2.jpg'
-                  alt='preview'
+                  src={
+                    userProfile.fullBodyPhoto
+                      ? `${import.meta.env.VITE_API_BASE_URL}${
+                          userProfile.fullBodyPhoto
+                        }`
+                      : '/img/page/home/remove_preview.png'
+                  }
+                  alt='Full body photo'
                   className='w-[49%] h-[50%] bg-cover object-cover rounded-xl'
                 />
                 <img
-                  src='/img/page/chery/img3.jpg'
-                  alt='preview'
+                  src={
+                    userProfile.thirdPhoto
+                      ? `${import.meta.env.VITE_API_BASE_URL}${
+                          userProfile.thirdPhoto
+                        }`
+                      : '/img/page/home/remove_preview.png'
+                  }
+                  alt='Additional photo'
                   className='w-[49%] h-[50%] bg-cover object-cover rounded-xl'
                 />
               </div>
@@ -99,22 +186,23 @@ const UserView = () => {
               </h2>
               <div className='bg-[#505050] p-6 rounded-lg my-4'>
                 <p className='font-raleway font-normal md:text-2xl text-xl'>
-                  Name : Cheryl Ann
+                  Name : {userProfile.user?.name || 'Not provided'}
                 </p>
                 <p className='font-raleway font-normal md:text-2xl text-xl my-5'>
-                  Age : 56
+                  Age : {userProfile.age || 'Not provided'}
                 </p>
                 <p className='font-raleway font-normal md:text-2xl text-xl'>
-                  Height : 5’7
+                  Height : {userProfile.height || 'Not provided'}
                 </p>
                 <p className='font-raleway font-normal md:text-2xl text-xl my-5'>
-                  Body type : Curvy
+                  Body type : {userProfile.bodyType || 'Not provided'}
                 </p>
                 <p className='font-raleway font-normal md:text-2xl text-xl'>
-                  Area : Hamilton, Montana
+                  Area :{' '}
+                  {userProfile.area || userProfile.location || 'Not provided'}
                 </p>
                 <p className='font-raleway font-normal md:text-2xl text-xl my-5'>
-                  Dealbreakers : Smokers
+                  Dealbreakers : {userProfile.dealbreakers || 'None specified'}
                 </p>
               </div>
             </div>
@@ -122,9 +210,7 @@ const UserView = () => {
             <h2 className='font-raleway font-medium text-xl mt-10'>Bio</h2>
             <div className='bg-[#FFFFFF14] rounded-lg my-4'>
               <p className='font-medium font-raleway md:text-base text-xs p-4'>
-                “Hi, I’m Cheryl Ann, 56, standing 5’7 with a curvy body type. I
-                enjoy genuine connections and meaningful conversations. Looking
-                to meet someone authentic — dealbreaker for me is smoking.”
+                {userProfile.bio || 'No bio available'}
               </p>
             </div>
 

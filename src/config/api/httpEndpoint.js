@@ -28,6 +28,7 @@ export const endpoints = {
     PROFILE: '/profile',
     SETTINGS: '/user/settings',
     QR_CODE: (qr_code) => `/qr-cards/scan/${qr_code}`,
+    FETCH_PROFILE: (userMail) => `/profile/${userMail}`,
   },
   subscription: {
     GET_ALL: '/subscriptions',

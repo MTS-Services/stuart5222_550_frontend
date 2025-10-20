@@ -1,11 +1,13 @@
 // store/slices/profileSlice.js
 import { createSlice } from '@reduxjs/toolkit';
-import { submitProfile } from './profileFetch';
+import { fetchUserProfile, submitProfile } from './profileFetch';
 
 const profileSlice = createSlice({
   name: 'profile',
   initialState: {
     submitLoading: false,
+    fetchLoading: false,
+    userProfile: [],
     imagePreviews: [],
     files: [],
     errors: {},
@@ -57,6 +59,16 @@ const profileSlice = createSlice({
         state.errors = {};
       })
       .addCase(submitProfile.rejected, (state, action) => {
+        state.submitLoading = false;
+        state.error = action.payload;
+        state.success = false;
+      })
+      .addCase(fetchUserProfile.fulfilled, (state, action) => {
+        state.submitLoading = false;
+        state.success = true;
+        state.userProfile = action.payload;
+      })
+      .addCase(fetchUserProfile.rejected, (state, action) => {
         state.submitLoading = false;
         state.error = action.payload;
         state.success = false;
