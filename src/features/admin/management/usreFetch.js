@@ -1,4 +1,3 @@
-// const // src/features/user/userFetch.js
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { endpoints } from '../../../config/api/httpEndpoint';
 import { GET, POST } from '../../../config/api/httpMethods';
@@ -21,8 +20,6 @@ export const adminUserList = createAsyncThunk(
     }
   }
 );
-
-// ========== GET Wait-list ==========
 
 // ========== POST Wait-list ==========
 export const adminApprove = createAsyncThunk(

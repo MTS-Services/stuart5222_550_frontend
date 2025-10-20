@@ -4,6 +4,8 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from 'react-router-dom';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 
 // Guards
 import PrivateGuard from './guards/PrivateGuard';
@@ -57,6 +59,8 @@ const WelcomeScanView = lazy(() =>
   import('../page/public/welcomeScan/WelcomeScanView.jsx')
 );
 
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -69,7 +73,14 @@ export const router = createBrowserRouter(
           <Route path='user-profile' element={<UserView />} />
           <Route path='user-profile/gallery' element={<GalleryView />} />
           <Route path='user-profile/connect' element={<LetsConnectView />} />
-          <Route path='checkout' element={<CheckoutView />} />
+          <Route
+            path='checkout/:user_email'
+            element={
+              <Elements stripe={stripePromise}>
+                <CheckoutView />
+              </Elements>
+            }
+          />
           <Route path='checkout/setup-profile' element={<SetupProfileView />} />
         </Route>
       </Route>

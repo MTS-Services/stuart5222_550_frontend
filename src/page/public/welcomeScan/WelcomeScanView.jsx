@@ -11,9 +11,7 @@ const WelcomeScanView = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    dispatch(
-      qrCodeRequest({ qr_code: 'bbef793e-8045-46cb-acaf-928058ac6084' })
-    );
+    dispatch(qrCodeRequest({ qr_code: id }));
   }, [dispatch]);
 
   return (

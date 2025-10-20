@@ -34,11 +34,8 @@ const notificationsSlice = createSlice({
       })
       .addCase(getAdminNotifications.fulfilled, (state, action) => {
         state.loading = false;
-        // Update notifications
         state.notifications = action.payload?.notifications || [];
-        // Update unread count
         state.unreadCount = state.notifications.filter((n) => !n.isRead).length;
-        // Update pagination info from API if provided
         state.pagination = {
           ...state.pagination,
           page: action.payload?.page || state.pagination.page,

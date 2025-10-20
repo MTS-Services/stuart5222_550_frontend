@@ -2,15 +2,17 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import authReducer from '../features/auth/authSlice';
 import userReducer from '../features/public/user/userSlice';
-import dashboardReducer from './admin/home/dashboardSlice';
+import profileReducer from '../features/public/profile/profileSlice';
 import qrCodeRequetReducer from '../features/public/QR-code/qrCodeSlice';
-import notificationsReducer from './admin/notifications/notificationsSlice';
 import adminUserManagementReducer from '../features/admin/management/usreSlice';
+import notificationsReducer from './admin/notifications/notificationsSlice';
+import dashboardReducer from './admin/home/dashboardSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     user: userReducer,
+    profile: profileReducer,
     dashboard: dashboardReducer,
     adminUsers: adminUserManagementReducer,
     notifications: notificationsReducer,

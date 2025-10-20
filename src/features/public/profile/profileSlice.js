@@ -1,0 +1,76 @@
+// store/slices/profileSlice.js
+import { createSlice } from '@reduxjs/toolkit';
+import { submitProfile } from './profileFetch';
+
+const profileSlice = createSlice({
+  name: 'profile',
+  initialState: {
+    submitLoading: false,
+    imagePreviews: [],
+    files: [],
+    errors: {},
+    submittedProfiles: [],
+    success: false,
+    error: null,
+  },
+  reducers: {
+    setFiles: (state, action) => {
+      state.files = action.payload;
+    },
+    setImagePreviews: (state, action) => {
+      state.imagePreviews = action.payload;
+    },
+    setErrors: (state, action) => {
+      state.errors = action.payload;
+    },
+    setSubmitLoading: (state, action) => {
+      state.submitLoading = action.payload;
+    },
+    resetProfile: (state) => {
+      state.submitLoading = false;
+      state.imagePreviews = [];
+      state.files = [];
+      state.errors = {};
+      state.success = false;
+      state.error = null;
+    },
+    removeImage: (state, action) => {
+      const index = action.payload;
+      state.files = state.files.filter((_, i) => i !== index);
+      state.imagePreviews = state.imagePreviews.filter((_, i) => i !== index);
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(submitProfile.pending, (state) => {
+        state.submitLoading = true;
+        state.success = false;
+        state.error = null;
+      })
+      .addCase(submitProfile.fulfilled, (state, action) => {
+        state.submitLoading = false;
+        state.success = true;
+        state.submittedProfiles.push(action.payload);
+        // Reset form data
+        state.files = [];
+        state.imagePreviews = [];
+        state.errors = {};
+      })
+      .addCase(submitProfile.rejected, (state, action) => {
+        state.submitLoading = false;
+        state.error = action.payload;
+        state.success = false;
+      });
+  },
+});
+
+export const {
+  setFiles,
+  setImagePreviews,
+  setErrors,
+  setSubmitLoading,
+  resetProfile,
+  removeImage,
+} = profileSlice.actions;
+
+export default profileSlice.reducer;

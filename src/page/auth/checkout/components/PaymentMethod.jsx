@@ -68,14 +68,14 @@ export const PaymentMethod = () => {
       </div>
 
       {/* Button */}
-      <Link to='/setup-profile'>
+      {/* <Link to='/checkout/setup-profile'>
         <button
           type='submit'
           className='w-full p-2.5 bg-orange-500 rounded-lg text-white text-base font-semibold hover:bg-orange-600 transition'
         >
           Payment method
         </button>
-      </Link>
+      </Link> */}
     </div>
   );
 };
