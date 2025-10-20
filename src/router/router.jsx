@@ -12,6 +12,8 @@ import AuthGuard from './guards/AuthGuard';
 import AuthLayout from '../layout/auth/authLayout';
 import UserDetailsView from '../page/private/userDetails/UserDetailsView';
 
+const UserDetails = lazy(() => import('../page/private/userDetails/UserDetails'));
+
 // Layouts
 const AdminLayout = lazy(() => import('../layout/admin/AdminLayout'));
 const MainLayout = lazy(() => import('../layout/main/MainLayout'));
@@ -63,6 +65,7 @@ export const router = createBrowserRouter(
           <Route path='user-management/:id' element={<UserDetailsView />} />
           <Route path='notifications' element={<NotificationView />} />
           <Route path='user-edit' element={<UserEditView />} />
+          <Route path='profile-details/:profileId' element={<UserDetails />} />
           <Route path='settings' element={<SettingsView />} />
         </Route>
       </Route>

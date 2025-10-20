@@ -1,74 +1,119 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { UserEditTable } from './components/UserEditTable';
+import { getUserProfiles } from '../../../services/profilesService';
 
 const UserEdit = () => {
-  const [editData, setEditData] = useState([]);
+  const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Pagination & search
+  // API response data
+  const [pagination, setPagination] = useState({});
+  const [stats, setStats] = useState({});
+  const [filters, setFilters] = useState({});
+
+  // UI state
   const [currentPage, setCurrentPage] = useState(1);
   const [searchInput, setSearchInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('DRAFT');
   const itemsPerPage = 10;
 
   useEffect(() => {
-    fetchHistory();
-  }, []);
+    fetchProfiles();
+  }, [currentPage, selectedStatus]);
 
-  const fetchHistory = async () => {
+  const fetchProfiles = async () => {
     try {
       setLoading(true);
       setError(null);
-      // const data = await getData(`profiles`);
-      setEditData(data || []);
+      
+      const response = await getUserProfiles(selectedStatus, currentPage, itemsPerPage);
+      
+      if (response) {
+        setProfiles(response.profiles || []);
+        setPagination(response.pagination || {});
+        setStats(response.stats || {});
+        setFilters(response.filters || {});
+        
+        toast.success(`Loaded ${response.profiles?.length || 0} profiles`, {
+          position: 'top-right',
+          autoClose: 2000,
+        });
+      }
     } catch (err) {
-      console.error('Failed to fetch data:', err);
-      setError('Failed to load data. Please try again later.');
+      console.error('Failed to fetch profiles:', err);
+      setError('Failed to load profiles. Please try again later.');
+      toast.error('Failed to load profiles', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  // Real-time search: typing triggers filtering immediately
+  // Handle search input
   const handleInputChange = (value) => {
     setSearchInput(value);
-    setSearchQuery(value);
+  };
+
+  // Handle status filter change
+  const handleStatusChange = (status) => {
+    setSelectedStatus(status);
     setCurrentPage(1);
+    toast.info(`Filtering by status: ${status}`, {
+      position: 'top-right',
+      autoClose: 2000,
+    });
   };
 
   // Clear search
   const handleClearSearch = () => {
     setSearchInput('');
     setSearchQuery('');
-    setCurrentPage(1);
   };
 
-  // Filter data using searchQuery
-  const filteredData = editData.filter((row) =>
-    row.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter profiles by search query (client-side)
+  const filteredProfiles = profiles.filter((profile) => {
+    if (!searchQuery) return true;
+    
+    const searchTerm = searchQuery.toLowerCase();
+    return (
+      profile.user?.name?.toLowerCase().includes(searchTerm) ||
+      profile.user?.email?.toLowerCase().includes(searchTerm) ||
+      profile.bio?.toLowerCase().includes(searchTerm)
+    );
+  });
 
-  // Pagination
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+  // Pagination calculations
+  const totalPages = pagination.totalPages || 1;
+  const startIndex = ((pagination.currentPage || 1) - 1) * itemsPerPage;
+  const currentData = filteredProfiles; // Use filtered profiles for display
 
   const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
+    if (pagination.hasPrevPage) {
+      setCurrentPage(prev => prev - 1);
+    }
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    if (pagination.hasNextPage) {
+      setCurrentPage(prev => prev + 1);
+    }
   };
 
-  // Highlight matched text
+  // Highlight matched text in search results
   const highlightText = (text) => {
-    if (!searchQuery) return text;
-    const regex = new RegExp(`(${searchQuery})`, 'gi');
-    return text.split(regex).map((part, index) =>
+    if (!searchInput || !text) return text;
+
+    const regex = new RegExp(`(${searchInput})`, 'gi');
+    const parts = text.split(regex);
+
+    return parts.map((part, index) =>
       regex.test(part) ? (
-        <span key={index} className=''>
+        <span key={index} className='bg-yellow-200 font-semibold'>
           {part}
         </span>
       ) : (
@@ -77,15 +122,65 @@ const UserEdit = () => {
     );
   };
 
+  // Format date
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
   return (
     <div className='text-black md:p-8 p-6'>
-      <div className='flex items-center justify-between mb-6'>
-        <h2 className='text-2xl text-[#002244] font-semibold font-poppins'>
-          All User list
-        </h2>
+      <div className='flex flex-col gap-6 mb-6'>
+        <div className='flex items-center justify-between'>
+          <h2 className='text-2xl text-[#002244] font-semibold font-poppins'>
+            All User Profiles
+          </h2>
+          
+          {/* Stats Display */}
+          {stats && Object.keys(stats).length > 0 && (
+            <div className='flex items-center gap-4 text-sm'>
+              <span className='bg-blue-100 text-blue-800 px-3 py-1 rounded-full'>
+                Total: {stats.total || 0}
+              </span>
+              <span className='bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full'>
+                Draft: {stats.draft || 0}
+              </span>
+              <span className='bg-orange-100 text-orange-800 px-3 py-1 rounded-full'>
+                Pending: {stats.pending || 0}
+              </span>
+              <span className='bg-green-100 text-green-800 px-3 py-1 rounded-full'>
+                Approved: {stats.approved || 0}
+              </span>
+              <span className='bg-red-100 text-red-800 px-3 py-1 rounded-full'>
+                Rejected: {stats.rejected || 0}
+              </span>
+            </div>
+          )}
+        </div>
 
-        {/* Search Field */}
-        <div className='relative w-full max-w-md'>
+        <div className='flex items-center gap-4'>
+          {/* Status Filter */}
+          <div className='flex items-center gap-2'>
+            <label className='text-sm font-medium text-gray-700'>Filter by Status:</label>
+            <select
+              value={selectedStatus}
+              onChange={(e) => handleStatusChange(e.target.value)}
+              className='border border-[#F07400] px-3 py-2 rounded-lg focus:border-[#F07400] focus:ring-1 focus:ring-[#eb9d54] outline-none'
+            >
+              {filters.availableStatuses?.map((status) => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Search Field */}
+          <div className='relative w-full max-w-md'>
           <input
             type='text'
             placeholder='Search user name'
@@ -136,6 +231,7 @@ const UserEdit = () => {
               </svg>
             )}
           </button>
+          </div>
         </div>
       </div>
 
@@ -146,11 +242,13 @@ const UserEdit = () => {
         currentData={currentData}
         highlightText={highlightText}
         startIndex={startIndex}
-        filteredData={filteredData}
+        filteredData={filteredProfiles}
         handlePrevious={handlePrevious}
-        currentPage={currentPage}
+        currentPage={pagination.currentPage || 1}
         handleNext={handleNext}
         totalPages={totalPages}
+        pagination={pagination}
+        stats={stats}
       />
     </div>
   );

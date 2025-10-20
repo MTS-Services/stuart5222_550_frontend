@@ -14,6 +14,10 @@ export const endpoints = {
     UPDATE_PASSWORD: '/admin/profile/password',
     GET_NOTIFICATIONS: '/admin/notifications',
     GET_UNREAD_COUNT: '/admin/notifications/unread-count',
+    GET_PROFILES: '/admin/profiles/all',
+    GET_PROFILE_BY_ID: (profileId) => `/admin/profiles/${profileId}`,
+    APPROVE_PROFILE: (profileId) => `/admin/profiles/${profileId}/approve`,
+    REJECT_PROFILE: (profileId) => `/admin/profiles/${profileId}/reject`,
   },
   user: {
     LOGIN: '/auth/login',

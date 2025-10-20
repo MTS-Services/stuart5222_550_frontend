@@ -12,7 +12,7 @@ const AdminLayout = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(adminUserList({ page: 1, limit: 50, status: 'VERIFIED' }));
+    dispatch(adminUserList({ page: 1, limit: 50, status: 'ALL' }));
     dispatch(fetchDashboardData());
   }, [dispatch]);
 
