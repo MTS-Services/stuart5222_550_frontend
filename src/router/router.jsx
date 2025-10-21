@@ -13,15 +13,15 @@ import PublicGuard from './guards/PublicGuard';
 import AuthGuard from './guards/AuthGuard';
 
 // Layouts
-const AuthLayout = lazy(() => import('../layout/auth/authLayout'));
-const AdminLayout = lazy(() => import('../layout/admin/AdminLayout'));
-const MainLayout = lazy(() => import('../layout/main/MainLayout'));
+const AuthLayout = lazy(() => import('../layout/auth/AuthLayout.jsx'));
+const AdminLayout = lazy(() => import('../layout/admin/AdminLayout.jsx'));
+const MainLayout = lazy(() => import('../layout/main/MainLayout.jsx'));
 
 // 🔓 Public Pages
-const ErrorView = lazy(() => import('../page/public/error/ErrorView'));
-const HomeView = lazy(() => import('../page/public/home/HomeView'));
+const ErrorView = lazy(() => import('../page/public/error/ErrorView.jsx'));
+const HomeView = lazy(() => import('../page/public/home/HomeView.jsx'));
 const LetsConnectView = lazy(() =>
-  import('../page/public/connect/ConnectView')
+  import('../page/public/connect/ConnectView.jsx')
 );
 const GalleryView = lazy(() =>
   import('../page/public/gallery/GalleryView.jsx')
@@ -34,18 +34,18 @@ const WelcomeScanView = lazy(() =>
 const CheckoutView = lazy(() =>
   import('../page/auth/checkout/CheckoutView.jsx')
 );
-const LoginView = lazy(() => import('../page/auth/login/LoginView'));
+const LoginView = lazy(() => import('../page/auth/login/LoginView.jsx'));
 
 // 🔒 Private Pages
-const AdminView = lazy(() => import('../page/private/admin/AdminView'));
+const AdminView = lazy(() => import('../page/private/admin/AdminView.jsx'));
 const UserManageView = lazy(() =>
-  import('../page/private/userManagements/UserManageView')
+  import('../page/private/userManagements/UserManageView.jsx')
 );
 const UserEditView = lazy(() =>
   import('../page/private/userEdit/UserEditView.jsx')
 );
 const SettingsView = lazy(() =>
-  import('../page/private/settings/SettingsView')
+  import('../page/private/settings/SettingsView.jsx')
 );
 const NotificationView = lazy(() =>
   import('../page/private/notification/Notification.jsx')
