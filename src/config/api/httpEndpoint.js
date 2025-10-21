@@ -2,6 +2,7 @@ export const endpoints = {
   auth: {
     LOGIN: '/auth/admin/login',
     REGISTER: '/auth/register',
+    PAYMENT: '/payment/simple-payment',
   },
   admin: {
     HOME_DATA: '/admin/dashboard',
@@ -13,7 +14,6 @@ export const endpoints = {
     GET_USER_VERIFIED_PROFILE: `/admin/profiles/verified`,
 
     GET_USER_DETAILS: `/admin/users`,
-
     GET_PROFILE: '/admin/profile',
     UPDATE_PROFILE: '/admin/profile/update',
     UPDATE_PASSWORD: '/admin/profile/update-password',
@@ -25,9 +25,10 @@ export const endpoints = {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
     WAITLIST: '/auth/register',
-    PROFILE: '/user/profile',
+    PROFILE: '/profile',
     SETTINGS: '/user/settings',
     QR_CODE: (qr_code) => `/qr-cards/scan/${qr_code}`,
+    FETCH_PROFILE: (userMail) => `/profile/${userMail}`,
   },
   subscription: {
     GET_ALL: '/subscriptions',

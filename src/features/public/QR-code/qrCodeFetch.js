@@ -3,13 +3,18 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { endpoints } from '../../../config/api/httpEndpoint';
 import { GET, POST } from '../../../config/api/httpMethods';
 
-// ========== POST Wait-list ==========
+// ========== POST QR Code Scan ==========
 export const qrCodeRequest = createAsyncThunk(
-  'admin/qrcode',
-  async ({ qr_code }, { rejectWithValue }) => {
+  'qrCode/scan',
+  async ({ qr_code, scannerEmail }, { rejectWithValue }) => {
     try {
-      const res = await POST(endpoints.user.QR_CODE(qr_code));
-      console.log('QR Code response:', res);
+      // Send body data as the backend expects it
+      const body = {};
+      if (scannerEmail) {
+        body.scannerEmail = scannerEmail;
+      }
+      const res = await POST(endpoints.user.QR_CODE(qr_code), body);
+      console.log('QR Code scan successful:', res);
       return res;
     } catch (err) {
       console.error('QR Code error:', err.response?.data || err.message);

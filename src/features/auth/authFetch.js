@@ -23,3 +23,21 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+
+// ========== Payment ==========
+export const processPayment = createAsyncThunk(
+  'auth/payment',
+  async ({ paymentData }, { rejectWithValue }) => {
+    try {
+      const res = await POST(endpoints.auth.PAYMENT, paymentData);
+
+      if (res?.success) {
+        return res;
+      }
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || 'Failed to process payment'
+      );
+    }
+  }
+);
