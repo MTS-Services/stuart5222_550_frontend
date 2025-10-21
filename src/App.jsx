@@ -1,7 +1,12 @@
 import { Suspense } from 'react';
 import { RouterProvider } from 'react-router-dom';
-import { router } from './router/router';
-import Loading from './components/ui/loading';
+import router from './router/router';
+
+const Loading = () => (
+  <div className='flex justify-center items-center min-h-screen'>
+    <div>Loading...</div>
+  </div>
+);
 
 function App() {
   return (
