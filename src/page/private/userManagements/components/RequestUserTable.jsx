@@ -4,7 +4,7 @@ import { FiX } from 'react-icons/fi';
 import { AllTableResponsiveStyle } from '../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
 import { Link } from 'react-router-dom';
 import { Loading } from '../../../../components/ui/loading';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 export const RequestUserTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

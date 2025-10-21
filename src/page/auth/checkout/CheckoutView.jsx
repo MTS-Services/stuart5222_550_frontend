@@ -53,12 +53,24 @@ const CheckoutView = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [selectedPlan, setSelectedPlan] = useState(plans[0].priceId);
+  const [cardComplete, setCardComplete] = useState(false);
+  const [cardError, setCardError] = useState('');
 
   const { user_email } = useParams();
-
   const stripe = useStripe();
+  const elements = useElements();
+
+  const handleCardChange = (event) => {
+    setCardComplete(event.complete);
+    setCardError(event.error ? event.error.message : '');
+  };
 
   const handlePayment = async () => {
+    if (!cardComplete) {
+      setErrorMsg('Please complete your card details');
+      return;
+    }
+
     setLoading(true);
     setSuccessMsg('');
     setErrorMsg('');
@@ -69,8 +81,8 @@ const CheckoutView = () => {
         `${import.meta.env.VITE_API_BASE_URL}/payment/simple-payment`,
         {
           email: 'ilk5tlcyus@mrotzis.com',
-          priceId: selectedPlan,
-          paymentMethodId: 'pm_card_visa', // test payment method
+          priceId: 'price_1SFuAiH5rkzWQxv8YhSgh1SD',
+          paymentMethodId: 'pm_card_visa',
         }
       );
 
@@ -89,6 +101,9 @@ const CheckoutView = () => {
       setLoading(false);
     }
   };
+
+  // Check if form can be submitted
+  const canSubmit = stripe && cardComplete && !loading && !cardError;
 
   if (successMsg) {
     return (
@@ -199,15 +214,34 @@ const CheckoutView = () => {
         {/* Stripe Card Element */}
         <div className='mt-6'>
           <label className='block text-white mb-2'>Card Details</label>
-          <div className='bg-[#555] p-3 rounded-lg'>
-            <CardElement options={CARD_ELEMENT_OPTIONS} />
+          <div
+            className={`bg-[#555] p-3 rounded-lg ${
+              cardError ? 'border border-red-400' : ''
+            }`}
+          >
+            <CardElement
+              options={CARD_ELEMENT_OPTIONS}
+              onChange={handleCardChange}
+            />
           </div>
+          {cardError && (
+            <p className='mt-2 text-red-400 text-sm'>{cardError}</p>
+          )}
+          {cardComplete && !cardError && (
+            <p className='mt-2 text-green-400 text-sm'>
+              ✓ Card details are valid
+            </p>
+          )}
         </div>
 
         <button
           onClick={handlePayment}
-          disabled={!stripe || loading}
-          className='mt-6 w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition-all'
+          disabled={!canSubmit}
+          className={`mt-6 w-full text-white py-3 rounded-xl font-semibold transition-all ${
+            canSubmit
+              ? 'bg-orange-500 hover:bg-orange-600 cursor-pointer'
+              : 'bg-gray-500 cursor-not-allowed'
+          }`}
         >
           {loading ? 'Processing...' : 'Complete Payment'}
         </button>
