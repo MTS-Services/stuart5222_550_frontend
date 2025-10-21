@@ -1,4 +1,4 @@
-export const Loading = () => {
+const Loading = () => {
   return (
     <div className='fixed inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm z-50'>
       {/* Spinner */}
@@ -11,3 +11,5 @@ export const Loading = () => {
     </div>
   );
 };
+
+export default Loading;
