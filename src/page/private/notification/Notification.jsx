@@ -2,7 +2,7 @@ import { IoCheckmarkDoneOutline } from 'react-icons/io5';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FaRegUser } from 'react-icons/fa';
-import { Loading } from '../../../components/ui/loading';
+import Loading from '../../../components/ui/loading';
 import { formatDate } from '../../../utils/formatDate';
 import { AllTableResponsiveStyle } from '../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
 

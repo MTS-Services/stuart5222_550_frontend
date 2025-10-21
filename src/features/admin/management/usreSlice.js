@@ -5,15 +5,15 @@ import {
   adminReject,
   adminApprove,
   adminUserList,
-  adminUserDetails,
-  adminUserVerifiedProfile,
   adminUserDraftProfile,
+  adminUserVerifiedProfile,
+  adminUserDetailsProfiles,
 } from './usreFetch';
 
 const initialState = {
   users: [],
-  userProfile: [],
-  drafts: [],
+  approved_list: [],
+  drafts_list: [],
   isLoading: false,
   error: null,
 };
@@ -48,16 +48,16 @@ const adminUserManagementSlice = createSlice({
       //======================================================
       // ===== User Details Request in HOMEPAGE =====
       // ====================================================
-      .addCase(adminUserDetails.pending, (state) => {
+      .addCase(adminUserDetailsProfiles.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(adminUserDetails.fulfilled, (state, action) => {
+      .addCase(adminUserDetailsProfiles.fulfilled, (state, action) => {
         state.isLoading = false;
         state.userProfile = action.payload;
         state.error = null;
       })
-      .addCase(adminUserDetails.rejected, (state, action) => {
+      .addCase(adminUserDetailsProfiles.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       })
@@ -113,7 +113,7 @@ const adminUserManagementSlice = createSlice({
       })
       .addCase(adminUserVerifiedProfile.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.userProfile = action.payload.profiles;
+        state.approved_list = action.payload.profiles;
         state.error = null;
       })
       .addCase(adminUserVerifiedProfile.rejected, (state, action) => {
@@ -130,7 +130,7 @@ const adminUserManagementSlice = createSlice({
       })
       .addCase(adminUserDraftProfile.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.drafts = action.payload.drafts;
+        state.drafts_list = action.payload.profiles;
         state.error = null;
       })
       .addCase(adminUserDraftProfile.rejected, (state, action) => {

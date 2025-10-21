@@ -41,65 +41,135 @@ const LoginView = () => {
       console.error('❌ Login failed:', err);
     }
   };
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-gray-50'>
-      <form
-        onSubmit={handleSubmit}
-        className='bg-white p-8 rounded-2xl shadow-md w-full max-w-sm'
-      >
-        <h2 className='text-2xl font-semibold text-center mb-6'>
-          Welcome Back 👋
-        </h2>
+    <div className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4'>
+      <div className='max-w-md w-full'>
+        {/* Card Container */}
+        <div className='bg-white rounded-2xl shadow overflow-hidden'>
+          {/* Header */}
+          <div className=' text-white p-8 text-center'>
+            <img
+              src='/img/page/home/remove_preview.png'
+              alt='Logo'
+              className='mx-auto '
+            />
+          </div>
+          <div>
+            <h1 className='text-xl font-bold text-black text-center'>
+              Welcome Back
+            </h1>
+          </div>
 
-        {/* Email Field */}
-        <div className='relative mb-4'>
-          <Mail className='absolute left-3 top-3 text-gray-400' size={18} />
-          <input
-            type='email'
-            name='email'
-            value={formData.email}
-            onChange={handleChange}
-            placeholder='Email'
-            required
-            className='w-full border border-gray-300 rounded-lg p-2 pl-10 focus:ring focus:ring-blue-200 outline-none'
-          />
+          {/* Form */}
+          <form onSubmit={handleSubmit} className='p-8 space-y-6'>
+            {/* Email Field */}
+            <div className='space-y-2'>
+              <label
+                htmlFor='email'
+                className='block text-sm font-medium text-gray-700'
+              >
+                Email Address
+              </label>
+              <div className='relative'>
+                <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                  <Mail className='h-5 w-5 text-gray-400' />
+                </div>
+                <input
+                  id='email'
+                  name='email'
+                  type='email'
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                  className='block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#000044] focus:border-transparent transition-all duration-200'
+                  placeholder='Enter your email'
+                />
+              </div>
+            </div>
+
+            {/* Password Field */}
+            <div className='space-y-2'>
+              <label
+                htmlFor='password'
+                className='block text-sm font-medium text-gray-700'
+              >
+                Password
+              </label>
+              <div className='relative'>
+                <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                  <Lock className='h-5 w-5 text-gray-400' />
+                </div>
+                <input
+                  id='password'
+                  name='password'
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  className='block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#000044] focus:border-transparent transition-all duration-200'
+                  placeholder='Enter your password'
+                />
+                <button
+                  type='button'
+                  onClick={togglePasswordVisibility}
+                  className='absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors'
+                >
+                  {showPassword ? (
+                    <EyeOff className='h-5 w-5' />
+                  ) : (
+                    <Eye className='h-5 w-5' />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Remember Me & Forgot Password */}
+            <div className='flex items-center justify-between'>
+              <div className='flex items-center'>
+                <input
+                  id='remember-me'
+                  name='remember-me'
+                  type='checkbox'
+                  className='h-4 w-4 text-[#000044] focus:ring-[#000044] border-gray-300 rounded'
+                />
+                <label
+                  htmlFor='remember-me'
+                  className='ml-2 block text-sm text-gray-700'
+                >
+                  Remember me
+                </label>
+              </div>
+
+              <a
+                href='#'
+                className='text-sm font-medium text-[#000044] hover:text-[#000066] transition-colors'
+              >
+                Forgot password?
+              </a>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type='submit'
+              disabled={loading}
+              className='w-full bg-[#FF8C00] text-white py-3 px-4 rounded-xl font-medium hover:bg-[#000066] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#000044] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]'
+            >
+              {loading ? (
+                <div className='flex items-center justify-center'>
+                  <div className='w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2'></div>
+                  Loading...
+                </div>
+              ) : (
+                'Login'
+              )}
+            </button>
+          </form>
         </div>
-
-        {/* Password Field */}
-        <div className='relative mb-4'>
-          <Lock className='absolute left-3 top-3 text-gray-400' size={18} />
-          <input
-            type={showPassword ? 'text' : 'password'}
-            name='password'
-            value={formData.password}
-            onChange={handleChange}
-            placeholder='Password'
-            required
-            className='w-full border border-gray-300 rounded-lg p-2 pl-10 pr-10 focus:ring focus:ring-blue-200 outline-none'
-          />
-          <span
-            onClick={() => setShowPassword((prev) => !prev)}
-            className='absolute right-3 top-3 cursor-pointer text-gray-500'
-          >
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-          </span>
-        </div>
-
-        {/* Error Display */}
-        {error && <p className='text-red-500 text-sm mb-2'>{error}</p>}
-
-        {/* Submit Button */}
-        <button
-          type='submit'
-          disabled={loading}
-          className={`w-full bg-blue-600 text-white py-2 rounded-lg transition duration-200 ${
-            loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
-          }`}
-        >
-          {loading ? 'Logging in...' : 'Login'}
-        </button>
-      </form>
+      </div>
     </div>
   );
 };

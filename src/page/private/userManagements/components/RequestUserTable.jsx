@@ -3,7 +3,7 @@ import { PiCheckBold } from 'react-icons/pi';
 import { FiX } from 'react-icons/fi';
 import { AllTableResponsiveStyle } from '../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
 import { Link } from 'react-router-dom';
-import { Loading } from '../../../../components/ui/loading';
+import Loading from '../../../../components/ui/loading';
 import { useSelector } from 'react-redux';
 
 export const RequestUserTable = () => {
@@ -12,9 +12,27 @@ export const RequestUserTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   // ✅ Get data from Redux
-  const { users, isLoading } = useSelector((state) => state.adminUsers);
+  const { drafts_list, isLoading } = useSelector((state) => state.adminUsers);
+  // ✅ Map and filter the data to match table needs
+  const processedList =
+    drafts_list?.map((user) => ({
+      id: user.id,
+      createdAt: user.createdAt,
+      name: user.displayName || user.user?.name || '—',
+      email: user.user?.email || '—',
+      status: user.status || 'DRAFT',
+    })) || [];
 
-  // ✅ Handle modal actions
+  // ✅ Pagination logic
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(processedList.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentData = processedList.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  // ✅ Modal handlers
   const openModal = (email) => {
     setSelectedEmail(email);
     setIsModalOpen(true);
@@ -29,15 +47,6 @@ export const RequestUserTable = () => {
     alert(`Feedback sent for ${selectedEmail}`);
     closeModal();
   };
-
-  // ✅ Pagination logic
-  const itemsPerPage = 10;
-  const totalPages = Math.ceil((users?.length || 0) / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentData =
-    users
-      ?.filter((user) => user.status === 'ACTIVE')
-      .slice(startIndex, startIndex + itemsPerPage) || [];
 
   const handlePrevious = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
@@ -61,39 +70,43 @@ export const RequestUserTable = () => {
                   <th className='px-7 py-3 w-1/5 whitespace-nowrap'>Date</th>
                   <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Name</th>
                   <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Status</th>
-                  <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Plan</th>
+
                   <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Email</th>
-                  <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Action</th>
+                  <th className='px-5 py-3 w-1/5 whitespace-nowrap text-center'>
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody className='text-black text-base font-normal'>
                 {currentData.length > 0 ? (
                   currentData.map((row, index) => (
                     <tr
-                      key={index}
+                      key={row.id}
                       className={index % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}
                     >
                       <td className='px-7 py-3 w-1/5 whitespace-nowrap'>
-                        {new Date(row.createdAt).toLocaleDateString() || '—'}
+                        {row.createdAt
+                          ? new Date(row.createdAt).toLocaleDateString()
+                          : '—'}
                       </td>
                       <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
-                        {row.name || '—'}
+                        {row.name}
                       </td>
                       <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
-                        {row.status || '--'}
+                        {row.status}
                       </td>
+
                       <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
-                        {row.paidSetupFee || 'Frees Trial'}
+                        {row.email}
                       </td>
-                      <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
-                        {row.email || '—'}
-                      </td>
-                      <td className='px-7 py-2.5 whitespace-nowrap flex items-center gap-3'>
+                      <td className='px-7 py-2.5 whitespace-nowrap flex items-center justify-center gap-3'>
                         <FiX
                           className='w-5 h-5 text-red-500 cursor-pointer'
                           onClick={() => openModal(row.email)}
                         />
-                        <PiCheckBold className='w-5 h-5 text-green-500' />
+
+                        <PiCheckBold className='w-5 h-5 text-green-50 bg-green-300 rounded-full p-1 cursor-pointer hover:bg-slate-400' />
+
                         <Link to={`/admin/user-management/${row.id}`}>
                           <button className='bg-[#F07400] text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap'>
                             See Details
@@ -105,7 +118,7 @@ export const RequestUserTable = () => {
                 ) : (
                   <tr>
                     <td
-                      colSpan={5}
+                      colSpan={6}
                       className='text-center text-gray-500 py-6 italic'
                     >
                       No users found.
@@ -119,11 +132,11 @@ export const RequestUserTable = () => {
           <AllTableResponsiveStyle />
 
           {/* 📄 Pagination */}
-          {users?.length > 0 && (
+          {processedList.length > 0 && (
             <div className='flex items-center text-gray-600 justify-between mt-8 text-base font-poppins font-normal md:gap-0 gap-2'>
               <p className='font-inter'>
                 Showing {startIndex + 1} to {startIndex + currentData.length} of{' '}
-                {users.length} results
+                {processedList.length} results
               </p>
               <div className='flex gap-4 sm:gap-5 md:gap-6 lg:gap-7'>
                 <button

@@ -64,7 +64,7 @@ export const WaitListTable = () => {
         <td className='p-2 border text-center flex justify-center gap-2'>
           <button
             onClick={() => handleApprove(user.id)}
-            className='bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded transition'
+            className='bg-orange-400 hover:bg-orange-700 text-white px-3 py-1 rounded transition'
             disabled={loadingRow.approve === user.id}
           >
             {loadingRow.approve === user.id ? 'Loading...' : '✓ Approve'}

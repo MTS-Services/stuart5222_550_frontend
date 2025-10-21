@@ -1,6 +1,5 @@
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import Traveling from './components/Traveling';
 
 const images = [
   { id: 1, image: '/img/page/admin/img1.png' },
@@ -10,22 +9,23 @@ const images = [
   { id: 5, image: '/img/page/admin/img5.png' },
 ];
 
-const UserDetailsView = () => {
+const EditDetailsView = () => {
   const { id } = useParams();
+
   const { approved_list, isLoading, error } = useSelector(
     (state) => state.adminUsers
   );
 
+  const user = approved_list.find((u) => u.id === Number(id));
+
   if (isLoading)
     return <div className='mx-auto justify-center'>Loading...</div>;
+
   if (error)
     return <div className='mx-auto justify-center'>Error: {error}</div>;
 
-  const user = approved_list.find((u) => u.id === Number(id));
-
   if (!user)
     return <div className='mx-auto justify-center'>User not found</div>;
-
   const {
     user: userInfo,
     age,
@@ -37,7 +37,6 @@ const UserDetailsView = () => {
     bodyType,
     dealbreakers,
   } = user;
-
   return (
     <div className='text-black'>
       {/* User Info Section */}
@@ -60,10 +59,17 @@ const UserDetailsView = () => {
                 {userInfo.email}
               </p>
               <p className='text-[#464646] text-xs'>{userInfo.phone}</p>
+              <p>
+                Status:{' '}
+                <span className=' bg-green-300 p-1 rounded-full text-white text-xs'>
+                  {user.status}
+                </span>
+              </p>
             </div>
           </div>
 
           <div className='flex flex-col text-[#404040] text-xs font-lato font-medium'>
+            <p>Id: {user.id}</p>
             <p>Age: {age}</p>
             <p className='my-1.5'>Height: {height}</p>
             <p>Body type: {bodyType}</p>
@@ -92,7 +98,38 @@ const UserDetailsView = () => {
       </div>
 
       {/* Traveling Component */}
-      <Traveling />
+      <div className='bg-gradient-to-b border from-orange-500/10 to-white p-6 rounded-lg flex flex-col gap-6'>
+        <div className='text-xl font-bold text-neutral-800'>
+          <span className='uppercase'>I </span>
+          <span className='lowercase'>am traveling and will be in:</span>
+        </div>
+
+        <div className='flex flex-col gap-4'>
+          {/* Location */}
+          <div className='flex items-center gap-3'>
+            <span className='text-orange-500 text-2xl'>📍</span>
+            <span className='text-xl font-medium text-neutral-800'>
+              Location: Anywhere, USA
+            </span>
+          </div>
+
+          {/* Start Date */}
+          <div className='flex items-center gap-3'>
+            <span className='text-orange-500 text-2xl'>📅</span>
+            <span className='text-xl font-medium text-neutral-800'>
+              Start-Date: October 1, 2025
+            </span>
+          </div>
+
+          {/* End Date */}
+          <div className='flex items-center gap-3'>
+            <span className='text-orange-500 text-2xl'>📅</span>
+            <span className='text-xl font-medium text-neutral-800'>
+              End-Date: October 20, 2025
+            </span>
+          </div>
+        </div>
+      </div>
 
       {/* Image Gallery */}
       <div className='pt-8'>
@@ -138,4 +175,4 @@ const UserDetailsView = () => {
   );
 };
 
-export default UserDetailsView;
+export default EditDetailsView;
