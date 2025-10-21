@@ -11,7 +11,6 @@ import { loadStripe } from '@stripe/stripe-js';
 import PrivateGuard from './guards/PrivateGuard';
 import PublicGuard from './guards/PublicGuard';
 import AuthGuard from './guards/AuthGuard';
-import EditDetailsView from '../page/private/userEdit/EditDetailsView.jsx';
 
 // Layouts
 const AuthLayout = lazy(() => import('../layout/auth/authLayout'));
@@ -50,6 +49,9 @@ const SetupProfileView = lazy(() =>
 );
 
 const UserView = lazy(() => import('../page/public/profile/UserView.jsx'));
+const EditDetailsView = lazy(() =>
+  import('../page/private/userEdit/EditDetailsView.jsx')
+);
 const GalleryView = lazy(() =>
   import('../page/public/gallery/GalleryView.jsx')
 );
