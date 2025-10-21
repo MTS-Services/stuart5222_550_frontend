@@ -7,11 +7,13 @@ import {
   adminUserList,
   adminUserDetails,
   adminUserVerifiedProfile,
+  adminUserDraftProfile,
 } from './usreFetch';
 
 const initialState = {
   users: [],
   userProfile: [],
+  drafts: [],
   isLoading: false,
   error: null,
 };
@@ -26,7 +28,9 @@ const adminUserManagementSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      //======================================================
       // ===== User Wait-list Request in HOMEPAGE =====
+      // ====================================================
       .addCase(adminUserList.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -41,7 +45,9 @@ const adminUserManagementSlice = createSlice({
         state.error = action.payload;
       })
 
+      //======================================================
       // ===== User Details Request in HOMEPAGE =====
+      // ====================================================
       .addCase(adminUserDetails.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -56,7 +62,9 @@ const adminUserManagementSlice = createSlice({
         state.error = action.payload;
       })
 
+      //======================================================
       // ===== User Approve Request in HOMEPAGE =====
+      // ====================================================
       .addCase(adminApprove.pending, (state) => {
         state.isApproved = true;
         state.error = null;
@@ -75,7 +83,9 @@ const adminUserManagementSlice = createSlice({
         toast.error(action.payload);
       })
 
+      // ======================================================
       // ===== User Reject Request in HOMEPAGE =====
+      // ======================================================
       .addCase(adminReject.pending, (state) => {
         state.isRejected = true;
         state.error = null;
@@ -94,7 +104,9 @@ const adminUserManagementSlice = createSlice({
         toast.error(action.payload);
       })
 
+      // ======================================================
       // ===== User Profile Request in HOMEPAGE =====
+      // ======================================================
       .addCase(adminUserVerifiedProfile.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -105,6 +117,23 @@ const adminUserManagementSlice = createSlice({
         state.error = null;
       })
       .addCase(adminUserVerifiedProfile.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+      })
+
+      //======================================================
+      // ===== adminUserDraftProfile =====
+      // ====================================================
+      .addCase(adminUserDraftProfile.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(adminUserDraftProfile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.drafts = action.payload.drafts;
+        state.error = null;
+      })
+      .addCase(adminUserDraftProfile.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
       });

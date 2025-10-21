@@ -24,12 +24,13 @@ export const adminUserList = createAsyncThunk(
 // ========== POST Wait-list ==========
 export const adminApprove = createAsyncThunk(
   'admin/approve',
-  async ({ user_id }, { rejectWithValue }) => {
+  async ({ page, limit, status }, { rejectWithValue }) => {
     try {
-      const res = await POST(
-        `${endpoints.admin.APPROVE_USER}?user_id=${user_id}`,
-        {}
-      );
+      const res = await GET(endpoints.admin.GET_ALL_USERS, {
+        page,
+        limit,
+        status,
+      });
 
       console.log('Approve response:', res);
       return res;
@@ -90,11 +91,32 @@ export const adminUserVerifiedProfile = createAsyncThunk(
         page,
         limit,
       });
-
+      console.log('VERIFIED_PROFILE:', res);
       return res;
     } catch (err) {
+      console.log('object');
       return rejectWithValue(
         err.response?.data?.message || 'Failed to update user details'
+      );
+    }
+  }
+);
+
+// ========== POST create draft =====================
+export const adminUserDraftProfile = createAsyncThunk(
+  'admin/createDraft',
+  async ({ page = 1, limit }, { rejectWithValue }) => {
+    try {
+      const res = await GET(endpoints.admin.DRAFTS_LIST, {
+        page,
+        limit,
+      });
+      console.log('DRAFT_PROFILE:', res);
+      return res;
+    } catch (err) {
+      console.log('object');
+      return rejectWithValue(
+        err.response?.data?.message || 'Failed to create draft'
       );
     }
   }
