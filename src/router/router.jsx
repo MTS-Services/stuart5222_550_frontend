@@ -23,6 +23,12 @@ const HomeView = lazy(() => import('../page/public/home/HomeView'));
 const LetsConnectView = lazy(() =>
   import('../page/public/connect/ConnectView')
 );
+const GalleryView = lazy(() =>
+  import('../page/public/gallery/GalleryView.jsx')
+);
+const WelcomeScanView = lazy(() =>
+  import('../page/public/welcomeScan/WelcomeScanView.jsx')
+);
 
 // 🛂 Auth Pages
 const CheckoutView = lazy(() =>
@@ -52,19 +58,13 @@ const UserView = lazy(() => import('../page/public/profile/UserView.jsx'));
 const EditDetailsView = lazy(() =>
   import('../page/private/userEdit/EditDetailsView.jsx')
 );
-const GalleryView = lazy(() =>
-  import('../page/public/gallery/GalleryView.jsx')
-);
 const UserDetailsView = lazy(() =>
   import('../page/private/userManagements/UserDetailsView.jsx')
-);
-const WelcomeScanView = lazy(() =>
-  import('../page/public/welcomeScan/WelcomeScanView.jsx')
 );
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-export const router = createBrowserRouter(
+const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       {/* 🔓 Public Routes */}
@@ -113,3 +113,5 @@ export const router = createBrowserRouter(
     </>
   )
 );
+
+export default router;
