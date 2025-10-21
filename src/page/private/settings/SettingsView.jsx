@@ -65,7 +65,6 @@ const SettingsView = () => {
       // ✅ Navigate after success
       // setTimeout(() => navigate("/welcome-scan"), 1500);
     } catch (err) {
-      console.error('Failed to submit data:', err);
       toast.error('Failed to submit your data. Please try again!', {
         position: 'top-right',
         autoClose: 3000,

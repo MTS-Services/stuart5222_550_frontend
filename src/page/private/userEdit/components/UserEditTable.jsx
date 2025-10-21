@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AllTableResponsiveStyle } from '../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
-import { Loading } from '../../../../components/ui/loading';
+import Loading from '../../../../components/ui/loading';
 import { useSelector } from 'react-redux';
 
 export const UserEditTable = () => {
-  const { userProfile, isLoading, error } = useSelector(
+  const { approved_list, isLoading, error } = useSelector(
     (state) => state.adminUsers
   );
 
@@ -14,7 +14,7 @@ export const UserEditTable = () => {
   const itemsPerPage = 10;
 
   // ✅ Show all users (no filtering)
-  const allUsers = userProfile || [];
+  const allUsers = approved_list || [];
 
   const totalPages = Math.ceil(allUsers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -44,9 +44,15 @@ export const UserEditTable = () => {
               <tr>
                 <th className='px-7 py-3 w-1/5 whitespace-nowrap'>Date</th>
                 <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Name</th>
-                <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Age</th>
-                <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Height</th>
-                <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Action</th>
+                <th className='px-5 py-3 w-1/5 whitespace-nowrap text-center'>
+                  Age
+                </th>
+                <th className='px-5 py-3 w-1/5 whitespace-nowrap text-center'>
+                  Height
+                </th>
+                <th className='px-5 py-3 w-1/5 whitespace-nowrap text-center'>
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className='text-black text-base font-normal'>
@@ -63,14 +69,14 @@ export const UserEditTable = () => {
                   <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
                     {row.user.name || '—'}
                   </td>
-                  <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
+                  <td className='px-5 py-3 w-1/5 whitespace-nowrap text-center'>
                     {row.age || '—'}{' '}
                     <span className='text-gray-500'>(years)</span>
                   </td>
-                  <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
+                  <td className='px-5 py-3 w-1/5 whitespace-nowrap text-center'>
                     {row.height || '—'}
                   </td>
-                  <td className='px-7 py-2.5 whitespace-nowrap flex items-center gap-3'>
+                  <td className='px-7 py-2.5 whitespace-nowrap flex items-center justify-center gap-3'>
                     <Link to={`/admin/user-edit/${row.id}`}>
                       <button className='bg-[#F07400] text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap hover:bg-[#d16200] transition'>
                         See Details
@@ -87,11 +93,11 @@ export const UserEditTable = () => {
       <AllTableResponsiveStyle />
 
       {/* 📄 Pagination */}
-      {allUsers.length > 0 && (
+      {approved_list.length > 0 && (
         <div className='flex items-center text-gray-600 justify-between mt-8 md:text-base text-sm font-poppins font-normal md:gap-0 gap-2'>
           <p className='font-inter'>
             Showing {startIndex + 1} to {startIndex + currentData.length} of{' '}
-            {allUsers.length} results
+            {approved_list.length} results
           </p>
           <div className='flex gap-4 sm:gap-5 md:gap-6 lg:gap-7'>
             <button

@@ -20,7 +20,7 @@ const UserManageView = () => {
       <AllCard />
       <div className=''>
         <h2 className='text-[28px] font-semibold font-poppins text-black my-3 sm:my-4 md:my-5 lg:my-6 xl:my-7'>
-          Requested User
+          Approved User
         </h2>
         <RequestUserTable />
       </div>

@@ -32,7 +32,6 @@ export const adminApprove = createAsyncThunk(
         status,
       });
 
-      console.log('Approve response:', res);
       return res;
     } catch (err) {
       console.error('Approve error:', err.response?.data || err.message);
@@ -67,12 +66,11 @@ export const adminReject = createAsyncThunk(
 );
 
 // ========== GET Single User Details ==========
-export const adminUserDetails = createAsyncThunk(
-  'admin/userDetails',
+export const adminUserDetailsProfiles = createAsyncThunk(
+  'admin/userDetailsProfiles',
   async ({ user_id }, { rejectWithValue }) => {
     try {
       const res = await GET(`${endpoints.admin.GET_USER_DETAILS}/${user_id}`);
-      console.log('User details response:', res);
       return res;
     } catch (err) {
       return rejectWithValue(
@@ -87,14 +85,12 @@ export const adminUserVerifiedProfile = createAsyncThunk(
   'admin/adminUserVerifiedProfile',
   async ({ page = 1, limit }, { rejectWithValue }) => {
     try {
-      const res = await GET(endpoints.admin.GET_USER_VERIFIED_PROFILE, {
-        page,
-        limit,
+      const res = await GET(endpoints.admin.APPROVE_LIST, {
+        params: { page, limit }, // ✅ send as query params
       });
-      console.log('VERIFIED_PROFILE:', res);
       return res;
     } catch (err) {
-      console.log('object');
+      console.log('ERROR VERIFIED_PROFILE:', err);
       return rejectWithValue(
         err.response?.data?.message || 'Failed to update user details'
       );
@@ -108,13 +104,11 @@ export const adminUserDraftProfile = createAsyncThunk(
   async ({ page = 1, limit }, { rejectWithValue }) => {
     try {
       const res = await GET(endpoints.admin.DRAFTS_LIST, {
-        page,
-        limit,
+        params: { page, limit }, // ✅ send as query params
       });
-      console.log('DRAFT_PROFILE:', res);
       return res;
     } catch (err) {
-      console.log('object');
+      console.log('ERROR DRAFT_PROFILE:', err);
       return rejectWithValue(
         err.response?.data?.message || 'Failed to create draft'
       );

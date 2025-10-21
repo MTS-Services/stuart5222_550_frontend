@@ -33,7 +33,7 @@ export const getUnreadNotificationsCount = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await GET(endpoints.admin.GET_UNREAD_COUNT);
-      console.log('UNREAD: ', response);
+
       return response;
     } catch (error) {
       console.error('Error fetching unread notifications count:', error);

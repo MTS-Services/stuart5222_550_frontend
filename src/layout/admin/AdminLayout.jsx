@@ -22,8 +22,10 @@ const AdminLayout = () => {
 
   useEffect(() => {
     dispatch(adminUserList({ page: 1, limit: 50, status: 'ALL' }));
-    dispatch(adminUserVerifiedProfile({ page: 1, limit: 10 }));
-    dispatch(adminUserDraftProfile({ page: 1, limit: 10 }));
+    dispatch(adminUserVerifiedProfile({ page: 1, limit: 50 }));
+    dispatch(adminUserDraftProfile({ page: 1, limit: 50 }));
+    dispatch(adminUserDraftProfile({ page: 1, limit: 50 }));
+
     dispatch(fetchDashboardData());
     // dispatch(markAllNotificationsRead());
     dispatch(getUnreadNotificationsCount());
