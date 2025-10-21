@@ -17,6 +17,10 @@ export const requestWaitlist = createAsyncThunk(
 
       return res;
     } catch (err) {
+      console.log(
+        'Waitlist registration error:',
+        err.response?.data || err.message
+      );
       return rejectWithValue(
         err.response?.data?.message || 'Failed to join waitlist'
       );

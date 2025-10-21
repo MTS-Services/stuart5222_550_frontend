@@ -6,6 +6,7 @@ import { Upload } from 'lucide-react';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { MdOutlinePrivacyTip } from 'react-icons/md';
 import { submitProfile } from '../../../features/public/profile/profileFetch';
+import { validateForm } from '../../../utils/validateForm';
 
 const SetupProfileView = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -54,40 +55,15 @@ const SetupProfileView = () => {
   };
 
   // ============================================
-  // 📋 Form Validation
-  // ============================================
-  const validateForm = (formData) => {
-    const newErrors = {};
-    if (!formData.firstName.trim()) newErrors.firstName = 'Name is required';
-    if (!formData.age.trim()) newErrors.age = 'Age is required';
-    if (!formData.height.trim()) newErrors.height = 'Height is required';
-    if (!formData.bodyType.trim()) newErrors.bodyType = 'Body type is required';
-    if (!formData.area.trim()) newErrors.area = 'Area is required';
-    if (!formData.textArea.trim())
-      newErrors.textArea = 'Tell us about yourself';
-    if (!formData.email.trim() && !formData.number.trim()) {
-      newErrors.contact = 'Please provide either email or phone number';
-    }
-    if (
-      formData.email.trim() &&
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-    ) {
-      newErrors.email = 'Invalid email format';
-    }
-    if (files.length < 3) newErrors.images = 'Minimum 3 images required';
-
-    return newErrors;
-  };
-
-  // ============================================
   // 📤 Form Submit Handler
   // ============================================
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
+
     const formData = {
       firstName: form.firstName.value,
-      age: form.age.value,
+      age: Number(form.age.value),
       height: form.height.value,
       bodyType: form.bodyType.value,
       area: form.area.value,
@@ -101,10 +77,21 @@ const SetupProfileView = () => {
       number: form.number.value,
     };
 
-    const validationErrors = validateForm(formData);
+    // ✅ Pass files to validation
+    const validationErrors = validateForm(formData, files);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       alert('⚠️ Please fix all errors before submitting');
+      return;
+    }
+
+    // ✅ Check minimum 3 image requirement (extra safety)
+    if (files.length < 3) {
+      setErrors((prev) => ({
+        ...prev,
+        images: 'Minimum 3 images required',
+      }));
+      alert('⚠️ Please upload at least 3 images before submitting');
       return;
     }
 
@@ -113,15 +100,13 @@ const SetupProfileView = () => {
 
     try {
       // 🖼️ Convert images to Base64
-      const imagePromises = files.map(
-        (file) =>
-          new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.readAsDataURL(file);
-          })
-      );
-      const imageData = await Promise.all(imagePromises);
+      const filePaths = files.map((file) => file.name); // or file.path if available
+
+      // 🧩 Separate images into backend-friendly fields
+      const facePhoto = filePaths[0] || null;
+      const fullBodyPhoto = filePaths[1] || null;
+      const thirdPhoto = filePaths[2] || null;
+      const additionalPhotos = filePaths.slice(3);
 
       const currentDate = new Date();
       const formattedDate = currentDate.toLocaleDateString('en-US', {
@@ -134,22 +119,26 @@ const SetupProfileView = () => {
         id: Date.now(),
         date: formattedDate,
         ...formData,
-        images: imageData,
+        facePhoto,
+        fullBodyPhoto,
+        thirdPhoto,
+        additionalPhotos,
         submittedAt: new Date().toISOString(),
-        status: 'pending_review', // No payment step
-        totalImages: imageData.length,
+        status: 'pending_review',
+        totalImages: filePaths.length,
       };
 
-      await dispatch(submitProfile(payload));
-      alert('✅ Profile submitted successfully for review!');
+      console.log('✅ Payload ready:', payload);
+      await dispatch(submitProfile(payload)).unwrap();
 
+      alert('✅ Profile submitted successfully for review!');
       form.reset();
       setSuccess(true);
       setFiles([]);
       setImagePreviews([]);
     } catch (err) {
       console.error('Submission error:', err);
-      alert('❌ Failed to submit profile. Please try again!');
+      alert(err || '❌ Failed to submit profile. Please try again.');
     } finally {
       setSubmitLoading(false);
     }
@@ -223,9 +212,9 @@ const SetupProfileView = () => {
                 Age <span className='text-red-500'>*</span>
               </label>
               <input
-                type='text'
+                type='number'
                 name='age'
-                placeholder='Enter your date of birth'
+                placeholder='Enter your age'
                 className={`h-11 px-3 bg-transparent text-white placeholder:text-gray-400 border ${
                   errors.age ? 'border-red-500' : 'border-gray-500'
                 } text-sm font-medium rounded-lg outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
@@ -377,17 +366,18 @@ const SetupProfileView = () => {
               </p>
             </div>
           </div>
-
-          {/* File Upload - UPDATED SECTION */}
+          {/* 🖼️ File Upload - FINALIZED SECTION */}
           <div className='flex items-center justify-center'>
             <div className='w-full space-y-4'>
-              <div className='bg-white rounded-xl p-12 flex flex-col items-center justify-center shadow-md'>
+              <div className='bg-white rounded-xl p-12 flex flex-col items-center justify-center shadow-md relative'>
+                {/* Upload Button */}
                 <div
                   className='w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mb-4 cursor-pointer hover:bg-orange-600 transition'
                   onClick={handleClick}
                 >
                   <Upload className='w-8 h-8 text-white' strokeWidth={2.5} />
                 </div>
+
                 <h2 className='text-gray-800 font-semibold text-lg mb-2'>
                   Upload Photos
                 </h2>
@@ -423,6 +413,7 @@ const SetupProfileView = () => {
                   </div>
                 </div>
 
+                {/* Hidden File Input */}
                 <input
                   type='file'
                   accept='image/*'
@@ -450,8 +441,16 @@ const SetupProfileView = () => {
                           >
                             <RiDeleteBinLine className='w-4 h-4' />
                           </button>
-                          <div className='absolute bottom-1 left-1 bg-black bg-opacity-50 text-white text-xs px-1 rounded'>
-                            {idx + 1}
+
+                          {/* 🔖 Image Type Label */}
+                          <div className='absolute bottom-1 left-1 bg-black bg-opacity-60 text-white text-[10px] px-2 py-[2px] rounded'>
+                            {idx === 0
+                              ? 'Face'
+                              : idx === 1
+                              ? 'Full Body'
+                              : idx === 2
+                              ? 'Third'
+                              : `Extra ${idx - 2}`}
                           </div>
                         </div>
                       ))}
@@ -496,6 +495,7 @@ const SetupProfileView = () => {
                   </p>
                 </div>
 
+                {/* Error Display */}
                 {errors.images && (
                   <div className='mt-3 p-2 bg-red-100 border border-red-300 rounded-lg'>
                     <p className='text-red-600 text-sm font-semibold flex items-center gap-2'>

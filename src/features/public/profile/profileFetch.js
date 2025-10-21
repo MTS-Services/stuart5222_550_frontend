@@ -10,6 +10,7 @@ export const submitProfile = createAsyncThunk(
       console.log('Profile submitted successfully:', res);
       return res;
     } catch (err) {
+      console.error('Failed to submit profile:', err);
       return rejectWithValue(
         err.response?.data?.message || 'Failed to submit profile'
       );
