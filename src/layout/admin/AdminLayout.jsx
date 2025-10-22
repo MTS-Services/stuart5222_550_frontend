@@ -11,10 +11,8 @@ import {
 import {
   getAdminNotifications,
   getUnreadNotificationsCount,
-  markAllNotificationsRead,
 } from '../../features/admin/notifications/notificationsFetch';
 import {
-  adminUserApprovedProfile,
   adminUserDraftProfile,
   adminUserList,
   adminUserVerifiedProfile,

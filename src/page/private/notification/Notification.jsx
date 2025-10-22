@@ -1,35 +1,30 @@
 import { IoCheckmarkDoneOutline } from 'react-icons/io5';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FaRegUser } from 'react-icons/fa';
-// import Loading from '../../../components/ui/loading';
 import { formatDate } from '../../../utils/formatDate';
 import { AllTableResponsiveStyle } from '../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
-
-const Loading = () => {
-  return (
-    <div className='fixed inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm z-50'>
-      {/* Spinner */}
-      <div className='w-8 h-8 border-4 border-orange-400 border-t-transparent rounded-full animate-spin'></div>
-
-      {/* Text */}
-      <span className='mt-4 text-orange-500 text-lg font-semibold tracking-wide'>
-        Loading...
-      </span>
-    </div>
-  );
-};
+import { markAllNotificationsRead } from '../../../features/admin/notifications/notificationsFetch';
+import Loading from '../../../components/ui/Loading';
 
 const NotificationView = () => {
   const { notifications, loading, unreadCount, pagination } = useSelector(
     (state) => state.notifications
   );
+  const dispatch = useDispatch();
 
   const [currentPage, setCurrentPage] = useState(pagination?.page || 1);
   const totalPages = Math.ceil(
     (pagination?.totalCount || 1) / (pagination?.limit || 20)
   );
   const hasMore = currentPage < totalPages;
+
+  // Handler to mark all notifications as read
+  const handleMarkAllRead = () => {
+    // Dispatch action to mark all as read
+    dispatch(markAllNotificationsRead());
+    console.log('Mark all notifications as read');
+  };
 
   return (
     <div className='text-black p-4 md:p-8'>
@@ -53,7 +48,7 @@ const NotificationView = () => {
 
             {unreadCount > 0 && (
               <button
-                // onClick={handleMarkAllRead}
+                onClick={handleMarkAllRead}
                 // disabled={markingAllRead}
                 className='flex items-center gap-3 font-inter font-normal text-lg hover:text-[#FF8C00] transition-colors duration-200 disabled:opacity-50'
               >
