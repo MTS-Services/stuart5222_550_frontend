@@ -24,13 +24,12 @@ export const adminUserList = createAsyncThunk(
 // ========== POST Wait-list ==========
 export const adminApprove = createAsyncThunk(
   'admin/approve',
-  async ({ page, limit, status }, { rejectWithValue }) => {
+  async ({ user_id }, { rejectWithValue }) => {
     try {
-      const res = await GET(endpoints.admin.GET_ALL_USERS, {
-        page,
-        limit,
-        status,
-      });
+      const res = await POST(
+        `${endpoints.admin.APPROVED_WAITLIST_USERS}?user_id=${user_id}`,
+        {}
+      );
 
       return res;
     } catch (err) {
@@ -111,6 +110,47 @@ export const adminUserDraftProfile = createAsyncThunk(
       console.log('ERROR DRAFT_PROFILE:', err);
       return rejectWithValue(
         err.response?.data?.message || 'Failed to create draft'
+      );
+    }
+  }
+);
+
+// ========== POST_USER_APPROVED_PROFILE ==========
+export const adminUserApprovedProfile = createAsyncThunk(
+  'admin/adminUserApprovedProfile',
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      // ✅ Make the POST request
+      const res = await POST(
+        `${endpoints.admin.APPROVED_DRAFT}/${id}/approve`,
+        {}
+      );
+
+      return res; // ✅ Return data only (not full response)
+    } catch (err) {
+      console.log('❌ ERROR APPROVED_PROFILE:', err);
+      return rejectWithValue(
+        err.response?.data?.message || 'Failed to approve profile'
+      );
+    }
+  }
+);
+
+// ========== POST_USER_REJECTED_PROFILE ==========
+export const adminUserRejectedProfile = createAsyncThunk(
+  'admin/adminUserRejectedProfile',
+  async ({ id, reason }, { rejectWithValue }) => {
+    try {
+      const res = await POST(
+        `${endpoints.admin.REJECTED_DRAFT}/${id}/reject`,
+        { reason } // ✅ send the reason here
+      );
+      console.log(`✅ adminUserRejected ${id} Profile:`, res);
+      return res.data;
+    } catch (err) {
+      console.log('❌ ERROR REJECTED_PROFILE:', err);
+      return rejectWithValue(
+        err.response?.data?.message || 'Failed to reject profile'
       );
     }
   }

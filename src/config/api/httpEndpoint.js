@@ -8,10 +8,15 @@ export const endpoints = {
     HOME_DATA: '/admin/dashboard',
     GET_ALL_USERS: '/admin/users/all',
     GET_WAITLIST: '/admin/users/waitlist',
+    APPROVED_WAITLIST_USERS: `/admin/users/approve`,
     GET_PENDING_USERS: '/admin/users/pending',
 
     APPROVE_LIST: `/admin/profiles/approved`,
     DRAFTS_LIST: '/admin/profiles/draft',
+
+    APPROVED_DRAFT: '/admin/profiles',
+    REJECTED_DRAFT: '/admin/profiles',
+
     GET_USER_DETAILS: `/admin/profiles`,
     GET_USER_VERIFIED_PROFILE: `/admin/profiles/verified`,
 

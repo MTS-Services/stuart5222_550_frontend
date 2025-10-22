@@ -14,7 +14,7 @@ const UserDetailsView = () => {
   const { drafts_list, isLoading, error } = useSelector(
     (state) => state.adminUsers
   );
-  console.log('User ID:', id);
+
   if (isLoading)
     return <div className='mx-auto justify-center'>Loading...</div>;
   if (error)

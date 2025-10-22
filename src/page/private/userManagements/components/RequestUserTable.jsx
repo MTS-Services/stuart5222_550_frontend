@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { PiCheckBold } from 'react-icons/pi';
-import { FiX } from 'react-icons/fi';
-import { AllTableResponsiveStyle } from '../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-// import Loading from '../../../../components/ui/loading';
-import { useSelector } from 'react-redux';
+import { FiX } from 'react-icons/fi';
+import {
+  adminUserApprovedProfile,
+  adminUserRejectedProfile,
+} from '../../../../features/admin/management/usreFetch';
+import { AllTableResponsiveStyle } from '../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
 
 const Loading = () => {
   return (
@@ -21,12 +24,84 @@ const Loading = () => {
 };
 
 export const RequestUserTable = () => {
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [reasonText, setReasonText] = useState('');
+  const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const dispatch = useDispatch();
+
+  // 🔹 Track which row is loading
+  const [loadingRow, setLoadingRow] = useState({ approve: null, reject: null });
 
   // ✅ Get data from Redux
   const { drafts_list, isLoading } = useSelector((state) => state.adminUsers);
+
+  // ✅ Approve handler
+  const handleApprove = async (userId) => {
+    console.log('ID', userId);
+    setLoadingRow((prev) => ({ ...prev, approve: userId }));
+    try {
+      await dispatch(adminUserApprovedProfile({ id: userId })).unwrap();
+    } catch (err) {
+      setError(err.message || 'Failed to approve user');
+    } finally {
+      setLoadingRow((prev) => ({ ...prev, approve: null }));
+    }
+  };
+
+  // ✅ Send button handler in modal - FIXED VERSION
+  const handleSend = async () => {
+    if (!selectedUserId || !reasonText.trim()) {
+      setError('Please provide a reason for rejection');
+      return;
+    }
+
+    console.log('User ID:', selectedUserId, 'Reason:', reasonText);
+    setLoadingRow((prev) => ({ ...prev, reject: selectedUserId }));
+    try {
+      await dispatch(
+        adminUserRejectedProfile({
+          id: selectedUserId,
+          reason: reasonText,
+        })
+      ).unwrap();
+      setError(''); // Clear any previous errors
+    } catch (err) {
+      console.error(err);
+      setError(err.message || 'Failed to reject user');
+    } finally {
+      setLoadingRow((prev) => ({ ...prev, reject: null }));
+      closeModal();
+    }
+  };
+
+  // ✅ Modal handlers
+  const openModal = (user) => {
+    setSelectedEmail(user.email);
+    setSelectedUserId(user.id);
+    setReasonText(''); // reset previous reason
+    setError(''); // clear previous errors
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedEmail('');
+    setSelectedUserId(null);
+    setReasonText('');
+    setError('');
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+
   // ✅ Map and filter the data to match table needs
   const processedList =
     drafts_list?.map((user) => ({
@@ -45,30 +120,6 @@ export const RequestUserTable = () => {
     startIndex,
     startIndex + itemsPerPage
   );
-
-  // ✅ Modal handlers
-  const openModal = (email) => {
-    setSelectedEmail(email);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedEmail('');
-  };
-
-  const handleSend = () => {
-    alert(`Feedback sent for ${selectedEmail}`);
-    closeModal();
-  };
-
-  const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-  };
 
   return (
     <div className='font-inter'>
@@ -116,10 +167,24 @@ export const RequestUserTable = () => {
                       <td className='px-7 py-2.5 whitespace-nowrap flex items-center justify-center gap-3'>
                         <FiX
                           className='w-5 h-5 text-red-500 cursor-pointer'
-                          onClick={() => openModal(row.email)}
+                          onClick={() => openModal(row)}
                         />
 
-                        <PiCheckBold className='w-5 h-5 text-green-50 bg-green-300 rounded-full p-1 cursor-pointer hover:bg-slate-400' />
+                        <button
+                          className='text-green-50 bg-green-300 rounded-full p-1 cursor-pointer hover:bg-slate-400 disabled:opacity-50'
+                          onClick={() => handleApprove(row.id)}
+                          disabled={loadingRow.approve === row.id}
+                          aria-label={`Approve ${row.name}`}
+                        >
+                          {loadingRow.approve === row.id ? (
+                            <>
+                              <span className='sr-only'>Loading...</span>
+                              <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin' />
+                            </>
+                          ) : (
+                            <PiCheckBold aria-hidden='true' />
+                          )}
+                        </button>
 
                         <Link to={`/admin/user-management/${row.id}`}>
                           <button className='bg-[#F07400] text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap'>
@@ -142,6 +207,49 @@ export const RequestUserTable = () => {
               </tbody>
             </table>
           </div>
+
+          {/* 💬 Modal - MOVED OUTSIDE THE TABLE ROW */}
+          {isModalOpen && (
+            <div className='fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4'>
+              <div className='bg-white rounded-lg w-full max-w-md mx-auto p-6 relative'>
+                <button
+                  className='absolute top-3 right-3 text-gray-500 hover:text-black'
+                  onClick={closeModal}
+                >
+                  ✕
+                </button>
+                <h3 className='text-lg font-semibold mb-4'>
+                  Cancel with Feedback
+                </h3>
+                <p className='text-gray-600 text-sm mb-2 break-all'>
+                  {selectedEmail}
+                </p>
+                <textarea
+                  className='w-full max-h-[195px] min-h-[195px] p-2 border border-gray-300 bg-[#E6EEF6] rounded-[6px] mb-2 focus:outline-none focus:ring-1 focus:ring-orange-300'
+                  placeholder='Write a review message here...'
+                  value={reasonText}
+                  onChange={(e) => setReasonText(e.target.value)}
+                />
+                {error && <p className='text-red-500 text-sm mb-2'>{error}</p>}
+                <button
+                  className='w-full bg-[#FF8C00] py-2.5 text-black rounded-lg hover:bg-orange-600 disabled:opacity-50'
+                  onClick={handleSend}
+                  disabled={
+                    loadingRow.reject === selectedUserId || !reasonText.trim()
+                  }
+                >
+                  {loadingRow.reject === selectedUserId ? (
+                    <div className='flex items-center justify-center'>
+                      <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2' />
+                      Sending...
+                    </div>
+                  ) : (
+                    'Send'
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
 
           <AllTableResponsiveStyle />
 
@@ -179,34 +287,6 @@ export const RequestUserTable = () => {
             </div>
           )}
         </>
-      )}
-
-      {/* 💬 Modal */}
-      {isModalOpen && (
-        <div className='fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4'>
-          <div className='bg-white rounded-lg w-full max-w-md mx-auto p-6 relative'>
-            <button
-              className='absolute top-3 right-3 text-gray-500 hover:text-black'
-              onClick={closeModal}
-            >
-              ✕
-            </button>
-            <h3 className='text-lg font-semibold mb-4'>Cancel with Feedback</h3>
-            <p className='text-gray-600 text-sm mb-2 break-all'>
-              {selectedEmail}
-            </p>
-            <textarea
-              className='w-full max-h-[195px] min-h-[195px] p-2 border border-gray-300 bg-[#E6EEF6] rounded-[6px] mb-4 focus:outline-none focus:ring-1 focus:ring-orange-300'
-              placeholder='Write a review message here...'
-            />
-            <button
-              className='w-full bg-[#FF8C00] py-2.5 text-black rounded-lg hover:bg-orange-600'
-              onClick={handleSend}
-            >
-              Send
-            </button>
-          </div>
-        </div>
       )}
     </div>
   );

@@ -12,20 +12,20 @@ const plans = [
     title: 'Initial Setup Fee',
     price: '$69 one-time',
     features: [
-      'Custom domain setup',
+      'Custom profile setup',
+      'High-resolution photos',
       'Profile personalization',
-      'Analytics dashboard',
       'Priority support',
     ],
   },
   {
-    priceId: 'price_1SFuAiH5rkzWQxv8YhSgh1SDs',
+    priceId: 'price_1SFuB8H5rkzWQxv8d141Sf06',
     id: 'monthly',
     title: 'Monthly',
     price: '$13 per month',
   },
   {
-    priceId: 'price_1SFuAiH5rkzWQxv8YhSgh1SDd',
+    priceId: 'price_1SFuAiH5rkzWQxv8YhSgh1SD',
     id: 'annual',
     title: 'Annual',
     price: '$120 per year',
@@ -53,10 +53,12 @@ const CheckoutView = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [selectedPlan, setSelectedPlan] = useState(plans[0].priceId);
+  console.log('Selected Plan:', selectedPlan);
   const [cardComplete, setCardComplete] = useState(false);
   const [cardError, setCardError] = useState('');
 
   const { user_email } = useParams();
+  console.log('User Email:', user_email);
   const stripe = useStripe();
   const elements = useElements();
 
@@ -80,8 +82,8 @@ const CheckoutView = () => {
       const res = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/payment/simple-payment`,
         {
-          email: 'ilk5tlcyus@mrotzis.com',
-          priceId: 'price_1SFuAiH5rkzWQxv8YhSgh1SD',
+          email: user_email,
+          priceId: selectedPlan,
           paymentMethodId: 'pm_card_visa',
         }
       );

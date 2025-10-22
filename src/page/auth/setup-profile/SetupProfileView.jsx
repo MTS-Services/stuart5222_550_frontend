@@ -63,7 +63,7 @@ const SetupProfileView = () => {
 
     const formData = {
       firstName: form.firstName.value,
-      age: Number(form.age.value),
+      age: form.age.value,
       height: form.height.value,
       bodyType: form.bodyType.value,
       area: form.area.value,

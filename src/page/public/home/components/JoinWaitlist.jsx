@@ -20,7 +20,6 @@ export const JoinWaitlist = () => {
     e.preventDefault();
     try {
       await dispatch(requestWaitlist(formData)).unwrap();
-      console.log('✅ Request submitted successfully!');
     } catch (err) {
       console.error('❌ Request submission failed:', err);
     }
@@ -31,7 +30,9 @@ export const JoinWaitlist = () => {
       {waitlistStatus === 'WAITLIST' ? (
         <div className='bg-green-100 p-6 rounded-lg mt-8 w-full'>
           <h1 className='text-green-500 font-semibold text-center'>
-            Thank you for joining the waitlist! We'll be in touch soon. 😊
+            Thank you for joining the waitlist! We'll be in touch soon. 😊{' '}
+            <br />
+            📧 Please check your email for this updates.
           </h1>
         </div>
       ) : (

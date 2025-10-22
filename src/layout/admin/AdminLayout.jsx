@@ -11,6 +11,7 @@ import {
   markAllNotificationsRead,
 } from '../../features/admin/notifications/notificationsFetch';
 import {
+  adminUserApprovedProfile,
   adminUserDraftProfile,
   adminUserList,
   adminUserVerifiedProfile,
@@ -23,7 +24,6 @@ const AdminLayout = () => {
   useEffect(() => {
     dispatch(adminUserList({ page: 1, limit: 50, status: 'ALL' }));
     dispatch(adminUserVerifiedProfile({ page: 1, limit: 50 }));
-    dispatch(adminUserDraftProfile({ page: 1, limit: 50 }));
     dispatch(adminUserDraftProfile({ page: 1, limit: 50 }));
 
     dispatch(fetchDashboardData());

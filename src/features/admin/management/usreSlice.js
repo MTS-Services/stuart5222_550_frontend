@@ -8,6 +8,8 @@ import {
   adminUserDraftProfile,
   adminUserVerifiedProfile,
   adminUserDetailsProfiles,
+  adminUserApprovedProfile,
+  adminUserRejectedProfile,
 } from './usreFetch';
 
 const initialState = {
@@ -46,7 +48,7 @@ const adminUserManagementSlice = createSlice({
       })
 
       //======================================================
-      // ===== User Details Request in HOMEPAGE =====
+      // ===== User Details =====
       // ====================================================
       .addCase(adminUserDetailsProfiles.pending, (state) => {
         state.isLoading = true;
@@ -136,6 +138,46 @@ const adminUserManagementSlice = createSlice({
       .addCase(adminUserDraftProfile.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+      })
+
+      // ======================================================
+      // ===== User Approved Draft Profile =====
+      // ======================================================
+      .addCase(adminUserApprovedProfile.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(adminUserApprovedProfile.fulfilled, (state, action) => {
+        state.approved_list = state.approved_list.filter(
+          (user) => user.id !== action.payload.id
+        );
+        state.error = null;
+      })
+      .addCase(adminUserApprovedProfile.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+
+      // ======================================================
+      // ===== User Rejected Draft Profile =====
+      // ======================================================
+      .addCase(adminUserRejectedProfile.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(adminUserRejectedProfile.fulfilled, (state, action) => {
+        state.approved_list = state.approved_list.filter(
+          (user) => user.id !== action.payload.id
+        );
+        state.error = null;
+      })
+      .addCase(adminUserRejectedProfile.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+
+      // ===================================
+      // ===== Global Rejected Handler =====
+      // ===================================
+      .addMatcher(isRejected(), (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload || 'An unexpected error occurred';
       });
   },
 });
