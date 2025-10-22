@@ -1,22 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AllTableResponsiveStyle } from '../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
-// import Loading from '../../../../components/ui/loading';
 import { useSelector } from 'react-redux';
-
-const Loading = () => {
-  return (
-    <div className='fixed inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm z-50'>
-      {/* Spinner */}
-      <div className='w-8 h-8 border-4 border-orange-400 border-t-transparent rounded-full animate-spin'></div>
-
-      {/* Text */}
-      <span className='mt-4 text-orange-500 text-lg font-semibold tracking-wide'>
-        Loading...
-      </span>
-    </div>
-  );
-};
+import { AllTableResponsiveStyle } from '../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
 
 export const UserEditTable = () => {
   const { approved_list, isLoading, error } = useSelector(
@@ -47,7 +32,11 @@ export const UserEditTable = () => {
       <div className='relative overflow-x-auto md:overflow-x-visible'>
         {/* 🌀 Loading / Error / Empty states */}
         {isLoading ? (
-          <Loading />
+          <div>
+            <p colSpan='5' className='text-center p-4'>
+              Loading...
+            </p>
+          </div>
         ) : error ? (
           <p className='text-center py-10 text-red-500'>{error}</p>
         ) : currentData.length === 0 ? (

@@ -12,24 +12,15 @@ import {
   getAdminNotifications,
   getUnreadNotificationsCount,
 } from '../../features/admin/notifications/notificationsFetch';
-import {
-  adminUserDraftProfile,
-  adminUserList,
-  adminUserVerifiedProfile,
-} from '../../features/admin/management/usreFetch';
 
 /* ---------------- MAIN LAYOUT ---------------- */
 const AdminLayout = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(adminUserList({ page: 1, limit: 50, status: 'ALL' }));
-    dispatch(adminUserVerifiedProfile({ page: 1, limit: 50 }));
-    dispatch(adminUserDraftProfile({ page: 1, limit: 50 }));
     dispatch(fetchAdminSettingsProfile());
     dispatch(fetchDashboardData());
     dispatch(getUnreadNotificationsCount());
-    dispatch(getAdminNotifications({ page: 1, limit: 20 }));
   }, [dispatch]);
 
   return (

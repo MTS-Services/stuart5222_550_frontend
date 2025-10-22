@@ -1,11 +1,15 @@
 import { IoCheckmarkDoneOutline } from 'react-icons/io5';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaRegUser } from 'react-icons/fa';
 import { formatDate } from '../../../utils/formatDate';
 import { AllTableResponsiveStyle } from '../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
-import { markAllNotificationsRead } from '../../../features/admin/notifications/notificationsFetch';
+import {
+  getAdminNotifications,
+  markAllNotificationsRead,
+} from '../../../features/admin/notifications/notificationsFetch';
 import Loading from '../../../components/ui/Loading';
+import Skeleton from '../../../components/ui/Skeleton';
 
 const NotificationView = () => {
   const { notifications, loading, unreadCount, pagination } = useSelector(
@@ -17,6 +21,7 @@ const NotificationView = () => {
   const totalPages = Math.ceil(
     (pagination?.totalCount || 1) / (pagination?.limit || 20)
   );
+
   const hasMore = currentPage < totalPages;
 
   // Handler to mark all notifications as read
@@ -26,11 +31,44 @@ const NotificationView = () => {
     console.log('Mark all notifications as read');
   };
 
+  useEffect(() => {
+    dispatch(getAdminNotifications({ page: currentPage, limit: 20 }));
+  }, [dispatch, currentPage]);
+
   return (
     <div className='text-black p-4 md:p-8'>
       {/* Loading */}
       {loading && currentPage === 1 ? (
-        <Loading />
+        <div className='space-y-4 mt-2'>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={i}
+              className='bg-white border-b border-gray-200 py-4 px-4 md:px-6 animate-pulse'
+            >
+              <div className='font-inter flex items-start gap-3'>
+                {/* Avatar placeholder */}
+                <div className='relative flex-shrink-0'>
+                  <div className='bg-gray-200 rounded-full w-10 h-10' />
+                </div>
+
+                {/* Content */}
+                <div className='min-w-0 flex-1'>
+                  {/* Title + timestamp row */}
+                  <div className='flex items-start justify-between gap-2 mb-1'>
+                    <Skeleton height={16} width='60%' className='!mb-0' />
+                    <Skeleton height={12} width={60} className='!mb-0' />
+                  </div>
+
+                  {/* Message body */}
+                  <Skeleton height={14} count={2} className='mb-2' />
+
+                  {/* Type badge (optional) */}
+                  <Skeleton height={20} width={70} className='rounded-full' />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
         <>
           <div className='flex flex-wrap justify-between items-center mb-8 gap-4'>

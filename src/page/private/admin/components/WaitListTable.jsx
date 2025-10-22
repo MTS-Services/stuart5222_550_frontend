@@ -8,7 +8,6 @@ import {
 export const WaitListTable = () => {
   const dispatch = useDispatch();
   const { users, isLoading } = useSelector((state) => state.adminUsers);
-  const filterUsers = users?.filter((user) => user.status === 'WAITLIST') || [];
 
   // 🔹 Track which row is loading
   const [loadingRow, setLoadingRow] = useState({ approve: null, reject: null });
@@ -44,7 +43,7 @@ export const WaitListTable = () => {
       );
     }
 
-    if (!filterUsers.length) {
+    if (!users.length) {
       return (
         <tr>
           <td colSpan='5' className='text-center p-4 text-gray-500'>
@@ -54,7 +53,7 @@ export const WaitListTable = () => {
       );
     }
 
-    return filterUsers.map((user) => (
+    return users.map((user) => (
       <tr key={user.id} className='hover:bg-gray-50'>
         <td className='p-2 border'>{user.id}</td>
         <td className='p-2 border'>{user.name}</td>

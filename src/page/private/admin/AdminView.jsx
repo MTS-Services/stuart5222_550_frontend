@@ -1,8 +1,17 @@
+import { use, useEffect } from 'react';
 import { AllCard } from '../common/AllCard';
 import { DateDropDown } from './components/DateDropDown';
 import { WaitListTable } from './components/WaitListTable';
+import { useDispatch } from 'react-redux';
+import { adminUserList } from '../../../features/admin/management/usreFetch';
 
 const AdminDashboard = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(adminUserList({ page: 1, limit: 50, status: 'WAITLIST' }));
+  }, [dispatch]);
+
   return (
     <div className='text-black md:p-8 p-6'>
       <div>

@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { UserEditTable } from './components/UserEditTable';
+import { adminUserVerifiedProfile } from '../../../features/admin/management/usreFetch';
 
 const UserEditView = () => {
   const [searchInput, setSearchInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const dispatch = useDispatch();
 
   // Real-time search: typing triggers filtering immediately
   const handleInputChange = (value) => {
@@ -16,6 +19,10 @@ const UserEditView = () => {
     setSearchInput('');
     setSearchQuery('');
   };
+
+  useEffect(() => {
+    dispatch(adminUserVerifiedProfile({ page: 1, limit: 50 }));
+  }, [dispatch]);
 
   return (
     <div className='text-black md:p-8 p-6'>
