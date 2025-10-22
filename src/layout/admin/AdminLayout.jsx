@@ -5,8 +5,8 @@ import AdminSidebar from './AdminSidebar';
 import { useDispatch } from 'react-redux';
 
 import {
-  fetchAdminSettingsProfile,
   fetchDashboardData,
+  fetchAdminSettingsProfile,
 } from '../../features/admin/home/dashboardFetch';
 import {
   getAdminNotifications,
@@ -18,6 +18,7 @@ const AdminLayout = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(getAdminNotifications({ page: 0, limit: 20 }));
     dispatch(fetchAdminSettingsProfile());
     dispatch(fetchDashboardData());
     dispatch(getUnreadNotificationsCount());

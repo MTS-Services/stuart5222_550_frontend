@@ -8,7 +8,6 @@ import {
   getAdminNotifications,
   markAllNotificationsRead,
 } from '../../../features/admin/notifications/notificationsFetch';
-import Loading from '../../../components/ui/Loading';
 import Skeleton from '../../../components/ui/Skeleton';
 
 const NotificationView = () => {

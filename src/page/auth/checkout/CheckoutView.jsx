@@ -7,7 +7,7 @@ import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 // Keep your plans array as-is
 const plans = [
   {
-    priceId: 'price_1SFuAiH5rkzWQxv8YhSgh1SD',
+    priceId: 'price_1SGXb5CZ2kLTrYVYtOKGZ7yP',
     id: 'setup-fee',
     title: 'Initial Setup Fee',
     price: '$69 one-time',
@@ -19,13 +19,13 @@ const plans = [
     ],
   },
   {
-    priceId: 'price_1SFuB8H5rkzWQxv8d141Sf06',
+    priceId: 'price_1SGXb5CZ2kLTrYVYtOKGZ7yU',
     id: 'monthly',
     title: 'Monthly',
     price: '$13 per month',
   },
   {
-    priceId: 'price_1SFuAiH5rkzWQxv8YhSgh1SD',
+    priceId: 'price_1SGXbRCZ2kLTrYVYlcpNAWsk',
     id: 'annual',
     title: 'Annual',
     price: '$120 per year',
@@ -53,12 +53,11 @@ const CheckoutView = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [selectedPlan, setSelectedPlan] = useState(plans[0].priceId);
-  console.log('Selected Plan:', selectedPlan);
   const [cardComplete, setCardComplete] = useState(false);
   const [cardError, setCardError] = useState('');
 
   const { user_email } = useParams();
-  console.log('User Email:', user_email);
+
   const stripe = useStripe();
   const elements = useElements();
 
@@ -68,6 +67,8 @@ const CheckoutView = () => {
   };
 
   const handlePayment = async () => {
+    if (!stripe || !elements) return;
+
     if (!cardComplete) {
       setErrorMsg('Please complete your card details');
       return;
@@ -78,26 +79,50 @@ const CheckoutView = () => {
     setErrorMsg('');
 
     try {
-      // ✅ Use your existing endpoint AS-IS
+      // 🪄 Step 1: Create Payment Method from card input
+      const { paymentMethod, error } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: elements.getElement(CardElement),
+        billing_details: { email: user_email },
+      });
+
+      if (error) {
+        setErrorMsg(error.message);
+        setLoading(false);
+        return;
+      }
+
+      // 🪄 Step 2: Send the paymentMethod.id to your backend
       const res = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/payment/simple-payment`,
         {
           email: user_email,
           priceId: selectedPlan,
-          paymentMethodId: 'pm_card_visa',
+          paymentMethodId: paymentMethod.id,
         }
       );
 
-      if (res.data.success) {
-        setSuccessMsg(
-          `✅ Payment completed: $${
-            res.data.amount
-          } ${res.data.currency.toUpperCase()}`
-        );
+      console.log('Payment Response:', res.data?.data.success);
+
+      if (res.data?.data.success) {
+        // 🪄 Step 3: Confirm client-side if 3D Secure is required
+        if (res.data.clientSecret) {
+          const { paymentIntent, error: confirmError } =
+            await stripe.confirmCardPayment(res.data.clientSecret);
+          if (confirmError) throw confirmError;
+          if (paymentIntent.status === 'succeeded') {
+            setSuccessMsg(`✅ Payment completed successfully!`);
+          }
+        } else {
+          setSuccessMsg(
+            `✅ Payment completed: $${res.data?.data.amountProcessed} `
+          );
+        }
       } else {
         setErrorMsg('❌ Payment failed.');
       }
     } catch (err) {
+      console.error(err);
       setErrorMsg(err?.response?.data?.message || 'Something went wrong!');
     } finally {
       setLoading(false);
