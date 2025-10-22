@@ -22,9 +22,9 @@ export const endpoints = {
 
     REJECT_USER: `/admin/users/reject`,
 
-    GET_PROFILE: '/admin/profile',
-    UPDATE_PROFILE: '/admin/profile/update',
-    UPDATE_PASSWORD: '/admin/profile/update-password',
+    GET_ADMIN_PROFILE: '/admin/profile',
+    UPDATE_ADMIN_PROFILE: '/admin/profile',
+    UPDATE_ADMIN_PASSWORD: '/admin/profile/update-password',
 
     GET_NOTIFICATIONS: '/admin/notifications',
     GET_UNREAD_COUNT: '/admin/notifications/unread-count',

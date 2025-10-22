@@ -1,17 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiEdit } from 'react-icons/fi';
 import { toast } from 'react-toastify';
-// import { postData } from '../../../../../../utils/axiosInstance';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchAdminSettingsProfile,
+  updateAdminSettingsProfile,
+} from '../../../features/admin/home/dashboardFetch';
 
 const SettingsView = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  // Get profile settings from Redux store
+  const { profileSettings } = useSelector((state) => state.dashboard);
+
+  // Initialize state with Redux data or fallback to defaults
   const [personalDetails, setPersonalDetails] = useState({
-    firstName: 'Jenny',
-    lastName: 'Wilson',
-    email: 'alma.lawson@example.com',
-    phone: '+0412 345 678',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
   });
 
   const [passwordDetails, setPasswordDetails] = useState({
@@ -20,9 +29,49 @@ const SettingsView = () => {
     confirmPassword: '',
   });
 
+  const [isEditingPersonal, setIsEditingPersonal] = useState(false);
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
+
+  // Sync Redux data with local state when component mounts or Redux data changes
+  useEffect(() => {
+    if (profileSettings) {
+      setPersonalDetails({
+        firstName: profileSettings.firstName || '',
+        lastName: profileSettings.lastName || '',
+        email: profileSettings.email || '',
+        phone: profileSettings.phone || '',
+      });
+    }
+  }, [profileSettings]);
+
+  const handlePersonalDetailsChange = (e) => {
+    const { name, value } = e.target;
+    setPersonalDetails((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handlePasswordDetailsChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordDetails((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
+
+    // Validate passwords match
+    if (passwordDetails.newPassword !== passwordDetails.confirmPassword) {
+      toast.error('New passwords do not match!', {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+      return;
+    }
 
     const data = {
       firstName: form.firstName.value,
@@ -36,40 +85,37 @@ const SettingsView = () => {
 
     try {
       // ✅ POST to scan_me route (backend ready)
-      const response = await postData('submit_user', data);
-      console.log('Server Response:', response);
+      // const response = await postData('submit_user', data);
+      // console.log('Server Response:', response);
 
-      toast.success('Your data has been submitted successfully!', {
-        position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      // Simulate API call success
+      console.log('Data to be submitted:', data);
+      await dispatch(updateAdminSettingsProfile(data)).unwrap();
 
-      // ✅ Reset form
-      form.reset();
-      setPersonalDetails({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-      });
+      // ✅ Reset password fields only
       setPasswordDetails({
         oldPassword: '',
         newPassword: '',
         confirmPassword: '',
       });
 
+      // Exit edit modes
+      setIsEditingPersonal(false);
+      setIsEditingPassword(false);
+
       // ✅ Navigate after success
       // setTimeout(() => navigate("/welcome-scan"), 1500);
     } catch (err) {
-      toast.error('Failed to submit your data. Please try again!', {
-        position: 'top-right',
-        autoClose: 3000,
-      });
+      console.log(object);
     }
+  };
+
+  const togglePersonalEdit = () => {
+    setIsEditingPersonal(!isEditingPersonal);
+  };
+
+  const togglePasswordEdit = () => {
+    setIsEditingPassword(!isEditingPassword);
   };
 
   return (
@@ -83,7 +129,7 @@ const SettingsView = () => {
         </p>
       </div>
 
-      <div className=' bg-gray-50 '>
+      <div className='bg-gray-50'>
         <div className=''>
           <form onSubmit={handleSubmit}>
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
@@ -93,7 +139,11 @@ const SettingsView = () => {
                   <h2 className='text-2xl font-poppins font-semibold text-gray-900'>
                     Personal Details
                   </h2>
-                  <button className='text-gray-600 hover:text-gray-900'>
+                  <button
+                    type='button'
+                    onClick={togglePersonalEdit}
+                    className='text-gray-600 hover:text-gray-900'
+                  >
                     <FiEdit className='w-5 h-5' />
                   </button>
                 </div>
@@ -108,13 +158,13 @@ const SettingsView = () => {
                         type='text'
                         name='firstName'
                         value={personalDetails.firstName}
-                        onChange={(e) =>
-                          setPersonalDetails({
-                            ...personalDetails,
-                            firstName: e.target.value,
-                          })
-                        }
-                        className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                        onChange={handlePersonalDetailsChange}
+                        disabled={!isEditingPersonal}
+                        className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          !isEditingPersonal
+                            ? 'bg-gray-100 cursor-not-allowed'
+                            : ''
+                        }`}
                       />
                     </div>
                     <div>
@@ -125,13 +175,13 @@ const SettingsView = () => {
                         type='text'
                         name='lastName'
                         value={personalDetails.lastName}
-                        onChange={(e) =>
-                          setPersonalDetails({
-                            ...personalDetails,
-                            lastName: e.target.value,
-                          })
-                        }
-                        className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                        onChange={handlePersonalDetailsChange}
+                        disabled={!isEditingPersonal}
+                        className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                          !isEditingPersonal
+                            ? 'bg-gray-100 cursor-not-allowed'
+                            : ''
+                        }`}
                       />
                     </div>
                   </div>
@@ -144,13 +194,13 @@ const SettingsView = () => {
                       type='email'
                       name='email'
                       value={personalDetails.email}
-                      onChange={(e) =>
-                        setPersonalDetails({
-                          ...personalDetails,
-                          email: e.target.value,
-                        })
-                      }
-                      className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                      onChange={handlePersonalDetailsChange}
+                      disabled={!isEditingPersonal}
+                      className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        !isEditingPersonal
+                          ? 'bg-gray-100 cursor-not-allowed'
+                          : ''
+                      }`}
                     />
                   </div>
 
@@ -162,13 +212,13 @@ const SettingsView = () => {
                       type='tel'
                       name='tel'
                       value={personalDetails.phone}
-                      onChange={(e) =>
-                        setPersonalDetails({
-                          ...personalDetails,
-                          phone: e.target.value,
-                        })
-                      }
-                      className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                      onChange={handlePersonalDetailsChange}
+                      disabled={!isEditingPersonal}
+                      className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        !isEditingPersonal
+                          ? 'bg-gray-100 cursor-not-allowed'
+                          : ''
+                      }`}
                     />
                   </div>
                 </div>
@@ -180,7 +230,11 @@ const SettingsView = () => {
                   <h2 className='text-2xl font-semibold text-gray-900'>
                     Account Password
                   </h2>
-                  <button className='text-gray-600 hover:text-gray-900'>
+                  <button
+                    type='button'
+                    onClick={togglePasswordEdit}
+                    className='text-gray-600 hover:text-gray-900'
+                  >
                     <FiEdit className='w-5 h-5' />
                   </button>
                 </div>
@@ -194,14 +248,14 @@ const SettingsView = () => {
                       type='password'
                       name='oldPassword'
                       value={passwordDetails.oldPassword}
-                      onChange={(e) =>
-                        setPasswordDetails({
-                          ...passwordDetails,
-                          oldPassword: e.target.value,
-                        })
-                      }
+                      onChange={handlePasswordDetailsChange}
+                      disabled={!isEditingPassword}
                       placeholder='******'
-                      className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                      className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        !isEditingPassword
+                          ? 'bg-gray-100 cursor-not-allowed'
+                          : ''
+                      }`}
                     />
                   </div>
 
@@ -213,14 +267,14 @@ const SettingsView = () => {
                       type='password'
                       name='newPassword'
                       value={passwordDetails.newPassword}
-                      onChange={(e) =>
-                        setPasswordDetails({
-                          ...passwordDetails,
-                          newPassword: e.target.value,
-                        })
-                      }
+                      onChange={handlePasswordDetailsChange}
+                      disabled={!isEditingPassword}
                       placeholder='******'
-                      className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                      className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        !isEditingPassword
+                          ? 'bg-gray-100 cursor-not-allowed'
+                          : ''
+                      }`}
                     />
                   </div>
 
@@ -232,14 +286,14 @@ const SettingsView = () => {
                       type='password'
                       name='confirmPassword'
                       value={passwordDetails.confirmPassword}
-                      onChange={(e) =>
-                        setPasswordDetails({
-                          ...passwordDetails,
-                          confirmPassword: e.target.value,
-                        })
-                      }
+                      onChange={handlePasswordDetailsChange}
+                      disabled={!isEditingPassword}
                       placeholder='******'
-                      className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                      className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                        !isEditingPassword
+                          ? 'bg-gray-100 cursor-not-allowed'
+                          : ''
+                      }`}
                     />
                   </div>
                 </div>
@@ -248,9 +302,9 @@ const SettingsView = () => {
 
             <button
               type='submit'
-              className='bg-[#FF8C00] text-black w-full py-2 rounded-[4px] mt-14'
+              className='bg-[#FF8C00] text-black w-full py-3 rounded-[4px] mt-14 font-medium hover:bg-[#E67E00] transition-colors duration-200'
             >
-              Send
+              Save Changes
             </button>
           </form>
         </div>

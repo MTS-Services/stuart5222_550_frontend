@@ -4,7 +4,10 @@ import AdminNavbar from './AdminNavbar';
 import AdminSidebar from './AdminSidebar';
 import { useDispatch } from 'react-redux';
 
-import { fetchDashboardData } from '../../features/admin/home/dashboardFetch';
+import {
+  fetchAdminSettingsProfile,
+  fetchDashboardData,
+} from '../../features/admin/home/dashboardFetch';
 import {
   getAdminNotifications,
   getUnreadNotificationsCount,
@@ -25,9 +28,8 @@ const AdminLayout = () => {
     dispatch(adminUserList({ page: 1, limit: 50, status: 'ALL' }));
     dispatch(adminUserVerifiedProfile({ page: 1, limit: 50 }));
     dispatch(adminUserDraftProfile({ page: 1, limit: 50 }));
-
+    dispatch(fetchAdminSettingsProfile());
     dispatch(fetchDashboardData());
-    // dispatch(markAllNotificationsRead());
     dispatch(getUnreadNotificationsCount());
     dispatch(getAdminNotifications({ page: 1, limit: 20 }));
   }, [dispatch]);
