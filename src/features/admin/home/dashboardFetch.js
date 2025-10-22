@@ -22,7 +22,7 @@ export const fetchAdminSettingsProfile = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await GET(endpoints.admin.GET_ADMIN_PROFILE);
-      console.log('Admin Settings Profile:', res);
+
       return res;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -36,7 +36,6 @@ export const updateAdminSettingsProfile = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const res = await UPDATE(endpoints.admin.UPDATE_ADMIN_PROFILE, data);
-      console.log('Admin Settings Profile Updated:', res);
       return res;
     } catch (error) {
       return rejectWithValue(error.message);
