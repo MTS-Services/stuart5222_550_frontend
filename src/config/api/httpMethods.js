@@ -6,7 +6,14 @@ export const GET = async (url, params) => {
 };
 
 export const POST = async (url, payload) => {
-  const { data: responseData } = await api.post(url, payload);
+  const isFormData = payload instanceof FormData;
+
+  const { data: responseData } = await api.post(url, payload, {
+    headers: {
+      'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
+    },
+  });
+
   return responseData;
 };
 

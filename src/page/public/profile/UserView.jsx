@@ -18,14 +18,17 @@ const UserView = () => {
   );
 
   const userEmail = qrData?.profile?.contactEmail;
+  const images = userProfile?.images || [];
+
+  const explicitImages = images.length > 0 ? images : [];
 
   console.log('🔍 QR Data:', qrData);
   console.log('📧 User Email:', userEmail);
   console.log('👤 User Profile:', userProfile);
+  console.log('🖼️ Profile Images:', images);
 
   useEffect(() => {
     if (userEmail) {
-      console.log('🚀 Fetching profile for:', userEmail);
       dispatch(fetchUserProfile({ userMail: userEmail }));
     }
   }, [dispatch, userEmail]);
@@ -56,7 +59,7 @@ const UserView = () => {
   }
 
   // Show message if no profile data
-  if (!userProfile || !userProfile.user) {
+  if (!userProfile || !userProfile.email) {
     return (
       <div className='px-[10px] py-2 sm:py-4 md:py-6 lg:py-8 bg-[#3B3B3D] min-h-screen flex items-center justify-center'>
         <div className='text-white text-center'>
@@ -80,7 +83,7 @@ const UserView = () => {
           />
         </div>
         <h1 className='font-bold text-2xl text-center py-6'>
-          {userProfile.user?.name || 'Anonymous User'}
+          {userProfile.displayName || 'Anonymous User'}
         </h1>
 
         <div className='flex justify-center items-center text-center w-full'>
@@ -133,41 +136,23 @@ const UserView = () => {
               {/* Main photo */}
               <div className='flex items-center justify-center'>
                 <img
-                  src={
-                    userProfile.facePhoto
-                      ? `${import.meta.env.VITE_API_BASE_URL}${
-                          userProfile.facePhoto
-                        }`
-                      : '/img/page/home/remove_preview.png'
-                  }
+                  src={images[0]?.url || '/img/page/home/remove_preview.png'}
                   alt='Profile photo'
                   className='w-full h-full bg-cover object-cover rounded-xl'
                 />
               </div>
 
               {/* Secondary photos */}
-              <div className='flex items-center w-full gap-5'>
+              <div className='grid grid-cols-2 gap-4'>
                 <img
-                  src={
-                    userProfile.fullBodyPhoto
-                      ? `${import.meta.env.VITE_API_BASE_URL}${
-                          userProfile.fullBodyPhoto
-                        }`
-                      : '/img/page/home/remove_preview.png'
-                  }
+                  src={images[1]?.url || '/img/page/home/remove_preview.png'}
                   alt='Full body photo'
-                  className='w-[49%] h-[50%] bg-cover object-cover rounded-xl'
+                  className='w-full h-full bg-cover object-cover rounded-xl'
                 />
                 <img
-                  src={
-                    userProfile.thirdPhoto
-                      ? `${import.meta.env.VITE_API_BASE_URL}${
-                          userProfile.thirdPhoto
-                        }`
-                      : '/img/page/home/remove_preview.png'
-                  }
+                  src={images[2]?.url || '/img/page/home/remove_preview.png'}
                   alt='Additional photo'
-                  className='w-[49%] h-[50%] bg-cover object-cover rounded-xl'
+                  className='w-full h-full bg-cover object-cover rounded-xl'
                 />
               </div>
             </div>
@@ -175,7 +160,7 @@ const UserView = () => {
 
           <div className='max-w-[600px] mx-auto my-2'>
             <Link to={`/user-profile/gallery`}>
-              <p className='flex items-center justify-end font-raleway text-base font-semibold'>
+              <p className='flex items-center underline hover:text-orange-500 justify-end font-raleway text-base font-semibold'>
                 See more photos
               </p>
             </Link>
@@ -186,7 +171,7 @@ const UserView = () => {
               </h2>
               <div className='bg-[#505050] p-6 rounded-lg my-4'>
                 <p className='font-raleway font-normal md:text-2xl text-xl'>
-                  Name : {userProfile.user?.name || 'Not provided'}
+                  Name : {userProfile.displayName || 'Not provided'}
                 </p>
                 <p className='font-raleway font-normal md:text-2xl text-xl my-5'>
                   Age : {userProfile.age || 'Not provided'}

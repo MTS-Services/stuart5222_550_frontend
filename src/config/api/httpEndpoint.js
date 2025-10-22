@@ -33,7 +33,7 @@ export const endpoints = {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
     WAITLIST: '/auth/register',
-    PROFILE: '/profile',
+    SETUP_PROFILE: '/profile',
     SETTINGS: '/user/settings',
     QR_CODE: (qr_code) => `/qr-cards/scan/${qr_code}`,
     FETCH_PROFILE: (userMail) => `/profile/${userMail}`,

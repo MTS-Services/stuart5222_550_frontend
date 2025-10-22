@@ -4,9 +4,9 @@ import { endpoints } from '../../../config/api/httpEndpoint';
 
 export const submitProfile = createAsyncThunk(
   'user/profile',
-  async (profileData, { rejectWithValue }) => {
+  async (submitData, { rejectWithValue }) => {
     try {
-      const res = await POST(endpoints.user.PROFILE, profileData);
+      const res = await POST(endpoints.user.SETUP_PROFILE, submitData);
       console.log('Profile submitted successfully:', res);
       return res;
     } catch (err) {

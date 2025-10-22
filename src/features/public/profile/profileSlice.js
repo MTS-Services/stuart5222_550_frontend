@@ -63,6 +63,8 @@ const profileSlice = createSlice({
         state.error = action.payload;
         state.success = false;
       })
+
+      // Fetch User Profile Cases
       .addCase(fetchUserProfile.fulfilled, (state, action) => {
         state.submitLoading = false;
         state.success = true;
