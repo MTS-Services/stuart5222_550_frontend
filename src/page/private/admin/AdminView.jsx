@@ -1,5 +1,4 @@
 import { AllCard } from '../common/AllCard';
-
 import { DateDropDown } from './components/DateDropDown';
 import { WaitListTable } from './components/WaitListTable';
 
