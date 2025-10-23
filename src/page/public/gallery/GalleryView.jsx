@@ -1,6 +1,6 @@
 import { IoMdArrowBack } from 'react-icons/io';
 import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const GalleryView = () => {
   const navigate = useNavigate();

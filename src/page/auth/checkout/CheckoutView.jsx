@@ -102,9 +102,7 @@ const CheckoutView = () => {
         }
       );
 
-      console.log('Payment Response:', res.data?.data.success);
-
-      if (res.data?.data.success) {
+      if (res.data?.success) {
         // 🪄 Step 3: Confirm client-side if 3D Secure is required
         if (res.data.clientSecret) {
           const { paymentIntent, error: confirmError } =
@@ -114,9 +112,7 @@ const CheckoutView = () => {
             setSuccessMsg(`✅ Payment completed successfully!`);
           }
         } else {
-          setSuccessMsg(
-            `✅ Payment completed: $${res.data?.data.amountProcessed} `
-          );
+          setSuccessMsg(`✅ Payment completed: $${res.data?.message} `);
         }
       } else {
         setErrorMsg('❌ Payment failed.');
