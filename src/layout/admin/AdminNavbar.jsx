@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom';
-import { FaRegBell, FaRegUser } from 'react-icons/fa';
+import { FaPowerOff, FaRegBell, FaRegUser } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
+import { STORAGE } from '../../config/storage/auth/authStorage';
 
 const AdminNavbar = () => {
   const { unreadCount } = useSelector((state) => state.notifications);
 
-  // If your notifications are an array, you can count unread ones like this:
-  // const unreadCount = unread?.filter((n) => !n.isRead)?.length || 0;
+  const handleLogout = () => {
+    STORAGE.clearAll();
+    window.location.href = '/auth/login';
+  };
 
   return (
     <nav className='sticky top-0 z-30 flex items-center justify-end bg-white border-b border-gray-200 px-6 py-6'>
@@ -39,6 +42,12 @@ const AdminNavbar = () => {
           <h2 className='text-sm font-semibold leading-tight'>John Davis</h2>
           <p className='text-xs text-gray-500'>Administrator</p>
         </div>
+        <button
+          onClick={handleLogout}
+          className='bg-red-50 rounded-full p-2.5 hover:bg-red-100 transition'
+        >
+          <FaPowerOff className='text-red-500' />
+        </button>
       </div>
     </nav>
   );
