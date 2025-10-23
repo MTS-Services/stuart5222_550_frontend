@@ -26,7 +26,6 @@ export const RequestUserTable = () => {
 
   // ✅ Approve handler
   const handleApprove = async (userId) => {
-    console.log('ID', userId);
     setLoadingRow((prev) => ({ ...prev, approve: userId }));
     try {
       await dispatch(adminUserApprovedProfile({ id: userId })).unwrap();

@@ -65,7 +65,7 @@ const adminUserManagementSlice = createSlice({
       })
 
       //======================================================
-      // ===== User Approve Request in HOMEPAGE =====
+      // ===== User APPROVED Request in HOMEPAGE =====
       // ====================================================
       .addCase(adminApprove.pending, (state) => {
         state.isApproved = true;
@@ -86,7 +86,7 @@ const adminUserManagementSlice = createSlice({
       })
 
       // ======================================================
-      // ===== User Reject Request in HOMEPAGE =====
+      // ===== User REJECT Request in HOMEPAGE =====
       // ======================================================
       .addCase(adminReject.pending, (state) => {
         state.isRejected = true;
@@ -106,25 +106,8 @@ const adminUserManagementSlice = createSlice({
         toast.error(action.payload);
       })
 
-      // ======================================================
-      // ===== User Profile Request in HOMEPAGE =====
-      // ======================================================
-      .addCase(adminUserVerifiedProfile.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(adminUserVerifiedProfile.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.approved_list = action.payload.profiles;
-        state.error = null;
-      })
-      .addCase(adminUserVerifiedProfile.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
-      })
-
       //======================================================
-      // ===== adminUserDraftProfile =====
+      // ===== admin USER Draft Profile =====
       // ====================================================
       .addCase(adminUserDraftProfile.pending, (state) => {
         state.isLoading = true;
@@ -141,7 +124,7 @@ const adminUserManagementSlice = createSlice({
       })
 
       // ======================================================
-      // ===== User Approved Draft Profile =====
+      // ===== Admin USER Approved Profile =====
       // ======================================================
       .addCase(adminUserApprovedProfile.pending, (state) => {
         state.error = null;
@@ -169,6 +152,23 @@ const adminUserManagementSlice = createSlice({
         state.error = null;
       })
       .addCase(adminUserRejectedProfile.rejected, (state, action) => {
+        state.error = action.payload;
+      })
+
+      // ======================================================
+      // ===== User Profile Request in HOMEPAGE =====
+      // ======================================================
+      .addCase(adminUserVerifiedProfile.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(adminUserVerifiedProfile.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.approved_list = action.payload.profiles;
+        state.error = null;
+      })
+      .addCase(adminUserVerifiedProfile.rejected, (state, action) => {
+        state.isLoading = false;
         state.error = action.payload;
       })
 

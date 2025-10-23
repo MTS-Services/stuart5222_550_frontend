@@ -30,9 +30,7 @@ const UserDetailsView = () => {
     age,
     height,
     bio,
-    facePhoto,
-    fullBodyPhoto,
-    thirdPhoto,
+    image,
     bodyType,
     dealbreakers,
   } = user;
@@ -135,12 +133,7 @@ const UserDetailsView = () => {
       <div className='pt-8'>
         <h3 className='text-2xl font-semibold mb-5'>Images</h3>
         <div className='grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 grid-cols-2 gap-4'>
-          {[
-            facePhoto,
-            fullBodyPhoto,
-            thirdPhoto,
-            ...images.map((i) => i.image),
-          ].map((img, index) => (
+          {image.map((img, index) => (
             <div key={index} className='overflow-hidden rounded-lg'>
               <img
                 src={img}

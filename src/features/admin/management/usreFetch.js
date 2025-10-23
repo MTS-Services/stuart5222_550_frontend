@@ -79,17 +79,16 @@ export const adminUserDetailsProfiles = createAsyncThunk(
   }
 );
 
-// ========== GET_USER_VERIFIED_PROFILE ==========
+// ========== GET APPROVED LIST AFTER SUBSCRIPTION ==========
 export const adminUserVerifiedProfile = createAsyncThunk(
   'admin/adminUserVerifiedProfile',
-  async ({ page = 1, limit }, { rejectWithValue }) => {
+  async ({ page = 1, limit, status }, { rejectWithValue }) => {
     try {
       const res = await GET(endpoints.admin.APPROVE_LIST, {
-        params: { page, limit }, // ✅ send as query params
+        params: { page, limit, status }, // ✅ send as query params
       });
       return res;
     } catch (err) {
-      console.log('ERROR VERIFIED_PROFILE:', err);
       return rejectWithValue(
         err.response?.data?.message || 'Failed to update user details'
       );
@@ -97,13 +96,13 @@ export const adminUserVerifiedProfile = createAsyncThunk(
   }
 );
 
-// ========== POST create draft =====================
+// ========== GET DRAFT LIST =====================
 export const adminUserDraftProfile = createAsyncThunk(
   'admin/createDraft',
-  async ({ page = 1, limit }, { rejectWithValue }) => {
+  async ({ page = 1, limit, status }, { rejectWithValue }) => {
     try {
       const res = await GET(endpoints.admin.DRAFTS_LIST, {
-        params: { page, limit }, // ✅ send as query params
+        params: { page, limit, status }, // ✅ send as query params
       });
       return res;
     } catch (err) {
@@ -115,18 +114,17 @@ export const adminUserDraftProfile = createAsyncThunk(
   }
 );
 
-// ========== POST_USER_APPROVED_PROFILE ==========
+// ========== POST APPROVED LIST ==========
 export const adminUserApprovedProfile = createAsyncThunk(
   'admin/adminUserApprovedProfile',
   async ({ id }, { rejectWithValue }) => {
     try {
-      // ✅ Make the POST request
       const res = await POST(
         `${endpoints.admin.APPROVED_DRAFT}/${id}/approve`,
         {}
       );
 
-      return res; // ✅ Return data only (not full response)
+      return res;
     } catch (err) {
       console.log('❌ ERROR APPROVED_PROFILE:', err);
       return rejectWithValue(

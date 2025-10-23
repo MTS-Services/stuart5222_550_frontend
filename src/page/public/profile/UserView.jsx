@@ -20,13 +20,6 @@ const UserView = () => {
   const userEmail = qrData?.profile?.contactEmail;
   const images = userProfile?.images || [];
 
-  const explicitImages = images.length > 0 ? images : [];
-
-  console.log('🔍 QR Data:', qrData);
-  console.log('📧 User Email:', userEmail);
-  console.log('👤 User Profile:', userProfile);
-  console.log('🖼️ Profile Images:', images);
-
   useEffect(() => {
     if (userEmail) {
       dispatch(fetchUserProfile({ userMail: userEmail }));

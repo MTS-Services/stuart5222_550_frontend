@@ -9,7 +9,7 @@ const UserManageView = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(adminUserDraftProfile({ page: 1, limit: 50 }));
+    dispatch(adminUserDraftProfile({ page: 1, limit: 50, status: 'DRAFT' }));
   }, [dispatch]);
 
   return (

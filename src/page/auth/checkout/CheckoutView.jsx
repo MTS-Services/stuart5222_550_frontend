@@ -7,7 +7,7 @@ import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 // Keep your plans array as-is
 const plans = [
   {
-    priceId: 'price_1SGXb5CZ2kLTrYVYtOKGZ7yP',
+    priceId: 'price_1SLERFCZ2kLTrYVYcUtIVSY3',
     id: 'setup-fee',
     title: 'Initial Setup Fee',
     price: '$69 one-time',
@@ -94,7 +94,7 @@ const CheckoutView = () => {
 
       // 🪄 Step 2: Send the paymentMethod.id to your backend
       const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/payment/simple-payment`,
+        `${import.meta.env.VITE_API_BASE_URL}/payment/create-subscription`,
         {
           email: user_email,
           priceId: selectedPlan,

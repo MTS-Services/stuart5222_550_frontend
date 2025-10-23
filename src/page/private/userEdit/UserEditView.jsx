@@ -21,7 +21,9 @@ const UserEditView = () => {
   };
 
   useEffect(() => {
-    dispatch(adminUserVerifiedProfile({ page: 1, limit: 50 }));
+    dispatch(
+      adminUserVerifiedProfile({ page: 1, limit: 50, status: 'APPROVED' })
+    );
   }, [dispatch]);
 
   return (
