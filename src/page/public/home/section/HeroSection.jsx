@@ -15,7 +15,7 @@ const HeroSection = () => {
           </div>
 
           {/* Heading */}
-          <h1 className='text-[32px] sm:text-[40px] md:text-[50px] lg:text-[60px] font-bold text-white my-[40px]'>
+          <h1 className='text-[30px] sm:text-[40px] md:text-[50px] font-bold text-white my-[40px]'>
             Why “Scan Me Maybe”?
           </h1>
         </div>

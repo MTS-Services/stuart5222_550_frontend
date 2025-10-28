@@ -35,7 +35,7 @@ const NotificationView = () => {
   }, [dispatch, currentPage]);
 
   return (
-    <div className='text-black p-4 md:p-8'>
+    <div className='text-black md:p-8'>
       {/* Loading */}
       {loading && currentPage === 1 ? (
         <div className='space-y-4 mt-2'>
@@ -72,7 +72,7 @@ const NotificationView = () => {
         <>
           <div className='flex flex-wrap justify-between items-center mb-8 gap-4'>
             <div>
-              <h2 className='text-2xl text-[#002244] font-semibold font-poppins'>
+              <h2 className='lg:text-2xl text-[#002244] font-semibold font-poppins'>
                 Notifications
               </h2>
               {unreadCount > 0 && (
@@ -87,7 +87,7 @@ const NotificationView = () => {
               <button
                 onClick={handleMarkAllRead}
                 // disabled={markingAllRead}
-                className='flex items-center gap-3 font-inter font-normal text-lg hover:text-[#FF8C00] transition-colors duration-200 disabled:opacity-50'
+                className='flex items-center gap-3 font-inter font-normal md:text-lg hover:text-[#FF8C00] transition-colors duration-200 disabled:opacity-50'
               >
                 {} 'Mark All Read'
                 <IoCheckmarkDoneOutline className='w-6 h-6' />

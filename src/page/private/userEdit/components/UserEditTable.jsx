@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { AllTableResponsiveStyle } from '../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
+import { formatDate } from '../../../../utils/formatDate';
 
 export const UserEditTable = () => {
   const { approved_list, isLoading, error } = useSelector(
@@ -14,7 +15,7 @@ export const UserEditTable = () => {
 
   // ✅ Show all users (no filtering)
   const allUsers = approved_list || [];
-
+  console.log('Approved_user', allUsers);
   const totalPages = Math.ceil(allUsers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = allUsers.slice(startIndex, startIndex + itemsPerPage);
@@ -54,6 +55,9 @@ export const UserEditTable = () => {
                   Height
                 </th>
                 <th className='px-5 py-3 w-1/5 whitespace-nowrap text-center'>
+                  QR Card
+                </th>
+                <th className='px-5 py-3 w-1/5 whitespace-nowrap text-center'>
                   Action
                 </th>
               </tr>
@@ -65,9 +69,7 @@ export const UserEditTable = () => {
                   className={index % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}
                 >
                   <td className='px-7 py-3 w-1/5 whitespace-nowrap'>
-                    {row.createdAt
-                      ? new Date(row.createdAt).toLocaleDateString()
-                      : '—'}
+                    {formatDate(row.createdAt) || '—'}
                   </td>
                   <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
                     {row.user.name || '—'}
@@ -78,6 +80,13 @@ export const UserEditTable = () => {
                   </td>
                   <td className='px-5 py-3 w-1/5 whitespace-nowrap text-center'>
                     {row.height || '—'}
+                  </td>
+                  <td className='px-5 py-3 w-1/5 whitespace-nowrap text-center'>
+                    <Link to={`/admin/qr-code/${row.email}`}>
+                      <button className='bg-[#00ac42] text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap hover:bg-[#008b13] transition'>
+                        See QR Card
+                      </button>
+                    </Link>
                   </td>
                   <td className='px-7 py-2.5 whitespace-nowrap flex items-center justify-center gap-3'>
                     <Link to={`/admin/user-edit/${row.id}`}>

@@ -12,6 +12,7 @@ import PrivateGuard from './guards/PrivateGuard';
 import PublicGuard from './guards/PublicGuard';
 import AuthGuard from './guards/AuthGuard';
 
+const AllQRCodes = lazy(() => import('../page/private/QR/AllQRCodes.jsx'));
 // Layouts
 const AuthLayout = lazy(() => import('../layout/auth/AuthLayout.jsx'));
 const AdminLayout = lazy(() => import('../layout/admin/AdminLayout.jsx'));
@@ -105,6 +106,7 @@ const router = createBrowserRouter(
           <Route path='user-edit' element={<UserEditView />} />
           <Route path='user-edit/:id' element={<EditDetailsView />} />
           <Route path='settings' element={<SettingsView />} />
+          <Route path='qr-code/:email' element={<AllQRCodes />} />
         </Route>
       </Route>
 

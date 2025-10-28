@@ -119,7 +119,7 @@ const SettingsView = () => {
   };
 
   return (
-    <div className='bg-[#F9FAFB] md:p-8 p-3'>
+    <div className='bg-[#F9FAFB] md:p-8'>
       <div>
         <h2 className='text-2xl text-[#002244] font-semibold font-poppins'>
           Settings
@@ -132,7 +132,7 @@ const SettingsView = () => {
       <div className='bg-gray-50'>
         <div className=''>
           <form onSubmit={handleSubmit}>
-            <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8'>
               {/* Personal Details Section */}
               <div className='bg-white rounded-lg p-8 shadow-sm'>
                 <div className='flex items-center justify-between mb-8'>
@@ -302,7 +302,7 @@ const SettingsView = () => {
 
             <button
               type='submit'
-              className='bg-[#FF8C00] text-black w-full py-3 rounded-[4px] mt-14 font-medium hover:bg-[#E67E00] transition-colors duration-200'
+              className='bg-[#FF8C00] text-black w-full py-3 rounded-[4px] md:mt-14 mt-4 font-medium hover:bg-[#E67E00] transition-colors duration-200'
             >
               Save Changes
             </button>

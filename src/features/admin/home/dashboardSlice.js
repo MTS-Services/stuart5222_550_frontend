@@ -1,13 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
   fetchAdminSettingsProfile,
-  fetchDashboardData,
   updateAdminSettingsProfile,
+  fetchDashboardData,
+  getUserQRcode,
 } from './dashboardFetch';
 
 const initialState = {
   dashboardData: [],
   profileSettings: [],
+  qrCodeList: [],
+  qrCodeUser: null,
   loading: false,
   error: null,
 };
@@ -25,14 +28,14 @@ const dashboardSlice = createSlice({
       })
       .addCase(fetchDashboardData.fulfilled, (state, action) => {
         state.loading = false;
-        state.dashboardData = action.payload;
-        state.error = null;
+        state.dashboardData = action.payload || [];
       })
       .addCase(fetchDashboardData.rejected, (state, action) => {
         state.loading = false;
         state.dashboardData = [];
         state.error = action.payload;
       })
+
       // --- admin profile settings  ---
       .addCase(fetchAdminSettingsProfile.pending, (state) => {
         state.loading = true;
@@ -40,8 +43,7 @@ const dashboardSlice = createSlice({
       })
       .addCase(fetchAdminSettingsProfile.fulfilled, (state, action) => {
         state.loading = false;
-        state.profileSettings = action.payload;
-        state.error = null;
+        state.profileSettings = action.payload || [];
       })
       .addCase(fetchAdminSettingsProfile.rejected, (state, action) => {
         state.loading = false;
@@ -56,17 +58,30 @@ const dashboardSlice = createSlice({
       })
       .addCase(updateAdminSettingsProfile.fulfilled, (state, action) => {
         state.loading = false;
-        state.profileSettings = action.payload.admin;
-        state.error = null;
+        state.profileSettings = action.payload?.admin || [];
       })
       .addCase(updateAdminSettingsProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+      // --- get user QR codes ---
+      .addCase(getUserQRcode.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserQRcode.fulfilled, (state, action) => {
+        const payload = action.payload || {};
+        state.loading = false;
+        state.qrCodeList = Array.isArray(payload.cards) ? payload.cards : [];
+        state.qrCodeUser = payload.user || null;
+      })
+      .addCase(getUserQRcode.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || 'Something went wrong';
       });
   },
 });
 
-export const selectDashboardData = (state) =>
-  state.admin.dashboard.dashboardData;
-
+export const selectDashboardData = (state) => state.dashboard.dashboardData;
 export default dashboardSlice.reducer;

@@ -1,39 +1,30 @@
-import { use, useEffect } from 'react';
-import { AllCard } from '../common/AllCard';
-import { DateDropDown } from './components/DateDropDown';
+import { useEffect, useState } from 'react';
 import { WaitListTable } from './components/WaitListTable';
 import { useDispatch } from 'react-redux';
 import { adminUserList } from '../../../features/admin/management/usreFetch';
+import Overviews from '../common/Overviews';
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();
+  const [page, setPage] = useState(1);
+  const limit = 10;
 
   useEffect(() => {
-    dispatch(adminUserList({ page: 1, limit: 50, status: 'WAITLIST' }));
-  }, [dispatch]);
+    // Later you can modify this dispatch to include date filter params if API supports it
+    dispatch(adminUserList({ page: page, limit: 10, status: 'WAITLIST' }));
+  }, [dispatch, page]);
 
   return (
-    <div className='text-black md:p-8 p-6'>
-      <div>
-        <h2 className='text-2xl text-[#002244] font-semibold font-poppins'>
-          Dashboard Overview
-        </h2>
-        <p className='text-[#464646] text-base font-normal font-lato mb-4 mt-1'>
-          Monitor your user performance
-        </p>
-        <h3 className='text-[#111827] text-base font-normal font-poppins leading-normal'>
-          Last 30 days overview
-        </h3>
-        <DateDropDown />
-      </div>
-
-      <AllCard />
+    <div className='text-black md:p-8'>
+      {/* Header */}
+      <Overviews />
 
       <div>
-        <h2 className='text-[28px] font-semibold font-poppins text-black my-3'>
-          Wait list
+        <h2 className='md:text-[28px] font-semibold font-poppins text-black my-3'>
+          Wait List
         </h2>
-        <WaitListTable />
+        {/* 🧾 Waitlist Table */}
+        <WaitListTable page={page} setPage={setPage} />
       </div>
     </div>
   );

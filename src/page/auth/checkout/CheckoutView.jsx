@@ -7,18 +7,6 @@ import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 // Keep your plans array as-is
 const plans = [
   {
-    priceId: 'price_1SLERFCZ2kLTrYVYcUtIVSY3',
-    id: 'setup-fee',
-    title: 'Initial Setup Fee',
-    price: '$69 one-time',
-    features: [
-      'Custom profile setup',
-      'High-resolution photos',
-      'Profile personalization',
-      'Priority support',
-    ],
-  },
-  {
     priceId: 'price_1SGXb5CZ2kLTrYVYtOKGZ7yU',
     id: 'monthly',
     title: 'Monthly',
@@ -170,7 +158,12 @@ const CheckoutView = () => {
             <span className='text-base font-semibold'>Initial setup fee</span>
           </h2>
           <hr className='my-6 text-gray-400' />
-          {plans[0].features.map((item, i) => (
+          {[
+            'Custom profile setup',
+            'High-resolution photos',
+            'Profile personalization',
+            'Priority support',
+          ].map((item, i) => (
             <h3
               key={i}
               className='flex items-center gap-3 font-medium text-base my-3'

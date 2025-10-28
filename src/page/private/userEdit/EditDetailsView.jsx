@@ -1,14 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-const images = [
-  { id: 1, image: '/img/page/admin/img1.png' },
-  { id: 2, image: '/img/page/admin/img2.png' },
-  { id: 3, image: '/img/page/admin/img3.png' },
-  { id: 4, image: '/img/page/admin/img4.png' },
-  { id: 5, image: '/img/page/admin/img5.png' },
-];
-
 const EditDetailsView = () => {
   const { id } = useParams();
 
@@ -20,10 +12,8 @@ const EditDetailsView = () => {
 
   if (isLoading)
     return <div className='mx-auto justify-center'>Loading...</div>;
-
   if (error)
     return <div className='mx-auto justify-center'>Error: {error}</div>;
-
   if (!user)
     return <div className='mx-auto justify-center'>User not found</div>;
   const {
@@ -34,6 +24,9 @@ const EditDetailsView = () => {
     image,
     bodyType,
     dealbreakers,
+    location,
+    startDate,
+    endDate,
   } = user;
 
   return (
@@ -45,7 +38,7 @@ const EditDetailsView = () => {
             <div className='w-[80px] h-[80px]'>
               <img
                 className='rounded-full object-cover w-full h-full'
-                src={'/img/page/admin/img1.png'}
+                src={image[0]}
                 alt={userInfo.name || 'User'}
               />
             </div>
@@ -68,7 +61,6 @@ const EditDetailsView = () => {
           </div>
 
           <div className='flex flex-col text-[#404040] text-xs font-lato font-medium'>
-            <p>Id: {user.id}</p>
             <p>Age: {age}</p>
             <p className='my-1.5'>Height: {height}</p>
             <p>Body type: {bodyType}</p>
@@ -108,7 +100,7 @@ const EditDetailsView = () => {
           <div className='flex items-center gap-3'>
             <span className='text-orange-500 text-2xl'>📍</span>
             <span className='text-xl font-medium text-neutral-800'>
-              Location: Anywhere, USA
+              Location: {location}
             </span>
           </div>
 
@@ -116,7 +108,7 @@ const EditDetailsView = () => {
           <div className='flex items-center gap-3'>
             <span className='text-orange-500 text-2xl'>📅</span>
             <span className='text-xl font-medium text-neutral-800'>
-              Start-Date: October 1, 2025
+              Start-Date: {startDate}
             </span>
           </div>
 
@@ -124,7 +116,7 @@ const EditDetailsView = () => {
           <div className='flex items-center gap-3'>
             <span className='text-orange-500 text-2xl'>📅</span>
             <span className='text-xl font-medium text-neutral-800'>
-              End-Date: October 20, 2025
+              End-Date: {endDate}
             </span>
           </div>
         </div>

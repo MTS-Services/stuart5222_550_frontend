@@ -86,7 +86,7 @@ const WelcomeScanView = () => {
                     </p>
                     {/* <p>{data.message}</p> */}
                     <p className='text-orange-200 text-sm font-medium '>
-                      Your remaining scans: {data.scansRemaining || 'empty'}
+                      Your remaining scans: {data.scansRemaining || '[empty]'}
                     </p>
                     <p className='text-red-500 text-xs font-medium '>
                       {data.message}

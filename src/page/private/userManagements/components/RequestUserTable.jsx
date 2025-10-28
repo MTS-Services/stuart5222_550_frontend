@@ -8,6 +8,7 @@ import {
   adminUserRejectedProfile,
 } from '../../../../features/admin/management/usreFetch';
 import { AllTableResponsiveStyle } from '../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
+import { formatDate } from '../../../../utils/formatDate';
 
 export const RequestUserTable = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
@@ -51,6 +52,7 @@ export const RequestUserTable = () => {
           reason: reasonText,
         })
       ).unwrap();
+      toast;
       setError(''); // Clear any previous errors
     } catch (err) {
       console.error(err);
@@ -65,8 +67,8 @@ export const RequestUserTable = () => {
   const openModal = (user) => {
     setSelectedEmail(user.email);
     setSelectedUserId(user.id);
-    setReasonText(''); // reset previous reason
-    setError(''); // clear previous errors
+    setReasonText('');
+    setError('');
     setIsModalOpen(true);
   };
 
@@ -138,9 +140,7 @@ export const RequestUserTable = () => {
                       className={index % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}
                     >
                       <td className='px-7 py-3 w-1/5 whitespace-nowrap'>
-                        {row.createdAt
-                          ? new Date(row.createdAt).toLocaleDateString()
-                          : '—'}
+                        {formatDate(row.createdAt) || '—'}
                       </td>
                       <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
                         {row.name}

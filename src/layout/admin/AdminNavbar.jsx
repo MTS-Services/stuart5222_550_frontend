@@ -12,7 +12,7 @@ const AdminNavbar = () => {
   };
 
   return (
-    <nav className='sticky top-0 z-30 flex items-center justify-end bg-white border-b border-gray-200 px-6 py-6'>
+    <nav className='sticky top-0 z-30 flex items-center justify-end bg-white border-b border-gray-200 p-[21px]'>
       <div className='flex items-center gap-4 sm:gap-5'>
         {/* 🔔 Notification Icon with Badge */}
         <Link

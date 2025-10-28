@@ -42,3 +42,21 @@ export const updateAdminSettingsProfile = createAsyncThunk(
     }
   }
 );
+
+// admin profile settings UPDATE
+// admin profile settings UPDATE
+export const getUserQRcode = createAsyncThunk(
+  'admin/getUserQRcode',
+  async (user_email, { rejectWithValue }) => {
+    try {
+      const res = await GET(
+        `${endpoints.admin.GET_USER_QR_CODE}/${user_email}`
+      );
+      console.log('QR-code →', res);
+      return res; // assuming res.data already returns JSON
+    } catch (error) {
+      console.error('QR Fetch Error →', error);
+      return rejectWithValue(error.message || 'Failed to load QR codes');
+    }
+  }
+);

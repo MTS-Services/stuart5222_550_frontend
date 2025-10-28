@@ -4,6 +4,7 @@ import {
   adminApprove,
   adminReject,
 } from '../../../../features/admin/management/usreFetch';
+import { formatDate } from '../../../../utils/formatDate';
 
 export const WaitListTable = () => {
   const dispatch = useDispatch();
@@ -58,7 +59,7 @@ export const WaitListTable = () => {
         <td className='p-2 border'>{user.id}</td>
         <td className='p-2 border'>{user.name}</td>
         <td className='p-2 border'>{user.email}</td>
-        <td className='p-2 border text-center'>{user.createdAt}</td>
+        <td className='p-2 border text-center'>{formatDate(user.createdAt)}</td>
         <td className='p-2 border text-center flex justify-center gap-2'>
           <button
             onClick={() => handleApprove(user.id)}

@@ -28,6 +28,8 @@ export const endpoints = {
 
     GET_NOTIFICATIONS: '/admin/notifications',
     GET_UNREAD_COUNT: '/admin/notifications/unread-count',
+
+    GET_USER_QR_CODE: '/qr-cards/by-email',
   },
   user: {
     LOGIN: '/auth/login',
