@@ -73,7 +73,7 @@ export const WaitListTable = () => {
 
           <button
             onClick={() => handleReject(user.id)}
-            className='bg-red-100 hover:bg-red-300 text-white px-2 transition rounded-full'
+            className='flex justify-center items-center'
             disabled={loadingRow.reject === user.id}
           >
             {loadingRow.reject === user.id ? (
@@ -82,7 +82,9 @@ export const WaitListTable = () => {
                 <div className='w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin' />
               </div>
             ) : (
-              '❌'
+              <span className='text-xs bg-red-50 hover:bg-red-200 text-white p-2 transition rounded-full'>
+                ❌
+              </span>
             )}
           </button>
         </td>
