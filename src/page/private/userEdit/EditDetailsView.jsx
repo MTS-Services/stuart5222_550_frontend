@@ -1,5 +1,10 @@
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import {
+  adminUserApprovedProfile,
+  adminUserRejectedProfile,
+} from '../../../features/admin/management/usreFetch';
+import { useState } from 'react';
 
 const EditDetailsView = () => {
   const { id } = useParams();
@@ -7,6 +12,9 @@ const EditDetailsView = () => {
   const { approved_list, isLoading, error } = useSelector(
     (state) => state.adminUsers
   );
+
+  const [rejectionReason, setRejectionReason] = useState('');
+  const [loading, setLoading] = useState({ approve: false, reject: false });
 
   const user = approved_list.find((u) => u.id === Number(id));
 
@@ -29,8 +37,49 @@ const EditDetailsView = () => {
     endDate,
   } = user;
 
+  // ✅ Approve
+  const handleApprove = async () => {
+    setLoading({ approve: true, reject: false });
+    try {
+      await dispatch(adminUserApprovedProfile({ id: user.id })).unwrap();
+      toast.success('User approved!');
+    } catch (err) {
+      toast.error(err.message || 'Approval failed');
+    } finally {
+      setLoading({ approve: false, reject: false });
+    }
+  };
+
+  // ❌ Reject
+  const handleReject = async () => {
+    if (!rejectionReason.trim()) {
+      toast.error('Please enter a rejection reason');
+      return;
+    }
+
+    setLoading({ approve: false, reject: true });
+    try {
+      await dispatch(
+        adminUserRejectedProfile({
+          id: user.id,
+          reason: rejectionReason.trim(),
+        })
+      ).unwrap();
+      toast.success('User rejected!');
+      setRejectionReason(''); // clear after success
+    } catch (err) {
+      toast.error(err.message || 'Rejection failed');
+    } finally {
+      setLoading({ approve: false, reject: false });
+    }
+  };
+
+  const handleCencel = () => {
+    navigate(-1);
+  };
+
   return (
-    <div className='text-black'>
+    <div className='text-black space-y-8'>
       {/* User Info Section */}
       <div className='rounded-sm p-4'>
         <div className='flex items-center justify-between'>
@@ -123,8 +172,8 @@ const EditDetailsView = () => {
       </div>
 
       {/* Image Gallery */}
-      <div className='pt-8'>
-        <h3 className='text-2xl font-semibold mb-5'>Images</h3>
+      <div className='pt-4'>
+        <h3 className='text-2xl font-bold mb-5'>Images</h3>
         <div className='grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 grid-cols-2 gap-4'>
           {image.map((img, index) => (
             <div key={index} className='overflow-hidden rounded-lg'>
@@ -139,20 +188,43 @@ const EditDetailsView = () => {
       </div>
 
       {/* Feedback Section */}
-      <div className='p-4 border border-gray-100 bg-white rounded-lg my-6'>
-        <h3 className='text-xl font-medium mb-4'>Cancel With Feedback.</h3>
+      <div className='p-4 border border-gray-200 bg-white rounded-lg'>
+        <h3 className='text-xl font-medium mb-3'>Reject with Feedback</h3>
         <textarea
-          className='w-full max-h-[195px] min-h-[195px] p-2 border border-gray-300 bg-[#E6EEF6] rounded-[6px] mb-4 focus:outline-none focus:ring-1 focus:ring-orange-300'
-          placeholder='Write a review message here...'
+          value={rejectionReason}
+          onChange={(e) => setRejectionReason(e.target.value)}
+          placeholder='Write a reason for rejection...'
+          className='w-full min-h-[120px] p-3 border border-gray-300 rounded bg-[#E6EEF6] focus:outline-none focus:ring-2 focus:ring-orange-300'
         />
-        <button className='bg-[#FF8C00] text-black w-full py-2 rounded-[4px] mb-6'>
-          Send
-        </button>
-        <div className='md:flex items-center gap-4 space-y-6 sm:space-y-0 md:w-[50%]'>
-          <button className='bg-[#1BA400] text-white w-full py-2 rounded-[4px]'>
-            Approved
+        <div className='mt-4 space-x-4'>
+          <button
+            onClick={handleApprove}
+            disabled={loading.approve}
+            className={`flex-1 py-2.5 w-64 rounded font-medium ${
+              loading.approve
+                ? 'bg-green-400 cursor-not-allowed'
+                : 'bg-green-600 hover:bg-green-700 text-white'
+            }`}
+          >
+            {loading.approve ? 'Approving...' : 'Approve'}
           </button>
-          <button className='bg-[#FF8C00] text-black w-full py-2 rounded-[4px]'>
+
+          <button
+            onClick={handleReject}
+            disabled={loading.reject}
+            className={`flex-1 py-2.5 w-64 rounded font-medium ${
+              loading.reject
+                ? 'bg-orange-400 cursor-not-allowed'
+                : 'bg-orange-500 hover:bg-orange-600 text-white'
+            }`}
+          >
+            {loading.reject ? 'Rejecting...' : 'Reject'}
+          </button>
+
+          <button
+            onClick={handleCencel}
+            className={`flex-1 py-2.5 w-64 rounded font-medium bg-red-500 hover:bg-orange-600 text-white `}
+          >
             Cancel
           </button>
         </div>

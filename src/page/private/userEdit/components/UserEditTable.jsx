@@ -82,7 +82,7 @@ export const UserEditTable = () => {
                     {row.height || '—'}
                   </td>
                   <td className='px-5 py-3 w-1/5 whitespace-nowrap text-center'>
-                    <Link to={`/admin/qr-code/${row.email}`}>
+                    <Link to={`/admin/user-edit/qr-code/${row.email}`}>
                       <button className='bg-[#00ac42] text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap hover:bg-[#008b13] transition'>
                         See QR Card
                       </button>
