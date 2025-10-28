@@ -63,17 +63,27 @@ export const WaitListTable = () => {
         <td className='p-2 border text-center flex justify-center gap-2'>
           <button
             onClick={() => handleApprove(user.id)}
-            className='bg-orange-400 hover:bg-orange-700 text-white px-3 py-1 rounded transition'
+            className={`bg-[#F07400] hover:bg-red-300 text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap ${
+              loadingRow.approve ? 'bg-[#cfccc8]' : ''
+            }`}
             disabled={loadingRow.approve === user.id}
           >
-            {loadingRow.approve === user.id ? 'Loading...' : '✓ Approve'}
+            {loadingRow.approve === user.id ? <p>Loading...</p> : '✓ Approve'}
           </button>
+
           <button
             onClick={() => handleReject(user.id)}
-            className='bg-red-100 hover:bg-red-300 text-white px-3 py-1 rounded transition'
+            className='bg-red-100 hover:bg-red-300 text-white px-2 transition rounded-full'
             disabled={loadingRow.reject === user.id}
           >
-            {loadingRow.reject === user.id ? 'Loading...' : '❌'}
+            {loadingRow.reject === user.id ? (
+              <div>
+                <span className='sr-only'>Loading...</span>
+                <div className='w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin' />
+              </div>
+            ) : (
+              '❌'
+            )}
           </button>
         </td>
       </tr>

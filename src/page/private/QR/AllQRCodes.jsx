@@ -7,12 +7,12 @@ import Skeleton from '../../../components/ui/Skeleton';
 
 const AllQRCodes = () => {
   const dispatch = useDispatch();
+  const { email: user_email } = useParams();
 
   const { qrCodeList, qrCodeUser, loading } = useSelector(
     (state) => state.dashboard
   );
-  const { email: user_email } = useParams();
-
+  console.log(qrCodeList.length);
   useEffect(() => {
     if (user_email) {
       dispatch(getUserQRcode(user_email));
@@ -50,7 +50,10 @@ const AllQRCodes = () => {
   return (
     <div className='p-4'>
       <div className='flex justify-between items-center'>
-        <h1 className='text-2xl font-bold'>QR-CODE LIST</h1>
+        <div>
+          <h1 className='text-2xl font-bold'>QR-CODE LIST</h1>
+          <h2>Total Card: ({qrCodeList.length})</h2>
+        </div>
         <div>
           <p className='text-gray-700'>
             Email: {qrCodeUser?.email || 'Unknown Email'}

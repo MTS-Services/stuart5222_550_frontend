@@ -17,8 +17,15 @@ export const POST = async (url, payload) => {
   return responseData;
 };
 
-export const UPDATE = async (url, data) => {
-  const { data: responseData } = await api.put(url, data);
+export const UPDATE = async (url, payload) => {
+  const isFormData = payload instanceof FormData;
+
+  const { data: responseData } = await api.put(url, payload, {
+    headers: {
+      'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
+    },
+  });
+
   return responseData;
 };
 

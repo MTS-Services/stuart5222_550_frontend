@@ -1,23 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { GiCheckMark } from 'react-icons/gi';
-import { BiErrorCircle } from 'react-icons/bi';
 import { Upload } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { GiCheckMark } from 'react-icons/gi';
+import { BiErrorCircle } from 'react-icons/bi';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { MdOutlinePrivacyTip } from 'react-icons/md';
-import { submitProfile } from '../../../features/public/profile/profileFetch';
 import { validateForm } from '../../../utils/validateForm';
+import { submitEditProfile } from '../../../features/public/profile/profileFetch';
 
-const SetupProfileView = () => {
+const EditProfileView = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [success, setSuccess] = useState(false);
-  const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
+  const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
-
   const dispatch = useDispatch();
+
   // ============================================
   // 📸 Image Upload Handler with Preview
   // ============================================
@@ -27,16 +27,13 @@ const SetupProfileView = () => {
       toast.warn('Maximum 13 images allowed (3 required + 10 optional)');
       return;
     }
-
     const validFiles = selectedFiles.filter((file) =>
       file.type.startsWith('image/')
     );
-
     if (validFiles.length !== selectedFiles.length) {
       toast.warn('Please upload only image files');
       return;
     }
-
     setFiles(validFiles);
     const previews = validFiles.map((file) => URL.createObjectURL(file));
     setImagePreviews(previews);
@@ -60,20 +57,19 @@ const SetupProfileView = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
-
     const formData = {
-      displayName: form.firstName.value, // ✅ Use displayName (matches your object)
       age: form.age.value,
+      area: form.area.value,
+      bio: form.textArea.value,
       height: form.height.value,
       bodyType: form.bodyType.value,
-      area: form.area.value,
-      bio: form.textArea.value, // ✅ bio, not textArea
-      dealbreakers: form.dealBreaks.value, // ✅ corrected spelling
+      displayName: form.firstName.value,
+      dealbreakers: form.dealBreaks.value,
       startDate: form.startDate.value || null,
       endDate: form.endDate.value || null,
+      phone: form.number.value || null,
       location: form.location.value,
       email: form.email.value,
-      phone: form.number.value || null, // ✅ phone, not number
     };
 
     // ✅ Validate with files
@@ -81,22 +77,20 @@ const SetupProfileView = () => {
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       toast.warn('Please fix all errors before submitting');
+
       return;
     }
-
     if (files.length < 3) {
       setErrors({ images: 'Minimum 3 images required' });
       toast.warn('Please upload at least 3 images before submitting');
       return;
     }
-
     setErrors({});
     setSubmitLoading(true);
 
     try {
       // 📤 Build FormData with image array
       const submitData = new FormData();
-
       // Append all text fields
       Object.entries(formData).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
@@ -109,16 +103,15 @@ const SetupProfileView = () => {
         submitData.append('image', file);
       });
 
-      await dispatch(submitProfile(submitData)).unwrap();
-
-      toast.success('Profile submitted successfully for review!');
+      await dispatch(submitEditProfile(submitData)).unwrap();
+      toast.success('User approved!');
       form.reset();
       setSuccess(true);
       setFiles([]);
       setImagePreviews([]);
     } catch (err) {
       console.error('Submission error:', err);
-      alert(err?.message || '❌ Failed to submit profile. Please try again.');
+      toast.warn(err || 'Failed to submit profile. Please try again.');
     } finally {
       setSubmitLoading(false);
     }
@@ -164,7 +157,7 @@ const SetupProfileView = () => {
           </div>
           <div className='text-center mb-6'>
             <h2 className='font-bold md:text-[32px] text-xl'>
-              Setup Your Profile
+              Edit Your Profile
             </h2>
           </div>
 
@@ -598,4 +591,4 @@ const SetupProfileView = () => {
   );
 };
 
-export default SetupProfileView;
+export default EditProfileView;

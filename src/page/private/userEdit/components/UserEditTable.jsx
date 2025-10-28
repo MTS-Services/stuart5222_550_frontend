@@ -75,8 +75,7 @@ export const UserEditTable = () => {
                     {row.user.name || '—'}
                   </td>
                   <td className='px-5 py-3 w-1/5 whitespace-nowrap text-center'>
-                    {row.age || '—'}{' '}
-                    <span className='text-gray-500'>(years)</span>
+                    {row.age || '—'} <span className=''>years</span>
                   </td>
                   <td className='px-5 py-3 w-1/5 whitespace-nowrap text-center'>
                     {row.height || '—'}

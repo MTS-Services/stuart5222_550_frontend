@@ -11,11 +11,11 @@ const UserDetailsView = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { drafts_list, isLoading, error } = useSelector(
+  const { userProfiles, isLoading, error } = useSelector(
     (state) => state.adminUsers
   );
 
-  const user = drafts_list?.find((u) => u.id === Number(id));
+  const user = userProfiles?.find((u) => u.id === Number(id));
 
   const [rejectionReason, setRejectionReason] = useState('');
   const [loading, setLoading] = useState({ approve: false, reject: false });
@@ -82,14 +82,14 @@ const UserDetailsView = () => {
   return (
     <div className='text-black p-6 space-y-8'>
       {/* User Info */}
-      <div className='rounded-sm p-4 border'>
+      <div className='rounded-sm p-4 '>
         <div className='flex flex-col md:flex-row items-start md:items-center justify-between gap-6'>
           <div className='flex items-center gap-4'>
             <div className='w-[80px] h-[80px]'>
               <img
                 src={image?.[0] || '/img/placeholder.jpg'}
                 alt={userInfo.name || 'User'}
-                className='rounded-full object-cover w-full h-full'
+                className='rounded-full border object-cover w-full h-full'
                 onError={(e) => (e.target.src = '/img/placeholder.jpg')}
               />
             </div>

@@ -12,18 +12,17 @@ import { formatDate } from '../../../../utils/formatDate';
 
 export const RequestUserTable = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
-  const [reasonText, setReasonText] = useState('');
-  const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [reasonText, setReasonText] = useState('');
+  const [error, setError] = useState('');
   const dispatch = useDispatch();
 
-  // 🔹 Track which row is loading
-  const [loadingRow, setLoadingRow] = useState({ approve: null, reject: null });
-
   // ✅ Get data from Redux
-  const { drafts_list, isLoading } = useSelector((state) => state.adminUsers);
+  const { userProfiles, isLoading } = useSelector((state) => state.adminUsers);
+  // ✅ Track which row is loading
+  const [loadingRow, setLoadingRow] = useState({ approve: null, reject: null });
 
   // ✅ Approve handler
   const handleApprove = async (userId) => {
@@ -90,7 +89,7 @@ export const RequestUserTable = () => {
 
   // ✅ Map and filter the data to match table needs
   const processedList =
-    drafts_list?.map((user) => ({
+    userProfiles?.map((user) => ({
       id: user.id,
       createdAt: user.createdAt,
       name: user.displayName || user.user?.name || '—',
@@ -122,11 +121,11 @@ export const RequestUserTable = () => {
             <table className='min-w-full table-fixed text-left text-xs sm:text-sm md:text-base'>
               <thead className='bg-white text-black text-lg font-normal'>
                 <tr>
-                  <th className='px-7 py-3 w-1/5 whitespace-nowrap'>Date</th>
                   <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Name</th>
+                  <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Email</th>
+                  <th className='px-7 py-3 w-1/5 whitespace-nowrap'>Date</th>
                   <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Status</th>
 
-                  <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Email</th>
                   <th className='px-5 py-3 w-1/5 whitespace-nowrap text-center'>
                     Action
                   </th>
@@ -139,47 +138,50 @@ export const RequestUserTable = () => {
                       key={row.id}
                       className={index % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}
                     >
-                      <td className='px-7 py-3 w-1/5 whitespace-nowrap'>
-                        {formatDate(row.createdAt) || '—'}
-                      </td>
                       <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
                         {row.name}
+                      </td>
+                      <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
+                        {row.email}
+                      </td>
+                      <td className='px-7 py-3 w-1/5 whitespace-nowrap'>
+                        {formatDate(row.createdAt) || '—'}
                       </td>
                       <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
                         {row.status}
                       </td>
 
-                      <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
-                        {row.email}
-                      </td>
-                      <td className='px-7 py-2.5 whitespace-nowrap flex items-center justify-center gap-3'>
-                        <FiX
-                          className='w-5 h-5 text-red-500 cursor-pointer'
-                          onClick={() => openModal(row)}
-                        />
-
-                        <button
-                          className='text-green-50 bg-green-300 rounded-full p-1 cursor-pointer hover:bg-slate-400 disabled:opacity-50'
-                          onClick={() => handleApprove(row.id)}
-                          disabled={loadingRow.approve === row.id}
-                          aria-label={`Approve ${row.name}`}
-                        >
-                          {loadingRow.approve === row.id ? (
-                            <>
-                              <span className='sr-only'>Loading...</span>
-                              <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin' />
-                            </>
-                          ) : (
-                            <PiCheckBold aria-hidden='true' />
-                          )}
-                        </button>
-
-                        <Link to={`/admin/user-management/${row.id}`}>
-                          <button className='bg-[#F07400] text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap'>
-                            See Details
+                      {row.status === 'DRAFT' ? (
+                        <td className='px-7 py-2.5 whitespace-nowrap flex items-center justify-center gap-3'>
+                          <Link to={`/admin/user-management/${row.id}`}>
+                            <button className='bg-[#F07400] text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap'>
+                              See Details
+                            </button>
+                          </Link>
+                          <button
+                            className='text-green-50 bg-green-300 rounded-full p-1 cursor-pointer hover:bg-slate-400 disabled:opacity-50'
+                            onClick={() => handleApprove(row.id)}
+                            disabled={loadingRow.approve === row.id}
+                            aria-label={`Approve ${row.name}`}
+                          >
+                            {loadingRow.approve === row.id ? (
+                              <>
+                                <span className='sr-only'>Loading...</span>
+                                <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin' />
+                              </>
+                            ) : (
+                              <PiCheckBold aria-hidden='true' />
+                            )}
                           </button>
-                        </Link>
-                      </td>
+
+                          <FiX
+                            className='w-5 h-5 text-red-500 cursor-pointer'
+                            onClick={() => openModal(row)}
+                          />
+                        </td>
+                      ) : (
+                        <td className='text-center'>{row.status}</td>
+                      )}
                     </tr>
                   ))
                 ) : (

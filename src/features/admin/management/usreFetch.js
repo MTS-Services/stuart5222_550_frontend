@@ -96,14 +96,17 @@ export const adminUserVerifiedProfile = createAsyncThunk(
   }
 );
 
-// ========== GET DRAFT LIST =====================
+// ========== GET ALL_PROFILES =====================
 export const adminUserDraftProfile = createAsyncThunk(
-  'admin/createDraft',
+  'admin/allProfiles',
   async ({ page = 1, limit, status }, { rejectWithValue }) => {
     try {
-      const res = await GET(endpoints.admin.DRAFTS_LIST, {
-        params: { page, limit, status }, // ✅ send as query params
+      const res = await GET(endpoints.admin.ALL_PROFILES, {
+        page,
+        limit,
+        status,
       });
+
       return res;
     } catch (err) {
       console.log('ERROR DRAFT_PROFILE:', err);

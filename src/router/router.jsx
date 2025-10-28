@@ -12,7 +12,6 @@ import PrivateGuard from './guards/PrivateGuard';
 import PublicGuard from './guards/PublicGuard';
 import AuthGuard from './guards/AuthGuard';
 
-const AllQRCodes = lazy(() => import('../page/private/QR/AllQRCodes.jsx'));
 // Layouts
 const AuthLayout = lazy(() => import('../layout/auth/AuthLayout.jsx'));
 const AdminLayout = lazy(() => import('../layout/admin/AdminLayout.jsx'));
@@ -32,13 +31,21 @@ const WelcomeScanView = lazy(() =>
 );
 
 // 🛂 Auth Pages
+const LoginView = lazy(() => import('../page/auth/login/LoginView.jsx'));
 const CheckoutView = lazy(() =>
   import('../page/auth/checkout/CheckoutView.jsx')
 );
-const LoginView = lazy(() => import('../page/auth/login/LoginView.jsx'));
+const SetupProfileView = lazy(() =>
+  import('../page/auth/setup-profile/SetupProfileView.jsx')
+);
+const EditProfileView = lazy(() =>
+  import('../page/auth/setup-profile/EditProfileView.jsx')
+);
 
 // 🔒 Private Pages
 const AdminView = lazy(() => import('../page/private/admin/AdminView.jsx'));
+const AllQRCodes = lazy(() => import('../page/private/QR/AllQRCodes.jsx'));
+const UserView = lazy(() => import('../page/public/profile/UserView.jsx'));
 const UserManageView = lazy(() =>
   import('../page/private/userManagements/UserManageView.jsx')
 );
@@ -51,11 +58,6 @@ const SettingsView = lazy(() =>
 const NotificationView = lazy(() =>
   import('../page/private/notification/Notification.jsx')
 );
-const SetupProfileView = lazy(() =>
-  import('../page/auth/setup-profile/SetupProfileView.jsx')
-);
-
-const UserView = lazy(() => import('../page/public/profile/UserView.jsx'));
 const EditDetailsView = lazy(() =>
   import('../page/private/userEdit/EditDetailsView.jsx')
 );
@@ -86,6 +88,10 @@ const router = createBrowserRouter(
             }
           />
           <Route path='checkout/setup-profile' element={<SetupProfileView />} />
+          <Route
+            path='checkout/setup-profile/edit'
+            element={<EditProfileView />}
+          />
         </Route>
       </Route>
 

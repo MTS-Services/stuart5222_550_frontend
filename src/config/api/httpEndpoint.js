@@ -14,6 +14,7 @@ export const endpoints = {
     APPROVE_LIST: `/admin/profiles/approved`,
     DRAFTS_LIST: '/admin/profiles/draft',
 
+    ALL_PROFILES: '/admin/profiles/all',
     APPROVED_DRAFT: '/admin/profiles',
     REJECTED_DRAFT: '/admin/profiles',
 
@@ -28,7 +29,6 @@ export const endpoints = {
 
     GET_NOTIFICATIONS: '/admin/notifications',
     GET_UNREAD_COUNT: '/admin/notifications/unread-count',
-
     GET_USER_QR_CODE: '/qr-cards/by-email',
   },
   user: {
@@ -36,6 +36,7 @@ export const endpoints = {
     REGISTER: '/auth/register',
     WAITLIST: '/auth/register',
     SETUP_PROFILE: '/profile',
+    EDIT_PROFILE: '/profile',
     SETTINGS: '/user/settings',
     QR_CODE: (qr_code) => `/qr-cards/scan/${qr_code}`,
     FETCH_PROFILE: (userMail) => `/profile/${userMail}`,

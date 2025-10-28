@@ -11,7 +11,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     // Later you can modify this dispatch to include date filter params if API supports it
-    dispatch(adminUserList({ page: page, limit: 10, status: 'WAITLIST' }));
+    dispatch(adminUserList({ page: page, limit: 50, status: 'WAITLIST' }));
   }, [dispatch, page]);
 
   return (

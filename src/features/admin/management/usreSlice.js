@@ -115,7 +115,7 @@ const adminUserManagementSlice = createSlice({
       })
       .addCase(adminUserDraftProfile.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.drafts_list = action.payload.profiles;
+        state.userProfiles = action.payload.profiles;
         state.error = null;
       })
       .addCase(adminUserDraftProfile.rejected, (state, action) => {
