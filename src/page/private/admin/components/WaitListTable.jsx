@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   adminApprove,
   adminReject,
-} from '../../../../features/admin/management/usreFetch';
-import { formatDate } from '../../../../utils/formatDate';
+} from "../../../../features/admin/management/usreFetch";
+import { formatDate } from "../../../../utils/formatDate";
 
 export const WaitListTable = () => {
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ export const WaitListTable = () => {
     if (isLoading) {
       return (
         <tr>
-          <td colSpan='5' className='text-center p-4'>
+          <td colSpan="5" className="p-4 text-center">
             Loading...
           </td>
         </tr>
@@ -47,7 +47,7 @@ export const WaitListTable = () => {
     if (!users.length) {
       return (
         <tr>
-          <td colSpan='5' className='text-center p-4 text-gray-500'>
+          <td colSpan="5" className="p-4 text-center text-gray-500">
             No users in waitlist.
           </td>
         </tr>
@@ -55,34 +55,32 @@ export const WaitListTable = () => {
     }
 
     return users.map((user) => (
-      <tr key={user.id} className='hover:bg-gray-50'>
-        <td className='p-2 border'>{user.id}</td>
-        <td className='p-2 border'>{user.name}</td>
-        <td className='p-2 border'>{user.email}</td>
-        <td className='p-2 border text-center'>{formatDate(user.createdAt)}</td>
-        <td className='p-2 border text-center flex justify-center gap-2'>
+      <tr key={user.id} className="hover:bg-gray-50">
+        <td className="border p-2">{user.id}</td>
+        <td className="border p-2">{user.name}</td>
+        <td className="border p-2">{user.email}</td>
+        <td className="border p-2 text-center">{formatDate(user.createdAt)}</td>
+        <td className="flex justify-center gap-2 border p-2 text-center">
           <button
             onClick={() => handleApprove(user.id)}
-            className={`bg-[#F07400] hover:bg-red-300 text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap ${
-              loadingRow.approve ? 'bg-[#cfccc8]' : ''
-            }`}
+            className={`whitespace-nowrap rounded-xl bg-[#F07400] px-4 py-2.5 text-xs text-white hover:bg-red-300`}
             disabled={loadingRow.approve === user.id}
           >
-            {loadingRow.approve === user.id ? <p>Loading...</p> : '✓ Approve'}
+            {loadingRow.approve === user.id ? <p>Loading...</p> : "✓ Approve"}
           </button>
 
           <button
             onClick={() => handleReject(user.id)}
-            className='flex justify-center items-center'
+            className="flex items-center justify-center"
             disabled={loadingRow.reject === user.id}
           >
             {loadingRow.reject === user.id ? (
               <div>
-                <span className='sr-only'>Loading...</span>
-                <div className='w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin' />
+                <span className="sr-only">Loading...</span>
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-500 border-t-transparent" />
               </div>
             ) : (
-              <span className='text-xs bg-red-50 hover:bg-red-200 text-white p-2 transition rounded-full'>
+              <span className="rounded-full bg-red-50 p-2 text-xs text-white transition hover:bg-red-200">
                 ❌
               </span>
             )}
@@ -93,14 +91,14 @@ export const WaitListTable = () => {
   };
 
   return (
-    <table className='w-full border-collapse border border-gray-200 text-left'>
+    <table className="w-full border-collapse border border-gray-200 text-left">
       <thead>
-        <tr className='bg-gray-100'>
-          <th className='p-2 border'>ID</th>
-          <th className='p-2 border'>Name</th>
-          <th className='p-2 border'>Email</th>
-          <th className='p-2 border text-center'>Date</th>
-          <th className='p-2 border text-center'>Action</th>
+        <tr className="bg-gray-100">
+          <th className="border p-2">ID</th>
+          <th className="border p-2">Name</th>
+          <th className="border p-2">Email</th>
+          <th className="border p-2 text-center">Date</th>
+          <th className="border p-2 text-center">Action</th>
         </tr>
       </thead>
       <tbody>{renderRows()}</tbody>

@@ -1,67 +1,68 @@
-import { JoinWaitlist } from '../components/JoinWaitlist';
+import { JoinWaitlist } from "../components/JoinWaitlist";
 
 const HeroSection = () => {
   return (
-    <div className='md:py-6 py-4 max-w-[600px] mx-auto'>
-      <div className='flex items-center justify-center'>
-        <div className='text-center'>
+    <div className="mx-auto max-w-[600px] md:py-6">
+      <div className="flex items-center justify-center">
+        <div className="text-center">
           {/* Image */}
-          <div className='flex justify-center mb-6'>
+          <div className="flex justify-center py-[40px]">
             <img
-              src='/img/page/home/remove_preview.png'
-              alt='preview'
-              className='w-[146px] h-[104px] bg-cover object-cover'
+              src="/img/assets/logo.png"
+              alt="preview"
+              className="h-24 w-36 object-cover"
             />
           </div>
 
           {/* Heading */}
-          <h1 className='text-[30px] sm:text-[40px] md:text-[50px] font-bold text-white my-[40px]'>
+          <h1 className="mb-[40px] font-raleway text-[30px] font-bold text-white sm:text-[40px] md:text-[50px]">
             Why “Scan Me Maybe”?
           </h1>
         </div>
       </div>
 
-      <div className='text-white flex items-center justify-center'>
-        <div className=''>
-          <p className='md:text-2xl text-base font-normal md:mb-6 mb-[16px]'>
+      <div className="flex items-center justify-center text-white">
+        <div className="">
+          <p className="mb-[16px] text-base font-normal md:mb-6 md:text-2xl">
             Let’s be honest:
           </p>
-          <p className='md:text-2xl text-base font-semibold my-5'>
+
+          <p className="my-7 text-base font-semibold leading-6 md:text-2xl">
             Dating apps? A disaster.
           </p>
-          <div className='md:ml-0 ml-4'>
-            <p className='md:text-2xl text-base font-medium my-5'>
-              -fake profiles
+          <div className="ml-4 md:ml-0">
+            <p className="my-5 text-base md:text-2xl">- fake profiles</p>
+            <p className="text-base md:text-2xl">- ghosting</p>
+            <p className="my-5 text-base md:text-2xl">
+              - long-distance pen pals
             </p>
-            <p className='md:text-2xl text-base font-medium'>-ghosting</p>
-            <p className='md:text-2xl text-base font-medium  my-5'>
-              -long -distance pen pals
-            </p>
-            <p className='md:text-2xl text-base font-medium my-6'>
-              -the eventual ask for money
+            <p className="my-5 text-base md:text-2xl">
+              - the eventual ask for money
             </p>
           </div>
-          <p className='md:text-2xl text-base font-semibold mt-6'>
+          <p className="mt-7 font-semibold md:text-2xl">
             Approaching someone out in the world?
-            <span className='block md:inline md:ml-2 ml-0'>Complicated.</span>
+            <span className="ml-0 block md:ml-2 md:inline">Complicated.</span>
           </p>
 
-          <div className='md:ml-0 ml-4'>
-            <p className='md:text-2xl text-base font-normal my-6'>-awkward</p>
-            <p className='md:text-2xl text-base font-normal'>
-              -negative reaction to a simple "hello"
+          <div className="ml-4 md:ml-0">
+            <p className="my-5 text-base font-normal md:text-2xl"> - awkward</p>
+            <p className="text-base font-normal md:text-2xl">
+              - negative reaction to a simple "hello"
             </p>
-            <p className='md:text-2xl text-base font-normal my-6'>
-              -fear of rejection
+            <p className="my-5 text-base font-normal md:text-2xl">
+              - fear of rejection
             </p>
           </div>
-          <div className=''>
-            <h2 className='font-bold text-[24px] mt-9 mb-6'>
+          <div className="">
+            <h2 className="mb-5 text-center text-[24px] font-bold">
               It’s not a scam, it’s a Scan
             </h2>
-            <div className='bg-[#434343] px-4 sm:py-8 py-[74px]  rounded-lg'>
-              <h2 className='text-[32px] font-bold mb-4'>Scan Me Maybe</h2>
-              <p className='text-base font-medium max-w-[568px] mb-[40px]'>
+            <div className="rounded-lg bg-[#434343] px-4 py-[74px] sm:py-8">
+              <h2 className="mb-4 text-center text-[32px] font-bold">
+                Scan Me Maybe
+              </h2>
+              <p className="mb-[40px] max-w-[568px] text-justify leading-6">
                 Revolutionizing dating through personalized cards and genuine
                 connections. because sometimes, the best matches happen when you
                 least expect them.

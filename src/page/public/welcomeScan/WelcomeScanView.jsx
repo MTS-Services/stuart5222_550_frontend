@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
-import { BsCheck } from 'react-icons/bs';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { qrCodeRequest } from '../../../features/public/QR-code/qrCodeFetch';
+import { useEffect } from "react";
+import { BsCheck } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { qrCodeRequest } from "../../../features/public/QR-code/qrCodeFetch";
 
 const WelcomeScanView = () => {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ const WelcomeScanView = () => {
 
   // Get QR code state from Redux
   const { data, loading, error, success } = useSelector(
-    (state) => state.qrcode
+    (state) => state.qrcode,
   );
 
   console.log(data?.profile?.contactEmail);
@@ -20,40 +20,37 @@ const WelcomeScanView = () => {
     if (id) {
       dispatch(qrCodeRequest({ qr_code: id }));
     } else {
-      console.error('❌ No QR code provided in URL');
+      console.error("❌ No QR code provided in URL");
     }
   }, [dispatch, id]);
 
   // Debug: Log state changes
 
   return (
-    <div className='px-[10px] py-2 sm:py-4 md:py-6 lg:py-8 font-raleway bg-[#3B3B3D] min-h-screen text-white'>
-      <div className='flex items-center justify-center text-center '>
-        <div className='text-center'>
+    <div className="min-h-screen bg-[#3B3B3D] px-[10px] py-2 font-raleway text-white sm:py-4 md:py-6 lg:py-8">
+      <div className="flex items-center justify-center text-center">
+        <div className="text-center">
           {/* Image */}
-          <div className='flex items-center justify-center py-6'>
-            {/* Image */}
+          <div className="flex justify-center py-[40px]">
             <img
-              src='/img/page/home/remove_preview.png'
-              alt='preview'
-              className='w-24 bg-cover object-cover'
+              src="/img/assets/logo.png"
+              alt="preview"
+              className="h-24 w-36 object-cover"
             />
           </div>
 
           {/* Heading */}
-          <h1 className='font-raleway font-bold text-[20px] sm:text-[30px] md:text-[40px] text-center mb-4'>
+          <h1 className="mb-4 text-center font-raleway text-[20px] font-bold sm:text-[30px] md:text-[40px]">
             Welcome to Scan Me Maybe <br />
-            <span className='font-medium inline-block'>
-              So…. you got the card.
-            </span>
+            So…. you got the card.
           </h1>
         </div>
       </div>
 
-      <div className='flex items-center justify-center max-w-[600px] mx-auto'>
-        <div className='w-full'>
+      <div className="mx-auto flex max-w-[600px] items-center justify-center">
+        <div className="w-full">
           {/* Paragraph */}
-          <p className='md:text-base text-xs font-normal text-center mx-auto font-raleway md:py-5 py-2.5'>
+          <p className="mx-auto py-2.5 text-center text-xs font-normal leading-4 md:py-5 md:text-base">
             If you’re reading this, it means I – or one of my wonderful friends
             – saw something in you. Maybe it was your smile, your energy, or the
             way you carried yourself. You weren’t obviously partnered, and if
@@ -61,34 +58,36 @@ const WelcomeScanView = () => {
             disregard all of this with a smile.
           </p>
 
-          <div className='bg-[#3d4743] flex items-center gap-4 px-4 py-3 rounded-lg w-full my-8'>
+          <div className="my-8 flex w-full items-center gap-4 rounded-lg bg-[#3d4743] px-4 py-3">
             {/* Checkbox */}
 
             {/* Text */}
-            <div className='flex flex-col text-start text-sm'>
+            <div className="flex flex-col text-start text-sm">
               {/* QR Code Status Indicator */}
               {loading && (
-                <div className='text-orange-500 text-sm font-medium mb-2'>
+                <div className="text-sm font-medium text-orange-500">
                   🔍 Scanning QR Code...
                 </div>
               )}
+
               {error && (
-                <div className='text-red-500 text-sm font-medium mb-2'>
-                  ❌ QR Scan Failed: {error}
+                <div className="text-sm font-medium text-red-500">
+                  <p>❌ QR Scan Failed: {error}</p>
                 </div>
               )}
+
               {success && data && (
-                <div className='mb-2 flex gap-4'>
-                  <div className='inline-flex items-center'>✅</div>
+                <div className="flex gap-4">
+                  <div className="inline-flex items-center">✅</div>
                   <div>
-                    <p className='text-green-500 text-sm font-medium '>
+                    <p className="text-sm font-medium text-green-500">
                       QR Code Scanned Successfully
                     </p>
                     {/* <p>{data.message}</p> */}
-                    <p className='text-orange-200 text-sm font-medium '>
-                      Your remaining scans: {data.scansRemaining || '[empty]'}
+                    <p className="text-sm font-medium text-orange-200">
+                      Your remaining scans: {data.scansRemaining || "[empty]"}
                     </p>
-                    <p className='text-red-500 text-xs font-medium '>
+                    <p className="text-xs font-medium text-red-500">
                       {data.message}
                     </p>
                   </div>
@@ -99,51 +98,51 @@ const WelcomeScanView = () => {
 
           {data && data.scansRemaining > 0 && (
             <div>
-              <div className='bg-[#505050] flex gap-4 px-4 py-3 rounded-lg w-full my-8'>
+              <div className="my-8 flex w-full gap-4 rounded-lg bg-[#505050] px-4 py-3">
                 {/* Checkbox */}
-                <div className='inline-flex items-center'>
-                  <label className='flex items-center cursor-pointer relative'>
+                <div className="inline-flex items-center">
+                  <label className="relative flex cursor-pointer items-center">
                     <input
-                      type='checkbox'
-                      className='peer h-5 w-5 cursor-pointer transition-all appearance-none rounded border border-orange-500 checked:bg-orange-500 checked:border-orange-500'
+                      type="checkbox"
+                      className="peer h-5 w-5 cursor-pointer appearance-none rounded border border-orange-500 transition-all checked:border-orange-500 checked:bg-orange-500"
                     />
                     {/* Checkmark */}
-                    <span className='absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none'>
-                      <BsCheck className='text-white w-3.5 h-3.5' />
+                    <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-white opacity-0 peer-checked:opacity-100">
+                      <BsCheck className="h-3.5 w-3.5 text-white" />
                     </span>
                   </label>
                 </div>
 
                 {/* Text */}
-                <div className='flex flex-col text-start text-sm'>
-                  <p className='font-semibold text-white'>
+                <div className="flex flex-col text-start text-sm">
+                  <p className="font-semibold text-white">
                     Read terms and conditions
                   </p>
-                  <p className='text-sm text-orange-500'>
+                  <p className="text-sm text-orange-500">
                     Yes, I have accepted the terms and conditions.
                   </p>
                 </div>
               </div>
 
-              <div className='md:mb-0 mb-10'>
-                <h2 className='font-raleway md:text-[26px] text-base font-bold md:my-6 my-4 text-center'>
+              <div className="mb-10 md:mb-0">
+                <h2 className="my-4 text-center font-raleway text-base font-bold md:my-6 md:text-[26px]">
                   It’s not a scam, it’s a Scan
                 </h2>
-                <div className='md:w-full w-[70%] flex mx-auto items-center gap-4 mt-[20px] font-semibold font-raleway'>
-                  <div className='w-full'>
+                <div className="mx-auto mt-[20px] flex w-[70%] items-center gap-4 font-raleway font-semibold md:w-full">
+                  <div className="w-full">
                     <Link to={`/user-profile`}>
                       <button
-                        type='submit'
-                        className='w-full p-2.5 bg-orange-500 rounded-lg text-white text-base hover:bg-orange-600 transition'
+                        type="submit"
+                        className="w-full rounded-lg bg-orange-500 p-2.5 text-base text-white transition hover:bg-orange-600"
                       >
                         Let’s go
                       </button>
                     </Link>
                   </div>
                   <button
-                    type='button'
+                    type="button"
                     onClick={() => navigate(-1)}
-                    className='w-full p-2.5 bg-orange-500 rounded-lg text-white text-base hover:bg-orange-600 transition'
+                    className="w-full rounded-lg bg-orange-500 p-2.5 text-base text-white transition hover:bg-orange-600"
                   >
                     No Thanks
                   </button>

@@ -1,48 +1,48 @@
-import { useState } from 'react';
-import { GiCheckMark } from 'react-icons/gi';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { useState } from "react";
+import { GiCheckMark } from "react-icons/gi";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
 // Keep your plans array as-is
 const plans = [
   {
-    priceId: 'price_1SGXb5CZ2kLTrYVYtOKGZ7yU',
-    id: 'monthly',
-    title: 'Monthly',
-    price: '$13 per month',
+    priceId: "price_1SGXb5CZ2kLTrYVYtOKGZ7yU",
+    id: "monthly",
+    title: "Monthly",
+    price: "$13 per month",
   },
   {
-    priceId: 'price_1SGXbRCZ2kLTrYVYlcpNAWsk',
-    id: 'annual',
-    title: 'Annual',
-    price: '$120 per year',
+    priceId: "price_1SGXbRCZ2kLTrYVYlcpNAWsk",
+    id: "annual",
+    title: "Annual",
+    price: "$120 per year",
   },
 ];
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
     base: {
-      fontSize: '16px',
-      color: '#fff',
-      '::placeholder': {
-        color: '#aab7c4',
+      fontSize: "16px",
+      color: "#fff",
+      "::placeholder": {
+        color: "#aab7c4",
       },
     },
     invalid: {
-      color: '#fa755a',
-      iconColor: '#fa755a',
+      color: "#fa755a",
+      iconColor: "#fa755a",
     },
   },
 };
 
 const CheckoutView = () => {
   const [loading, setLoading] = useState(false);
-  const [successMsg, setSuccessMsg] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const [selectedPlan, setSelectedPlan] = useState(plans[0].priceId);
   const [cardComplete, setCardComplete] = useState(false);
-  const [cardError, setCardError] = useState('');
+  const [cardError, setCardError] = useState("");
 
   const { user_email } = useParams();
 
@@ -51,25 +51,25 @@ const CheckoutView = () => {
 
   const handleCardChange = (event) => {
     setCardComplete(event.complete);
-    setCardError(event.error ? event.error.message : '');
+    setCardError(event.error ? event.error.message : "");
   };
 
   const handlePayment = async () => {
     if (!stripe || !elements) return;
 
     if (!cardComplete) {
-      setErrorMsg('Please complete your card details');
+      setErrorMsg("Please complete your card details");
       return;
     }
 
     setLoading(true);
-    setSuccessMsg('');
-    setErrorMsg('');
+    setSuccessMsg("");
+    setErrorMsg("");
 
     try {
       // 🪄 Step 1: Create Payment Method from card input
       const { paymentMethod, error } = await stripe.createPaymentMethod({
-        type: 'card',
+        type: "card",
         card: elements.getElement(CardElement),
         billing_details: { email: user_email },
       });
@@ -87,7 +87,7 @@ const CheckoutView = () => {
           email: user_email,
           priceId: selectedPlan,
           paymentMethodId: paymentMethod.id,
-        }
+        },
       );
 
       if (res.data?.success) {
@@ -95,19 +95,21 @@ const CheckoutView = () => {
         if (res.data.clientSecret) {
           const { paymentIntent, error: confirmError } =
             await stripe.confirmCardPayment(res.data.clientSecret);
+
           if (confirmError) throw confirmError;
-          if (paymentIntent.status === 'succeeded') {
+
+          if (paymentIntent.status === "succeeded") {
             setSuccessMsg(`✅ Payment completed successfully!`);
           }
         } else {
           setSuccessMsg(`✅ Payment completed: $${res.data?.message} `);
         }
       } else {
-        setErrorMsg('❌ Payment failed.');
+        setErrorMsg("❌ Payment failed.");
       }
     } catch (err) {
       console.error(err);
-      setErrorMsg(err?.response?.data?.message || 'Something went wrong!');
+      setErrorMsg(err?.response?.data?.message || "Something went wrong!");
     } finally {
       setLoading(false);
     }
@@ -118,15 +120,15 @@ const CheckoutView = () => {
 
   if (successMsg) {
     return (
-      <section className='max-w-[600px] mx-auto px-[10px] py-4 text-white border h-screen flex justify-center border-green-400 items-center'>
-        <div className='text-center'>
-          <h2 className='font-bold md:text-[32px] text-xl text-white mb-4'>
+      <section className="mx-auto flex h-screen max-w-[600px] items-center justify-center px-[10px] py-4 text-white">
+        <div className="text-center">
+          <h2 className="mb-4 text-xl font-bold text-white md:text-[32px]">
             Payment Successful!
           </h2>
-          <p className='text-green-400 text-lg'>{successMsg}</p>
+          <p className="text-lg text-green-400">{successMsg}</p>
           <button
-            onClick={() => window.location.replace('/checkout/setup-profile')}
-            className='mt-4 px-4 py-2 bg-green-500 text-white rounded-md'
+            onClick={() => window.location.replace("/checkout/setup-profile")}
+            className="mt-4 rounded-md bg-green-500 px-4 py-2 text-white"
           >
             Setup Your Profile
           </button>
@@ -136,89 +138,91 @@ const CheckoutView = () => {
   }
 
   return (
-    <section className='max-w-[600px] mx-auto px-[10px] py-4 text-white'>
-      <div className='flex justify-center mb-6'>
+    <section className="mx-auto max-w-[600px] px-[10px] text-white">
+      <div className="flex justify-center py-[40px]">
         <img
-          src='/img/page/home/remove_preview.png'
-          alt='preview'
-          className='w-[146px] h-[104px] bg-cover object-cover'
+          src="/img/assets/logo.png"
+          alt="preview"
+          className="h-24 w-36 object-cover"
         />
       </div>
 
-      <div className='text-center mb-6'>
-        <h2 className='font-bold md:text-[32px] text-xl text-white'>
-          Setup Profile and Pick your Plan
+      <div className="mb-[40px] text-center">
+        <h2 className="text-xl font-bold text-white md:text-[32px]">
+          Pick your Plan and Setup Profile
         </h2>
       </div>
 
-      <div className='border-t-2 border-orange-500 rounded-xl bg-[#434343] p-4 md:mt-6'>
-        <div className='bg-[#FFFFFF33] p-6 rounded-xl'>
-          <h2 className='text-[32px] font-semibold'>
-            $69/
-            <span className='text-base font-semibold'>Initial setup fee</span>
+      <div className="mb-8 rounded-xl border-t-2 border-orange-500 bg-[#434343] p-4 md:mt-6">
+        <div className="rounded-xl bg-[#FFFFFF33] p-6">
+          <h2 className="text-[32px] font-semibold">
+            $69<span className="text-[24px]">/</span>
+            <span className="font-raleway text-base font-normal">
+              Initial setup fee
+            </span>
           </h2>
-          <hr className='my-6 text-gray-400' />
+          <hr className="my-6 text-gray-400" />
           {[
-            'Custom profile setup',
-            'High-resolution photos',
-            'Profile personalization',
-            'Priority support',
+            "Custom profile setup",
+            "High-resolution photos",
+            "Profile personalization",
+            "Priority support",
           ].map((item, i) => (
-            <h3
+            <p
               key={i}
-              className='flex items-center gap-3 font-medium text-base my-3'
+              className="my-3 flex items-center gap-3 text-base font-medium"
             >
-              <span className='rounded-lg p-2 bg-orange-500 w-7 h-7 flex items-center justify-center'>
-                <GiCheckMark className='w-6 h-6' />
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-orange-500 p-2">
+                <GiCheckMark className="h-6 w-6" />
               </span>
               {item}
-            </h3>
+            </p>
           ))}
         </div>
 
-        <div className='md:mt-8 mt-5'>
-          <h2 className='font-bold text-[28px] text-center'>Plus</h2>
-          <div className='flex items-center justify-center mt-4 mb-7 rounded-xl'>
-            <div className='flex md:flex-row gap-5 max-w-3xl w-full'>
+        <div className="mt-5 md:mt-8">
+          <h2 className="text-center text-[28px] font-bold">Plus</h2>
+          <div className="mb-7 mt-4 flex items-center justify-center rounded-xl">
+            <div className="flex w-full max-w-3xl gap-5 md:flex-row">
               {plans.map((plan) => (
                 <div
                   key={plan.id}
-                  role='radio'
+                  role="radio"
                   aria-checked={selectedPlan === plan.priceId}
                   tabIndex={0}
                   onClick={() => setSelectedPlan(plan.priceId)}
                   onKeyDown={(e) =>
-                    e.key === 'Enter' && setSelectedPlan(plan.priceId)
+                    e.key === "Enter" && setSelectedPlan(plan.priceId)
                   }
-                  className={`flex-1 rounded-xl md:p-5 p-[14px] cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(212,163,115,0.3)] ${
+                  className={`flex-1 cursor-pointer rounded-xl px-3 py-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(212,163,115,0.3)] md:p-5 ${
                     selectedPlan === plan.priceId
-                      ? 'border-2 border-[#ff8c42]'
-                      : 'border-2 border-[#d4a373]'
+                      ? "border-2 border-[#ff8c42]"
+                      : "border-2 border-[#d4a373]"
                   }`}
                 >
-                  <div className='flex sm:flex-row items-start sm:items-center gap-4'>
+                  <div className="flex items-center gap-4 sm:flex-row sm:items-center">
                     <div
-                      className={`w-6 h-6 flex items-center justify-center rounded-full border-2 transition-colors duration-300 ${
+                      className={`flex h-6 w-6 items-center justify-center rounded-full border-2 transition-colors duration-300 ${
                         selectedPlan === plan.priceId
-                          ? 'border-[#ff8c42]'
-                          : 'border-[#d4a373]'
+                          ? "border-[#ff8c42]"
+                          : "border-[#d4a373]"
                       }`}
                     >
                       <div
-                        className={`w-3 h-3 rounded-full bg-[#ff8c42] transition-transform duration-200 ${
+                        className={`h-3 w-3 rounded-full bg-[#ff8c42] transition-transform duration-200 ${
                           selectedPlan === plan.priceId
-                            ? 'scale-100'
-                            : 'scale-0'
+                            ? "scale-100"
+                            : "scale-0"
                         }`}
                       />
                     </div>
-                    <div className='flex-1 font-raleway'>
-                      <div className='text-white text-base font-bold mb-1'>
+                    <div className="">
+                      <p className="text-base font-bold text-white">
                         {plan.title}
-                      </div>
-                      <div className='text-white text-sm font-normal'>
+                      </p>
+                      <p className="text-sm font-normal text-white">
                         {plan.price}
-                      </div>
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -228,11 +232,13 @@ const CheckoutView = () => {
         </div>
 
         {/* Stripe Card Element */}
-        <div className='mt-6'>
-          <label className='block text-white mb-2'>Card Details</label>
+        <div className="mt-6">
+          <label className="mb-2 block font-raleway text-white">
+            Card Details
+          </label>
           <div
-            className={`bg-[#555] p-3 rounded-lg ${
-              cardError ? 'border border-red-400' : ''
+            className={`rounded-lg bg-[#555] p-3 ${
+              cardError ? "border border-red-400" : ""
             }`}
           >
             <CardElement
@@ -241,10 +247,10 @@ const CheckoutView = () => {
             />
           </div>
           {cardError && (
-            <p className='mt-2 text-red-400 text-sm'>{cardError}</p>
+            <p className="mt-2 text-sm text-red-400">{cardError}</p>
           )}
           {cardComplete && !cardError && (
-            <p className='mt-2 text-green-400 text-sm'>
+            <p className="mt-2 text-sm text-green-400">
               ✓ Card details are valid
             </p>
           )}
@@ -253,16 +259,16 @@ const CheckoutView = () => {
         <button
           onClick={handlePayment}
           disabled={!canSubmit}
-          className={`mt-6 w-full text-white py-3 rounded-xl font-semibold transition-all ${
+          className={`mt-6 w-full rounded-xl py-3 font-semibold text-white transition-all ${
             canSubmit
-              ? 'bg-orange-500 hover:bg-orange-600 cursor-pointer'
-              : 'bg-gray-500 cursor-not-allowed'
+              ? "cursor-pointer bg-orange-500 hover:bg-orange-600"
+              : "cursor-not-allowed bg-gray-500"
           }`}
         >
-          {loading ? 'Processing...' : 'Complete Payment'}
+          {loading ? "Processing..." : "Complete Payment"}
         </button>
 
-        {errorMsg && <p className='mt-4 text-red-400'>{errorMsg}</p>}
+        {errorMsg && <p className="mt-4 text-red-400">{errorMsg}</p>}
       </div>
     </section>
   );

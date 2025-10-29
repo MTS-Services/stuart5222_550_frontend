@@ -1,13 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { GiCheckMark } from 'react-icons/gi';
-import { BiErrorCircle } from 'react-icons/bi';
-import { Upload } from 'lucide-react';
-import { toast } from 'react-toastify';
-import { RiDeleteBinLine } from 'react-icons/ri';
-import { MdOutlinePrivacyTip } from 'react-icons/md';
-import { submitProfile } from '../../../features/public/profile/profileFetch';
-import { validateForm } from '../../../utils/validateForm';
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { GiCheckMark } from "react-icons/gi";
+import { BiErrorCircle } from "react-icons/bi";
+import { Upload } from "lucide-react";
+import { toast } from "react-toastify";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { MdOutlinePrivacyTip } from "react-icons/md";
+import { submitProfile } from "../../../features/public/profile/profileFetch";
+import { validateForm } from "../../../utils/validateForm";
+import { FaCamera } from "react-icons/fa";
 
 const SetupProfileView = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -24,23 +25,23 @@ const SetupProfileView = () => {
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     if (selectedFiles.length > 13) {
-      toast.warn('Maximum 13 images allowed (3 required + 10 optional)');
+      toast.warn("Maximum 13 images allowed (3 required + 10 optional)");
       return;
     }
 
     const validFiles = selectedFiles.filter((file) =>
-      file.type.startsWith('image/')
+      file.type.startsWith("image/"),
     );
 
     if (validFiles.length !== selectedFiles.length) {
-      toast.warn('Please upload only image files');
+      toast.warn("Please upload only image files");
       return;
     }
 
     setFiles(validFiles);
     const previews = validFiles.map((file) => URL.createObjectURL(file));
     setImagePreviews(previews);
-    e.target.value = '';
+    e.target.value = "";
   };
 
   const removeImage = (index) => {
@@ -80,13 +81,13 @@ const SetupProfileView = () => {
     const validationErrors = validateForm(formData, files);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      toast.warn('Please fix all errors before submitting');
+      toast.warn("Please fix all errors before submitting");
       return;
     }
 
     if (files.length < 3) {
-      setErrors({ images: 'Minimum 3 images required' });
-      toast.warn('Please upload at least 3 images before submitting');
+      setErrors({ images: "Minimum 3 images required" });
+      toast.warn("Please upload at least 3 images before submitting");
       return;
     }
 
@@ -106,19 +107,19 @@ const SetupProfileView = () => {
 
       // ✅ Append ALL files under "image" (as array)
       files.forEach((file) => {
-        submitData.append('image', file);
+        submitData.append("image", file);
       });
 
       await dispatch(submitProfile(submitData)).unwrap();
 
-      toast.success('Profile submitted successfully for review!');
+      toast.success("Profile submitted successfully for review!");
       form.reset();
       setSuccess(true);
       setFiles([]);
       setImagePreviews([]);
     } catch (err) {
-      console.error('Submission error:', err);
-      alert(err?.message || '❌ Failed to submit profile. Please try again.');
+      console.error("Submission error:", err);
+      alert(err?.message || "❌ Failed to submit profile. Please try again.");
     } finally {
       setSubmitLoading(false);
     }
@@ -133,16 +134,16 @@ const SetupProfileView = () => {
 
   if (success) {
     return (
-      <div className='px-[10px] py-10 sm:py-4 md:py-6 lg:py-8 bg-[#3B3B3D] min-h-screen text-white font-sans flex flex-col items-center justify-center'>
-        <h2 className='font-bold md:text-[32px] text-xl mb-4'>
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[#3B3B3D] px-[10px] py-10 font-sans text-white sm:py-4 md:py-6 lg:py-8">
+        <h2 className="mb-4 text-xl font-bold md:text-[32px]">
           Profile Setup Successful!
         </h2>
-        <p className='text-gray-400'>
+        <p className="text-gray-400">
           Your profile has been submitted for review.
         </p>
         <button
-          onClick={() => window.location.replace('/')}
-          className='mt-6 px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600'
+          onClick={() => window.location.replace("/")}
+          className="mt-6 rounded-md bg-orange-500 px-4 py-2 text-white hover:bg-orange-600"
         >
           Go to Home
         </button>
@@ -151,195 +152,195 @@ const SetupProfileView = () => {
   }
 
   return (
-    <div className='px-[10px] py-10 sm:py-4 md:py-6 lg:py-8 bg-[#3B3B3D] min-h-screen text-white font-sans'>
+    <div className="min-h-screen bg-[#3B3B3D] px-[10px] font-sans text-white sm:py-4 md:py-6 lg:py-8">
       <form onSubmit={handleSubmit}>
-        <div className='max-w-[600px] mx-auto'>
+        <div className="mx-auto max-w-[600px]">
           {/* Header */}
-          <div className='flex justify-center mb-6'>
+          <div className="flex justify-center py-[40px]">
             <img
-              src='/img/page/home/remove_preview.png'
-              alt='preview'
-              className='w-[146px] h-[104px] bg-cover object-cover'
+              src="/img/assets/logo.png"
+              alt="preview"
+              className="h-24 w-36 object-cover"
             />
           </div>
-          <div className='text-center mb-6'>
-            <h2 className='font-bold md:text-[32px] text-xl'>
+          <div className="mb-6 text-center">
+            <h2 className="text-xl font-bold md:text-[32px]">
               Setup Your Profile
             </h2>
           </div>
 
           {/* Form Fields */}
-          <div className='md:my-20 my-10'>
-            <div className='self-stretch flex flex-col gap-2 my-5'>
-              <label className='text-white text-xl font-medium mb-4'>
-                Name <span className='text-red-500'>*</span>
+          <div className="my-10 md:my-20">
+            <div className="my-5 flex flex-col gap-2 self-stretch">
+              <label className="mb-4 text-xl font-medium text-white">
+                Name <span className="text-red-500">*</span>
               </label>
               <input
-                type='text'
-                name='firstName'
-                placeholder='Enter Display Name'
-                className={`h-11 px-3 bg-transparent text-white placeholder:text-gray-400 border ${
-                  errors.firstName ? 'border-red-500' : 'border-gray-500'
-                } text-sm font-medium rounded-lg outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
+                type="text"
+                name="firstName"
+                placeholder="Enter Display Name"
+                className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
+                  errors.firstName ? "border-red-500" : "border-gray-500"
+                } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
               {errors.firstName && (
-                <p className='text-red-500 text-sm'>{errors.firstName}</p>
+                <p className="text-sm text-red-500">{errors.firstName}</p>
               )}
             </div>
 
-            <div className='self-stretch flex flex-col gap-2 my-5'>
-              <label className='text-white text-xl font-medium mb-4'>
-                Age <span className='text-red-500'>*</span>
+            <div className="my-5 flex flex-col gap-2 self-stretch">
+              <label className="mb-4 text-xl font-medium text-white">
+                Age <span className="text-red-500">*</span>
               </label>
               <input
-                type='number'
-                name='age'
-                placeholder='Enter your age'
-                className={`h-11 px-3 bg-transparent text-white placeholder:text-gray-400 border ${
-                  errors.age ? 'border-red-500' : 'border-gray-500'
-                } text-sm font-medium rounded-lg outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
+                type="number"
+                name="age"
+                placeholder="Enter your age"
+                className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
+                  errors.age ? "border-red-500" : "border-gray-500"
+                } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
               {errors.age && (
-                <p className='text-red-500 text-sm'>{errors.age}</p>
+                <p className="text-sm text-red-500">{errors.age}</p>
               )}
-              <p className='text-xs font-normal text-gray-400 w-[350px] my-2'>
+              <p className="my-2 text-xs font-normal text-gray-400">
                 (We only store your month and year of birth which will calculate
                 your age as of the 28th of your birth month.)
               </p>
-              <p className='text-xs font-normal text-gray-400 w-[350px] md:mb-2 mb-1 flex items-center gap-2'>
-                <BiErrorCircle className='text-orange-500 w-5 h-5' />
+              <p className="mb-1 flex items-center gap-2 text-xs font-normal text-gray-400 md:mb-2">
+                <BiErrorCircle className="h-5 w-5 text-orange-500" />
                 Must be 18 or older
               </p>
             </div>
 
-            <div className='flex items-center gap-4 w-full my-5'>
-              <div className='self-stretch flex flex-col gap-2 w-full'>
-                <label className='text-white text-xl font-medium mb-[8px]'>
-                  Height <span className='text-red-500'>*</span>
-                </label>
-                <input
-                  type='text'
-                  name='height'
-                  placeholder='Enter your Height'
-                  className={`h-11 px-3 bg-transparent text-white placeholder:text-gray-400 border ${
-                    errors.height ? 'border-red-500' : 'border-gray-500'
-                  } text-sm font-medium rounded-lg outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
-                />
-                {errors.height && (
-                  <p className='text-red-500 text-sm'>{errors.height}</p>
-                )}
-              </div>
-              <div className='self-stretch flex flex-col gap-2 w-full'>
-                <label className='text-white text-xl font-medium mb-[8px]'>
-                  Body Type <span className='text-red-500'>*</span>
-                </label>
-                <input
-                  type='text'
-                  name='bodyType'
-                  placeholder='Describe your body type'
-                  className={`h-11 px-3 bg-transparent text-white placeholder:text-gray-400 border ${
-                    errors.bodyType ? 'border-red-500' : 'border-gray-500'
-                  } text-sm font-medium rounded-lg outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
-                />
-                {errors.bodyType && (
-                  <p className='text-red-500 text-sm'>{errors.bodyType}</p>
-                )}
-              </div>
-            </div>
-
-            <div className='self-stretch flex flex-col gap-2 w-full'>
-              <label className='text-white text-xl font-medium mb-[8px]'>
-                Area <span className='text-red-500'>*</span>
+            <div className="flex w-full flex-col gap-2">
+              <label className="mb-[8px] text-xl font-medium text-white">
+                Height <span className="text-red-500">*</span>
               </label>
               <input
-                type='text'
-                name='area'
-                placeholder='Enter your country and state'
-                className={`h-11 px-3 bg-transparent text-white placeholder:text-gray-400 border ${
-                  errors.area ? 'border-red-500' : 'border-gray-500'
-                } text-sm font-medium rounded-lg outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
+                type="text"
+                name="height"
+                placeholder="Enter your Height"
+                className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
+                  errors.height ? "border-red-500" : "border-gray-500"
+                } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
-              {errors.area && (
-                <p className='text-red-500 text-sm'>{errors.area}</p>
+              {errors.height && (
+                <p className="text-sm text-red-500">{errors.height}</p>
               )}
             </div>
 
-            <div className='self-stretch flex flex-col gap-2 w-full my-5'>
-              <label className='text-white text-xl font-medium mb-[8px]'>
+            <div className="my-5 flex w-full flex-col gap-2">
+              <label className="mb-[8px] text-xl font-medium text-white">
+                Body Type <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="bodyType"
+                placeholder="Describe your body type"
+                className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
+                  errors.bodyType ? "border-red-500" : "border-gray-500"
+                } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
+              />
+
+              {errors.bodyType && (
+                <p className="text-sm text-red-500">{errors.bodyType}</p>
+              )}
+            </div>
+
+            <div className="my-5 flex w-full flex-col gap-2 self-stretch">
+              <label className="mb-[8px] text-xl font-medium text-white">
+                Area <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="area"
+                placeholder="Enter your country and state"
+                className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
+                  errors.area ? "border-red-500" : "border-gray-500"
+                } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
+              />
+              {errors.area && (
+                <p className="text-sm text-red-500">{errors.area}</p>
+              )}
+            </div>
+
+            <div className="my-5 flex w-full flex-col gap-2 self-stretch">
+              <label className="mb-[8px] text-xl font-medium text-white">
                 Dealbreakers
               </label>
               <input
-                type='text'
-                name='dealBreaks'
+                type="text"
+                name="dealBreaks"
                 placeholder="Enter your no go's"
-                className='h-11 px-3 bg-transparent text-white placeholder:text-gray-400 border border-gray-500 text-sm font-medium rounded-lg outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300'
+                className="h-11 rounded-lg border border-gray-500 bg-transparent px-3 text-sm font-medium text-white outline-none placeholder:text-gray-400 focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300"
               />
             </div>
 
-            <div className='self-stretch flex flex-col gap-2 w-full my-5'>
-              <label className='text-white text-xl font-medium mb-[8px]'>
-                Tell Me About You <span className='text-red-500'>*</span>
+            <div className="my-5 flex w-full flex-col gap-2 self-stretch">
+              <label className="mb-[8px] text-xl font-medium text-white">
+                Tell Me About You <span className="text-red-500">*</span>
               </label>
               <textarea
-                rows='5'
-                name='textArea'
-                placeholder='Write your message here...'
-                className={`w-full max-h-[265px] min-h-[265px] px-3 pt-1 bg-transparent text-white placeholder:text-gray-400 border ${
-                  errors.textArea ? 'border-red-500' : 'border-gray-500'
-                } text-sm font-medium rounded-lg outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
+                rows="5"
+                name="textArea"
+                placeholder="Write your message here..."
+                className={`max-h-[265px] min-h-[265px] w-full border bg-transparent px-3 pt-1 text-white placeholder:text-gray-400 ${
+                  errors.textArea ? "border-red-500" : "border-gray-500"
+                } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
               {errors.textArea && (
-                <p className='text-red-500 text-sm'>{errors.textArea}</p>
+                <p className="text-sm text-red-500">{errors.textArea}</p>
               )}
             </div>
           </div>
 
           {/* Travel Mode */}
-          <div className='bg-[#434343] px-3 py-8 rounded-lg'>
-            <h2 className='font-bold text-2xl text-center'>Travel Mode</h2>
-            <div className='w-full flex items-center md:gap-5 gap-3 my-6'>
-              <div className='self-stretch flex flex-col gap-2 w-[48%]'>
-                <label className='text-white text-base font-semibold'>
+          <div className="rounded-lg bg-[#434343] px-3 py-8">
+            <h2 className="text-center text-2xl font-bold">Travel Mode</h2>
+            <div className="my-6 flex w-full items-center gap-3 md:gap-5">
+              <div className="flex w-[48%] flex-col gap-2 self-stretch">
+                <label className="text-base font-semibold text-white">
                   Start Date
                 </label>
                 <input
-                  type='date'
-                  name='startDate'
-                  className='h-11 px-3 bg-white text-gray-800 text-sm font-medium rounded-lg outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400'
+                  type="date"
+                  name="startDate"
+                  className="h-11 rounded-lg bg-white px-3 text-sm font-medium text-gray-800 outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
                 />
               </div>
-              <div className='self-stretch flex flex-col gap-2 w-[48%]'>
-                <label className='text-white text-base font-semibold'>
+              <div className="flex w-[48%] flex-col gap-2 self-stretch">
+                <label className="text-base font-semibold text-white">
                   End Date
                 </label>
                 <input
-                  type='date'
-                  name='endDate'
-                  className='h-11 px-3 bg-white text-gray-800 text-sm font-medium rounded-lg outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400'
+                  type="date"
+                  name="endDate"
+                  className="h-11 rounded-lg bg-white px-3 text-sm font-medium text-gray-800 outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
                 />
               </div>
             </div>
-            <div className='self-stretch flex flex-col gap-2 w-full'>
-              <label className='text-white text-base font-semibold'>
+            <div className="flex w-full flex-col gap-2 self-stretch">
+              <label className="text-base font-semibold text-white">
                 Location
               </label>
               <input
-                type='text'
-                name='location'
-                placeholder='Enter your location'
-                className='h-11 px-3 bg-white text-gray-800 text-sm font-medium rounded-lg outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400'
+                type="text"
+                name="location"
+                placeholder="Enter your location"
+                className="h-11 rounded-lg bg-white px-3 text-sm font-medium text-gray-800 outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
               />
             </div>
           </div>
 
           {/* Add Images */}
-          <div className='my-10'>
-            <h2 className='font-medium text-xl'>
-              Add Images <span className='text-red-500'>* (Min 3)</span>
+          <div className="my-10">
+            <h2 className="text-xl font-medium">
+              Add Images <span className="text-red-500">* (Min 3)</span>
             </h2>
-            <div className='px-3 py-8 flex items-center gap-4 bg-[#FFFFFF33] rounded-lg my-6'>
-              <BiErrorCircle className='w-10 h-10 text-orange-500' />
-              <p className='font-normal text-base'>
+            <div className="my-6 flex items-center gap-4 rounded-lg bg-[#FFFFFF33] px-3 py-8">
+              <BiErrorCircle className="h-10 w-10 text-orange-500" />
+              <p className="text-base font-normal">
                 One showing eyes, one showing a toothy grin and one showing full
                 body. Be classy, not trashy. No nudes. G or PG rated photos
                 only.
@@ -347,90 +348,90 @@ const SetupProfileView = () => {
             </div>
           </div>
           {/* 🖼️ File Upload - FINALIZED SECTION */}
-          <div className='flex items-center justify-center'>
-            <div className='w-full space-y-4'>
-              <div className='bg-white rounded-xl p-12 flex flex-col items-center justify-center shadow-md relative'>
+          <div className="flex items-center justify-center">
+            <div className="w-full space-y-4">
+              <div className="flex flex-col items-center justify-center rounded-xl bg-white p-8 shadow-md">
                 {/* Upload Button */}
                 <div
-                  className='w-16 h-16 bg-orange-500 rounded-2xl flex items-center justify-center mb-4 cursor-pointer hover:bg-orange-600 transition'
+                  className="mb-4 flex h-16 w-16 cursor-pointer items-center justify-center rounded-2xl bg-orange-500 transition hover:bg-orange-600"
                   onClick={handleClick}
                 >
-                  <Upload className='w-8 h-8 text-white' strokeWidth={2.5} />
+                  <Upload className="h-8 w-8 text-white" strokeWidth={2.5} />
                 </div>
 
-                <h2 className='text-gray-800 font-semibold text-lg mb-2'>
+                <h2 className="mb-2 text-lg font-semibold text-gray-800">
                   Upload Photos
                 </h2>
-                <p className='text-gray-500 text-[10px] text-center mb-4 max-w-[288px] mx-auto'>
+                <p className="mx-auto mb-4 max-w-[288px] text-center text-[10px] text-gray-500">
                   Minimum 3 photos required • Maximum 13 photos allowed
                 </p>
 
                 {/* Upload Progress Indicator */}
-                <div className='w-full max-w-xs mb-4'>
-                  <div className='flex justify-between text-xs text-gray-600 mb-1'>
+                <div className="mb-4 w-full max-w-xs">
+                  <div className="mb-1 flex justify-between text-xs text-gray-600">
                     <span>Upload Progress</span>
                     <span>{files.length}/13 images</span>
                   </div>
-                  <div className='w-full bg-gray-200 rounded-full h-2'>
+                  <div className="h-2 w-full rounded-full bg-gray-200">
                     <div
-                      className='bg-orange-500 h-2 rounded-full transition-all duration-300'
+                      className="h-2 rounded-full bg-orange-500 transition-all duration-300"
                       style={{ width: `${(files.length / 13) * 100}%` }}
                     ></div>
                   </div>
-                  <div className='flex justify-between text-xs text-gray-500 mt-1'>
+                  <div className="mt-1 flex justify-between text-xs text-gray-500">
                     <span>Min: 3</span>
                     <span
                       className={
                         files.length < 3
-                          ? 'text-red-500 font-semibold'
-                          : 'text-green-500 font-semibold'
+                          ? "font-semibold text-red-500"
+                          : "font-semibold text-green-500"
                       }
                     >
                       {files.length >= 3
-                        ? '✓ Requirement met'
-                        : 'Need more images'}
+                        ? "✓ Requirement met"
+                        : "Need more images"}
                     </span>
                   </div>
                 </div>
 
                 {/* Hidden File Input */}
                 <input
-                  type='file'
-                  accept='image/*'
+                  type="file"
+                  accept="image/*"
                   multiple
                   ref={fileInputRef}
-                  className='hidden'
+                  className="hidden"
                   onChange={handleFileChange}
                 />
 
                 {/* Image Previews */}
                 {imagePreviews.length > 0 && (
-                  <div className='mt-4 w-full'>
-                    <div className='grid grid-cols-3 gap-3 mb-4'>
+                  <div className="mt-4 w-full">
+                    <div className="mb-4 grid grid-cols-3 gap-3">
                       {imagePreviews.map((preview, idx) => (
-                        <div key={idx} className='relative group'>
+                        <div key={idx} className="group relative">
                           <img
                             src={preview}
                             alt={`Preview ${idx + 1}`}
-                            className='w-full h-24 object-cover rounded-lg border-2 border-gray-200'
+                            className="h-24 w-full rounded-lg border-2 border-gray-200 object-cover"
                           />
                           <button
-                            type='button'
+                            type="button"
                             onClick={() => removeImage(idx)}
-                            className='absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition'
+                            className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition group-hover:opacity-100"
                           >
-                            <RiDeleteBinLine className='w-4 h-4' />
+                            <RiDeleteBinLine className="h-4 w-4" />
                           </button>
 
                           {/* 🔖 Image Type Label */}
-                          <div className='absolute bottom-1 left-1 bg-black bg-opacity-60 text-white text-[10px] px-2 py-[2px] rounded'>
+                          <div className="absolute bottom-1 left-1 rounded bg-black bg-opacity-60 px-2 py-[2px] text-[10px] text-white">
                             {idx === 0
-                              ? 'Face'
+                              ? "Face"
                               : idx === 1
-                              ? 'Full Body'
-                              : idx === 2
-                              ? 'Third'
-                              : `Extra ${idx - 2}`}
+                                ? "Full Body"
+                                : idx === 2
+                                  ? "Third"
+                                  : `Extra ${idx - 2}`}
                           </div>
                         </div>
                       ))}
@@ -438,22 +439,22 @@ const SetupProfileView = () => {
 
                     {/* Upload Status */}
                     <div
-                      className={`text-center p-2 rounded-lg ${
+                      className={`rounded-lg p-2 text-center ${
                         files.length >= 3
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-yellow-100 text-yellow-700'
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
                       }`}
                     >
                       {files.length >= 3 ? (
-                        <div className='flex items-center justify-center gap-2'>
-                          <GiCheckMark className='w-4 h-4' />
+                        <div className="flex items-center justify-center gap-2">
+                          <GiCheckMark className="h-4 w-4" />
                           Ready to submit! ({files.length}/13 images)
                         </div>
                       ) : (
-                        <div className='flex items-center justify-center gap-2'>
-                          <BiErrorCircle className='w-4 h-4' />
+                        <div className="flex items-center justify-center gap-2">
+                          <BiErrorCircle className="h-4 w-4" />
                           {3 - files.length} more image
-                          {3 - files.length !== 1 ? 's' : ''} needed
+                          {3 - files.length !== 1 ? "s" : ""} needed
                         </div>
                       )}
                     </div>
@@ -461,25 +462,28 @@ const SetupProfileView = () => {
                 )}
 
                 {/* Upload Instructions */}
-                <div className='mt-4 text-center'>
-                  <p className='text-sm text-gray-600 font-semibold'>
-                    📸 How to upload multiple images:
+                <div className="mt-4 text-center">
+                  <p className="flex items-center gap-1 text-sm font-semibold text-gray-600">
+                    <span>
+                      <FaCamera />
+                    </span>
+                    How to upload multiple images:
                   </p>
-                  <p className='text-xs text-gray-500 mt-1'>
-                    • Hold <kbd className='px-1 bg-gray-200 rounded'>Ctrl</kbd>{' '}
-                    (Windows) or{' '}
-                    <kbd className='px-1 bg-gray-200 rounded'>Cmd</kbd> (Mac)
+                  <p className="mt-1 text-xs text-gray-500">
+                    • Hold <kbd className="rounded bg-gray-200 px-1">Ctrl</kbd>{" "}
+                    (Windows) or{" "}
+                    <kbd className="rounded bg-gray-200 px-1">Cmd</kbd> (Mac)
                   </p>
-                  <p className='text-xs text-gray-500'>
+                  <p className="text-xs text-gray-500">
                     • Click and drag to select multiple files
                   </p>
                 </div>
 
                 {/* Error Display */}
                 {errors.images && (
-                  <div className='mt-3 p-2 bg-red-100 border border-red-300 rounded-lg'>
-                    <p className='text-red-600 text-sm font-semibold flex items-center gap-2'>
-                      <BiErrorCircle className='w-4 h-4' />
+                  <div className="mt-3 rounded-lg border border-red-300 bg-red-100 p-2">
+                    <p className="flex items-center gap-2 text-sm font-semibold text-red-600">
+                      <BiErrorCircle className="h-4 w-4" />
                       {errors.images}
                     </p>
                   </div>
@@ -489,104 +493,104 @@ const SetupProfileView = () => {
           </div>
 
           {/* Safety Notice */}
-          <div className='bg-[#FFFFFF33] p-5 rounded-lg my-8'>
-            <div className='w-10 h-10 relative bg-orange-500 rounded overflow-hidden p-1 flex justify-center text-center mx-auto mb-5'>
-              <MdOutlinePrivacyTip className='w-full h-full text-white' />
+          <div className="my-8 rounded-lg bg-[#FFFFFF33] p-5">
+            <div className="relative mx-auto mb-5 flex h-10 w-10 justify-center overflow-hidden rounded bg-orange-500 p-1 text-center">
+              <MdOutlinePrivacyTip className="h-full w-full text-white" />
             </div>
-            <p className='font-normal text-lg text-center'>
+            <p className="text-center text-base font-normal leading-6">
               Your safety is what inspired us. You don't know anything about the
               person you or your friend have given the card to. Please be smart
               about what information you share.
             </p>
           </div>
 
-          <div className='px-3 py-8 flex items-center gap-4 bg-[#FFFFFF33] rounded-lg my-10'>
-            <RiDeleteBinLine className='w-14 h-14 text-orange-500' />
-            <p className='font-normal text-base'>
+          <div className="my-10 flex items-center gap-4 rounded-lg bg-[#FFFFFF33] px-3 py-8">
+            <RiDeleteBinLine className="h-14 w-14 text-orange-500" />
+            <p className="text-base font-normal">
               Your cards will be sent to you after your profile has been
               approved for not violating decency standards.
             </p>
           </div>
 
           {/* Contact Information */}
-          <div className='bg-[#434343] px-4 py-6 rounded-lg '>
-            <div className='max-w-[330px] mx-auto mb-6'>
-              <h2 className='font-semibold text-xl mb-4'>
+          <div className="rounded-lg bg-[#434343] px-4 py-8">
+            <div className="mb-6">
+              <h2 className="mb-6 text-xl font-bold leading-6">
                 Person to person dating, but with a safer approach.
               </h2>
-              <p className='font-normal text-base'>
+              <p className="leading-6">
                 This is your "safe share" zone – just the details you choose to
                 pass along.
               </p>
             </div>
 
             {errors.contact && (
-              <p className='text-red-500 text-center mb-4'>{errors.contact}</p>
+              <p className="mb-4 text-center text-red-500">{errors.contact}</p>
             )}
 
-            <div className='max-w-[340px] mx-auto'>
-              <div className='self-stretch flex flex-col gap-2'>
-                <label className='text-white text-base font-semibold'>
+            <div className="">
+              <div className="flex flex-col gap-2 self-stretch">
+                <label className="text-base font-semibold text-white">
                   Name
                 </label>
                 <input
-                  type='text'
-                  name='name'
-                  placeholder='Enter your display name'
-                  className='h-11 px-3 bg-white text-gray-700 text-sm font-medium rounded-lg outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400'
+                  type="text"
+                  name="name"
+                  placeholder="Enter your display name"
+                  className="h-11 rounded-lg bg-white px-3 text-sm font-medium text-gray-700 outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
                 />
               </div>
 
-              <div className='self-stretch flex flex-col gap-2 mt-6'>
-                <label className='text-white text-base font-semibold'>
+              <div className="mt-6 flex flex-col gap-2 self-stretch">
+                <label className="text-base font-semibold text-white">
                   E-mail
                 </label>
                 <input
-                  type='email'
-                  name='email'
-                  placeholder='Enter your unique email'
-                  className={`h-11 px-3 bg-white text-gray-700 text-sm font-medium rounded-lg outline outline-1 ${
-                    errors.email ? 'outline-red-500' : 'outline-gray-300'
+                  type="email"
+                  name="email"
+                  placeholder="Enter your unique email"
+                  className={`h-11 rounded-lg bg-white px-3 text-sm font-medium text-gray-700 outline outline-1 ${
+                    errors.email ? "outline-red-500" : "outline-gray-300"
                   } focus:outline-orange-500 focus:ring-2 focus:ring-orange-400`}
                 />
                 {errors.email && (
-                  <p className='text-red-500 text-sm'>{errors.email}</p>
+                  <p className="text-sm text-red-500">{errors.email}</p>
                 )}
               </div>
 
-              <div className='md:my-8 my-4'>
-                <h2 className='text-base font-semibold text-center'>and/or</h2>
+              <div className="my-4 md:my-8">
+                <h2 className="text-center text-base font-semibold">and/or</h2>
               </div>
 
-              <div className='self-stretch flex flex-col gap-2'>
-                <label className='text-white text-base font-semibold'>
+              <div className="flex flex-col gap-2 self-stretch">
+                <label className="text-base font-semibold text-white">
                   Phone number
                 </label>
                 <input
-                  type='tel'
-                  name='number'
-                  placeholder='Enter your dedicated phone number'
-                  className='h-11 px-3 bg-white text-gray-700 text-sm font-medium rounded-lg outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400'
+                  type="tel"
+                  name="number"
+                  placeholder="Enter your dedicated phone number"
+                  className="h-11 rounded-lg bg-white px-3 text-sm font-medium text-gray-700 outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
                 />
               </div>
             </div>
           </div>
 
           <button
-            type='submit'
+            type="submit"
             disabled={submitLoading}
-            className='w-full mt-10 px-6 py-3 bg-orange-500 hover:bg-orange-600 rounded-lg text-white text-lg font-semibold transition'
+            className="mt-10 w-full rounded-lg bg-orange-500 px-6 py-3 text-lg font-semibold text-white transition hover:bg-orange-600"
           >
-            {submitLoading ? 'Submitting...' : 'Submit Profile for Review'}
+            {submitLoading ? "Submitting..." : "Submit Profile for Review"}
           </button>
-          <div className='max-w-[600px] mx-auto mt-10 mb-6'>
-            <p className='text-center text-gray-400 text-sm'>
-              By submitting your profile, you agree to our{' '}
-              <a href='/terms' className='text-orange-500 hover:underline'>
+          <div className="mx-auto mb-6 mt-10 max-w-[600px]">
+            <p className="text-center text-sm text-gray-400">
+              By submitting your profile, you agree to our{" "}
+              <a href="/terms" className="text-orange-500 hover:underline">
                 Terms of Service
-              </a>{' '}
-              and{' '}
-              <a href='/privacy' className='text-orange-500 hover:underline'>
+              </a>{" "}
+              and{" "}
+              <a href="/privacy" className="text-orange-500 hover:underline">
                 Privacy Policy
               </a>
               .

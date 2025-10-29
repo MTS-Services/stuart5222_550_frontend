@@ -1,9 +1,9 @@
-import AboutSection from './section/AboutSection';
-import HeroSection from './section/HeroSection';
+import AboutSection from "./section/AboutSection";
+import HeroSection from "./section/HeroSection";
 
 const HomeView = () => {
   return (
-    <div className='px-[10px] font-raleway bg-[#3B3B3D] gap-[60px]'>
+    <div className="gap-[60px] bg-[#3B3B3D] px-[10px] font-raleway">
       <HeroSection />
       <AboutSection />
     </div>
