@@ -29,7 +29,7 @@ const UserEditView = () => {
   return (
     <div className="font-raleway text-black md:p-8">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="font-poppins text-2xl font-semibold text-[#002244]">
+        <h2 className="font-raleway text-2xl font-semibold text-[#002244]">
           All User list
         </h2>
 

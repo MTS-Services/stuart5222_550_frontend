@@ -115,7 +115,7 @@ const EditDetailsView = () => {
               <p className="text-xs text-[#464646]">{userInfo.phone}</p>
               <p>
                 Status:{" "}
-                <span className="rounded-full bg-green-300 p-1 text-xs text-white">
+                <span className="rounded-full bg-green-300 p-1 font-raleway text-xs text-white">
                   {user.status}
                 </span>
               </p>
@@ -203,10 +203,10 @@ const EditDetailsView = () => {
             </CustomModal>
 
             <div>
-              <p>Age: {age}</p>
-              <p>Height: {height}</p>
-              <p>Body type: {bodyType}</p>
-              <p>Dealbreakers: {dealbreakers}</p>
+              <p className="font-raleway">Age: {age}</p>
+              <p className="font-raleway">Height: {height}</p>
+              <p className="font-raleway">Body type: {bodyType}</p>
+              <p className="font-raleway">Dealbreakers: {dealbreakers}</p>
             </div>
           </div>
         </div>
@@ -234,31 +234,33 @@ const EditDetailsView = () => {
       {/* Traveling Component */}
       <div className="flex flex-col gap-6 rounded-lg border bg-gradient-to-b from-orange-500/10 to-white p-6">
         <div className="text-xl font-bold text-neutral-800">
-          <span className="uppercase">I </span>
-          <span className="lowercase">am traveling and will be in:</span>
+          <span className="font-raleway uppercase">I </span>
+          <span className="font-raleway lowercase">
+            am traveling and will be in:
+          </span>
         </div>
 
         <div className="flex flex-col gap-4">
           {/* Location */}
           <div className="flex items-center gap-3">
-            <span className="text-2xl text-orange-500">📍</span>
-            <span className="text-xl font-medium text-neutral-800">
+            <span className="font-raleway text-2xl text-orange-500">📍</span>
+            <span className="font-raleway text-xl font-medium text-neutral-800">
               Location: {location}
             </span>
           </div>
 
           {/* Start Date */}
           <div className="flex items-center gap-3">
-            <span className="text-2xl text-orange-500">📅</span>
-            <span className="text-xl font-medium text-neutral-800">
+            <span className="font-raleway text-2xl text-orange-500">📅</span>
+            <span className="font-raleway text-xl font-medium text-neutral-800">
               Start-Date: {startDate}
             </span>
           </div>
 
           {/* End Date */}
           <div className="flex items-center gap-3">
-            <span className="text-2xl text-orange-500">📅</span>
-            <span className="text-xl font-medium text-neutral-800">
+            <span className="font-raleway text-2xl text-orange-500">📅</span>
+            <span className="font-raleway text-xl font-medium text-neutral-800">
               End-Date: {endDate}
             </span>
           </div>
@@ -267,7 +269,7 @@ const EditDetailsView = () => {
 
       {/* Image Gallery */}
       <div className="pt-4">
-        <h3 className="mb-5 text-2xl font-bold">Images</h3>
+        <h3 className="mb-5 font-raleway text-2xl font-bold">Images</h3>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
           {image.map((img, index) => (
             <div key={index} className="overflow-hidden rounded-lg">
@@ -283,7 +285,9 @@ const EditDetailsView = () => {
 
       {/* Feedback Section */}
       <div className="rounded-lg border border-gray-200 bg-white p-4">
-        <h3 className="mb-3 text-xl font-medium">Reject with Feedback</h3>
+        <h3 className="mb-3 font-raleway text-xl font-medium">
+          Reject with Feedback
+        </h3>
         <textarea
           value={rejectionReason}
           onChange={(e) => setRejectionReason(e.target.value)}
@@ -294,7 +298,7 @@ const EditDetailsView = () => {
           <button
             onClick={handleApprove}
             disabled={loading.approve}
-            className={`w-64 flex-1 rounded py-2.5 font-medium ${
+            className={`w-64 flex-1 rounded py-2.5 font-raleway font-medium ${
               loading.approve
                 ? "cursor-not-allowed bg-green-400"
                 : "bg-green-600 text-white hover:bg-green-700"
@@ -306,7 +310,7 @@ const EditDetailsView = () => {
           <button
             onClick={handleReject}
             disabled={loading.reject}
-            className={`w-64 flex-1 rounded py-2.5 font-medium ${
+            className={`w-64 flex-1 rounded py-2.5 font-raleway font-medium ${
               loading.reject
                 ? "cursor-not-allowed bg-orange-400"
                 : "bg-orange-500 text-white hover:bg-orange-600"
@@ -317,7 +321,7 @@ const EditDetailsView = () => {
 
           <button
             onClick={handleCencel}
-            className={`w-64 flex-1 rounded bg-red-500 py-2.5 font-medium text-white hover:bg-orange-600`}
+            className={`w-64 flex-1 rounded bg-red-500 py-2.5 font-raleway font-medium text-white hover:bg-orange-600`}
           >
             Cancel
           </button>

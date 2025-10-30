@@ -227,7 +227,7 @@ const SettingsView = () => {
               {/* Account Password Section */}
               <div className="rounded-lg bg-white p-4 shadow-sm md:p-8">
                 <div className="mb-8 flex items-center justify-between">
-                  <h2 className="text-2xl font-semibold text-gray-900">
+                  <h2 className="font-raleway text-2xl font-semibold text-gray-900">
                     Account Password
                   </h2>
                   <button

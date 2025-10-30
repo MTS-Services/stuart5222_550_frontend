@@ -100,10 +100,12 @@ const UserDetailsView = () => {
               <p className="my-1.5 font-lato text-sm text-[#242424]">
                 {userInfo.email}
               </p>
-              <p className="text-xs text-[#464646]">{userInfo.phone}</p>
-              <p className="flex items-center gap-2">
+              <p className="font-raleway text-xs text-[#464646]">
+                {userInfo.phone}
+              </p>
+              <p className="flex items-center gap-2 font-raleway">
                 Status:
-                <span className="rounded-full bg-yellow-400 px-2 py-1 text-xs text-white">
+                <span className="rounded-full bg-yellow-400 px-2 py-1 font-raleway text-xs text-white">
                   {user.status}
                 </span>
               </p>
@@ -111,13 +113,11 @@ const UserDetailsView = () => {
           </div>
 
           <div className="space-y-1 text-[#404040]">
-            <div>Hello</div>
-
             <div>
-              <p>Age: {age}</p>
-              <p>Height: {height}</p>
-              <p>Body type: {bodyType}</p>
-              <p>Dealbreakers: {dealbreakers}</p>
+              <p className="font-raleway">Age: {age}</p>
+              <p className="font-raleway">Height: {height}</p>
+              <p className="font-raleway">Body type: {bodyType}</p>
+              <p className="font-raleway">Dealbreakers: {dealbreakers}</p>
             </div>
           </div>
         </div>
@@ -143,28 +143,36 @@ const UserDetailsView = () => {
       {/* Travel Info */}
       <div className="rounded-lg border bg-gradient-to-b from-orange-500/10 to-white p-6">
         <div className="text-xl font-bold text-neutral-800">
-          <span className="uppercase">I </span>
-          <span className="lowercase">am traveling and will be in:</span>
+          <span className="font-raleway uppercase">I </span>
+          <span className="font-raleway lowercase">
+            am traveling and will be in:
+          </span>
         </div>
         <div className="mt-4 flex flex-col gap-4">
           <div className="flex items-center gap-3">
-            <span className="text-2xl text-orange-500">📍</span>
-            <span className="text-xl font-medium">Location: {location}</span>
+            <span className="font-raleway text-2xl text-orange-500">📍</span>
+            <span className="font-raleway text-xl font-medium">
+              Location: {location}
+            </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-2xl text-orange-500">📅</span>
-            <span className="text-xl font-medium">Start Date: {startDate}</span>
+            <span className="font-raleway text-2xl text-orange-500">📅</span>
+            <span className="font-raleway text-xl font-medium">
+              Start Date: {startDate}
+            </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-2xl text-orange-500">📅</span>
-            <span className="text-xl font-medium">End Date: {endDate}</span>
+            <span className="font-raleway text-2xl text-orange-500">📅</span>
+            <span className="font-raleway text-xl font-medium">
+              End Date: {endDate}
+            </span>
           </div>
         </div>
       </div>
 
       {/* Images */}
       <div>
-        <h3 className="mb-5 text-2xl font-semibold">Images</h3>
+        <h3 className="mb-5 font-raleway text-2xl font-semibold">Images</h3>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {image?.map((img, idx) => (
             <div key={idx} className="">
@@ -181,7 +189,9 @@ const UserDetailsView = () => {
 
       {/* Action Section – NO MODAL */}
       <div className="rounded-lg border border-gray-200 bg-white p-4">
-        <h3 className="mb-3 text-xl font-medium">Reject with Feedback</h3>
+        <h3 className="mb-3 font-raleway text-xl font-medium">
+          Reject with Feedback
+        </h3>
         <textarea
           value={rejectionReason}
           onChange={(e) => setRejectionReason(e.target.value)}
@@ -192,7 +202,7 @@ const UserDetailsView = () => {
           <button
             onClick={handleApprove}
             disabled={loading.approve}
-            className={`w-64 flex-1 rounded py-2.5 font-medium ${
+            className={`w-64 flex-1 rounded py-2.5 font-raleway font-medium ${
               loading.approve
                 ? "cursor-not-allowed bg-green-400"
                 : "bg-green-600 text-white hover:bg-green-700"
@@ -204,7 +214,7 @@ const UserDetailsView = () => {
           <button
             onClick={handleReject}
             disabled={loading.reject}
-            className={`w-64 flex-1 rounded py-2.5 font-medium ${
+            className={`w-64 flex-1 rounded py-2.5 font-raleway font-medium ${
               loading.reject
                 ? "cursor-not-allowed bg-orange-400"
                 : "bg-orange-500 text-white hover:bg-orange-600"
@@ -215,7 +225,7 @@ const UserDetailsView = () => {
 
           <button
             onClick={handleCencel}
-            className={`w-64 flex-1 rounded bg-red-500 py-2.5 font-medium text-white hover:bg-orange-600`}
+            className={`w-64 flex-1 rounded bg-red-500 py-2.5 font-raleway font-medium text-white hover:bg-orange-600`}
           >
             Cancel
           </button>

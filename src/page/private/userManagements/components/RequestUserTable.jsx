@@ -121,10 +121,18 @@ export const RequestUserTable = () => {
             <table className="min-w-full table-fixed text-left text-xs sm:text-sm md:text-base">
               <thead className="bg-white text-lg font-normal text-black">
                 <tr>
-                  <th className="w-1/5 whitespace-nowrap px-5 py-3">Name</th>
-                  <th className="w-1/5 whitespace-nowrap px-5 py-3">Email</th>
-                  <th className="w-1/5 whitespace-nowrap px-7 py-3">Date</th>
-                  <th className="w-1/5 whitespace-nowrap px-5 py-3">Status</th>
+                  <th className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
+                    Name
+                  </th>
+                  <th className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
+                    Email
+                  </th>
+                  <th className="w-1/5 whitespace-nowrap px-7 py-3 font-raleway">
+                    Date
+                  </th>
+                  <th className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
+                    Status
+                  </th>
 
                   <th className="w-1/5 whitespace-nowrap px-5 py-3 text-center">
                     Action
@@ -138,23 +146,23 @@ export const RequestUserTable = () => {
                       key={row.id}
                       className={index % 2 === 0 ? "bg-yellow-50" : "bg-white"}
                     >
-                      <td className="w-1/5 whitespace-nowrap px-5 py-3">
+                      <td className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
                         {row.name}
                       </td>
-                      <td className="w-1/5 whitespace-nowrap px-5 py-3">
+                      <td className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
                         {row.email}
                       </td>
-                      <td className="w-1/5 whitespace-nowrap px-7 py-3">
+                      <td className="w-1/5 whitespace-nowrap px-7 py-3 font-raleway">
                         {formatDate(row.createdAt) || "—"}
                       </td>
-                      <td className="w-1/5 whitespace-nowrap px-5 py-3">
+                      <td className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
                         {row.status}
                       </td>
 
                       {row.status === "DRAFT" ? (
                         <td className="flex items-center justify-center gap-3 whitespace-nowrap px-7 py-2.5">
                           <Link to={`/admin/user-management/${row.id}`}>
-                            <button className="whitespace-nowrap rounded-xl bg-[#F07400] px-4 py-2.5 text-xs text-white">
+                            <button className="whitespace-nowrap rounded-xl bg-[#F07400] px-4 py-2.5 font-raleway text-xs text-white">
                               See Details
                             </button>
                           </Link>
@@ -188,7 +196,7 @@ export const RequestUserTable = () => {
                   <tr>
                     <td
                       colSpan={6}
-                      className="py-6 text-center italic text-gray-500"
+                      className="py-6 text-center font-raleway italic text-gray-500"
                     >
                       No users found.
                     </td>
@@ -208,7 +216,7 @@ export const RequestUserTable = () => {
                 >
                   ✕
                 </button>
-                <h3 className="mb-4 text-lg font-semibold">
+                <h3 className="mb-4 font-raleway text-lg font-semibold">
                   Cancel with Feedback
                 </h3>
                 <p className="mb-2 break-all text-sm text-gray-600">
@@ -245,14 +253,14 @@ export const RequestUserTable = () => {
 
           {/* 📄 Pagination */}
           {processedList.length > 0 && (
-            <div className="mt-8 flex items-center justify-between gap-2 font-poppins text-base font-normal text-gray-600 md:gap-0">
+            <div className="mt-8 flex items-center justify-between gap-2 font-raleway text-base font-normal text-gray-600 md:gap-0">
               <p className="font-raleway">
                 Showing {startIndex + 1} to {startIndex + currentData.length} of{" "}
                 {processedList.length} results
               </p>
               <div className="flex gap-4 sm:gap-5 md:gap-6 lg:gap-7">
                 <button
-                  className={`rounded-xl border px-4 py-1.5 md:px-5 md:py-2 ${
+                  className={`rounded-xl border px-4 py-1.5 font-raleway md:px-5 md:py-2 ${
                     currentPage === 1
                       ? "cursor-not-allowed border-gray-300 text-gray-400"
                       : "border-gray-600"
@@ -263,7 +271,7 @@ export const RequestUserTable = () => {
                   Previous
                 </button>
                 <button
-                  className={`rounded-xl border px-4 py-1.5 md:px-5 md:py-2 ${
+                  className={`rounded-xl border px-4 py-1.5 font-raleway md:px-5 md:py-2 ${
                     currentPage === totalPages
                       ? "cursor-not-allowed border-gray-300 text-gray-400"
                       : "border-gray-600"

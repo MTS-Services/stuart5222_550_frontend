@@ -59,18 +59,22 @@ export const UserEditTable = ({ searchQuery }) => {
           <table className="min-w-full table-fixed text-left text-xs sm:text-sm md:text-base">
             <thead className="bg-white text-lg font-normal text-black">
               <tr>
-                <th className="w-1/5 whitespace-nowrap px-7 py-3">Date</th>
-                <th className="w-1/5 whitespace-nowrap px-5 py-3">Name</th>
-                <th className="w-1/5 whitespace-nowrap px-5 py-3 text-center">
+                <th className="w-1/5 whitespace-nowrap px-7 py-3 font-raleway">
+                  Date
+                </th>
+                <th className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
+                  Name
+                </th>
+                <th className="w-1/5 whitespace-nowrap px-5 py-3 text-center font-raleway">
                   Age
                 </th>
-                <th className="w-1/5 whitespace-nowrap px-5 py-3 text-center">
+                <th className="w-1/5 whitespace-nowrap px-5 py-3 text-center font-raleway">
                   Height
                 </th>
-                <th className="w-1/5 whitespace-nowrap px-5 py-3 text-center">
+                <th className="w-1/5 whitespace-nowrap px-5 py-3 text-center font-raleway">
                   Body Type
                 </th>
-                <th className="w-1/5 whitespace-nowrap px-5 py-3 text-center">
+                <th className="w-1/5 whitespace-nowrap px-5 py-3 text-center font-raleway">
                   Action
                 </th>
               </tr>
@@ -81,24 +85,24 @@ export const UserEditTable = ({ searchQuery }) => {
                   key={index}
                   className={index % 2 === 0 ? "bg-yellow-50" : "bg-white"}
                 >
-                  <td className="w-1/5 whitespace-nowrap px-7 py-3">
+                  <td className="w-1/5 whitespace-nowrap px-7 py-3 font-raleway">
                     {formatDate(row.createdAt) || "—"}
                   </td>
-                  <td className="w-1/5 whitespace-nowrap px-5 py-3">
+                  <td className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
                     {row.user.name || "—"}
                   </td>
-                  <td className="w-1/5 whitespace-nowrap px-5 py-3 text-center">
+                  <td className="w-1/5 whitespace-nowrap px-5 py-3 text-center font-raleway">
                     {row.age || "—"} <span>years</span>
                   </td>
-                  <td className="w-1/5 whitespace-nowrap px-5 py-3 text-center">
+                  <td className="w-1/5 whitespace-nowrap px-5 py-3 text-center font-raleway">
                     {row.height || "—"}
                   </td>
-                  <td className="w-1/5 whitespace-nowrap px-5 py-3 text-center">
+                  <td className="w-1/5 whitespace-nowrap px-5 py-3 text-center font-raleway">
                     {row.bodyType || "—"}
                   </td>
                   <td className="flex items-center justify-center gap-3 whitespace-nowrap px-7 py-2.5">
                     <Link to={`/admin/user-edit/${row.id}`}>
-                      <button className="whitespace-nowrap rounded-xl bg-[#F07400] px-4 py-2.5 text-xs text-white transition hover:bg-[#d16200]">
+                      <button className="whitespace-nowrap rounded-xl bg-[#F07400] px-4 py-2.5 font-raleway text-xs text-white transition hover:bg-[#d16200]">
                         See Details
                       </button>
                     </Link>
@@ -115,20 +119,20 @@ export const UserEditTable = ({ searchQuery }) => {
       {/* 📄 Pagination */}
       {filteredUsers.length > 0 && (
         <div className="mt-8 flex items-center justify-between gap-2 font-poppins text-sm font-normal text-gray-600 md:gap-0 md:text-base">
-          <p className="font-inter">
+          <p className="font-raleway">
             Showing {startIndex + 1} to {startIndex + currentData.length} of{" "}
             {filteredUsers.length} results
           </p>
           <div className="flex gap-4 sm:gap-5 md:gap-6 lg:gap-7">
             <button
-              className="rounded-xl border border-gray-600 px-4 py-1.5 disabled:cursor-not-allowed disabled:opacity-50 md:px-5 md:py-2"
+              className="rounded-xl border border-gray-600 px-4 py-1.5 font-raleway disabled:cursor-not-allowed disabled:opacity-50 md:px-5 md:py-2"
               onClick={handlePrevious}
               disabled={currentPage === 1}
             >
               Previous
             </button>
             <button
-              className="rounded-xl border border-gray-600 px-4 py-1.5 disabled:cursor-not-allowed disabled:opacity-50 md:px-5 md:py-2"
+              className="rounded-xl border border-gray-600 px-4 py-1.5 font-raleway disabled:cursor-not-allowed disabled:opacity-50 md:px-5 md:py-2"
               onClick={handleNext}
               disabled={currentPage === totalPages || totalPages === 0}
             >
