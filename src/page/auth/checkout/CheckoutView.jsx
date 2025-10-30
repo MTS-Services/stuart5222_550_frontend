@@ -38,12 +38,13 @@ const CARD_ELEMENT_OPTIONS = {
 
 const CheckoutView = () => {
   const [loading, setLoading] = useState(false);
-  const [successMsg, setSuccessMsg] = useState("");
+  // Preferred way
+  const [successMsg, setSuccessMsg] = useState(null);
+
   const [errorMsg, setErrorMsg] = useState("");
   const [selectedPlan, setSelectedPlan] = useState(plans[0].priceId);
   const [cardComplete, setCardComplete] = useState(false);
   const [cardError, setCardError] = useState("");
-
   const { user_email } = useParams();
 
   const stripe = useStripe();
@@ -80,6 +81,17 @@ const CheckoutView = () => {
         return;
       }
 
+      const payment = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/payment/create-one-time-payment`,
+        {
+          email: user_email,
+          amount: "69",
+          paymentMethodId: paymentMethod.id,
+        },
+      );
+
+      console.log("payment:", payment);
+
       // 🪄 Step 2: Send the paymentMethod.id to your backend
       const res = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/payment/create-subscription`,
@@ -95,14 +107,13 @@ const CheckoutView = () => {
         if (res.data.clientSecret) {
           const { paymentIntent, error: confirmError } =
             await stripe.confirmCardPayment(res.data.clientSecret);
-
           if (confirmError) throw confirmError;
-
           if (paymentIntent.status === "succeeded") {
-            setSuccessMsg(`✅ Payment completed successfully!`);
+            setSuccessMsg(`Successfully completed!`);
           }
         } else {
-          setSuccessMsg(`✅ Payment completed: $${res.data?.message} `);
+          console.log("Subscriptions:", res.data);
+          setSuccessMsg(res?.data);
         }
       } else {
         setErrorMsg("❌ Payment failed.");
@@ -121,16 +132,24 @@ const CheckoutView = () => {
   if (successMsg) {
     return (
       <section className="mx-auto flex h-screen max-w-[600px] items-center justify-center px-[10px] py-4 text-white">
-        <div className="text-center">
-          <h2 className="mb-4 text-xl font-bold text-white md:text-[32px]">
-            Payment Successful!
+        <div className="space-y-8 text-center">
+          <h2 className="mb-4 text-2xl font-bold text-green-100 md:text-[32px]">
+            Subscription Successfully Done🎉
           </h2>
-          <p className="text-lg text-green-400">{successMsg}</p>
+          <div className="rounded-xl border border-green-500 p-4 text-left shadow-md shadow-green-700">
+            <p className="text-green-400">
+              Customer-ID: {successMsg?.customerId}
+            </p>
+            <p>Plan : {successMsg?.plan.toLowerCase()}</p>
+            <p>Status : {successMsg?.stripeStatus}</p>
+            <p>Amount : ${successMsg?.amount}</p>
+          </div>
+          <p>Follow Next Step:</p>
           <button
             onClick={() => window.location.replace("/checkout/setup-profile")}
-            className="mt-4 rounded-md bg-green-500 px-4 py-2 text-white"
+            className="mt-4 rounded-md border bg-green-500 px-4 py-2 text-white hover:bg-green-700"
           >
-            Setup Your Profile
+            Go to profile setup
           </button>
         </div>
       </section>

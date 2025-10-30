@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { GiCheckMark } from "react-icons/gi";
 import { BiErrorCircle } from "react-icons/bi";
 import { Upload } from "lucide-react";

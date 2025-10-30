@@ -1,8 +1,7 @@
 // src/features/auth/authSlice.js -> authFetch.js -> httpEndpoint.js
-
-import { createSlice } from '@reduxjs/toolkit';
-import { loginUser, processPayment } from './authFetch';
-import { STORAGE } from '../../config/storage/auth/authStorage';
+import { createSlice } from "@reduxjs/toolkit";
+import { loginUser, paymentIntent, paymentSubscriptions } from "./authFetch";
+import { STORAGE } from "../../config/storage/auth/authStorage";
 
 const token = STORAGE.getToken();
 
@@ -15,7 +14,7 @@ const initialState = {
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     resetAuthError: (state) => {
@@ -40,16 +39,30 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
 
-      // ===== Payment =====
-      .addCase(processPayment.pending, (state) => {
+      // ===== payment Intent =====
+      .addCase(paymentIntent.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(processPayment.fulfilled, (state, action) => {
+      .addCase(paymentIntent.fulfilled, (state, action) => {
         state.loading = false;
         state.paymentSuccess = true;
       })
-      .addCase(processPayment.rejected, (state, action) => {
+      .addCase(paymentIntent.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // ===== payment Intent =====
+      .addCase(paymentSubscriptions.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(paymentSubscriptions.fulfilled, (state, action) => {
+        state.loading = false;
+        state.paymentSuccess = true;
+      })
+      .addCase(paymentSubscriptions.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

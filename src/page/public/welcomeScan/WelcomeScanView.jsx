@@ -14,8 +14,7 @@ const WelcomeScanView = () => {
     (state) => state.qrcode,
   );
 
-  console.log(data?.profile?.contactEmail);
-
+  // console.log(data?.profile?.contactEmail);
   useEffect(() => {
     if (id) {
       dispatch(qrCodeRequest({ qr_code: id }));
@@ -23,8 +22,6 @@ const WelcomeScanView = () => {
       console.error("❌ No QR code provided in URL");
     }
   }, [dispatch, id]);
-
-  // Debug: Log state changes
 
   return (
     <div className="min-h-screen bg-[#3B3B3D] px-[10px] py-2 font-raleway text-white sm:py-4 md:py-6 lg:py-8">
@@ -78,14 +75,9 @@ const WelcomeScanView = () => {
 
               {success && data && (
                 <div className="flex gap-4">
-                  <div className="inline-flex items-center">✅</div>
                   <div>
                     <p className="text-sm font-medium text-green-500">
-                      QR Code Scanned Successfully
-                    </p>
-                    {/* <p>{data.message}</p> */}
-                    <p className="text-sm font-medium text-orange-200">
-                      Your remaining scans: {data.scansRemaining || "[empty]"}
+                      ✅ QR Code Scanned Successfully
                     </p>
                     <p className="text-xs font-medium text-red-500">
                       {data.message}

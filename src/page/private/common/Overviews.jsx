@@ -12,7 +12,6 @@ const Overviews = () => {
   const { dashboardData, loading } = useSelector((state) => state.dashboard);
   const [slectedDate, setSlectedDate] = useState({ from: today, to: today });
   const [filter, setFilter] = useState("Today");
-  console.log(console.log("slectedDate", slectedDate.from));
   const dispatch = useDispatch();
 
   useEffect(() => {
