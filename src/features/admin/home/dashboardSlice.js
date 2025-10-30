@@ -1,10 +1,10 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 import {
   fetchAdminSettingsProfile,
   updateAdminSettingsProfile,
   fetchDashboardData,
   getUserQRcode,
-} from './dashboardFetch';
+} from "./dashboardFetch";
 
 const initialState = {
   dashboardData: [],
@@ -16,7 +16,7 @@ const initialState = {
 };
 
 const dashboardSlice = createSlice({
-  name: 'admin/dashboard',
+  name: "admin/dashboard",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -28,7 +28,7 @@ const dashboardSlice = createSlice({
       })
       .addCase(fetchDashboardData.fulfilled, (state, action) => {
         state.loading = false;
-        state.dashboardData = action.payload || [];
+        state.dashboardData = action.payload.data || [];
       })
       .addCase(fetchDashboardData.rejected, (state, action) => {
         state.loading = false;
@@ -78,7 +78,7 @@ const dashboardSlice = createSlice({
       })
       .addCase(getUserQRcode.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Something went wrong';
+        state.error = action.payload || "Something went wrong";
       });
   },
 });

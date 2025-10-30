@@ -4,8 +4,8 @@ import {
   FaIdCard,
   FaClock,
   FaDollarSign,
-} from 'react-icons/fa';
-import Skeleton from '../../../components/ui/Skeleton';
+} from "react-icons/fa";
+import Skeleton from "../../../components/ui/Skeleton";
 
 export const AllCard = ({ dashboardData, loading, filter }) => {
   // pick the correct data set based on filter
@@ -15,77 +15,77 @@ export const AllCard = ({ dashboardData, loading, filter }) => {
   const cardData = [
     {
       id: 1,
-      title: 'Total Users',
-      value: filteredData?.users ?? overview?.totalUsers ?? '--',
-      icon: <FaUsers className='w-5 h-5 text-gray-800' />,
-      color: 'bg-blue-50',
+      title: "Total Users",
+      value: filteredData?.users ?? overview?.totalUsers ?? "--",
+      icon: <FaUsers className="h-5 w-5 text-gray-800" />,
+      color: "bg-blue-50",
     },
     {
       id: 2,
-      title: 'Wait List',
-      value: dashboardData?.waitlistUsers ?? '--',
-      icon: <FaClock className='w-5 h-5 text-gray-800' />,
-      color: 'bg-yellow-50',
+      title: "Wait List",
+      value: dashboardData?.waitlistUsers ?? "--",
+      icon: <FaClock className="h-5 w-5 text-gray-800" />,
+      color: "bg-yellow-50",
     },
     {
       id: 3,
-      title: 'Active Users',
-      value: dashboardData?.userStatus?.active ?? '--',
-      icon: <FaCheckCircle className='w-5 h-5 text-gray-800' />,
-      color: 'bg-green-50',
+      title: "Active Users",
+      value: dashboardData?.userStatus?.active ?? "--",
+      icon: <FaCheckCircle className="h-5 w-5 text-gray-800" />,
+      color: "bg-green-50",
     },
     {
       id: 4,
-      title: 'Verified Profiles',
-      value: filteredData?.profiles ?? dashboardData?.verifiedProfiles ?? '--',
-      icon: <FaCheckCircle className='w-5 h-5 text-gray-800' />,
-      color: 'bg-green-50',
+      title: "Verified Profiles",
+      value: filteredData?.profiles ?? dashboardData?.verifiedProfiles ?? "--",
+      icon: <FaCheckCircle className="h-5 w-5 text-gray-800" />,
+      color: "bg-green-50",
     },
     {
       id: 5,
-      title: 'Active Cards',
-      value: filteredData?.cards ?? dashboardData?.activeCards ?? '--',
-      icon: <FaIdCard className='w-5 h-5 text-gray-800' />,
-      color: 'bg-purple-50',
+      title: "Active Cards",
+      value: filteredData?.cards ?? dashboardData?.activeCards ?? "--",
+      icon: <FaIdCard className="h-5 w-5 text-gray-800" />,
+      color: "bg-purple-50",
     },
     {
       id: 6,
-      title: 'Total Scans',
-      value: filteredData?.scans ?? dashboardData?.totalScans ?? '--',
-      icon: <FaIdCard className='w-5 h-5 text-gray-800' />,
-      color: 'bg-purple-50',
+      title: "Total Scans",
+      value: filteredData?.scans ?? dashboardData?.totalScans ?? "--",
+      icon: <FaIdCard className="h-5 w-5 text-gray-800" />,
+      color: "bg-purple-50",
     },
     {
       id: 7,
-      title: 'Total Revenue',
-      value: filteredData?.revenue?.amount ?? overview?.totalRevenue ?? '--',
-      icon: <FaDollarSign className='w-5 h-5 text-gray-800' />,
-      color: 'bg-green-50',
+      title: "Total Revenue",
+      value: filteredData?.revenue?.amount ?? overview?.totalRevenue ?? "--",
+      icon: <FaDollarSign className="h-5 w-5 text-gray-800" />,
+      color: "bg-green-50",
     },
     {
       id: 8,
-      title: 'Active Subscriptions',
-      value: overview?.activeSubscriptions ?? '--',
-      icon: <FaIdCard className='w-5 h-5 text-gray-800' />,
-      color: 'bg-indigo-50',
+      title: "Active Subscriptions",
+      value: overview?.activeSubscriptions ?? "--",
+      icon: <FaIdCard className="h-5 w-5 text-gray-800" />,
+      color: "bg-indigo-50",
     },
   ];
 
   if (loading) {
     return (
-      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-2'>
+      <div className="mt-2 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className='rounded-xl border p-5 bg-white'>
-            <Skeleton width='60%' height='1rem' className='mb-3' />
-            <div className='flex items-center justify-between mb-3'>
-              <Skeleton width='35%' height='2rem' />
+          <div key={i} className="rounded-xl border bg-white p-5">
+            <Skeleton width="60%" height="1rem" className="mb-3" />
+            <div className="mb-3 flex items-center justify-between">
+              <Skeleton width="35%" height="2rem" />
               <Skeleton
-                width='2.5rem'
-                height='2.5rem'
-                className='rounded-full'
+                width="2.5rem"
+                height="2.5rem"
+                className="rounded-full"
               />
             </div>
-            <Skeleton width='50%' height='0.75rem' />
+            <Skeleton width="50%" height="0.75rem" />
           </div>
         ))}
       </div>
@@ -93,22 +93,22 @@ export const AllCard = ({ dashboardData, loading, filter }) => {
   }
 
   return (
-    <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 mt-2'>
+    <div className="mt-2 grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
       {cardData.map((item) => (
         <div
           key={item.id}
-          className='rounded-xl border p-5 bg-white col-span-1 shadow-sm hover:shadow-md transition-all duration-200'
+          className="col-span-1 rounded-xl border bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md"
         >
-          <p className='text-gray-700 font-semibold mb-2 text-sm md:text-lg'>
+          <p className="mb-2 text-sm font-semibold text-gray-700 md:text-lg">
             {item.title}
           </p>
-          <div className='flex items-center justify-between mb-3'>
-            <span className='text-gray-900 text-2xl font-semibold'>
+          <div className="mb-3 flex items-center justify-between">
+            <span className="text-2xl font-semibold text-gray-900">
               {item.value}
             </span>
-            <div className={`${item.color} p-3 rounded-lg`}>{item.icon}</div>
+            <div className={`${item.color} rounded-lg p-3`}>{item.icon}</div>
           </div>
-          <p className='text-gray-500 text-xs font-light'>vs last {filter}</p>
+          <p className="text-xs font-light text-gray-500">vs last {filter}</p>
         </div>
       ))}
     </div>
