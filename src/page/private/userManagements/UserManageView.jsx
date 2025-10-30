@@ -14,11 +14,11 @@ const UserManageView = () => {
   }, [dispatch, status]); // ✅
 
   return (
-    <div className="bg-[#F9FAFB] md:p-8">
+    <div className="bg-[#F9FAFB] font-raleway md:p-8">
       <Overviews />
       <div className="">
         <div className="flex items-center justify-between">
-          <h2 className="my-3 font-poppins text-[28px] font-semibold text-black sm:my-4 md:my-5 lg:my-6 xl:my-7">
+          <h2 className="my-3 text-[28px] font-semibold text-black sm:my-4 md:my-5 lg:my-6 xl:my-7">
             Approved User
           </h2>
 

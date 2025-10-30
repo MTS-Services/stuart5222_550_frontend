@@ -21,7 +21,7 @@ const AdminLayout = () => {
   }, [dispatch]);
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 font-raleway">
       {/* Sidebar */}
       <div className="hidden w-64 lg:block">
         <AdminSidebar />

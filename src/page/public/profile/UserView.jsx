@@ -32,7 +32,7 @@ const UserView = () => {
       <div className="flex min-h-screen items-center justify-center bg-[#3B3B3D] px-[10px] py-2 sm:py-4 md:py-6 lg:py-8">
         <div className="text-center text-white">
           <div className="mb-4 text-2xl">⏳</div>
-          <p className="text-xl">Loading profile...</p>
+          <p className="font-raleway text-xl">Loading profile...</p>
         </div>
       </div>
     );
@@ -44,8 +44,10 @@ const UserView = () => {
       <div className="flex min-h-screen items-center justify-center bg-[#3B3B3D] px-[10px] py-2 sm:py-4 md:py-6 lg:py-8">
         <div className="text-center text-white">
           <div className="mb-4 text-2xl">❌</div>
-          <p className="text-xl text-red-400">Error loading profile</p>
-          <p className="mt-2 text-sm">{error}</p>
+          <p className="font-raleway text-xl text-red-400">
+            Error loading profile
+          </p>
+          <p className="mt-2 font-raleway text-sm">{error}</p>
         </div>
       </div>
     );
@@ -57,8 +59,10 @@ const UserView = () => {
       <div className="flex min-h-screen items-center justify-center bg-[#3B3B3D] px-[10px] py-2 sm:py-4 md:py-6 lg:py-8">
         <div className="text-center text-white">
           <div className="mb-4 text-2xl">👤</div>
-          <p className="text-xl">No profile found</p>
-          <p className="mt-2 text-sm">Please scan a valid QR code first</p>
+          <p className="font-raleway text-xl">No profile found</p>
+          <p className="mt-2 font-raleway text-sm">
+            Please scan a valid QR code first
+          </p>
         </div>
       </div>
     );
@@ -75,37 +79,37 @@ const UserView = () => {
           />
         </div>
 
-        <h1 className="text-center text-2xl font-bold">
+        <h1 className="text-center font-raleway text-2xl font-bold">
           {userProfile.displayName || "Anonymous User"}
         </h1>
 
         <div className="flex w-full items-center justify-center text-center">
           <div className="my-6 w-[600px] overflow-hidden rounded-lg border-l border-t border-orange-500 bg-gradient-to-b from-orange-500/10 to-white/0 p-8 shadow-lg">
             {/* Content */}
-            <h2 className="mb-[21px] text-start text-xl font-bold text-gray-100 md:text-[32px]">
+            <h2 className="mb-[21px] text-start font-raleway text-xl font-bold text-gray-100 md:text-[32px]">
               I am traveling and will be in:
             </h2>
 
             <div className="space-y-4">
               <div className="flex items-center gap-4">
-                <span className="text-orange-600">
+                <span className="font-raleway text-orange-600">
                   <FaRegCalendar size={20} />
                 </span>
                 <div className="text-start">
-                  <p className="text-xl font-medium text-gray-300 md:text-2xl">
+                  <p className="font-raleway text-xl font-medium text-gray-300 md:text-2xl">
                     Start-Date: October 1, 2025
                   </p>
-                  <p className="text-xl font-medium text-gray-300 md:text-2xl">
+                  <p className="font-raleway text-xl font-medium text-gray-300 md:text-2xl">
                     End-Date: October 20, 2025
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-4 text-start">
-                <span className="text-xl text-orange-600">
+                <span className="font-raleway text-xl text-orange-600">
                   <GrLocation size={20} />
                 </span>
-                <p className="text-xl font-medium text-gray-300 md:text-2xl">
+                <p className="font-raleway text-xl font-medium text-gray-300 md:text-2xl">
                   Location: {userProfile.location}
                 </p>
               </div>

@@ -80,7 +80,7 @@ const UserDetailsView = () => {
   };
 
   return (
-    <div className="space-y-8 p-6 text-black">
+    <div className="space-y-8 p-6 font-raleway text-black">
       {/* User Info */}
       <div className="rounded-sm p-4">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
@@ -94,16 +94,16 @@ const UserDetailsView = () => {
               />
             </div>
             <div>
-              <h3 className="font-poppins text-base font-medium text-[#252525]">
+              <h3 className="font-raleway text-base font-medium text-[#252525]">
                 {userInfo.name}
               </h3>
               <p className="my-1.5 font-lato text-sm text-[#242424]">
                 {userInfo.email}
               </p>
               <p className="text-xs text-[#464646]">{userInfo.phone}</p>
-              <p>
+              <p className="flex items-center gap-2">
                 Status:
-                <span className="rounded-full bg-yellow-300 px-2 py-1 text-xs text-white">
+                <span className="rounded-full bg-yellow-400 px-2 py-1 text-xs text-white">
                   {user.status}
                 </span>
               </p>

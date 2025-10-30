@@ -1,30 +1,30 @@
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import Traveling from './components/Traveling';
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import Traveling from "./components/Traveling";
 
 const images = [
-  { id: 1, image: '/img/page/admin/img1.png' },
-  { id: 2, image: '/img/page/admin/img2.png' },
-  { id: 3, image: '/img/page/admin/img3.png' },
-  { id: 4, image: '/img/page/admin/img4.png' },
-  { id: 5, image: '/img/page/admin/img5.png' },
+  { id: 1, image: "/img/page/admin/img1.png" },
+  { id: 2, image: "/img/page/admin/img2.png" },
+  { id: 3, image: "/img/page/admin/img3.png" },
+  { id: 4, image: "/img/page/admin/img4.png" },
+  { id: 5, image: "/img/page/admin/img5.png" },
 ];
 
 const UserDetailsView = () => {
   const { id } = useParams();
   const { approved_list, isLoading, error } = useSelector(
-    (state) => state.adminUsers
+    (state) => state.adminUsers,
   );
 
   if (isLoading)
-    return <div className='mx-auto justify-center'>Loading...</div>;
+    return <div className="mx-auto justify-center">Loading...</div>;
   if (error)
-    return <div className='mx-auto justify-center'>Error: {error}</div>;
+    return <div className="mx-auto justify-center">Error: {error}</div>;
 
   const user = approved_list.find((u) => u.id === Number(id));
 
   if (!user)
-    return <div className='mx-auto justify-center'>User not found</div>;
+    return <div className="mx-auto justify-center">User not found</div>;
 
   const {
     user: userInfo,
@@ -39,51 +39,51 @@ const UserDetailsView = () => {
   } = user;
 
   return (
-    <div className='text-black'>
+    <div className="font-raleway text-black">
       {/* User Info Section */}
-      <div className='rounded-sm p-4'>
-        <div className='flex items-center justify-between'>
-          <div className='flex items-center gap-4'>
-            <div className='w-[80px] h-[80px]'>
+      <div className="rounded-sm p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="h-[80px] w-[80px]">
               <img
-                className='rounded-full object-cover w-full h-full'
-                src={'/img/page/admin/img1.png'}
-                alt={userInfo.name || 'User'}
+                className="h-full w-full rounded-full object-cover"
+                src={"/img/page/admin/img1.png"}
+                alt={userInfo.name || "User"}
               />
             </div>
 
-            <div className='flex flex-col'>
-              <h3 className='text-base text-[#252525] font-poppins font-medium'>
+            <div className="flex flex-col">
+              <h3 className="font-raleway text-base font-medium text-[#252525]">
                 {userInfo.name}
               </h3>
-              <p className='text-[#242424] font-lato text-sm my-1.5'>
+              <p className="my-1.5 font-lato text-sm text-[#242424]">
                 {userInfo.email}
               </p>
-              <p className='text-[#464646] text-xs'>{userInfo.phone}</p>
+              <p className="text-xs text-[#464646]">{userInfo.phone}</p>
             </div>
           </div>
 
-          <div className='flex flex-col text-[#404040] text-xs font-lato font-medium'>
+          <div className="flex flex-col font-lato text-xs font-medium text-[#404040]">
             <p>Age: {age}</p>
-            <p className='my-1.5'>Height: {height}</p>
+            <p className="my-1.5">Height: {height}</p>
             <p>Body type: {bodyType}</p>
-            <p className='my-1.5'>Dealbreakers: {dealbreakers}</p>
+            <p className="my-1.5">Dealbreakers: {dealbreakers}</p>
           </div>
         </div>
 
-        <div className='mt-4'>
-          <h2 className='text-black font-raleway text-2xl font-semibold my-4'>
+        <div className="mt-4">
+          <h2 className="my-4 font-raleway text-2xl font-semibold text-black">
             Bio
           </h2>
           {bio ? (
             Array.isArray(bio) ? (
               bio.map((paragraph, idx) => (
-                <p key={idx} className='text-base font-raleway my-2'>
+                <p key={idx} className="my-2 font-raleway text-base">
                   {paragraph}
                 </p>
               ))
             ) : (
-              <p className='text-base font-raleway'>{bio}</p>
+              <p className="font-raleway text-base">{bio}</p>
             )
           ) : (
             <p>No bio available</p>
@@ -95,20 +95,20 @@ const UserDetailsView = () => {
       <Traveling />
 
       {/* Image Gallery */}
-      <div className='pt-8'>
-        <h3 className='text-2xl font-semibold mb-5'>Images</h3>
-        <div className='grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 grid-cols-2 gap-4'>
+      <div className="pt-8">
+        <h3 className="mb-5 text-2xl font-semibold">Images</h3>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
           {[
             facePhoto,
             fullBodyPhoto,
             thirdPhoto,
             ...images.map((i) => i.image),
           ].map((img, index) => (
-            <div key={index} className='overflow-hidden rounded-lg'>
+            <div key={index} className="overflow-hidden rounded-lg">
               <img
                 src={img}
                 alt={`Image ${index + 1}`}
-                className='w-full h-full object-cover bg-yellow-200'
+                className="h-full w-full bg-yellow-200 object-cover"
               />
             </div>
           ))}
@@ -116,20 +116,20 @@ const UserDetailsView = () => {
       </div>
 
       {/* Feedback Section */}
-      <div className='p-4 border border-gray-100 bg-white rounded-lg my-6'>
-        <h3 className='text-xl font-medium mb-4'>Cancel With Feedback.</h3>
+      <div className="my-6 rounded-lg border border-gray-100 bg-white p-4">
+        <h3 className="mb-4 text-xl font-medium">Cancel With Feedback.</h3>
         <textarea
-          className='w-full max-h-[195px] min-h-[195px] p-2 border border-gray-300 bg-[#E6EEF6] rounded-[6px] mb-4 focus:outline-none focus:ring-1 focus:ring-orange-300'
-          placeholder='Write a review message here...'
+          className="mb-4 max-h-[195px] min-h-[195px] w-full rounded-[6px] border border-gray-300 bg-[#E6EEF6] p-2 focus:outline-none focus:ring-1 focus:ring-orange-300"
+          placeholder="Write a review message here..."
         />
-        <button className='bg-[#FF8C00] text-black w-full py-2 rounded-[4px] mb-6'>
+        <button className="mb-6 w-full rounded-[4px] bg-[#FF8C00] py-2 text-black">
           Send
         </button>
-        <div className='md:flex items-center gap-4 space-y-6 sm:space-y-0 md:w-[50%]'>
-          <button className='bg-[#1BA400] text-white w-full py-2 rounded-[4px]'>
+        <div className="items-center gap-4 space-y-6 sm:space-y-0 md:flex md:w-[50%]">
+          <button className="w-full rounded-[4px] bg-[#1BA400] py-2 text-white">
             Approved
           </button>
-          <button className='bg-[#FF8C00] text-black w-full py-2 rounded-[4px]'>
+          <button className="w-full rounded-[4px] bg-[#FF8C00] py-2 text-black">
             Cancel
           </button>
         </div>

@@ -56,11 +56,13 @@ export const WaitListTable = () => {
 
     return users.map((user) => (
       <tr key={user.id} className="hover:bg-gray-50">
-        <td className="border p-2">{user.id}</td>
-        <td className="border p-2">{user.name}</td>
-        <td className="border p-2">{user.email}</td>
-        <td className="border p-2 text-center">{formatDate(user.createdAt)}</td>
-        <td className="flex justify-center gap-2 border p-2 text-center">
+        <td className="border p-2 font-raleway">{user.id}</td>
+        <td className="border p-2 font-raleway">{user.name}</td>
+        <td className="border p-2 font-raleway">{user.email}</td>
+        <td className="border p-2 text-center font-raleway">
+          {formatDate(user.createdAt)}
+        </td>
+        <td className="flex justify-center gap-2 border p-2 text-center font-raleway">
           <button
             onClick={() => handleApprove(user.id)}
             className={`whitespace-nowrap rounded-xl bg-[#F07400] px-4 py-2.5 text-xs text-white hover:bg-red-300`}
@@ -94,11 +96,11 @@ export const WaitListTable = () => {
     <table className="w-full border-collapse border border-gray-200 text-left">
       <thead>
         <tr className="bg-gray-100">
-          <th className="border p-2">ID</th>
-          <th className="border p-2">Name</th>
-          <th className="border p-2">Email</th>
-          <th className="border p-2 text-center">Date</th>
-          <th className="border p-2 text-center">Action</th>
+          <th className="border p-2 font-raleway">ID</th>
+          <th className="border p-2 font-raleway">Name</th>
+          <th className="border p-2 font-raleway">Email</th>
+          <th className="border p-2 text-center font-raleway">Date</th>
+          <th className="border p-2 text-center font-raleway">Action</th>
         </tr>
       </thead>
       <tbody>{renderRows()}</tbody>

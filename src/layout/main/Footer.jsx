@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <div className="flex items-center justify-center bg-[#505050] px-4 py-6 md:py-10 lg:py-16">
+    <div className="flex items-center justify-center bg-[#505050] px-4 py-6 font-raleway md:py-10 lg:py-16">
       <div className="">
         {/* Feature header */}
         <div className="flex flex-col items-start justify-start gap-4 self-stretch">
@@ -22,8 +22,11 @@ const Footer = () => {
 
         {/* Copyright & Legal */}
         <div className="space-y-4">
-          <p className="mt-4 font-normal leading-6 text-neutral-200">
-            © 2025 <span className="text-orange-400">SCAN ME MAYBE -</span>
+          <p className="mt-4 font-raleway font-normal leading-6 text-neutral-200">
+            © 2025{" "}
+            <span className="font-raleway text-orange-400">
+              SCAN ME MAYBE -
+            </span>
           </p>
 
           <p className="font-raleway text-xs font-normal leading-3 text-neutral-200">

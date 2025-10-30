@@ -3,7 +3,7 @@ import HeroSection from "./section/HeroSection";
 
 const HomeView = () => {
   return (
-    <div className="gap-[60px] bg-[#3B3B3D] px-[10px] font-raleway">
+    <div className="gap-[60px] overflow-hidden bg-[#3B3B3D] px-[10px] font-raleway">
       <HeroSection />
       <AboutSection />
     </div>

@@ -101,7 +101,7 @@ export const AllCard = ({ loading, analyticsData, dashboardData, filter }) => {
           key={item.id}
           className="col-span-1 rounded-xl border bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md"
         >
-          <p className="mb-2 text-sm font-semibold text-gray-700 md:text-lg">
+          <p className="mb-2 font-raleway text-sm font-semibold text-gray-700 md:text-lg">
             {item.title}
           </p>
           <div className="mb-3 flex items-center justify-between">
@@ -110,7 +110,9 @@ export const AllCard = ({ loading, analyticsData, dashboardData, filter }) => {
             </span>
             <div className={`${item.color} rounded-lg p-3`}>{item.icon}</div>
           </div>
-          <p className="text-xs font-light text-gray-500">{filter}</p>
+          <p className="font-raleway text-xs font-light text-gray-500">
+            {filter}
+          </p>
         </div>
       ))}
     </div>

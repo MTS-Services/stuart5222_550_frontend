@@ -42,7 +42,7 @@ export const UserEditTable = ({ searchQuery }) => {
   };
 
   return (
-    <div className="font-inter">
+    <div className="font-raleway">
       <div className="relative overflow-x-auto md:overflow-x-visible">
         {/* 🌀 Loading / Error / Empty states */}
         {isLoading ? (

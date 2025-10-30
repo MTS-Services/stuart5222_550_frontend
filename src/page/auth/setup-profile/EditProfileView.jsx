@@ -134,11 +134,11 @@ const EditProfileView = () => {
 
   if (success) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#3B3B3D] px-[10px] py-10 font-sans text-white sm:py-4 md:py-6 lg:py-8">
-        <h2 className="mb-4 text-xl font-bold md:text-[32px]">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[#3B3B3D] px-[10px] py-10 font-raleway text-white sm:py-4 md:py-6 lg:py-8">
+        <h2 className="mb-4 font-raleway text-xl font-bold md:text-[32px]">
           Profile Edit Successful!
         </h2>
-        <p className="text-gray-400">
+        <p className="font-raleway text-gray-400">
           Your edit profile has been submitted for review.
         </p>
         <button
@@ -152,7 +152,7 @@ const EditProfileView = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#3B3B3D] px-[10px] font-sans text-white sm:py-4 md:py-6 lg:py-8">
+    <div className="min-h-screen bg-[#3B3B3D] px-[10px] font-raleway text-white sm:py-4 md:py-6 lg:py-8">
       <form onSubmit={handleSubmit}>
         <div className="mx-auto max-w-[600px]">
           {/* Header */}
@@ -164,7 +164,7 @@ const EditProfileView = () => {
             />
           </div>
           <div className="mb-6 text-center">
-            <h2 className="text-xl font-bold md:text-[32px]">
+            <h2 className="font-raleway text-xl font-bold md:text-[32px]">
               Edit Your Profile
             </h2>
           </div>
@@ -172,8 +172,8 @@ const EditProfileView = () => {
           {/* Form Fields */}
           <div className="my-10 md:my-20">
             <div className="my-5 flex flex-col gap-2 self-stretch">
-              <label className="mb-4 text-xl font-medium text-white">
-                Name <span className="text-red-500">*</span>
+              <label className="mb-4 font-raleway text-xl font-medium text-white">
+                Name <span className="font-raleway text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -184,13 +184,15 @@ const EditProfileView = () => {
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
               {errors.firstName && (
-                <p className="text-sm text-red-500">{errors.firstName}</p>
+                <p className="font-raleway text-sm text-red-500">
+                  {errors.firstName}
+                </p>
               )}
             </div>
 
             <div className="my-5 flex flex-col gap-2 self-stretch">
-              <label className="mb-4 text-xl font-medium text-white">
-                Age <span className="text-red-500">*</span>
+              <label className="mb-4 font-raleway text-xl font-medium text-white">
+                Age <span className="font-raleway text-red-500">*</span>
               </label>
               <input
                 type="number"
@@ -201,21 +203,23 @@ const EditProfileView = () => {
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
               {errors.age && (
-                <p className="text-sm text-red-500">{errors.age}</p>
+                <p className="font-raleway text-sm text-red-500">
+                  {errors.age}
+                </p>
               )}
-              <p className="my-2 text-xs font-normal text-gray-400">
+              <p className="my-2 font-raleway text-xs font-normal text-gray-400">
                 (We only store your month and year of birth which will calculate
                 your age as of the 28th of your birth month.)
               </p>
-              <p className="mb-1 flex items-center gap-2 text-xs font-normal text-gray-400 md:mb-2">
+              <p className="mb-1 flex items-center gap-2 font-raleway text-xs font-normal text-gray-400 md:mb-2">
                 <BiErrorCircle className="h-5 w-5 text-orange-500" />
                 Must be 18 or older
               </p>
             </div>
 
             <div className="flex w-full flex-col gap-2">
-              <label className="mb-[8px] text-xl font-medium text-white">
-                Height <span className="text-red-500">*</span>
+              <label className="mb-[8px] font-raleway text-xl font-medium text-white">
+                Height <span className="font-raleway text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -226,13 +230,15 @@ const EditProfileView = () => {
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
               {errors.height && (
-                <p className="text-sm text-red-500">{errors.height}</p>
+                <p className="font-raleway text-sm text-red-500">
+                  {errors.height}
+                </p>
               )}
             </div>
 
             <div className="my-5 flex w-full flex-col gap-2">
-              <label className="mb-[8px] text-xl font-medium text-white">
-                Body Type <span className="text-red-500">*</span>
+              <label className="mb-[8px] font-raleway text-xl font-medium text-white">
+                Body Type <span className="font-raleway text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -244,13 +250,15 @@ const EditProfileView = () => {
               />
 
               {errors.bodyType && (
-                <p className="text-sm text-red-500">{errors.bodyType}</p>
+                <p className="font-raleway text-sm text-red-500">
+                  {errors.bodyType}
+                </p>
               )}
             </div>
 
             <div className="my-5 flex w-full flex-col gap-2 self-stretch">
-              <label className="mb-[8px] text-xl font-medium text-white">
-                Area <span className="text-red-500">*</span>
+              <label className="mb-[8px] font-raleway text-xl font-medium text-white">
+                Area <span className="font-raleway text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -261,12 +269,14 @@ const EditProfileView = () => {
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
               {errors.area && (
-                <p className="text-sm text-red-500">{errors.area}</p>
+                <p className="font-raleway text-sm text-red-500">
+                  {errors.area}
+                </p>
               )}
             </div>
 
             <div className="my-5 flex w-full flex-col gap-2 self-stretch">
-              <label className="mb-[8px] text-xl font-medium text-white">
+              <label className="mb-[8px] font-raleway text-xl font-medium text-white">
                 Dealbreakers
               </label>
               <input
@@ -278,8 +288,9 @@ const EditProfileView = () => {
             </div>
 
             <div className="my-5 flex w-full flex-col gap-2 self-stretch">
-              <label className="mb-[8px] text-xl font-medium text-white">
-                Tell Me About You <span className="text-red-500">*</span>
+              <label className="mb-[8px] font-raleway text-xl font-medium text-white">
+                Tell Me About You{" "}
+                <span className="font-raleway text-red-500">*</span>
               </label>
               <textarea
                 rows="5"
@@ -290,17 +301,21 @@ const EditProfileView = () => {
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
               {errors.textArea && (
-                <p className="text-sm text-red-500">{errors.textArea}</p>
+                <p className="font-raleway text-sm text-red-500">
+                  {errors.textArea}
+                </p>
               )}
             </div>
           </div>
 
           {/* Travel Mode */}
           <div className="rounded-lg bg-[#434343] px-3 py-8">
-            <h2 className="text-center text-2xl font-bold">Travel Mode</h2>
+            <h2 className="text-center font-raleway text-2xl font-bold">
+              Travel Mode
+            </h2>
             <div className="my-6 flex w-full items-center gap-3 md:gap-5">
               <div className="flex w-[48%] flex-col gap-2 self-stretch">
-                <label className="text-base font-semibold text-white">
+                <label className="font-raleway text-base font-semibold text-white">
                   Start Date
                 </label>
                 <input
@@ -310,7 +325,7 @@ const EditProfileView = () => {
                 />
               </div>
               <div className="flex w-[48%] flex-col gap-2 self-stretch">
-                <label className="text-base font-semibold text-white">
+                <label className="font-raleway text-base font-semibold text-white">
                   End Date
                 </label>
                 <input
@@ -321,7 +336,7 @@ const EditProfileView = () => {
               </div>
             </div>
             <div className="flex w-full flex-col gap-2 self-stretch">
-              <label className="text-base font-semibold text-white">
+              <label className="font-raleway text-base font-semibold text-white">
                 Location
               </label>
               <input
@@ -335,12 +350,13 @@ const EditProfileView = () => {
 
           {/* Add Images */}
           <div className="my-10">
-            <h2 className="text-xl font-medium">
-              Add Images <span className="text-red-500">* (Min 3)</span>
+            <h2 className="font-raleway text-xl font-medium">
+              Add Images{" "}
+              <span className="font-raleway text-red-500">* (Min 3)</span>
             </h2>
             <div className="my-6 flex items-center gap-4 rounded-lg bg-[#FFFFFF33] px-3 py-8">
               <BiErrorCircle className="h-10 w-10 text-orange-500" />
-              <p className="text-base font-normal">
+              <p className="font-raleway text-base font-normal">
                 One showing eyes, one showing a toothy grin and one showing full
                 body. Be classy, not trashy. No nudes. G or PG rated photos
                 only.
@@ -359,10 +375,10 @@ const EditProfileView = () => {
                   <Upload className="h-8 w-8 text-white" strokeWidth={2.5} />
                 </div>
 
-                <h2 className="mb-2 text-lg font-semibold text-gray-800">
+                <h2 className="mb-2 font-raleway text-lg font-semibold text-gray-800">
                   Upload Photos
                 </h2>
-                <p className="mx-auto mb-4 max-w-[288px] text-center text-[10px] text-gray-500">
+                <p className="mx-auto mb-4 max-w-[288px] text-center font-raleway text-[10px] text-gray-500">
                   Minimum 3 photos required • Maximum 13 photos allowed
                 </p>
 
@@ -463,18 +479,18 @@ const EditProfileView = () => {
 
                 {/* Upload Instructions */}
                 <div className="mt-4 text-center">
-                  <p className="flex items-center gap-1 text-sm font-semibold text-gray-600">
+                  <p className="flex items-center gap-1 font-raleway text-sm font-semibold text-gray-600">
                     <span>
                       <FaCamera />
                     </span>
                     How to upload multiple images:
                   </p>
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p className="mt-1 font-raleway text-xs text-gray-500">
                     • Hold <kbd className="rounded bg-gray-200 px-1">Ctrl</kbd>{" "}
                     (Windows) or{" "}
                     <kbd className="rounded bg-gray-200 px-1">Cmd</kbd> (Mac)
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="font-raleway text-xs text-gray-500">
                     • Click and drag to select multiple files
                   </p>
                 </div>
@@ -482,7 +498,7 @@ const EditProfileView = () => {
                 {/* Error Display */}
                 {errors.images && (
                   <div className="mt-3 rounded-lg border border-red-300 bg-red-100 p-2">
-                    <p className="flex items-center gap-2 text-sm font-semibold text-red-600">
+                    <p className="flex items-center gap-2 font-raleway text-sm font-semibold text-red-600">
                       <BiErrorCircle className="h-4 w-4" />
                       {errors.images}
                     </p>
@@ -495,9 +511,9 @@ const EditProfileView = () => {
           {/* Safety Notice */}
           <div className="my-8 rounded-lg bg-[#FFFFFF33] p-5">
             <div className="relative mx-auto mb-5 flex h-10 w-10 justify-center overflow-hidden rounded bg-orange-500 p-1 text-center">
-              <MdOutlinePrivacyTip className="h-full w-full text-white" />
+              <MdOutlinePrivacyTip className="h-full w-full font-raleway text-white" />
             </div>
-            <p className="text-center text-base font-normal leading-6">
+            <p className="text-center font-raleway text-base font-normal leading-6">
               Your safety is what inspired us. You don't know anything about the
               person you or your friend have given the card to. Please be smart
               about what information you share.
@@ -506,7 +522,7 @@ const EditProfileView = () => {
 
           <div className="my-10 flex items-center gap-4 rounded-lg bg-[#FFFFFF33] px-3 py-8">
             <RiDeleteBinLine className="h-14 w-14 text-orange-500" />
-            <p className="text-base font-normal">
+            <p className="font-raleway text-base font-normal">
               Your cards will be sent to you after your profile has been
               approved for not violating decency standards.
             </p>
@@ -515,22 +531,24 @@ const EditProfileView = () => {
           {/* Contact Information */}
           <div className="rounded-lg bg-[#434343] px-4 py-8">
             <div className="mb-6">
-              <h2 className="mb-6 text-xl font-bold leading-6">
+              <h2 className="mb-6 font-raleway text-xl font-bold leading-6">
                 Person to person dating, but with a safer approach.
               </h2>
-              <p className="leading-6">
+              <p className="font-raleway leading-6">
                 This is your "safe share" zone – just the details you choose to
                 pass along.
               </p>
             </div>
 
             {errors.contact && (
-              <p className="mb-4 text-center text-red-500">{errors.contact}</p>
+              <p className="mb-4 text-center font-raleway text-red-500">
+                {errors.contact}
+              </p>
             )}
 
             <div className="">
               <div className="flex flex-col gap-2 self-stretch">
-                <label className="text-base font-semibold text-white">
+                <label className="font-raleway text-base font-semibold text-white">
                   Name
                 </label>
                 <input
@@ -542,7 +560,7 @@ const EditProfileView = () => {
               </div>
 
               <div className="mt-6 flex flex-col gap-2 self-stretch">
-                <label className="text-base font-semibold text-white">
+                <label className="font-raleway text-base font-semibold text-white">
                   E-mail
                 </label>
                 <input
@@ -554,16 +572,20 @@ const EditProfileView = () => {
                   } focus:outline-orange-500 focus:ring-2 focus:ring-orange-400`}
                 />
                 {errors.email && (
-                  <p className="text-sm text-red-500">{errors.email}</p>
+                  <p className="font-raleway text-sm text-red-500">
+                    {errors.email}
+                  </p>
                 )}
               </div>
 
               <div className="my-4 md:my-8">
-                <h2 className="text-center text-base font-semibold">and/or</h2>
+                <h2 className="text-center font-raleway text-base font-semibold">
+                  and/or
+                </h2>
               </div>
 
               <div className="flex flex-col gap-2 self-stretch">
-                <label className="text-base font-semibold text-white">
+                <label className="font-raleway text-base font-semibold text-white">
                   Phone number
                 </label>
                 <input
@@ -584,13 +606,19 @@ const EditProfileView = () => {
             {submitLoading ? "Submitting..." : "Submit Profile for Review"}
           </button>
           <div className="mx-auto mb-6 mt-10 max-w-[600px]">
-            <p className="text-center text-sm text-gray-400">
+            <p className="text-center font-raleway text-sm text-gray-400">
               By submitting your profile, you agree to our{" "}
-              <a href="/terms" className="text-orange-500 hover:underline">
+              <a
+                href="/terms"
+                className="font-raleway text-orange-500 hover:underline"
+              >
                 Terms of Service
               </a>{" "}
               and{" "}
-              <a href="/privacy" className="text-orange-500 hover:underline">
+              <a
+                href="/privacy"
+                className="font-raleway text-orange-500 hover:underline"
+              >
                 Privacy Policy
               </a>
               .

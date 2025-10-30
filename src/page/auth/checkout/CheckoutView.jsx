@@ -131,7 +131,7 @@ const CheckoutView = () => {
 
   if (successMsg) {
     return (
-      <section className="mx-auto flex h-screen max-w-[600px] items-center justify-center px-[10px] py-4 text-white">
+      <section className="mx-auto flex h-screen max-w-[600px] items-center justify-center px-[10px] py-4 font-raleway text-white">
         <div className="space-y-8 text-center">
           <h2 className="mb-4 text-2xl font-bold text-green-100 md:text-[32px]">
             Subscription Successfully Done🎉
@@ -157,7 +157,7 @@ const CheckoutView = () => {
   }
 
   return (
-    <section className="mx-auto max-w-[600px] px-[10px] text-white">
+    <section className="mx-auto max-w-[600px] px-[10px] font-raleway text-white">
       <div className="flex justify-center py-[40px]">
         <img
           src="/img/assets/logo.png"
@@ -167,14 +167,14 @@ const CheckoutView = () => {
       </div>
 
       <div className="mb-[40px] text-center">
-        <h2 className="text-xl font-bold text-white md:text-[32px]">
+        <h2 className="font-raleway text-xl font-bold text-white md:text-[32px]">
           Pick your Plan and Setup Profile
         </h2>
       </div>
 
       <div className="mb-8 rounded-xl border-t-2 border-orange-500 bg-[#434343] p-4 md:mt-6">
         <div className="rounded-xl bg-[#FFFFFF33] p-6">
-          <h2 className="text-[32px] font-semibold">
+          <h2 className="font-raleway text-[32px] font-semibold">
             $69<span className="text-[24px]">/</span>
             <span className="font-raleway text-base font-normal">
               Initial setup fee

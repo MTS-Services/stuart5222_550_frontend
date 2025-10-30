@@ -1,22 +1,22 @@
-import { useState } from 'react';
-import { PiCheckBold } from 'react-icons/pi';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { FiX } from 'react-icons/fi';
+import { useState } from "react";
+import { PiCheckBold } from "react-icons/pi";
+import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import { FiX } from "react-icons/fi";
 import {
   adminUserApprovedProfile,
   adminUserRejectedProfile,
-} from '../../../../features/admin/management/usreFetch';
-import { AllTableResponsiveStyle } from '../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle';
-import { formatDate } from '../../../../utils/formatDate';
+} from "../../../../features/admin/management/usreFetch";
+import { AllTableResponsiveStyle } from "../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle";
+import { formatDate } from "../../../../utils/formatDate";
 
 export const RequestUserTable = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedEmail, setSelectedEmail] = useState('');
+  const [selectedEmail, setSelectedEmail] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [reasonText, setReasonText] = useState('');
-  const [error, setError] = useState('');
+  const [reasonText, setReasonText] = useState("");
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
 
   // ✅ Get data from Redux
@@ -30,7 +30,7 @@ export const RequestUserTable = () => {
     try {
       await dispatch(adminUserApprovedProfile({ id: userId })).unwrap();
     } catch (err) {
-      setError(err.message || 'Failed to approve user');
+      setError(err.message || "Failed to approve user");
     } finally {
       setLoadingRow((prev) => ({ ...prev, approve: null }));
     }
@@ -39,7 +39,7 @@ export const RequestUserTable = () => {
   // ✅ Send button handler in modal - FIXED VERSION
   const handleSend = async () => {
     if (!selectedUserId || !reasonText.trim()) {
-      setError('Please provide a reason for rejection');
+      setError("Please provide a reason for rejection");
       return;
     }
 
@@ -49,13 +49,13 @@ export const RequestUserTable = () => {
         adminUserRejectedProfile({
           id: selectedUserId,
           reason: reasonText,
-        })
+        }),
       ).unwrap();
       toast;
-      setError(''); // Clear any previous errors
+      setError(""); // Clear any previous errors
     } catch (err) {
       console.error(err);
-      setError(err.message || 'Failed to reject user');
+      setError(err.message || "Failed to reject user");
     } finally {
       setLoadingRow((prev) => ({ ...prev, reject: null }));
       closeModal();
@@ -66,17 +66,17 @@ export const RequestUserTable = () => {
   const openModal = (user) => {
     setSelectedEmail(user.email);
     setSelectedUserId(user.id);
-    setReasonText('');
-    setError('');
+    setReasonText("");
+    setError("");
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedEmail('');
+    setSelectedEmail("");
     setSelectedUserId(null);
-    setReasonText('');
-    setError('');
+    setReasonText("");
+    setError("");
   };
 
   const handlePrevious = () => {
@@ -92,9 +92,9 @@ export const RequestUserTable = () => {
     userProfiles?.map((user) => ({
       id: user.id,
       createdAt: user.createdAt,
-      name: user.displayName || user.user?.name || '—',
-      email: user.user?.email || '—',
-      status: user.status || 'DRAFT',
+      name: user.displayName || user.user?.name || "—",
+      email: user.user?.email || "—",
+      status: user.status || "DRAFT",
     })) || [];
 
   // ✅ Pagination logic
@@ -103,84 +103,84 @@ export const RequestUserTable = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = processedList.slice(
     startIndex,
-    startIndex + itemsPerPage
+    startIndex + itemsPerPage,
   );
 
   return (
-    <div className='font-inter'>
+    <div className="font-inter">
       {/* 🌀 Loading State */}
       {isLoading ? (
         <div>
-          <p colSpan='5' className='text-center p-4'>
+          <p colSpan="5" className="p-4 text-center">
             Loading...
           </p>
         </div>
       ) : (
         <>
-          <div className='relative overflow-x-auto md:overflow-x-visible'>
-            <table className='min-w-full table-fixed text-left text-xs sm:text-sm md:text-base'>
-              <thead className='bg-white text-black text-lg font-normal'>
+          <div className="relative overflow-x-auto md:overflow-x-visible">
+            <table className="min-w-full table-fixed text-left text-xs sm:text-sm md:text-base">
+              <thead className="bg-white text-lg font-normal text-black">
                 <tr>
-                  <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Name</th>
-                  <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Email</th>
-                  <th className='px-7 py-3 w-1/5 whitespace-nowrap'>Date</th>
-                  <th className='px-5 py-3 w-1/5 whitespace-nowrap'>Status</th>
+                  <th className="w-1/5 whitespace-nowrap px-5 py-3">Name</th>
+                  <th className="w-1/5 whitespace-nowrap px-5 py-3">Email</th>
+                  <th className="w-1/5 whitespace-nowrap px-7 py-3">Date</th>
+                  <th className="w-1/5 whitespace-nowrap px-5 py-3">Status</th>
 
-                  <th className='px-5 py-3 w-1/5 whitespace-nowrap text-center'>
+                  <th className="w-1/5 whitespace-nowrap px-5 py-3 text-center">
                     Action
                   </th>
                 </tr>
               </thead>
-              <tbody className='text-black text-base font-normal'>
+              <tbody className="text-base font-normal text-black">
                 {currentData.length > 0 ? (
                   currentData.map((row, index) => (
                     <tr
                       key={row.id}
-                      className={index % 2 === 0 ? 'bg-yellow-50' : 'bg-white'}
+                      className={index % 2 === 0 ? "bg-yellow-50" : "bg-white"}
                     >
-                      <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
+                      <td className="w-1/5 whitespace-nowrap px-5 py-3">
                         {row.name}
                       </td>
-                      <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
+                      <td className="w-1/5 whitespace-nowrap px-5 py-3">
                         {row.email}
                       </td>
-                      <td className='px-7 py-3 w-1/5 whitespace-nowrap'>
-                        {formatDate(row.createdAt) || '—'}
+                      <td className="w-1/5 whitespace-nowrap px-7 py-3">
+                        {formatDate(row.createdAt) || "—"}
                       </td>
-                      <td className='px-5 py-3 w-1/5 whitespace-nowrap'>
+                      <td className="w-1/5 whitespace-nowrap px-5 py-3">
                         {row.status}
                       </td>
 
-                      {row.status === 'DRAFT' ? (
-                        <td className='px-7 py-2.5 whitespace-nowrap flex items-center justify-center gap-3'>
+                      {row.status === "DRAFT" ? (
+                        <td className="flex items-center justify-center gap-3 whitespace-nowrap px-7 py-2.5">
                           <Link to={`/admin/user-management/${row.id}`}>
-                            <button className='bg-[#F07400] text-white text-xs py-2.5 px-4 rounded-xl whitespace-nowrap'>
+                            <button className="whitespace-nowrap rounded-xl bg-[#F07400] px-4 py-2.5 text-xs text-white">
                               See Details
                             </button>
                           </Link>
                           <button
-                            className='text-green-50 bg-green-300 rounded-full p-1 cursor-pointer hover:bg-slate-400 disabled:opacity-50'
+                            className="cursor-pointer rounded-full bg-green-300 p-1 text-green-50 hover:bg-slate-400 disabled:opacity-50"
                             onClick={() => handleApprove(row.id)}
                             disabled={loadingRow.approve === row.id}
                             aria-label={`Approve ${row.name}`}
                           >
                             {loadingRow.approve === row.id ? (
                               <>
-                                <span className='sr-only'>Loading...</span>
-                                <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin' />
+                                <span className="sr-only">Loading...</span>
+                                <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                               </>
                             ) : (
-                              <PiCheckBold aria-hidden='true' />
+                              <PiCheckBold aria-hidden="true" />
                             )}
                           </button>
 
                           <FiX
-                            className='w-5 h-5 text-red-500 cursor-pointer'
+                            className="h-5 w-5 cursor-pointer text-red-500"
                             onClick={() => openModal(row)}
                           />
                         </td>
                       ) : (
-                        <td className='text-center'>{row.status}</td>
+                        <td className="text-center">{row.status}</td>
                       )}
                     </tr>
                   ))
@@ -188,7 +188,7 @@ export const RequestUserTable = () => {
                   <tr>
                     <td
                       colSpan={6}
-                      className='text-center text-gray-500 py-6 italic'
+                      className="py-6 text-center italic text-gray-500"
                     >
                       No users found.
                     </td>
@@ -200,41 +200,41 @@ export const RequestUserTable = () => {
 
           {/* 💬 Modal - MOVED OUTSIDE THE TABLE ROW */}
           {isModalOpen && (
-            <div className='fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4'>
-              <div className='bg-white rounded-lg w-full max-w-md mx-auto p-6 relative'>
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+              <div className="relative mx-auto w-full max-w-md rounded-lg bg-white p-6">
                 <button
-                  className='absolute top-3 right-3 text-gray-500 hover:text-black'
+                  className="absolute right-3 top-3 text-gray-500 hover:text-black"
                   onClick={closeModal}
                 >
                   ✕
                 </button>
-                <h3 className='text-lg font-semibold mb-4'>
+                <h3 className="mb-4 text-lg font-semibold">
                   Cancel with Feedback
                 </h3>
-                <p className='text-gray-600 text-sm mb-2 break-all'>
+                <p className="mb-2 break-all text-sm text-gray-600">
                   {selectedEmail}
                 </p>
                 <textarea
-                  className='w-full max-h-[195px] min-h-[195px] p-2 border border-gray-300 bg-[#E6EEF6] rounded-[6px] mb-2 focus:outline-none focus:ring-1 focus:ring-orange-300'
-                  placeholder='Write a review message here...'
+                  className="mb-2 max-h-[195px] min-h-[195px] w-full rounded-[6px] border border-gray-300 bg-[#E6EEF6] p-2 focus:outline-none focus:ring-1 focus:ring-orange-300"
+                  placeholder="Write a review message here..."
                   value={reasonText}
                   onChange={(e) => setReasonText(e.target.value)}
                 />
-                {error && <p className='text-red-500 text-sm mb-2'>{error}</p>}
+                {error && <p className="mb-2 text-sm text-red-500">{error}</p>}
                 <button
-                  className='w-full bg-[#FF8C00] py-2.5 text-black rounded-lg hover:bg-orange-600 disabled:opacity-50'
+                  className="w-full rounded-lg bg-[#FF8C00] py-2.5 text-black hover:bg-orange-600 disabled:opacity-50"
                   onClick={handleSend}
                   disabled={
                     loadingRow.reject === selectedUserId || !reasonText.trim()
                   }
                 >
                   {loadingRow.reject === selectedUserId ? (
-                    <div className='flex items-center justify-center'>
-                      <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2' />
+                    <div className="flex items-center justify-center">
+                      <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
                       Sending...
                     </div>
                   ) : (
-                    'Send'
+                    "Send"
                   )}
                 </button>
               </div>
@@ -245,17 +245,17 @@ export const RequestUserTable = () => {
 
           {/* 📄 Pagination */}
           {processedList.length > 0 && (
-            <div className='flex items-center text-gray-600 justify-between mt-8 text-base font-poppins font-normal md:gap-0 gap-2'>
-              <p className='font-inter'>
-                Showing {startIndex + 1} to {startIndex + currentData.length} of{' '}
+            <div className="mt-8 flex items-center justify-between gap-2 font-poppins text-base font-normal text-gray-600 md:gap-0">
+              <p className="font-raleway">
+                Showing {startIndex + 1} to {startIndex + currentData.length} of{" "}
                 {processedList.length} results
               </p>
-              <div className='flex gap-4 sm:gap-5 md:gap-6 lg:gap-7'>
+              <div className="flex gap-4 sm:gap-5 md:gap-6 lg:gap-7">
                 <button
-                  className={`border rounded-xl md:px-5 px-4 md:py-2 py-1.5 ${
+                  className={`rounded-xl border px-4 py-1.5 md:px-5 md:py-2 ${
                     currentPage === 1
-                      ? 'border-gray-300 text-gray-400 cursor-not-allowed'
-                      : 'border-gray-600'
+                      ? "cursor-not-allowed border-gray-300 text-gray-400"
+                      : "border-gray-600"
                   }`}
                   onClick={handlePrevious}
                   disabled={currentPage === 1}
@@ -263,10 +263,10 @@ export const RequestUserTable = () => {
                   Previous
                 </button>
                 <button
-                  className={`border rounded-xl md:px-5 px-4 md:py-2 py-1.5 ${
+                  className={`rounded-xl border px-4 py-1.5 md:px-5 md:py-2 ${
                     currentPage === totalPages
-                      ? 'border-gray-300 text-gray-400 cursor-not-allowed'
-                      : 'border-gray-600'
+                      ? "cursor-not-allowed border-gray-300 text-gray-400"
+                      : "border-gray-600"
                   }`}
                   onClick={handleNext}
                   disabled={currentPage === totalPages}

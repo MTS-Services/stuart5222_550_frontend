@@ -63,18 +63,18 @@ const SetupProfileView = () => {
     const form = e.currentTarget;
 
     const formData = {
-      displayName: form.firstName.value, // ✅ Use displayName (matches your object)
+      displayName: form.firstName.value,
       age: form.age.value,
       height: form.height.value,
       bodyType: form.bodyType.value,
       area: form.area.value,
-      bio: form.textArea.value, // ✅ bio, not textArea
-      dealbreakers: form.dealBreaks.value, // ✅ corrected spelling
+      bio: form.textArea.value,
+      dealbreakers: form.dealBreaks.value,
       startDate: form.startDate.value || null,
       endDate: form.endDate.value || null,
       location: form.location.value,
       email: form.email.value,
-      phone: form.number.value || null, // ✅ phone, not number
+      phone: form.number.value || null,
     };
 
     // ✅ Validate with files
@@ -97,7 +97,7 @@ const SetupProfileView = () => {
     try {
       // 📤 Build FormData with image array
       const submitData = new FormData();
-
+      console.log("submitData:", submitData);
       // Append all text fields
       Object.entries(formData).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
@@ -115,11 +115,11 @@ const SetupProfileView = () => {
       toast.success("Profile submitted successfully for review!");
       form.reset();
       setSuccess(true);
-      setFiles([]);
       setImagePreviews([]);
+      setFiles([]);
     } catch (err) {
-      console.error("Submission error:", err);
-      alert(err?.message || "❌ Failed to submit profile. Please try again.");
+      console.error(err);
+      alert(err || "❌ Failed to submit profile. Please try again.");
     } finally {
       setSubmitLoading(false);
     }
@@ -134,7 +134,7 @@ const SetupProfileView = () => {
 
   if (success) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#3B3B3D] px-[10px] py-10 font-sans text-white sm:py-4 md:py-6 lg:py-8">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[#3B3B3D] px-[10px] py-10 font-raleway text-white sm:py-4 md:py-6 lg:py-8">
         <h2 className="mb-4 text-xl font-bold md:text-[32px]">
           Profile Setup Successful!
         </h2>
@@ -152,7 +152,7 @@ const SetupProfileView = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#3B3B3D] px-[10px] font-sans text-white sm:py-4 md:py-6 lg:py-8">
+    <div className="min-h-screen bg-[#3B3B3D] px-[10px] font-raleway text-white sm:py-4 md:py-6 lg:py-8">
       <form onSubmit={handleSubmit}>
         <div className="mx-auto max-w-[600px]">
           {/* Header */}
@@ -164,7 +164,7 @@ const SetupProfileView = () => {
             />
           </div>
           <div className="mb-6 text-center">
-            <h2 className="text-xl font-bold md:text-[32px]">
+            <h2 className="font-raleway text-xl font-bold md:text-[32px]">
               Setup Your Profile
             </h2>
           </div>
@@ -172,7 +172,7 @@ const SetupProfileView = () => {
           {/* Form Fields */}
           <div className="my-10 md:my-20">
             <div className="my-5 flex flex-col gap-2 self-stretch">
-              <label className="mb-4 text-xl font-medium text-white">
+              <label className="mb-4 font-raleway text-xl font-medium text-white">
                 Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -189,7 +189,7 @@ const SetupProfileView = () => {
             </div>
 
             <div className="my-5 flex flex-col gap-2 self-stretch">
-              <label className="mb-4 text-xl font-medium text-white">
+              <label className="mb-4 font-raleway text-xl font-medium text-white">
                 Age <span className="text-red-500">*</span>
               </label>
               <input
@@ -203,18 +203,18 @@ const SetupProfileView = () => {
               {errors.age && (
                 <p className="text-sm text-red-500">{errors.age}</p>
               )}
-              <p className="my-2 text-xs font-normal text-gray-400">
+              <p className="my-2 font-raleway text-xs font-normal text-gray-400">
                 (We only store your month and year of birth which will calculate
                 your age as of the 28th of your birth month.)
               </p>
-              <p className="mb-1 flex items-center gap-2 text-xs font-normal text-gray-400 md:mb-2">
+              <p className="mb-1 flex items-center gap-2 font-raleway text-xs font-normal text-gray-400 md:mb-2">
                 <BiErrorCircle className="h-5 w-5 text-orange-500" />
                 Must be 18 or older
               </p>
             </div>
 
             <div className="flex w-full flex-col gap-2">
-              <label className="mb-[8px] text-xl font-medium text-white">
+              <label className="mb-[8px] font-raleway text-xl font-medium text-white">
                 Height <span className="text-red-500">*</span>
               </label>
               <input
@@ -231,7 +231,7 @@ const SetupProfileView = () => {
             </div>
 
             <div className="my-5 flex w-full flex-col gap-2">
-              <label className="mb-[8px] text-xl font-medium text-white">
+              <label className="mb-[8px] font-raleway text-xl font-medium text-white">
                 Body Type <span className="text-red-500">*</span>
               </label>
               <input
@@ -249,7 +249,7 @@ const SetupProfileView = () => {
             </div>
 
             <div className="my-5 flex w-full flex-col gap-2 self-stretch">
-              <label className="mb-[8px] text-xl font-medium text-white">
+              <label className="mb-[8px] font-raleway text-xl font-medium text-white">
                 Area <span className="text-red-500">*</span>
               </label>
               <input
@@ -266,7 +266,7 @@ const SetupProfileView = () => {
             </div>
 
             <div className="my-5 flex w-full flex-col gap-2 self-stretch">
-              <label className="mb-[8px] text-xl font-medium text-white">
+              <label className="mb-[8px] font-raleway text-xl font-medium text-white">
                 Dealbreakers
               </label>
               <input
@@ -278,7 +278,7 @@ const SetupProfileView = () => {
             </div>
 
             <div className="my-5 flex w-full flex-col gap-2 self-stretch">
-              <label className="mb-[8px] text-xl font-medium text-white">
+              <label className="mb-[8px] font-raleway text-xl font-medium text-white">
                 Tell Me About You <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -296,11 +296,13 @@ const SetupProfileView = () => {
           </div>
 
           {/* Travel Mode */}
-          <div className="rounded-lg bg-[#434343] px-3 py-8">
-            <h2 className="text-center text-2xl font-bold">Travel Mode</h2>
+          <div className="rounded-lg bg-[#434343] px-3 py-8 font-raleway">
+            <h2 className="text-center font-raleway text-2xl font-bold">
+              Travel Mode
+            </h2>
             <div className="my-6 flex w-full items-center gap-3 md:gap-5">
               <div className="flex w-[48%] flex-col gap-2 self-stretch">
-                <label className="text-base font-semibold text-white">
+                <label className="font-raleway text-base font-semibold text-white">
                   Start Date
                 </label>
                 <input
@@ -310,7 +312,7 @@ const SetupProfileView = () => {
                 />
               </div>
               <div className="flex w-[48%] flex-col gap-2 self-stretch">
-                <label className="text-base font-semibold text-white">
+                <label className="font-raleway text-base font-semibold text-white">
                   End Date
                 </label>
                 <input
@@ -321,7 +323,7 @@ const SetupProfileView = () => {
               </div>
             </div>
             <div className="flex w-full flex-col gap-2 self-stretch">
-              <label className="text-base font-semibold text-white">
+              <label className="font-raleway text-base font-semibold text-white">
                 Location
               </label>
               <input
@@ -335,12 +337,13 @@ const SetupProfileView = () => {
 
           {/* Add Images */}
           <div className="my-10">
-            <h2 className="text-xl font-medium">
-              Add Images <span className="text-red-500">* (Min 3)</span>
+            <h2 className="font-raleway text-xl font-medium">
+              Add Images{" "}
+              <span className="font-raleway text-red-500">* (Min 3)</span>
             </h2>
             <div className="my-6 flex items-center gap-4 rounded-lg bg-[#FFFFFF33] px-3 py-8">
               <BiErrorCircle className="h-10 w-10 text-orange-500" />
-              <p className="text-base font-normal">
+              <p className="font-raleway text-base font-normal">
                 One showing eyes, one showing a toothy grin and one showing full
                 body. Be classy, not trashy. No nudes. G or PG rated photos
                 only.
@@ -359,18 +362,20 @@ const SetupProfileView = () => {
                   <Upload className="h-8 w-8 text-white" strokeWidth={2.5} />
                 </div>
 
-                <h2 className="mb-2 text-lg font-semibold text-gray-800">
+                <h2 className="mb-2 font-raleway text-lg font-semibold text-gray-800">
                   Upload Photos
                 </h2>
-                <p className="mx-auto mb-4 max-w-[288px] text-center text-[10px] text-gray-500">
+                <p className="mx-auto mb-4 max-w-[288px] text-center font-raleway text-[10px] text-gray-500">
                   Minimum 3 photos required • Maximum 13 photos allowed
                 </p>
 
                 {/* Upload Progress Indicator */}
                 <div className="mb-4 w-full max-w-xs">
                   <div className="mb-1 flex justify-between text-xs text-gray-600">
-                    <span>Upload Progress</span>
-                    <span>{files.length}/13 images</span>
+                    <span className="font-raleway">Upload Progress</span>
+                    <span className="font-raleway">
+                      {files.length}/13 images
+                    </span>
                   </div>
                   <div className="h-2 w-full rounded-full bg-gray-200">
                     <div
@@ -379,12 +384,12 @@ const SetupProfileView = () => {
                     ></div>
                   </div>
                   <div className="mt-1 flex justify-between text-xs text-gray-500">
-                    <span>Min: 3</span>
+                    <span className="font-raleway">Min: 3</span>
                     <span
                       className={
                         files.length < 3
-                          ? "font-semibold text-red-500"
-                          : "font-semibold text-green-500"
+                          ? "font-raleway font-semibold text-red-500"
+                          : "font-raleway font-semibold text-green-500"
                       }
                     >
                       {files.length >= 3
@@ -448,10 +453,12 @@ const SetupProfileView = () => {
                       {files.length >= 3 ? (
                         <div className="flex items-center justify-center gap-2">
                           <GiCheckMark className="h-4 w-4" />
-                          Ready to submit! ({files.length}/13 images)
+                          <span className="font-raleway">
+                            Ready to submit! ({files.length}/13 images)
+                          </span>
                         </div>
                       ) : (
-                        <div className="flex items-center justify-center gap-2">
+                        <div className="flex items-center justify-center gap-2 font-raleway">
                           <BiErrorCircle className="h-4 w-4" />
                           {3 - files.length} more image
                           {3 - files.length !== 1 ? "s" : ""} needed
@@ -463,18 +470,18 @@ const SetupProfileView = () => {
 
                 {/* Upload Instructions */}
                 <div className="mt-4 text-center">
-                  <p className="flex items-center gap-1 text-sm font-semibold text-gray-600">
+                  <p className="flex items-center gap-1 font-raleway text-sm font-semibold text-gray-600">
                     <span>
                       <FaCamera />
                     </span>
                     How to upload multiple images:
                   </p>
-                  <p className="mt-1 text-xs text-gray-500">
+                  <p className="mt-1 font-raleway text-xs text-gray-500">
                     • Hold <kbd className="rounded bg-gray-200 px-1">Ctrl</kbd>{" "}
                     (Windows) or{" "}
                     <kbd className="rounded bg-gray-200 px-1">Cmd</kbd> (Mac)
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="font-raleway text-xs text-gray-500">
                     • Click and drag to select multiple files
                   </p>
                 </div>
@@ -497,7 +504,7 @@ const SetupProfileView = () => {
             <div className="relative mx-auto mb-5 flex h-10 w-10 justify-center overflow-hidden rounded bg-orange-500 p-1 text-center">
               <MdOutlinePrivacyTip className="h-full w-full text-white" />
             </div>
-            <p className="text-center text-base font-normal leading-6">
+            <p className="text-center font-raleway text-base font-normal leading-6">
               Your safety is what inspired us. You don't know anything about the
               person you or your friend have given the card to. Please be smart
               about what information you share.
@@ -506,7 +513,7 @@ const SetupProfileView = () => {
 
           <div className="my-10 flex items-center gap-4 rounded-lg bg-[#FFFFFF33] px-3 py-8">
             <RiDeleteBinLine className="h-14 w-14 text-orange-500" />
-            <p className="text-base font-normal">
+            <p className="font-raleway text-base font-normal">
               Your cards will be sent to you after your profile has been
               approved for not violating decency standards.
             </p>
@@ -515,10 +522,10 @@ const SetupProfileView = () => {
           {/* Contact Information */}
           <div className="rounded-lg bg-[#434343] px-4 py-8">
             <div className="mb-6">
-              <h2 className="mb-6 text-xl font-bold leading-6">
+              <h2 className="mb-6 font-raleway text-xl font-bold leading-6">
                 Person to person dating, but with a safer approach.
               </h2>
-              <p className="leading-6">
+              <p className="font-raleway leading-6">
                 This is your "safe share" zone – just the details you choose to
                 pass along.
               </p>
@@ -530,7 +537,7 @@ const SetupProfileView = () => {
 
             <div className="">
               <div className="flex flex-col gap-2 self-stretch">
-                <label className="text-base font-semibold text-white">
+                <label className="font-raleway text-base font-semibold text-white">
                   Name
                 </label>
                 <input
@@ -542,7 +549,7 @@ const SetupProfileView = () => {
               </div>
 
               <div className="mt-6 flex flex-col gap-2 self-stretch">
-                <label className="text-base font-semibold text-white">
+                <label className="font-raleway text-base font-semibold text-white">
                   E-mail
                 </label>
                 <input
@@ -559,11 +566,13 @@ const SetupProfileView = () => {
               </div>
 
               <div className="my-4 md:my-8">
-                <h2 className="text-center text-base font-semibold">and/or</h2>
+                <h2 className="text-center font-raleway text-base font-semibold">
+                  and/or
+                </h2>
               </div>
 
               <div className="flex flex-col gap-2 self-stretch">
-                <label className="text-base font-semibold text-white">
+                <label className="font-raleway text-base font-semibold text-white">
                   Phone number
                 </label>
                 <input
@@ -584,13 +593,19 @@ const SetupProfileView = () => {
             {submitLoading ? "Submitting..." : "Submit Profile for Review"}
           </button>
           <div className="mx-auto mb-6 mt-10 max-w-[600px]">
-            <p className="text-center text-sm text-gray-400">
+            <p className="text-center font-raleway text-sm text-gray-400">
               By submitting your profile, you agree to our{" "}
-              <a href="/terms" className="text-orange-500 hover:underline">
+              <a
+                href="/terms"
+                className="font-raleway text-orange-500 hover:underline"
+              >
                 Terms of Service
               </a>{" "}
               and{" "}
-              <a href="/privacy" className="text-orange-500 hover:underline">
+              <a
+                href="/privacy"
+                className="font-raleway text-orange-500 hover:underline"
+              >
                 Privacy Policy
               </a>
               .

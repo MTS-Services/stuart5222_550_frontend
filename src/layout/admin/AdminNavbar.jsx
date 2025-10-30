@@ -37,8 +37,10 @@ const AdminNavbar = () => {
 
         {/* 🧑 User Info */}
         <div className="font-medium text-gray-800">
-          <h2 className="text-sm font-semibold leading-tight">John Davis</h2>
-          <p className="text-xs text-gray-500">Administrator</p>
+          <h2 className="font-raleway text-sm font-semibold leading-tight">
+            John Davis
+          </h2>
+          <p className="font-raleway text-xs text-gray-500">Administrator</p>
         </div>
         <button
           onClick={handleLogout}

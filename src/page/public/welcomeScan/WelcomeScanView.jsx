@@ -47,7 +47,7 @@ const WelcomeScanView = () => {
       <div className="mx-auto flex max-w-[600px] items-center justify-center">
         <div className="w-full">
           {/* Paragraph */}
-          <p className="mx-auto py-2.5 text-center text-xs font-normal leading-4 md:py-5 md:text-base">
+          <p className="mx-auto py-2.5 text-center font-raleway text-xs font-normal leading-4 md:py-5 md:text-base">
             If you’re reading this, it means I – or one of my wonderful friends
             – saw something in you. Maybe it was your smile, your energy, or the
             way you carried yourself. You weren’t obviously partnered, and if
@@ -62,13 +62,13 @@ const WelcomeScanView = () => {
             <div className="flex flex-col text-start text-sm">
               {/* QR Code Status Indicator */}
               {loading && (
-                <div className="text-sm font-medium text-orange-500">
+                <div className="font-raleway text-sm font-medium text-orange-500">
                   🔍 Scanning QR Code...
                 </div>
               )}
 
               {error && (
-                <div className="text-sm font-medium text-red-500">
+                <div className="font-raleway text-sm font-medium text-red-500">
                   <p>❌ QR Scan Failed: {error}</p>
                 </div>
               )}
@@ -76,10 +76,10 @@ const WelcomeScanView = () => {
               {success && data && (
                 <div className="flex gap-4">
                   <div>
-                    <p className="text-sm font-medium text-green-500">
+                    <p className="font-raleway text-sm font-medium text-green-500">
                       ✅ QR Code Scanned Successfully
                     </p>
-                    <p className="text-xs font-medium text-red-500">
+                    <p className="font-raleway text-xs font-medium text-red-500">
                       {data.message}
                     </p>
                   </div>
@@ -107,10 +107,10 @@ const WelcomeScanView = () => {
 
                 {/* Text */}
                 <div className="flex flex-col text-start text-sm">
-                  <p className="font-semibold text-white">
+                  <p className="font-raleway font-semibold text-white">
                     Read terms and conditions
                   </p>
-                  <p className="text-sm text-orange-500">
+                  <p className="font-raleway text-sm text-orange-500">
                     Yes, I have accepted the terms and conditions.
                   </p>
                 </div>

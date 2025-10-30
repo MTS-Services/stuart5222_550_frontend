@@ -37,7 +37,7 @@ const SidebarLink = ({ link, active, onClick }) => (
       <div className="absolute left-0 top-0 h-full w-1 rounded-br-sm rounded-tr-sm bg-[#F07400]" />
     )}
     <span className="flex items-center justify-center">{link.icon}</span>
-    <span className="whitespace-nowrap">{link.name}</span>
+    <span className="whitespace-nowrap font-raleway">{link.name}</span>
   </button>
 );
 

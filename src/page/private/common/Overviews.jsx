@@ -51,14 +51,14 @@ const Overviews = () => {
     <>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="font-poppins text-2xl font-semibold text-[#002244]">
+          <h2 className="font-raleway text-2xl font-semibold text-[#002244]">
             Dashboard Overview
           </h2>
-          <p className="mb-4 mt-1 font-lato text-base font-normal text-[#464646]">
+          <p className="mb-4 mt-1 font-raleway text-base font-normal text-[#464646]">
             Monitor your user performance
           </p>
 
-          <h3 className="font-poppins text-base font-normal leading-normal text-[#111827]">
+          <h3 className="font-raleway text-base font-normal leading-normal text-[#111827]">
             {filter === "Today"
               ? "Today’s Overview"
               : filter === "This Week"

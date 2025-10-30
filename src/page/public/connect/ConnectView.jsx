@@ -32,7 +32,7 @@ const LetsConnectView = () => {
       <div className="mx-auto max-w-[600px]">
         <h3
           onClick={() => navigate(-1)}
-          className="flex cursor-pointer items-center gap-2 text-white"
+          className="flex cursor-pointer items-center gap-2 font-raleway text-white"
         >
           <IoMdArrowBack /> Back
         </h3>
@@ -52,7 +52,7 @@ const LetsConnectView = () => {
         </div>
 
         <div className="mt-3 rounded-lg bg-[#FFFFFF14] p-4 text-base font-medium text-[#FFFFFF]">
-          <p className="flex items-center justify-between">
+          <p className="flex items-center justify-between font-raleway">
             Name : {name}
             <button
               type="button"
@@ -67,7 +67,7 @@ const LetsConnectView = () => {
               )}
             </button>
           </p>
-          <p className="my-4 flex items-center justify-between">
+          <p className="my-4 flex items-center justify-between font-raleway">
             E-mail : {email}
             <button
               type="button"
@@ -82,7 +82,7 @@ const LetsConnectView = () => {
               )}
             </button>
           </p>
-          <p className="flex items-center justify-between">
+          <p className="flex items-center justify-between font-raleway">
             Phone number : {phone}
             <button
               type="button"
