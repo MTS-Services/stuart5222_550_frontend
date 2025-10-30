@@ -1,17 +1,14 @@
-import { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
-import AdminNavbar from './AdminNavbar';
-import AdminSidebar from './AdminSidebar';
-import { useDispatch } from 'react-redux';
+import { useEffect } from "react";
+import { Outlet } from "react-router-dom";
+import AdminNavbar from "./AdminNavbar";
+import AdminSidebar from "./AdminSidebar";
+import { useDispatch } from "react-redux";
 
-import {
-  fetchDashboardData,
-  fetchAdminSettingsProfile,
-} from '../../features/admin/home/dashboardFetch';
 import {
   getAdminNotifications,
   getUnreadNotificationsCount,
-} from '../../features/admin/notifications/notificationsFetch';
+} from "../../features/admin/notifications/notificationsFetch";
+import { fetchAdminSettingsProfile } from "../../features/admin/home/dashboardFetch";
 
 /* ---------------- MAIN LAYOUT ---------------- */
 const AdminLayout = () => {
@@ -20,26 +17,25 @@ const AdminLayout = () => {
   useEffect(() => {
     dispatch(getAdminNotifications({ page: 0, limit: 20 }));
     dispatch(fetchAdminSettingsProfile());
-    dispatch(fetchDashboardData());
     dispatch(getUnreadNotificationsCount());
   }, [dispatch]);
 
   return (
-    <div className='flex h-screen bg-gray-50'>
+    <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <div className='hidden lg:block w-64'>
+      <div className="hidden w-64 lg:block">
         <AdminSidebar />
       </div>
 
       {/* Mobile Sidebar */}
-      <div className='lg:hidden'>
+      <div className="lg:hidden">
         <AdminSidebar />
       </div>
 
       {/* Main Area */}
-      <div className='flex flex-col flex-1 overflow-hidden'>
+      <div className="flex flex-1 flex-col overflow-hidden">
         <AdminNavbar />
-        <main className='flex-1 overflow-y-auto p-6 bg-[#F9FAFB]'>
+        <main className="flex-1 overflow-y-auto bg-[#F9FAFB] p-6">
           <Outlet />
         </main>
       </div>

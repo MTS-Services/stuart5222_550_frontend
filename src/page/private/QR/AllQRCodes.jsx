@@ -1,18 +1,17 @@
-import { useDispatch, useSelector } from 'react-redux';
-import QRCard from '../../../components/common/QRCard';
-import { useEffect } from 'react';
-import { getUserQRcode } from '../../../features/admin/home/dashboardFetch';
-import { useParams } from 'react-router-dom';
-import Skeleton from '../../../components/ui/Skeleton';
+import { useDispatch, useSelector } from "react-redux";
+import QRCard from "../../../components/common/QRCard";
+import { useEffect } from "react";
+import { getUserQRcode } from "../../../features/admin/home/dashboardFetch";
+import { useParams } from "react-router-dom";
+import Skeleton from "../../../components/ui/Skeleton";
 
 const AllQRCodes = () => {
   const dispatch = useDispatch();
   const { email: user_email } = useParams();
 
   const { qrCodeList, qrCodeUser, loading } = useSelector(
-    (state) => state.dashboard
+    (state) => state.dashboard,
   );
-  console.log(qrCodeList.length);
   useEffect(() => {
     if (user_email) {
       dispatch(getUserQRcode(user_email));
@@ -21,25 +20,25 @@ const AllQRCodes = () => {
 
   if (loading) {
     return (
-      <div className='p-4'>
-        <h1 className='text-2xl font-bold'>QR-CODE LIST</h1>
-        <div className='grid grid-cols-2 md:grid-cols-6 gap-4 py-6'>
-          {Array.from({ length: 6 }).map((_, i) => (
+      <div className="p-4">
+        <h1 className="text-2xl font-bold">QR-CODE LIST</h1>
+        <div className="grid grid-cols-2 gap-4 py-6 md:grid-cols-6">
+          {Array.from({ length: 1 }).map((_, i) => (
             <div
               key={i}
-              className='rounded-xl border p-4 bg-white flex flex-col items-center justify-center'
-              style={{ height: '360px', width: '100%' }}
+              className="flex flex-col items-center justify-center rounded-xl border bg-white p-4"
+              style={{ height: "360px", width: "100%" }}
             >
               {/* QR Placeholder */}
               <Skeleton
-                width='180px'
-                height='180px'
-                className='mb-4 rounded-md'
+                width="180px"
+                height="180px"
+                className="mb-4 rounded-md"
               />
 
               {/* Text placeholders */}
-              <Skeleton width='60%' height='0.8rem' className='mb-2' />
-              <Skeleton width='40%' height='0.8rem' />
+              <Skeleton width="60%" height="0.8rem" className="mb-2" />
+              <Skeleton width="40%" height="0.8rem" />
             </div>
           ))}
         </div>
@@ -48,23 +47,23 @@ const AllQRCodes = () => {
   }
 
   return (
-    <div className='p-4'>
-      <div className='flex justify-between items-center'>
+    <div className="p-4">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className='text-2xl font-bold'>QR-CODE LIST</h1>
+          <h1 className="text-2xl font-bold">QR-CODE LIST</h1>
           <h2>Total Card: ({qrCodeList.length})</h2>
         </div>
         <div>
-          <p className='text-gray-700'>
-            Email: {qrCodeUser?.email || 'Unknown Email'}
+          <p className="text-gray-700">
+            Email: {qrCodeUser?.email || "Unknown Email"}
           </p>
-          <p className='text-gray-700'>
-            Name: {qrCodeUser?.name || 'Unknown User'}
+          <p className="text-gray-700">
+            Name: {qrCodeUser?.name || "Unknown User"}
           </p>
         </div>
       </div>
 
-      <div className='grid grid-cols-2 md:grid-cols-6 gap-4 py-6'>
+      <div className="grid grid-cols-2 gap-4 py-6 md:grid-cols-6">
         {qrCodeList.map((card) => (
           <QRCard
             key={card.id}

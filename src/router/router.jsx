@@ -110,7 +110,7 @@ const router = createBrowserRouter(
           <Route path="notifications" element={<NotificationView />} />
           <Route path="user-edit" element={<UserEditView />} />
           <Route path="user-edit/:id" element={<EditDetailsView />} />
-          <Route path="user-edit/qr-code/:email" element={<AllQRCodes />} />
+          {/* <Route path="user-edit/qr-code/:email" element={<AllQRCodes />} /> */}
           <Route path="settings" element={<SettingsView />} />
         </Route>
       </Route>

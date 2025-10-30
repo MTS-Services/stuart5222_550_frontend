@@ -7,23 +7,21 @@ import {
 } from "react-icons/fa";
 import Skeleton from "../../../components/ui/Skeleton";
 
-export const AllCard = ({ dashboardData, loading, filter }) => {
-  // pick the correct data set based on filter
-  const filteredData = dashboardData?.[filter] || {};
+export const AllCard = ({ loading, analyticsData, dashboardData, filter }) => {
   const overview = dashboardData?.overview || {};
 
   const cardData = [
     {
       id: 1,
       title: "Total Users",
-      value: filteredData?.users ?? overview?.totalUsers ?? "--",
+      value: analyticsData?.users ?? overview?.totalUsers ?? "--",
       icon: <FaUsers className="h-5 w-5 text-gray-800" />,
       color: "bg-blue-50",
     },
     {
       id: 2,
       title: "Wait List",
-      value: dashboardData?.waitlistUsers ?? "--",
+      value: dashboardData?.userStatus?.waitlist ?? "--",
       icon: <FaClock className="h-5 w-5 text-gray-800" />,
       color: "bg-yellow-50",
     },
@@ -37,28 +35,32 @@ export const AllCard = ({ dashboardData, loading, filter }) => {
     {
       id: 4,
       title: "Verified Profiles",
-      value: filteredData?.profiles ?? dashboardData?.verifiedProfiles ?? "--",
+      value:
+        analyticsData?.profiles ??
+        dashboardData?.profileStatus?.approved ??
+        "--",
       icon: <FaCheckCircle className="h-5 w-5 text-gray-800" />,
       color: "bg-green-50",
     },
     {
       id: 5,
       title: "Active Cards",
-      value: filteredData?.cards ?? dashboardData?.activeCards ?? "--",
+      value:
+        analyticsData?.cards ?? dashboardData?.data?.cardStatus?.active ?? "--",
       icon: <FaIdCard className="h-5 w-5 text-gray-800" />,
       color: "bg-purple-50",
     },
     {
       id: 6,
       title: "Total Scans",
-      value: filteredData?.scans ?? dashboardData?.totalScans ?? "--",
+      value: analyticsData?.scans ?? overview?.totalScans ?? "--",
       icon: <FaIdCard className="h-5 w-5 text-gray-800" />,
       color: "bg-purple-50",
     },
     {
       id: 7,
       title: "Total Revenue",
-      value: filteredData?.revenue?.amount ?? overview?.totalRevenue ?? "--",
+      value: analyticsData?.revenue?.amount ?? overview?.totalRevenue ?? "--",
       icon: <FaDollarSign className="h-5 w-5 text-gray-800" />,
       color: "bg-green-50",
     },
@@ -108,7 +110,7 @@ export const AllCard = ({ dashboardData, loading, filter }) => {
             </span>
             <div className={`${item.color} rounded-lg p-3`}>{item.icon}</div>
           </div>
-          <p className="text-xs font-light text-gray-500">vs last {filter}</p>
+          <p className="text-xs font-light text-gray-500">{filter}</p>
         </div>
       ))}
     </div>

@@ -17,6 +17,7 @@
     "@stripe/stripe-js": "^8.1.0",
     "@tailwindcss/vite": "^4.1.14",
     "axios": "^1.12.2",
+    "dayjs": "^1.11.18",
     "html-to-image": "^1.11.13",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.544.0",

@@ -1,29 +1,29 @@
-import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   adminUserApprovedProfile,
   adminUserRejectedProfile,
-} from '../../../features/admin/management/usreFetch';
+} from "../../../features/admin/management/usreFetch";
 
 const UserDetailsView = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const dispatch = useDispatch();
   const { userProfiles, isLoading, error } = useSelector(
-    (state) => state.adminUsers
+    (state) => state.adminUsers,
   );
 
   const user = userProfiles?.find((u) => u.id === Number(id));
 
-  const [rejectionReason, setRejectionReason] = useState('');
+  const [rejectionReason, setRejectionReason] = useState("");
   const [loading, setLoading] = useState({ approve: false, reject: false });
 
-  if (isLoading) return <div className='p-6 text-center'>Loading...</div>;
+  if (isLoading) return <div className="p-6 text-center">Loading...</div>;
   if (error)
-    return <div className='p-6 text-center text-red-600'>Error: {error}</div>;
-  if (!user) return <div className='p-6 text-center'>User not found</div>;
+    return <div className="p-6 text-center text-red-600">Error: {error}</div>;
+  if (!user) return <div className="p-6 text-center">User not found</div>;
 
   const {
     user: userInfo,
@@ -43,9 +43,9 @@ const UserDetailsView = () => {
     setLoading({ approve: true, reject: false });
     try {
       await dispatch(adminUserApprovedProfile({ id: user.id })).unwrap();
-      toast.success('User approved!');
+      toast.success("User approved!");
     } catch (err) {
-      toast.error(err.message || 'Approval failed');
+      toast.error(err.message || "Approval failed");
     } finally {
       setLoading({ approve: false, reject: false });
     }
@@ -54,7 +54,7 @@ const UserDetailsView = () => {
   // ❌ Reject
   const handleReject = async () => {
     if (!rejectionReason.trim()) {
-      toast.error('Please enter a rejection reason');
+      toast.error("Please enter a rejection reason");
       return;
     }
 
@@ -64,12 +64,12 @@ const UserDetailsView = () => {
         adminUserRejectedProfile({
           id: user.id,
           reason: rejectionReason.trim(),
-        })
+        }),
       ).unwrap();
-      toast.success('User rejected!');
-      setRejectionReason(''); // clear after success
+      toast.success("User rejected!");
+      setRejectionReason(""); // clear after success
     } catch (err) {
-      toast.error(err.message || 'Rejection failed');
+      toast.error(err.message || "Rejection failed");
     } finally {
       setLoading({ approve: false, reject: false });
     }
@@ -80,55 +80,59 @@ const UserDetailsView = () => {
   };
 
   return (
-    <div className='text-black p-6 space-y-8'>
+    <div className="space-y-8 p-6 text-black">
       {/* User Info */}
-      <div className='rounded-sm p-4 '>
-        <div className='flex flex-col md:flex-row items-start md:items-center justify-between gap-6'>
-          <div className='flex items-center gap-4'>
-            <div className='w-[80px] h-[80px]'>
+      <div className="rounded-sm p-4">
+        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+          <div className="flex items-center gap-4">
+            <div className="h-[80px] w-[80px]">
               <img
-                src={image?.[0] || '/img/placeholder.jpg'}
-                alt={userInfo.name || 'User'}
-                className='rounded-full border object-cover w-full h-full'
-                onError={(e) => (e.target.src = '/img/placeholder.jpg')}
+                src={image?.[0] || "/img/placeholder.jpg"}
+                alt={userInfo.name || "User"}
+                className="h-full w-full rounded-full border object-cover"
+                onError={(e) => (e.target.src = "/img/placeholder.jpg")}
               />
             </div>
             <div>
-              <h3 className='text-base font-poppins font-medium text-[#252525]'>
+              <h3 className="font-poppins text-base font-medium text-[#252525]">
                 {userInfo.name}
               </h3>
-              <p className='text-sm font-lato text-[#242424] my-1.5'>
+              <p className="my-1.5 font-lato text-sm text-[#242424]">
                 {userInfo.email}
               </p>
-              <p className='text-xs text-[#464646]'>{userInfo.phone}</p>
+              <p className="text-xs text-[#464646]">{userInfo.phone}</p>
               <p>
                 Status:
-                <span className='bg-yellow-300 px-2 py-1 rounded-full text-white text-xs'>
+                <span className="rounded-full bg-yellow-300 px-2 py-1 text-xs text-white">
                   {user.status}
                 </span>
               </p>
             </div>
           </div>
 
-          <div className=' text-[#404040] space-y-1'>
-            <p>Age: {age}</p>
-            <p>Height: {height}</p>
-            <p>Body type: {bodyType}</p>
-            <p>Dealbreakers: {dealbreakers}</p>
+          <div className="space-y-1 text-[#404040]">
+            <div>Hello</div>
+
+            <div>
+              <p>Age: {age}</p>
+              <p>Height: {height}</p>
+              <p>Body type: {bodyType}</p>
+              <p>Dealbreakers: {dealbreakers}</p>
+            </div>
           </div>
         </div>
 
-        <div className='mt-6'>
-          <h2 className='text-2xl font-semibold font-raleway my-4'>Bio</h2>
+        <div className="mt-6">
+          <h2 className="my-4 font-raleway text-2xl font-semibold">Bio</h2>
           {bio ? (
             Array.isArray(bio) ? (
               bio.map((p, i) => (
-                <p key={i} className='text-base font-raleway my-2'>
+                <p key={i} className="my-2 font-raleway text-base">
                   {p}
                 </p>
               ))
             ) : (
-              <p className='text-base font-raleway'>{bio}</p>
+              <p className="font-raleway text-base">{bio}</p>
             )
           ) : (
             <p>No bio available</p>
@@ -137,38 +141,38 @@ const UserDetailsView = () => {
       </div>
 
       {/* Travel Info */}
-      <div className='bg-gradient-to-b border from-orange-500/10 to-white p-6 rounded-lg'>
-        <div className='text-xl font-bold text-neutral-800'>
-          <span className='uppercase'>I </span>
-          <span className='lowercase'>am traveling and will be in:</span>
+      <div className="rounded-lg border bg-gradient-to-b from-orange-500/10 to-white p-6">
+        <div className="text-xl font-bold text-neutral-800">
+          <span className="uppercase">I </span>
+          <span className="lowercase">am traveling and will be in:</span>
         </div>
-        <div className='flex flex-col gap-4 mt-4'>
-          <div className='flex items-center gap-3'>
-            <span className='text-orange-500 text-2xl'>📍</span>
-            <span className='text-xl font-medium'>Location: {location}</span>
+        <div className="mt-4 flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl text-orange-500">📍</span>
+            <span className="text-xl font-medium">Location: {location}</span>
           </div>
-          <div className='flex items-center gap-3'>
-            <span className='text-orange-500 text-2xl'>📅</span>
-            <span className='text-xl font-medium'>Start Date: {startDate}</span>
+          <div className="flex items-center gap-3">
+            <span className="text-2xl text-orange-500">📅</span>
+            <span className="text-xl font-medium">Start Date: {startDate}</span>
           </div>
-          <div className='flex items-center gap-3'>
-            <span className='text-orange-500 text-2xl'>📅</span>
-            <span className='text-xl font-medium'>End Date: {endDate}</span>
+          <div className="flex items-center gap-3">
+            <span className="text-2xl text-orange-500">📅</span>
+            <span className="text-xl font-medium">End Date: {endDate}</span>
           </div>
         </div>
       </div>
 
       {/* Images */}
       <div>
-        <h3 className='text-2xl font-semibold mb-5'>Images</h3>
-        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
+        <h3 className="mb-5 text-2xl font-semibold">Images</h3>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {image?.map((img, idx) => (
-            <div key={idx} className=''>
+            <div key={idx} className="">
               <img
                 src={img}
                 alt={`Img ${idx + 1}`}
-                className='w-full h-full object-cover rounded-md'
-                onError={(e) => (e.target.src = '/img/placeholder.jpg')}
+                className="h-full w-full rounded-md object-cover"
+                onError={(e) => (e.target.src = "/img/placeholder.jpg")}
               />
             </div>
           ))}
@@ -176,42 +180,42 @@ const UserDetailsView = () => {
       </div>
 
       {/* Action Section – NO MODAL */}
-      <div className='p-4 border border-gray-200 bg-white rounded-lg'>
-        <h3 className='text-xl font-medium mb-3'>Reject with Feedback</h3>
+      <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <h3 className="mb-3 text-xl font-medium">Reject with Feedback</h3>
         <textarea
           value={rejectionReason}
           onChange={(e) => setRejectionReason(e.target.value)}
-          placeholder='Write a reason for rejection...'
-          className='w-full min-h-[120px] p-3 border border-gray-300 rounded bg-[#E6EEF6] focus:outline-none focus:ring-2 focus:ring-orange-300'
+          placeholder="Write a reason for rejection..."
+          className="min-h-[120px] w-full rounded border border-gray-300 bg-[#E6EEF6] p-3 focus:outline-none focus:ring-2 focus:ring-orange-300"
         />
-        <div className='mt-4 space-x-4'>
+        <div className="mt-4 space-x-4">
           <button
             onClick={handleApprove}
             disabled={loading.approve}
-            className={`flex-1 py-2.5 w-64 rounded font-medium ${
+            className={`w-64 flex-1 rounded py-2.5 font-medium ${
               loading.approve
-                ? 'bg-green-400 cursor-not-allowed'
-                : 'bg-green-600 hover:bg-green-700 text-white'
+                ? "cursor-not-allowed bg-green-400"
+                : "bg-green-600 text-white hover:bg-green-700"
             }`}
           >
-            {loading.approve ? 'Approving...' : 'Approve'}
+            {loading.approve ? "Approving..." : "Approve"}
           </button>
 
           <button
             onClick={handleReject}
             disabled={loading.reject}
-            className={`flex-1 py-2.5 w-64 rounded font-medium ${
+            className={`w-64 flex-1 rounded py-2.5 font-medium ${
               loading.reject
-                ? 'bg-orange-400 cursor-not-allowed'
-                : 'bg-orange-500 hover:bg-orange-600 text-white'
+                ? "cursor-not-allowed bg-orange-400"
+                : "bg-orange-500 text-white hover:bg-orange-600"
             }`}
           >
-            {loading.reject ? 'Rejecting...' : 'Reject'}
+            {loading.reject ? "Rejecting..." : "Reject"}
           </button>
 
           <button
             onClick={handleCencel}
-            className={`flex-1 py-2.5 w-64 rounded font-medium bg-red-500 hover:bg-orange-600 text-white `}
+            className={`w-64 flex-1 rounded bg-red-500 py-2.5 font-medium text-white hover:bg-orange-600`}
           >
             Cancel
           </button>

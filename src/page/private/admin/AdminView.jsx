@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
-import { WaitListTable } from './components/WaitListTable';
-import { useDispatch } from 'react-redux';
-import { adminUserList } from '../../../features/admin/management/usreFetch';
-import Overviews from '../common/Overviews';
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import Overviews from "../common/Overviews";
+import { WaitListTable } from "./components/WaitListTable";
+import { adminUserList } from "../../../features/admin/management/usreFetch";
+import { fetchDashboardData } from "../../../features/admin/home/dashboardFetch";
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();
@@ -10,17 +11,15 @@ const AdminDashboard = () => {
   const limit = 10;
 
   useEffect(() => {
-    // Later you can modify this dispatch to include date filter params if API supports it
-    dispatch(adminUserList({ page: page, limit: 50, status: 'WAITLIST' }));
+    dispatch(adminUserList({ page: page, limit: 50, status: "WAITLIST" }));
   }, [dispatch, page]);
 
   return (
-    <div className='text-black md:p-8'>
+    <div className="text-black md:p-8">
       {/* Header */}
       <Overviews />
-
       <div>
-        <h2 className='md:text-[28px] font-semibold font-poppins text-black my-3'>
+        <h2 className="my-3 font-poppins font-semibold text-black md:text-[28px]">
           Wait List
         </h2>
         {/* 🧾 Waitlist Table */}
