@@ -9,7 +9,6 @@ import Skeleton from "../../../components/ui/Skeleton";
 
 export const AllCard = ({ loading, analyticsData, dashboardData, filter }) => {
   const overview = dashboardData?.overview || {};
-
   const cardData = [
     {
       id: 1,
@@ -46,7 +45,7 @@ export const AllCard = ({ loading, analyticsData, dashboardData, filter }) => {
       id: 5,
       title: "Active Cards",
       value:
-        analyticsData?.cards ?? dashboardData?.data?.cardStatus?.active ?? "--",
+        analyticsData?.cardStatus ?? dashboardData?.cardStatus?.active ?? "--",
       icon: <FaIdCard className="h-5 w-5 text-gray-800" />,
       color: "bg-purple-50",
     },
