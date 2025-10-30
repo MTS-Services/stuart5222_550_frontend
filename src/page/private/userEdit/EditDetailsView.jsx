@@ -6,24 +6,25 @@ import {
 } from "../../../features/admin/management/usreFetch";
 import { useEffect, useState } from "react";
 import QRCard from "../../../components/common/QRCard";
-import CustomModal from "../../../components/common/CustomModal";
+// import CustomModal from "../../../components/common/CustomModal";
+// import { formatDate } from "../../../utils/formatDate";
 import { getUserQRcode } from "../../../features/admin/home/dashboardFetch";
-import { formatDate } from "../../../utils/formatDate";
 
 const EditDetailsView = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const { qrCodeList } = useSelector((state) => state.dashboard);
+  console.log("qrCodeList:", qrCodeList);
   const { approved_list, isLoading, error } = useSelector(
     (state) => state.adminUsers,
   );
   const user = approved_list.find((u) => u.id === Number(id));
-  const qr_code = qrCodeList?.scans;
+  // const qr_code = qrCodeList?.scans;
   const [loading, setLoading] = useState({ approve: false, reject: false });
 
-  const [isOpen, setIsOpen] = useState(false);
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  // const [isOpen, setIsOpen] = useState(false);
+  // const openModal = () => setIsOpen(true);
+  // const closeModal = () => setIsOpen(false);
   const [rejectionReason, setRejectionReason] = useState("");
 
   const user_email = user?.email;
@@ -148,7 +149,7 @@ const EditDetailsView = () => {
                 </p>
               )} */}
             </div>
-            <CustomModal isOpen={isOpen} onClose={closeModal} size="2xl">
+            {/* <CustomModal isOpen={isOpen} onClose={closeModal} size="2xl">
               <div className="flex flex-col items-center justify-center space-y-4 text-center">
                 <p>QR Code Details</p>
                 <div className="flex flex-col items-center justify-center gap-4 border">
@@ -200,7 +201,7 @@ const EditDetailsView = () => {
                   </tbody>
                 </table>
               </div>
-            </CustomModal>
+            </CustomModal> */}
 
             <div>
               <p className="font-raleway">Age: {age}</p>

@@ -189,9 +189,9 @@ const CheckoutView = () => {
           ].map((item, i) => (
             <p
               key={i}
-              className="my-3 flex items-center gap-3 text-base font-medium"
+              className="my-3 flex items-center gap-3 font-raleway text-base font-medium"
             >
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-orange-500 p-2">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-orange-500 p-2 font-raleway">
                 <GiCheckMark className="h-6 w-6" />
               </span>
               {item}
@@ -200,7 +200,9 @@ const CheckoutView = () => {
         </div>
 
         <div className="mt-5 md:mt-8">
-          <h2 className="text-center text-[28px] font-bold">Plus</h2>
+          <h2 className="text-center font-raleway text-[28px] font-bold">
+            Plus
+          </h2>
           <div className="mb-7 mt-4 flex items-center justify-center rounded-xl">
             <div className="flex w-full max-w-3xl gap-5 md:flex-row">
               {plans.map((plan) => (
@@ -236,10 +238,10 @@ const CheckoutView = () => {
                       />
                     </div>
                     <div className="">
-                      <p className="text-base font-bold text-white">
+                      <p className="font-raleway text-base font-bold text-white">
                         {plan.title}
                       </p>
-                      <p className="text-sm font-normal text-white">
+                      <p className="font-raleway text-sm font-normal text-white">
                         {plan.price}
                       </p>
                     </div>

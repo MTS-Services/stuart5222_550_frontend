@@ -104,8 +104,8 @@ export const AllCard = ({ loading, analyticsData, dashboardData, filter }) => {
           <p className="mb-2 font-raleway text-sm font-semibold text-gray-700 md:text-lg">
             {item.title}
           </p>
-          <div className="mb-3 flex items-center justify-between">
-            <span className="text-2xl font-semibold text-gray-900">
+          <div className="mb-3 flex items-center justify-between font-raleway">
+            <span className="font-raleway text-2xl font-semibold text-gray-900">
               {item.value}
             </span>
             <div className={`${item.color} rounded-lg p-3`}>{item.icon}</div>

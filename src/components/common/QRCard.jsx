@@ -23,13 +23,29 @@ const QRCard = ({ qrCode, scanCount, maxScans }) => {
   };
 
   return (
-    <div className="">
+    <div className="group relative inline-block">
+      <div ref={cardRef} className="">
+        <QRCodeCanvas
+          value={scanUrl}
+          bgColor="#ffffff"
+          fgColor="#000000"
+          includeMargin={true}
+        />
+      </div>
+      <button
+        onClick={handleDownload}
+        className="absolute inset-0 flex items-center justify-center rounded-xl bg-black/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      >
+        <span className="flex items-center gap-2 rounded-lg border border-gray-500 bg-black px-3 py-2 font-semibold text-white">
+          <FaDownload size={20} />
+        </span>
+      </button>
       {/* QR card container */}
       {/* <p className="mb-2 font-semibold text-gray-700">
         QR Code: {qrCode.slice(0, 8)}...
       </p> */}
-      <div ref={cardRef}>
-        {/* QR or expired message */}
+      {/* QR or expired message */}
+      {/* <div ref={cardRef}>
         {isExpired ? (
           <div className="flex flex-col items-center justify-center rounded-lg border border-gray-400 bg-gray-100 p-6">
             <p className="text-sm font-semibold text-red-600">
@@ -45,7 +61,7 @@ const QRCard = ({ qrCode, scanCount, maxScans }) => {
             includeMargin={true}
           />
         )}
-      </div>
+      </div> */}
       {/* Remaining scans */}
       {/* <p
         className={`mt-3 text-xs ${

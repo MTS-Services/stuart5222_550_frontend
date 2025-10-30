@@ -59,7 +59,7 @@ const LoginView = () => {
             />
           </div>
           <div>
-            <h1 className="text-center text-xl font-bold text-black">
+            <h1 className="text-center font-raleway text-xl font-bold text-black">
               Welcome Back
             </h1>
           </div>
@@ -70,7 +70,7 @@ const LoginView = () => {
             <div className="space-y-2">
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block font-raleway text-sm font-medium text-gray-700"
               >
                 Email Address
               </label>
@@ -95,7 +95,7 @@ const LoginView = () => {
             <div className="space-y-2">
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
+                className="block font-raleway text-sm font-medium text-gray-700"
               >
                 Password
               </label>
@@ -138,7 +138,7 @@ const LoginView = () => {
                 />
                 <label
                   htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-700"
+                  className="ml-2 block font-raleway text-sm text-gray-700"
                 >
                   Remember me
                 </label>
@@ -156,7 +156,7 @@ const LoginView = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full transform rounded-xl bg-[#FF8C00] px-4 py-3 font-medium text-white transition-all duration-200 hover:scale-[1.02] hover:bg-[#000066] focus:outline-none focus:ring-2 focus:ring-[#000044] focus:ring-offset-2 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full transform rounded-xl bg-[#FF8C00] px-4 py-3 font-raleway font-medium text-white transition-all duration-200 hover:scale-[1.02] hover:bg-[#000066] focus:outline-none focus:ring-2 focus:ring-[#000044] focus:ring-offset-2 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? (
                 <div className="flex items-center justify-center">
