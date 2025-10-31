@@ -1,30 +1,26 @@
 import { GrLocation } from "react-icons/gr";
 import { FaRegCalendar } from "react-icons/fa";
-
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../../../features/public/profile/profileFetch";
 
 const UserView = () => {
   const dispatch = useDispatch();
-
-  // Get QR code data (contains profile email)
-  const { data: qrData } = useSelector((state) => state.qrcode);
+  const { mail } = useParams();
 
   // Get actual profile data
   const { userProfile, fetchLoading, error } = useSelector(
     (state) => state.profile,
   );
-  console.log(userProfile);
-  const userEmail = qrData?.profile?.contactEmail;
+
   const images = userProfile?.images || [];
 
   useEffect(() => {
-    if (userEmail) {
-      dispatch(fetchUserProfile({ userMail: userEmail }));
+    if (mail) {
+      dispatch(fetchUserProfile({ userMail: mail }));
     }
-  }, [dispatch, userEmail]);
+  }, [dispatch, mail]);
 
   // Show loading state
   if (fetchLoading) {

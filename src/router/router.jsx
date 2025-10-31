@@ -75,7 +75,7 @@ const router = createBrowserRouter(
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomeView />} />
           <Route path="welcome/:id" element={<WelcomeScanView />} />
-          <Route path="user-profile" element={<UserView />} />
+          <Route path="user-profile/:mail" element={<UserView />} />
           <Route path="user-profile/gallery" element={<GalleryView />} />
           <Route path="user-profile/connect" element={<LetsConnectView />} />
           <Route

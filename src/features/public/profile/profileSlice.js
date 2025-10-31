@@ -1,9 +1,9 @@
 // store/slices/profileSlice.js
-import { createSlice } from '@reduxjs/toolkit';
-import { fetchUserProfile, submitProfile } from './profileFetch';
+import { createSlice } from "@reduxjs/toolkit";
+import { fetchUserProfile, submitProfile } from "./profileFetch";
 
 const profileSlice = createSlice({
-  name: 'profile',
+  name: "profile",
   initialState: {
     submitLoading: false,
     fetchLoading: false,
@@ -65,14 +65,19 @@ const profileSlice = createSlice({
       })
 
       // Fetch User Profile Cases
+      .addCase(fetchUserProfile.pending, (state) => {
+        state.fetchLoading = true;
+        state.error = null;
+        state.success = false;
+      })
       .addCase(fetchUserProfile.fulfilled, (state, action) => {
-        state.submitLoading = false;
+        state.fetchLoading = false;
         state.success = true;
         state.userProfile = action.payload;
       })
       .addCase(fetchUserProfile.rejected, (state, action) => {
-        state.submitLoading = false;
-        state.error = action.payload;
+        state.fetchLoading = false;
+        state.error = action.payload || "Failed to fetch user profile";
         state.success = false;
       });
   },

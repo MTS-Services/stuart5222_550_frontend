@@ -13,8 +13,10 @@ const WelcomeScanView = () => {
   const { data, loading, error, success } = useSelector(
     (state) => state.qrcode,
   );
+  console.log("data:", data?.profile?.contactEmail);
 
-  // console.log(data?.profile?.contactEmail);
+  const mail = data?.profile?.contactEmail;
+
   useEffect(() => {
     if (id) {
       dispatch(qrCodeRequest({ qr_code: id }));
@@ -122,7 +124,7 @@ const WelcomeScanView = () => {
                 </h2>
                 <div className="mx-auto mt-[20px] flex w-[70%] items-center gap-4 font-raleway font-semibold md:w-full">
                   <div className="w-full">
-                    <Link to={`/user-profile`}>
+                    <Link to={`/user-profile/${mail}`}>
                       <button
                         type="submit"
                         className="w-full rounded-lg bg-orange-500 p-2.5 text-base text-white transition hover:bg-orange-600"
