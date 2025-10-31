@@ -8,8 +8,8 @@ const GalleryView = () => {
   const images = userProfile?.images || [];
 
   return (
-    <div className="bg-[#3B3B3D] px-[10px] py-2 sm:py-4 md:py-6 lg:py-8">
-      <div className="mx-auto max-w-[600px]">
+    <div className="mx-auto max-w-4xl bg-[#3B3B3D] px-[10px] py-2 sm:py-4 md:py-6 lg:py-8">
+      <div className="">
         <h3
           onClick={() => navigate(-1)}
           className="mb-3 flex cursor-pointer items-center gap-2 text-white"

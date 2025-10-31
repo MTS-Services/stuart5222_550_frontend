@@ -6,8 +6,9 @@ import CustomSelect from "./CustomSelect";
 import CustomDateInput from "./CustomDateInput";
 import { fetchDashboardData } from "../../../features/admin/home/dashboardFetch";
 import { filterFormate } from "../../../utils/formatDate";
-const today = filterFormate(new Date());
 
+const today = filterFormate(new Date());
+console.log(today);
 const Overviews = () => {
   const { dashboardData, loading } = useSelector((state) => state.dashboard);
   const [slectedDate, setSlectedDate] = useState({ from: today, to: today });
@@ -69,15 +70,19 @@ const Overviews = () => {
           </h3>
 
           {/* 🗓 Date Filter */}
-          <div className="mt-2 flex items-center gap-4 md:py-2">
-            <CustomSelect
-              options={["Today", "This Week", "This Month", "This Year"]}
-              value={filter}
-              onChange={(val) => setFilter(val)}
-              placeholder="Select Date Range"
-            />
+          <div className="mt-2 flex flex-col items-center gap-4 sm:flex-row sm:flex-wrap sm:justify-between md:py-2">
+            {/* Filter Select */}
+            <div className="w-full sm:w-auto">
+              <CustomSelect
+                options={["Today", "This Week", "This Month", "This Year"]}
+                value={filter}
+                onChange={(val) => setFilter(val)}
+                placeholder="Select Date Range"
+              />
+            </div>
 
-            <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
+            {/* Date Inputs */}
+            <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
               <CustomDateInput
                 label="From"
                 value={slectedDate.from || ""}
@@ -90,11 +95,12 @@ const Overviews = () => {
               />
             </div>
 
+            {/* Reload Button */}
             <button
               onClick={handleReload}
-              className="rounded-full bg-slate-200 p-1 hover:bg-slate-400"
+              className="rounded-full bg-slate-200 p-2 hover:bg-slate-400"
             >
-              <FaRedoAlt className="text-white" />
+              <FaRedoAlt className="text-slate-700" />
             </button>
           </div>
         </div>

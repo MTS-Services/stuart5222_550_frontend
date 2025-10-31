@@ -69,7 +69,7 @@ const UserView = () => {
   }
 
   return (
-    <div className="bg-[#3B3B3D] px-[10px] sm:py-4 md:py-6 lg:py-8">
+    <div className="mx-auto max-w-[600px] bg-[#3B3B3D] px-[10px] sm:py-4 md:py-6 lg:py-8">
       <div className="px-2 font-raleway text-white">
         <div className="flex justify-center py-[40px]">
           <img
@@ -96,10 +96,10 @@ const UserView = () => {
                   <FaRegCalendar size={20} />
                 </span>
                 <div className="text-start">
-                  <p className="font-raleway text-xl font-medium text-gray-300 md:text-2xl">
+                  <p className="font-raleway text-xl font-medium text-gray-300">
                     Start-Date: October 1, 2025
                   </p>
-                  <p className="font-raleway text-xl font-medium text-gray-300 md:text-2xl">
+                  <p className="font-raleway text-xl font-medium text-gray-300">
                     End-Date: October 20, 2025
                   </p>
                 </div>
@@ -109,7 +109,7 @@ const UserView = () => {
                 <span className="font-raleway text-xl text-orange-600">
                   <GrLocation size={20} />
                 </span>
-                <p className="font-raleway text-xl font-medium text-gray-300 md:text-2xl">
+                <p className="font-raleway text-xl font-medium text-gray-300">
                   Location: {userProfile.location}
                 </p>
               </div>
@@ -158,23 +158,23 @@ const UserView = () => {
                 Profile Details
               </h2>
               <div className="my-4 rounded-lg bg-[#505050] p-6">
-                <p className="font-raleway text-xl font-normal md:text-2xl">
+                <p className="font-raleway text-xl font-normal">
                   Name : {userProfile.displayName || "Not provided"}
                 </p>
-                <p className="my-5 font-raleway text-xl font-normal md:text-2xl">
+                <p className="my-5 font-raleway text-xl font-normal">
                   Age : {userProfile.age || "Not provided"}
                 </p>
-                <p className="font-raleway text-xl font-normal md:text-2xl">
+                <p className="font-raleway text-xl font-normal">
                   Height : {userProfile.height || "Not provided"}
                 </p>
-                <p className="my-5 font-raleway text-xl font-normal md:text-2xl">
+                <p className="my-5 font-raleway text-xl font-normal">
                   Body type : {userProfile.bodyType || "Not provided"}
                 </p>
-                <p className="font-raleway text-xl font-normal md:text-2xl">
+                <p className="font-raleway text-xl font-normal">
                   Area :{" "}
                   {userProfile.area || userProfile.location || "Not provided"}
                 </p>
-                <p className="my-5 font-raleway text-xl font-normal md:text-2xl">
+                <p className="my-5 font-raleway text-xl font-normal">
                   Dealbreakers : {userProfile.dealbreakers || "None specified"}
                 </p>
               </div>
