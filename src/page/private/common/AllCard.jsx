@@ -7,66 +7,61 @@ import {
 } from "react-icons/fa";
 import Skeleton from "../../../components/ui/Skeleton";
 
-export const AllCard = ({ loading, analyticsData, dashboardData, filter }) => {
-  const overview = dashboardData?.overview || {};
+export const AllCard = ({ loading, dashboardData, filter }) => {
   const cardData = [
     {
       id: 1,
       title: "Total Users",
-      value: analyticsData?.users ?? overview?.totalUsers ?? "--",
+      value: dashboardData?.users || "0",
       icon: <FaUsers className="h-5 w-5 text-gray-800" />,
       color: "bg-blue-50",
     },
     {
       id: 2,
       title: "Wait List",
-      value: dashboardData?.userStatus?.waitlist ?? "--",
+      value: dashboardData?.waitlist || "0",
       icon: <FaClock className="h-5 w-5 text-gray-800" />,
       color: "bg-yellow-50",
     },
     {
       id: 3,
       title: "Active Users",
-      value: dashboardData?.userStatus?.active ?? "--",
+      value: dashboardData?.active || "0",
       icon: <FaCheckCircle className="h-5 w-5 text-gray-800" />,
       color: "bg-green-50",
     },
     {
       id: 4,
       title: "Verified Profiles",
-      value:
-        analyticsData?.profiles ??
-        dashboardData?.profileStatus?.approved ??
-        "--",
+      value: dashboardData?.verifiedProfiles || "0",
       icon: <FaCheckCircle className="h-5 w-5 text-gray-800" />,
       color: "bg-green-50",
     },
     {
       id: 5,
       title: "Active Cards",
-      value:
-        analyticsData?.cardStatus ?? dashboardData?.cardStatus?.active ?? "--",
+      value: dashboardData?.cards || "0",
       icon: <FaIdCard className="h-5 w-5 text-gray-800" />,
       color: "bg-purple-50",
     },
     {
       id: 6,
       title: "Total Scans",
-      value: analyticsData?.scans ?? overview?.totalScans ?? "--",
+      value: dashboardData?.scans || "0",
       icon: <FaIdCard className="h-5 w-5 text-gray-800" />,
       color: "bg-purple-50",
     },
     {
       id: 7,
       title: "Total Revenue",
-      value: analyticsData?.revenue?.amount ?? overview?.totalRevenue ?? "--",
+      value: dashboardData?.totalRevenue || "0",
       icon: <FaDollarSign className="h-5 w-5 text-gray-800" />,
       color: "bg-green-50",
     },
     {
       id: 8,
       title: "Active Subscriptions",
-      value: overview?.activeSubscriptions ?? "--",
+      value: dashboardData?.activeSubscriptions || "0",
       icon: <FaIdCard className="h-5 w-5 text-gray-800" />,
       color: "bg-indigo-50",
     },
@@ -75,9 +70,9 @@ export const AllCard = ({ loading, analyticsData, dashboardData, filter }) => {
   if (loading) {
     return (
       <div className="mt-2 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-        {Array.from({ length: 4 }).map((_, i) => (
+        {Array.from({ length: 8 }).map((_, i) => (
           <div key={i} className="rounded-xl border bg-white p-5">
-            <Skeleton width="60%" height="1rem" className="mb-3" />
+            <Skeleton width="60%" height="2rem" className="mb-3" />
             <div className="mb-3 flex items-center justify-between">
               <Skeleton width="35%" height="2rem" />
               <Skeleton

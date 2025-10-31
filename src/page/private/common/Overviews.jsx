@@ -10,43 +10,30 @@ import { filterFormate } from "../../../utils/formatDate";
 const today = filterFormate(new Date());
 console.log(today);
 const Overviews = () => {
-  const { dashboardData, loading } = useSelector((state) => state.dashboard);
-  const [slectedDate, setSlectedDate] = useState({ from: today, to: today });
-  const [filter, setFilter] = useState("Today");
   const dispatch = useDispatch();
+  const { overview, loading } = useSelector((state) => state.dashboard);
+  const [slectedDate, setSlectedDate] = useState({ from: today, to: today });
+  const [filter, setFilter] = useState("today");
+
+  // console.log("dashboard:", overview);
+  // console.log("filter:", filter);
 
   useEffect(() => {
     if (slectedDate?.from && slectedDate?.to) {
       dispatch(
-        fetchDashboardData({ from: slectedDate.from, to: slectedDate.to }),
+        fetchDashboardData({
+          from: slectedDate.from,
+          to: slectedDate.to,
+          range: filter,
+        }),
       );
     }
-  }, [slectedDate, dispatch]);
+  }, [slectedDate, filter, dispatch]);
 
   const handleReload = () => window.location.reload();
   const handleDateChange = (key, value) => {
     setSlectedDate((prev) => ({ ...prev, [key]: value }));
   };
-
-  // Get analytics data based on filter
-  const getFilteredAnalytics = () => {
-    if (!dashboardData?.analytics) return null;
-    const { analytics } = dashboardData;
-    switch (filter) {
-      case "Today":
-        return analytics.today;
-      case "This Week":
-        return analytics.week;
-      case "This Month":
-        return analytics.month;
-      case "This Year":
-        return analytics.year;
-      default:
-        return analytics.today;
-    }
-  };
-
-  const analyticsData = getFilteredAnalytics();
 
   return (
     <>
@@ -74,7 +61,7 @@ const Overviews = () => {
             {/* Filter Select */}
             <div className="w-full sm:w-auto">
               <CustomSelect
-                options={["Today", "This Week", "This Month", "This Year"]}
+                options={["today", "week", "month", "year"]}
                 value={filter}
                 onChange={(val) => setFilter(val)}
                 placeholder="Select Date Range"
@@ -107,12 +94,7 @@ const Overviews = () => {
       </div>
 
       {/* 📊 Stats Cards */}
-      <AllCard
-        loading={loading}
-        filter={filter}
-        analyticsData={analyticsData}
-        dashboardData={dashboardData}
-      />
+      <AllCard loading={loading} filter={filter} dashboardData={overview} />
     </>
   );
 };

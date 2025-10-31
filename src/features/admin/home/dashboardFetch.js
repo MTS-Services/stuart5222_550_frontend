@@ -5,9 +5,9 @@ import { endpoints } from "../../../config/api/httpEndpoint";
 // Thunk to fetch dashboard data for admin home page
 export const fetchDashboardData = createAsyncThunk(
   "admin/fetchDashboardData",
-  async ({ from, to }, { rejectWithValue }) => {
+  async ({ from, to, range }, { rejectWithValue }) => {
     try {
-      const res = await GET(endpoints.admin.HOME_DATA, { from, to });
+      const res = await GET(endpoints.admin.HOME_DATA, { from, to, range });
       return res;
     } catch (error) {
       return rejectWithValue(error.message);

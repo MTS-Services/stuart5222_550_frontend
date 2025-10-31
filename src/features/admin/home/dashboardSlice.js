@@ -7,7 +7,7 @@ import {
 } from "./dashboardFetch";
 
 const initialState = {
-  dashboardData: [],
+  overview: [],
   profileSettings: [],
   qrCodeList: [],
   qrCodeUser: null,
@@ -25,15 +25,19 @@ const dashboardSlice = createSlice({
       .addCase(fetchDashboardData.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.success = false;
       })
       .addCase(fetchDashboardData.fulfilled, (state, action) => {
         state.loading = false;
-        state.dashboardData = action.payload.data || [];
+        state.success = true;
+        state.overview = action.payload?.data || action.payload || [];
+        state.lastFetched = new Date().toISOString();
       })
       .addCase(fetchDashboardData.rejected, (state, action) => {
         state.loading = false;
-        state.dashboardData = [];
-        state.error = action.payload;
+        state.success = false;
+        state.overview = [];
+        state.error = action.payload || "Failed to fetch dashboard data";
       })
 
       // --- admin profile settings  ---

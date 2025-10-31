@@ -86,9 +86,12 @@ const router = createBrowserRouter(
               </Elements>
             }
           />
-          <Route path="checkout/setup-profile" element={<SetupProfileView />} />
           <Route
-            path="checkout/setup-profile/edit"
+            path="checkout/setup-profile/:user_email"
+            element={<SetupProfileView />}
+          />
+          <Route
+            path="checkout/setup-profile/edit/:user_email"
             element={<EditProfileView />}
           />
         </Route>

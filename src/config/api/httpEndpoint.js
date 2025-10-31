@@ -38,6 +38,7 @@ export const endpoints = {
     WAITLIST: "/auth/register",
     SETUP_PROFILE: "/profile",
     EDIT_PROFILE: "/profile",
+    STATUS_CHANGE: "/profile/submit",
     SETTINGS: "/user/settings",
     QR_CODE: (qr_code) => `/qr-cards/scan/${qr_code}`,
     FETCH_PROFILE: (userMail) => `/profile/${userMail}`,

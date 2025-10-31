@@ -1,6 +1,10 @@
 // store/slices/profileSlice.js
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchUserProfile, submitProfile } from "./profileFetch";
+import {
+  fetchUserProfile,
+  profileStatusChange,
+  submitProfile,
+} from "./profileFetch";
 
 const profileSlice = createSlice({
   name: "profile",
@@ -44,6 +48,7 @@ const profileSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // SUBMIT PROFILE
       .addCase(submitProfile.pending, (state) => {
         state.submitLoading = true;
         state.success = false;
@@ -59,6 +64,23 @@ const profileSlice = createSlice({
         state.errors = {};
       })
       .addCase(submitProfile.rejected, (state, action) => {
+        state.submitLoading = false;
+        state.error = action.payload;
+        state.success = false;
+      })
+
+      //EDIT PROFILE
+      .addCase(profileStatusChange.pending, (state) => {
+        state.submitLoading = true;
+        state.success = false;
+        state.error = null;
+      })
+      .addCase(profileStatusChange.fulfilled, (state, action) => {
+        state.submitLoading = false;
+        state.success = true;
+        state.errors = {};
+      })
+      .addCase(profileStatusChange.rejected, (state, action) => {
         state.submitLoading = false;
         state.error = action.payload;
         state.success = false;

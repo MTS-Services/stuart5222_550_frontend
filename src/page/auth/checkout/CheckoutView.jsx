@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { GiCheckMark } from "react-icons/gi";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
 // Keep your plans array as-is
@@ -144,13 +144,13 @@ const CheckoutView = () => {
             <p>Status : {successMsg?.stripeStatus}</p>
             <p>Amount : ${successMsg?.amount}</p>
           </div>
-          <p>Follow Next Step:</p>
-          <button
-            onClick={() => window.location.replace("/checkout/setup-profile")}
-            className="mt-4 rounded-md border bg-green-500 px-4 py-2 text-white hover:bg-green-700"
+          <p className="py-5">Follow Next Step:</p>
+          <Link
+            to={`/checkout/setup-profile/${user_email}`}
+            className="rounded-md border bg-green-500 px-4 py-2 text-white hover:bg-green-700"
           >
             Go to profile setup
-          </button>
+          </Link>
         </div>
       </section>
     );

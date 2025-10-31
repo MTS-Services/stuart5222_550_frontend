@@ -6,11 +6,17 @@ import { Upload } from "lucide-react";
 import { toast } from "react-toastify";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { MdOutlinePrivacyTip } from "react-icons/md";
-import { submitProfile } from "../../../features/public/profile/profileFetch";
+import {
+  profileStatusChange,
+  submitProfile,
+} from "../../../features/public/profile/profileFetch";
 import { validateForm } from "../../../utils/validateForm";
 import { FaCamera } from "react-icons/fa";
+import { useParams } from "react-router-dom";
 
 const SetupProfileView = () => {
+  const { user_email } = useParams();
+  console.log("user_email", user_email);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [success, setSuccess] = useState(false);
@@ -73,7 +79,7 @@ const SetupProfileView = () => {
       startDate: form.startDate.value || null,
       endDate: form.endDate.value || null,
       location: form.location.value,
-      email: form.email.value,
+      email: user_email,
       phone: form.number.value || null,
     };
 
@@ -97,7 +103,7 @@ const SetupProfileView = () => {
     try {
       // 📤 Build FormData with image array
       const submitData = new FormData();
-      console.log("submitData:", submitData);
+
       // Append all text fields
       Object.entries(formData).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
@@ -113,7 +119,7 @@ const SetupProfileView = () => {
       await dispatch(submitProfile(submitData)).unwrap();
 
       toast.success("Profile submitted successfully for review!");
-      form.reset();
+      // form.reset();
       setSuccess(true);
       setImagePreviews([]);
       setFiles([]);
@@ -218,7 +224,7 @@ const SetupProfileView = () => {
                 Height <span className="text-red-500">*</span>
               </label>
               <input
-                type="text"
+                type="number"
                 name="height"
                 placeholder="Enter your Height"
                 className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${

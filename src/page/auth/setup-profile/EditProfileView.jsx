@@ -8,7 +8,11 @@ import { FaCamera } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { MdOutlinePrivacyTip } from "react-icons/md";
 import { validateForm } from "../../../utils/validateForm";
-import { submitEditProfile } from "../../../features/public/profile/profileFetch";
+import {
+  profileStatusChange,
+  submitEditProfile,
+} from "../../../features/public/profile/profileFetch";
+import { useParams } from "react-router-dom";
 
 const EditProfileView = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -17,6 +21,7 @@ const EditProfileView = () => {
   const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
+  const { user_email } = useParams();
 
   const dispatch = useDispatch();
   // ============================================
@@ -63,20 +68,21 @@ const EditProfileView = () => {
     const form = e.currentTarget;
 
     const formData = {
-      displayName: form.firstName.value, // ✅ Use displayName (matches your object)
+      displayName: form.firstName.value,
       age: form.age.value,
       height: form.height.value,
       bodyType: form.bodyType.value,
       area: form.area.value,
-      bio: form.textArea.value, // ✅ bio, not textArea
-      dealbreakers: form.dealBreaks.value, // ✅ corrected spelling
+      bio: form.textArea.value,
+      dealbreakers: form.dealBreaks.value,
       startDate: form.startDate.value || null,
       endDate: form.endDate.value || null,
       location: form.location.value,
-      email: form.email.value,
-      phone: form.number.value || null, // ✅ phone, not number
+      email: user_email,
+      phone: form.number.value || null,
+      gmail: form.gmail.value || null,
     };
-
+    console.log("formData:", formData);
     // ✅ Validate with files
     const validationErrors = validateForm(formData, files);
     if (Object.keys(validationErrors).length > 0) {
@@ -110,8 +116,10 @@ const EditProfileView = () => {
         submitData.append("image", file);
       });
 
+      console.log("submitData:", submitData);
       await dispatch(submitEditProfile(submitData)).unwrap();
-
+      console.log("TEST:", user_email);
+      await dispatch(profileStatusChange({ email: user_email }));
       toast.success("Profile submitted successfully for review!");
       form.reset();
       setSuccess(true);
@@ -136,10 +144,10 @@ const EditProfileView = () => {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#3B3B3D] px-[10px] py-10 font-raleway text-white sm:py-4 md:py-6 lg:py-8">
         <h2 className="mb-4 font-raleway text-xl font-bold md:text-[32px]">
-          Profile Edit Successful!
+          Your Profile Updated Successfully!
         </h2>
         <p className="font-raleway text-gray-400">
-          Your edit profile has been submitted for review.
+          Your Updated profile has been submitted for review.
         </p>
         <button
           onClick={() => window.location.replace("/")}
@@ -165,7 +173,7 @@ const EditProfileView = () => {
           </div>
           <div className="mb-6 text-center">
             <h2 className="font-raleway text-xl font-bold md:text-[32px]">
-              Edit Your Profile
+              Update Your Profile
             </h2>
           </div>
 
@@ -564,16 +572,16 @@ const EditProfileView = () => {
                   E-mail
                 </label>
                 <input
-                  type="email"
-                  name="email"
+                  type="gmail"
+                  name="gmail"
                   placeholder="Enter your unique email"
                   className={`h-11 rounded-lg bg-white px-3 text-sm font-medium text-gray-700 outline outline-1 ${
-                    errors.email ? "outline-red-500" : "outline-gray-300"
+                    errors.gamil ? "outline-red-500" : "outline-gray-300"
                   } focus:outline-orange-500 focus:ring-2 focus:ring-orange-400`}
                 />
-                {errors.email && (
+                {errors.gamil && (
                   <p className="font-raleway text-sm text-red-500">
-                    {errors.email}
+                    {errors.gamil}
                   </p>
                 )}
               </div>

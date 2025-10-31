@@ -1,51 +1,67 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { GET, POST, UPDATE } from '../../../config/api/httpMethods';
-import { endpoints } from '../../../config/api/httpEndpoint';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { GET, POST, UPDATE } from "../../../config/api/httpMethods";
+import { endpoints } from "../../../config/api/httpEndpoint";
 
 export const fetchUserProfile = createAsyncThunk(
-  'user/fetchProfile',
+  "user/fetchProfile",
   async ({ userMail }, { rejectWithValue }) => {
     try {
       const res = await GET(endpoints.user.FETCH_PROFILE(userMail));
 
       return res;
     } catch (err) {
-      console.error('❌ Failed to fetch user profile:', err);
+      console.error("❌ Failed to fetch user profile:", err);
       return rejectWithValue(
-        err.response?.data?.message || 'Failed to fetch user profile'
+        err.response?.data?.message || "Failed to fetch user profile",
       );
     }
-  }
+  },
 );
 
 export const submitProfile = createAsyncThunk(
-  'user/setProfile',
+  "user/setProfile",
   async (submitData, { rejectWithValue }) => {
     try {
       const res = await POST(endpoints.user.SETUP_PROFILE, submitData);
 
       return res;
     } catch (err) {
-      console.error('Failed to submit profile:', err);
+      console.error("Failed to submit profile:", err);
       return rejectWithValue(
-        err.response?.data?.message || 'Failed to submit profile'
+        err.response?.data?.message || "Failed to submit profile",
       );
     }
-  }
+  },
 );
 
 export const submitEditProfile = createAsyncThunk(
-  'user/editProfile',
+  "user/editProfile",
   async (submitData, { rejectWithValue }) => {
     try {
       const res = await UPDATE(endpoints.user.EDIT_PROFILE, submitData);
-
+      console.log("UPDATE Profile:", res);
       return res;
     } catch (err) {
-      console.error('Failed to submit profile:', err);
+      console.error("Failed to submit profile:", err);
       return rejectWithValue(
-        err.response?.data?.message || 'Failed to submit profile'
+        err.response?.data?.message || "Failed to submit profile",
       );
     }
-  }
+  },
+);
+
+export const profileStatusChange = createAsyncThunk(
+  "user/statusChange",
+  async ({ email }, { rejectWithValue }) => {
+    try {
+      const res = await POST(endpoints.user.STATUS_CHANGE, { email });
+      console.log("StatusChange:", res);
+      return res;
+    } catch (err) {
+      console.error("Failed to submit profile:", err);
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to submit profile",
+      );
+    }
+  },
 );
