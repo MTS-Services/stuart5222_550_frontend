@@ -7,7 +7,6 @@ export const fetchUserProfile = createAsyncThunk(
   async ({ userMail }, { rejectWithValue }) => {
     try {
       const res = await GET(endpoints.user.FETCH_PROFILE(userMail));
-
       return res;
     } catch (err) {
       console.error("❌ Failed to fetch user profile:", err);
@@ -23,7 +22,6 @@ export const submitProfile = createAsyncThunk(
   async (submitData, { rejectWithValue }) => {
     try {
       const res = await POST(endpoints.user.SETUP_PROFILE, submitData);
-
       return res;
     } catch (err) {
       console.error("Failed to submit profile:", err);
@@ -39,7 +37,6 @@ export const submitEditProfile = createAsyncThunk(
   async (submitData, { rejectWithValue }) => {
     try {
       const res = await UPDATE(endpoints.user.EDIT_PROFILE, submitData);
-      console.log("UPDATE Profile:", res);
       return res;
     } catch (err) {
       console.error("Failed to submit profile:", err);
@@ -55,7 +52,6 @@ export const profileStatusChange = createAsyncThunk(
   async ({ email }, { rejectWithValue }) => {
     try {
       const res = await POST(endpoints.user.STATUS_CHANGE, { email });
-      console.log("StatusChange:", res);
       return res;
     } catch (err) {
       console.error("Failed to submit profile:", err);

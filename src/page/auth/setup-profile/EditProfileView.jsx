@@ -82,7 +82,7 @@ const EditProfileView = () => {
       phone: form.number.value || null,
       gmail: form.gmail.value || null,
     };
-    console.log("formData:", formData);
+
     // ✅ Validate with files
     const validationErrors = validateForm(formData, files);
     if (Object.keys(validationErrors).length > 0) {
@@ -103,7 +103,6 @@ const EditProfileView = () => {
     try {
       // 📤 Build FormData with image array
       const submitData = new FormData();
-
       // Append all text fields
       Object.entries(formData).forEach(([key, value]) => {
         if (value !== null && value !== undefined) {
@@ -111,14 +110,11 @@ const EditProfileView = () => {
         }
       });
 
-      // ✅ Append ALL files under "image" (as array)
       files.forEach((file) => {
         submitData.append("image", file);
       });
 
-      console.log("submitData:", submitData);
       await dispatch(submitEditProfile(submitData)).unwrap();
-      console.log("TEST:", user_email);
       await dispatch(profileStatusChange({ email: user_email }));
       toast.success("Profile submitted successfully for review!");
       form.reset();

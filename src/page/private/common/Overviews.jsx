@@ -8,26 +8,24 @@ import { fetchDashboardData } from "../../../features/admin/home/dashboardFetch"
 import { filterFormate } from "../../../utils/formatDate";
 
 const today = filterFormate(new Date());
-console.log(today);
+
 const Overviews = () => {
   const dispatch = useDispatch();
   const { overview, loading } = useSelector((state) => state.dashboard);
-  const [slectedDate, setSlectedDate] = useState({ from: today, to: today });
-  const [filter, setFilter] = useState("today");
+  const [slectedDate, setSlectedDate] = useState({ from: "", to: today });
+  const [filter, setFilter] = useState("");
 
   // console.log("dashboard:", overview);
   // console.log("filter:", filter);
 
   useEffect(() => {
-    if (slectedDate?.from && slectedDate?.to) {
-      dispatch(
-        fetchDashboardData({
-          from: slectedDate.from,
-          to: slectedDate.to,
-          range: filter,
-        }),
-      );
-    }
+    dispatch(
+      fetchDashboardData({
+        from: slectedDate.from || null,
+        to: slectedDate.to || null,
+        range: filter || "all-time", // fallback
+      }),
+    );
   }, [slectedDate, filter, dispatch]);
 
   const handleReload = () => window.location.reload();
@@ -64,7 +62,7 @@ const Overviews = () => {
                 options={["today", "week", "month", "year"]}
                 value={filter}
                 onChange={(val) => setFilter(val)}
-                placeholder="Select Date Range"
+                placeholder="Select Date"
               />
             </div>
 
