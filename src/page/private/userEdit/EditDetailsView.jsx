@@ -9,26 +9,24 @@ import QRCard from "../../../components/common/QRCard";
 // import CustomModal from "../../../components/common/CustomModal";
 // import { formatDate } from "../../../utils/formatDate";
 import { getUserQRcode } from "../../../features/admin/home/dashboardFetch";
-import CustomModal from "../../../components/common/CustomModal";
 
 const EditDetailsView = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const { qrCodeList, isQrLoading } = useSelector((state) => state.dashboard);
-
+  console.log("qrCodeList:", qrCodeList);
   const { approved_list, isLoading, error } = useSelector(
     (state) => state.adminUsers,
   );
+
   const user = approved_list.find((u) => u.id === Number(id));
-  // const qr_code = qrCodeList?.scans;
+
   const [loading, setLoading] = useState({ approve: false, reject: false });
 
-  // const [isOpen, setIsOpen] = useState(false);
-  // const openModal = () => setIsOpen(true);
-  // const closeModal = () => setIsOpen(false);
   const [rejectionReason, setRejectionReason] = useState("");
 
   const user_email = user?.email;
+
   useEffect(() => {
     if (user_email) {
       dispatch(getUserQRcode(user_email));
@@ -147,71 +145,7 @@ const EditDetailsView = () => {
                   No QR Cards
                 </div>
               )}
-
-              {/* Optional "See more" */}
-              {/* {qrCodeList && qrCodeList.length > 0 && (
-                <p
-                  onClick={openModal}
-                  className="mt-2 cursor-pointer text-center underline"
-                >
-                  See more...
-                </p>
-              )} */}
             </div>
-
-            {/* <CustomModal isOpen={isOpen} onClose={closeModal} size="2xl">
-              <div className="flex flex-col items-center justify-center space-y-4 text-center">
-                <p>QR Code Details</p>
-                <div className="flex flex-col items-center justify-center gap-4 border">
-                  {qrCodeList.map((card) => (
-                    <QRCard
-                      key={card.id}
-                      qrCode={card.qrCode}
-                      scanCount={card.scanCount}
-                      maxScans={card.maxScans}
-                    />
-                  ))}
-                </div>
-                <table className="min-w-full divide-y divide-gray-200 border border-gray-200">
-                  <thead className="bg-gray-100">
-                    <tr>
-                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                        ID
-                      </th>
-                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                        IP Address
-                      </th>
-                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                        User Agent
-                      </th>
-                      <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                        Created At
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {qrCodeList.map((card) =>
-                      card.scans.map((scan) => (
-                        <tr key={scan.id}>
-                          <td className="px-4 py-2 text-sm text-gray-800">
-                            {scan.id}
-                          </td>
-                          <td className="px-4 py-2 text-left text-sm text-gray-800">
-                            {scan.ipAddress}
-                          </td>
-                          <td className="break-all px-4 py-2 text-left text-sm text-gray-800">
-                            {scan.userAgent.slice(0, 40)}...
-                          </td>
-                          <td className="px-4 py-2 text-xs text-gray-800">
-                            {formatDate(scan.createdAt)}
-                          </td>
-                        </tr>
-                      )),
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </CustomModal> */}
 
             <div>
               <p className="font-raleway">Age: {age}</p>

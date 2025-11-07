@@ -37,9 +37,9 @@ const Footer = () => {
           {/* Links */}
           <p className="text-xs text-stone-300 underline">Terms & Conditions</p>
           <p className="text-xs text-stone-300 underline">Privacy Policy</p>
-          <p className="cursor-pointer text-xs text-stone-300 underline">
+          {/* <p className="cursor-pointer text-xs text-stone-300 underline">
             <Link to="/auth/login">Access Admin</Link>
-          </p>
+          </p> */}
         </div>
       </div>
     </div>
