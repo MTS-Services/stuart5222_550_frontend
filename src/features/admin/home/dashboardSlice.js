@@ -12,6 +12,9 @@ const initialState = {
   qrCodeList: [],
   qrCodeUser: null,
   loading: false,
+  isQrLoading: false,
+  success: false,
+  lastFetched: null,
   error: null,
 };
 
@@ -71,17 +74,17 @@ const dashboardSlice = createSlice({
 
       // --- get user QR codes ---
       .addCase(getUserQRcode.pending, (state) => {
-        state.loading = true;
+        state.isQrLoading = true;
         state.error = null;
       })
       .addCase(getUserQRcode.fulfilled, (state, action) => {
         const payload = action.payload || {};
-        state.loading = false;
+        state.isQrLoading = false;
         state.qrCodeList = Array.isArray(payload.cards) ? payload.cards : [];
         state.qrCodeUser = payload.user || null;
       })
       .addCase(getUserQRcode.rejected, (state, action) => {
-        state.loading = false;
+        state.isQrLoading = false;
         state.error = action.payload || "Something went wrong";
       });
   },

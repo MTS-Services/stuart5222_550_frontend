@@ -9,12 +9,13 @@ import QRCard from "../../../components/common/QRCard";
 // import CustomModal from "../../../components/common/CustomModal";
 // import { formatDate } from "../../../utils/formatDate";
 import { getUserQRcode } from "../../../features/admin/home/dashboardFetch";
+import CustomModal from "../../../components/common/CustomModal";
 
 const EditDetailsView = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const { qrCodeList } = useSelector((state) => state.dashboard);
-  console.log("qrCodeList:", qrCodeList);
+  const { qrCodeList, isQrLoading } = useSelector((state) => state.dashboard);
+
   const { approved_list, isLoading, error } = useSelector(
     (state) => state.adminUsers,
   );
@@ -40,6 +41,7 @@ const EditDetailsView = () => {
     return <div className="mx-auto justify-center">Error: {error}</div>;
   if (!user)
     return <div className="mx-auto justify-center">User not found</div>;
+
   const {
     user: userInfo,
     age,
@@ -124,12 +126,18 @@ const EditDetailsView = () => {
           </div>
 
           <div className="flex items-center gap-4 space-y-1 text-[#404040]">
-            <div className="">
-              {qrCodeList && qrCodeList.length > 0 ? (
+            <div>
+              {/* QR Codes Section */}
+              {isQrLoading ? (
+                <div className="flex h-[140px] w-[150px] items-center justify-center rounded-lg border border-gray-300 text-gray-500">
+                  Loading...
+                </div>
+              ) : qrCodeList && qrCodeList.length > 0 ? (
                 qrCodeList.map((card) => (
                   <QRCard
                     key={card.id}
                     qrCode={card.qrCode}
+                    userInfo={card.profile}
                     scanCount={card.scanCount}
                     maxScans={card.maxScans}
                   />
@@ -140,6 +148,7 @@ const EditDetailsView = () => {
                 </div>
               )}
 
+              {/* Optional "See more" */}
               {/* {qrCodeList && qrCodeList.length > 0 && (
                 <p
                   onClick={openModal}
@@ -149,6 +158,7 @@ const EditDetailsView = () => {
                 </p>
               )} */}
             </div>
+
             {/* <CustomModal isOpen={isOpen} onClose={closeModal} size="2xl">
               <div className="flex flex-col items-center justify-center space-y-4 text-center">
                 <p>QR Code Details</p>

@@ -1,6 +1,6 @@
 // src/features/auth/authSlice.js -> authFetch.js -> httpEndpoint.js
-import { createSlice, isRejected } from '@reduxjs/toolkit';
-import { toast } from 'react-toastify';
+import { createSlice, isRejected } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import {
   adminReject,
   adminApprove,
@@ -10,7 +10,7 @@ import {
   adminUserDetailsProfiles,
   adminUserApprovedProfile,
   adminUserRejectedProfile,
-} from './usreFetch';
+} from "./usreFetch";
 
 const initialState = {
   users: [],
@@ -21,7 +21,7 @@ const initialState = {
 };
 
 const adminUserManagementSlice = createSlice({
-  name: 'userManagement',
+  name: "userManagement",
   initialState,
   reducers: {
     resetUsersError: (state) => {
@@ -74,9 +74,9 @@ const adminUserManagementSlice = createSlice({
       .addCase(adminApprove.fulfilled, (state, action) => {
         state.isApproved = false;
         state.users = state.users.filter(
-          (user) => user.id !== action.payload.id
+          (user) => user.id !== action.payload.id,
         );
-        toast.success('User approved!');
+        toast.success("User approved!");
         state.error = null;
       })
       .addCase(adminApprove.rejected, (state, action) => {
@@ -95,9 +95,9 @@ const adminUserManagementSlice = createSlice({
       .addCase(adminReject.fulfilled, (state, action) => {
         state.isRejected = false;
         state.users = state.users.filter(
-          (user) => user.id !== action.payload.id
+          (user) => user.id !== action.payload.id,
         );
-        toast.success('User rejected!');
+        toast.success("User rejected!");
         state.error = null;
       })
       .addCase(adminReject.rejected, (state, action) => {
@@ -131,7 +131,7 @@ const adminUserManagementSlice = createSlice({
       })
       .addCase(adminUserApprovedProfile.fulfilled, (state, action) => {
         state.approved_list = state.approved_list.filter(
-          (user) => user.id !== action.payload.id
+          (user) => user.id !== action.payload.id,
         );
         state.error = null;
       })
@@ -147,7 +147,7 @@ const adminUserManagementSlice = createSlice({
       })
       .addCase(adminUserRejectedProfile.fulfilled, (state, action) => {
         state.approved_list = state.approved_list.filter(
-          (user) => user.id !== action.payload.id
+          (user) => user.id !== action.payload.id,
         );
         state.error = null;
       })
@@ -177,7 +177,7 @@ const adminUserManagementSlice = createSlice({
       // ===================================
       .addMatcher(isRejected(), (state, action) => {
         state.isLoading = false;
-        state.error = action.payload || 'An unexpected error occurred';
+        state.error = action.payload || "An unexpected error occurred";
       });
   },
 });

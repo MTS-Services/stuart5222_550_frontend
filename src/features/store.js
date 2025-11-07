@@ -1,12 +1,13 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
 
-import authReducer from '../features/auth/authSlice';
-import userReducer from '../features/public/user/userSlice';
-import profileReducer from '../features/public/profile/profileSlice';
-import qrCodeRequetReducer from '../features/public/QR-code/qrCodeSlice';
-import adminUserManagementReducer from '../features/admin/management/usreSlice';
-import notificationsReducer from './admin/notifications/notificationsSlice';
-import dashboardReducer from './admin/home/dashboardSlice';
+import authReducer from "../features/auth/authSlice";
+import userReducer from "../features/public/user/userSlice";
+import profileReducer from "../features/public/profile/profileSlice";
+import qrCodeRequetReducer from "../features/public/QR-code/qrCodeSlice";
+import adminUserManagementReducer from "../features/admin/management/usreSlice";
+import notificationsReducer from "./admin/notifications/notificationsSlice";
+import dashboardReducer from "./admin/home/dashboardSlice";
+import mailReducer from "./admin/mail/mailSlice";
 
 export const store = configureStore({
   reducer: {
@@ -17,14 +18,15 @@ export const store = configureStore({
     adminUsers: adminUserManagementReducer,
     notifications: notificationsReducer,
     qrcode: qrCodeRequetReducer,
+    mail: mailReducer,
     // Add other reducers here
   },
 
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['persist/PERSIST'],
+        ignoredActions: ["persist/PERSIST"],
       },
     }),
-  devTools: import.meta.env.VITE_API_NODE_ENV !== 'production',
+  devTools: import.meta.env.VITE_API_NODE_ENV !== "production",
 });
