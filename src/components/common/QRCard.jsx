@@ -6,7 +6,7 @@ import jsPDF from "jspdf";
 
 const QRCard = ({ qrCode, userInfo }) => {
   const cardRef = useRef(null);
-  const scanUrl = `https://stuart05frontend.mtscorporate.com/welcome/${qrCode}`;
+  const scanUrl = `https://scanmemaybe.com/welcome/${qrCode}`;
 
   const handleDownload = async () => {
     if (!cardRef.current) return;
