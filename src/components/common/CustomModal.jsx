@@ -6,7 +6,7 @@ const sizeClasses = {
   md: "max-w-md",
   lg: "max-w-lg",
   xl: "max-w-xl",
-  "2xl": "max-w-2xl",
+  "2xl": "max-w-xl",
   full: "w-full max-w-full",
 };
 
@@ -23,7 +23,7 @@ const CustomModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
       <div
-        className={`w-full rounded-2xl bg-white shadow-xl ${sizeClasses[size]} relative p-6`}
+        className={`w-full rounded-2xl bg-[#3B3B3D] shadow-xl ${sizeClasses[size]} relative p-6`}
       >
         {/* Close button */}
         <button
@@ -34,7 +34,9 @@ const CustomModal = ({
         </button>
 
         {/* Modal Title */}
-        {title && <h2 className="mb-4 text-xl font-semibold">{title}</h2>}
+        {title && (
+          <h2 className="mb-4 text-xl font-semibold text-white">{title}</h2>
+        )}
 
         {/* Modal Content */}
         <div className="mb-4">{children}</div>

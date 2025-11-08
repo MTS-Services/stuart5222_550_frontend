@@ -50,7 +50,9 @@ const dashboardSlice = createSlice({
       })
       .addCase(fetchAdminSettingsProfile.fulfilled, (state, action) => {
         state.loading = false;
-        state.profileSettings = action.payload || [];
+        // Handle both direct payload and nested data structure
+        state.profileSettings = action.payload?.data || action.payload || {};
+        console.log("Fetched admin profile:", state.profileSettings); // Debug log
       })
       .addCase(fetchAdminSettingsProfile.rejected, (state, action) => {
         state.loading = false;
