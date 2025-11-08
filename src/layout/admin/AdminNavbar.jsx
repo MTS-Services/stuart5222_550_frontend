@@ -1,13 +1,49 @@
 import { Link } from "react-router-dom";
 import { FaPowerOff, FaRegBell, FaRegUser } from "react-icons/fa";
 import { STORAGE } from "../../config/storage/auth/authStorage";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { fetchAdminSettingsProfile } from "../../features/admin/home/dashboardFetch";
 
 const AdminNavbar = () => {
+  const dispatch = useDispatch();
   const { unreadCount } = useSelector((state) => state.notifications);
+  const { profileSettings, loading } = useSelector((state) => state.dashboard);
+
+  // Fetch admin profile on component mount
+  useEffect(() => {
+    dispatch(fetchAdminSettingsProfile());
+  }, [dispatch]);
+
   const handleLogout = () => {
     STORAGE.clearAll();
     window.location.href = "/auth/login";
+  };
+
+  // Get display name - prioritize firstName, fallback to username, then email
+  const getDisplayName = () => {
+    console.log("Profile settings:", profileSettings); // Debug log
+    
+    if (loading) return "Loading...";
+    if (!profileSettings || Object.keys(profileSettings).length === 0) {
+      return "Admin User";
+    }
+
+    const { firstName, lastName, username, email } = profileSettings;
+
+    if (firstName && firstName.trim()) {
+      return lastName && lastName.trim() ? `${firstName} ${lastName}` : firstName;
+    }
+    
+    if (username && username.trim()) {
+      return username;
+    }
+    
+    if (email && email.trim()) {
+      return email;
+    }
+    
+    return "Admin User";
   };
 
   return (
@@ -38,9 +74,13 @@ const AdminNavbar = () => {
         {/* 🧑 User Info */}
         <div className="font-medium text-gray-800">
           <h2 className="font-raleway text-sm font-semibold leading-tight">
-            John Davis
+            {getDisplayName()}
           </h2>
-          <p className="font-raleway text-xs text-gray-500">Administrator</p>
+          <p className="font-raleway text-xs text-gray-500">
+            {profileSettings?.role && profileSettings.role.trim()
+              ? profileSettings.role.charAt(0).toUpperCase() + profileSettings.role.slice(1)
+              : "Administrator"}
+          </p>
         </div>
         <button
           onClick={handleLogout}

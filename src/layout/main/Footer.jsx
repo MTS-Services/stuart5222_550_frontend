@@ -61,21 +61,21 @@ const Footer = () => {
         title="Terms & Conditions"
         size="2xl"
       >
-        <div className="max-h-96 space-y-4 overflow-y-auto text-sm text-gray-700">
+        <div className="max-h-96 overflow-y-auto bg-[#3B3B3D] py-4 text-sm text-white">
           <div>
-            <h3 className="mb-2 text-lg font-bold text-orange-600">
+            <h3 className="mb-2 text-lg font-bold text-orange-400">
               Yep, this is all the legal gobbledygook.
             </h3>
 
             <div className="space-y-3">
-              <p className="leading-relaxed">
+              <p className="leading-relaxed text-white">
                 Welcome to Scan Me Maybe! By using our service, you agree to
                 these terms and conditions. Please read them carefully before
                 proceeding. By accessing and using Scan Me Maybe, you accept and
                 agree to be bound by the terms and provision of this agreement.
               </p>
 
-              <p className="leading-relaxed">
+              <p className="leading-relaxed text-white">
                 Permission is granted to temporarily use Scan Me Maybe for
                 personal, non-commercial transitory viewing only. This is the
                 grant of a license, not a transfer of title. Your privacy and
@@ -85,11 +85,11 @@ const Footer = () => {
               </p>
 
               {/* Easter Egg Story */}
-              <div className="rounded-lg border-l-4 border-orange-400 bg-gradient-to-r from-orange-50 to-pink-50 p-4">
-                <h4 className="mb-3 font-bold text-orange-600">
+              <div className="rounded-lg border-l-4 border-orange-400 bg-[#505050] p-4">
+                <h4 className="mb-3 font-bold text-orange-400">
                   🛒 A Little Story...
                 </h4>
-                <p className="italic leading-relaxed text-orange-800">
+                <p className="italic leading-relaxed text-orange-200">
                   Your eyes met across the produce section of the grocery store.
                   "Mmmm. I like what I see." Is there a wedding ring? Are they
                   here with someone? It doesn't look like it. Get brave and whip
@@ -99,7 +99,7 @@ const Footer = () => {
                 </p>
               </div>
 
-              <p className="leading-relaxed">
+              <p className="leading-relaxed text-white">
                 Users must conduct themselves respectfully and lawfully. Any
                 harassment, inappropriate behavior, or misuse of the platform is
                 strictly prohibited. The materials on Scan Me Maybe are provided
@@ -109,16 +109,16 @@ const Footer = () => {
               </p>
 
               {/* Call to Action */}
-              <div className="mt-6 rounded-lg bg-gray-50 p-4">
-                <h4 className="mb-3 font-bold text-orange-600">Your Move</h4>
-                <p className="leading-relaxed text-gray-700">
+              <div className="mt-6 rounded-lg bg-[#505050] p-4">
+                <h4 className="mb-3 font-bold text-orange-400">Your Move</h4>
+                <p className="leading-relaxed text-white">
                   If you've read this far and you're intrigued, don't overthink
                   it. Let's see what a good conversation might bring. Worst
                   case? We have an interesting chat. Best case? Who knows……
                 </p>
               </div>
 
-              <p className="mt-4 text-xs text-gray-500">
+              <p className="mt-4 text-xs text-gray-300">
                 Last updated: November 8, 2025
                 <br />© 2025 Scan Me Maybe, LLC. All Rights Reserved.
               </p>
