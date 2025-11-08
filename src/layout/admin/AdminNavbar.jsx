@@ -23,7 +23,7 @@ const AdminNavbar = () => {
   // Get display name - prioritize firstName, fallback to username, then email
   const getDisplayName = () => {
     console.log("Profile settings:", profileSettings); // Debug log
-    
+
     if (loading) return "Loading...";
     if (!profileSettings || Object.keys(profileSettings).length === 0) {
       return "Admin User";
@@ -32,17 +32,19 @@ const AdminNavbar = () => {
     const { firstName, lastName, username, email } = profileSettings;
 
     if (firstName && firstName.trim()) {
-      return lastName && lastName.trim() ? `${firstName} ${lastName}` : firstName;
+      return lastName && lastName.trim()
+        ? `${firstName} ${lastName}`
+        : firstName;
     }
-    
+
     if (username && username.trim()) {
       return username;
     }
-    
+
     if (email && email.trim()) {
       return email;
     }
-    
+
     return "Admin User";
   };
 
@@ -78,7 +80,8 @@ const AdminNavbar = () => {
           </h2>
           <p className="font-raleway text-xs text-gray-500">
             {profileSettings?.role && profileSettings.role.trim()
-              ? profileSettings.role.charAt(0).toUpperCase() + profileSettings.role.slice(1)
+              ? profileSettings.role.charAt(0).toUpperCase() +
+                profileSettings.role.slice(1)
               : "Administrator"}
           </p>
         </div>
