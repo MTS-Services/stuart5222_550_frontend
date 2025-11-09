@@ -91,14 +91,22 @@ const WelcomeScanView = () => {
                         {data.message}
                       </p>
                     )}
-                    {data.totalScans && (
+                    {data.scansRemaining !== undefined && (
+                      <p className="font-raleway text-sm font-semibold text-blue-400 mt-2">
+                        📊 Card Scans Remaining: {data.scansRemaining} out of {data.maxScans}
+                      </p>
+                    )}
+                    {data.totalScans !== undefined && (
                       <p className="font-raleway text-xs text-gray-300 mt-1">
-                        Total scans: {data.totalScans}/{data.maxScans}
+                        Total scans used: {data.totalScans}/{data.maxScans}
                       </p>
                     )}
                     {data.ipScansUsed !== undefined && data.yourIpAddress && (
                       <p className="font-raleway text-xs text-orange-400 mt-1">
                         Your IP ({data.yourIpAddress}): {data.ipScansUsed}/5 scans used
+                        {data.ipScansRemaining !== null && (
+                          <span> • {data.ipScansRemaining} remaining for your IP</span>
+                        )}
                       </p>
                     )}
                   </div>
