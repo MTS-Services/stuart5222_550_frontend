@@ -11,6 +11,11 @@ import { STORAGE } from "../../config/storage/auth/authStorage";
 const navLinks = [
   { name: "Dashboard", icon: <CgDice4 size={18} />, path: "/admin" },
   {
+    name: "Add Dummy User",
+    icon: <FaUsers size={20} />,
+    path: "/admin/add-dummy-user",
+  },
+  {
     name: "User Management",
     icon: <FaUsers size={20} />,
     path: "/admin/user-management",

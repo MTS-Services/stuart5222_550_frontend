@@ -82,20 +82,49 @@ const WelcomeScanView = () => {
 
               {success && data && (
                 <div className="flex gap-4">
-                  <div>
+                  <div className="w-full">
                     <p className="font-raleway text-sm font-medium text-green-500">
                       ✅ QR Code Scanned Successfully
                     </p>
-                    <p className="font-raleway text-xs font-medium text-red-500">
-                      {data.message}
-                    </p>
+                    {data.message && (
+                      <p className="font-raleway text-xs font-medium text-red-500">
+                        {data.message}
+                      </p>
+                    )}
+                    {data.totalScans && (
+                      <p className="font-raleway text-xs text-gray-300 mt-1">
+                        Total scans: {data.totalScans}/{data.maxScans}
+                      </p>
+                    )}
+                    {data.ipScansUsed !== undefined && data.yourIpAddress && (
+                      <p className="font-raleway text-xs text-orange-400 mt-1">
+                        Your IP ({data.yourIpAddress}): {data.ipScansUsed}/5 scans used
+                      </p>
+                    )}
                   </div>
                 </div>
               )}
             </div>
           </div>
 
-          {data && data.scansRemaining > 0 && (
+          {/* Show error message if limit reached */}
+          {data && (data.limitReached || data.ipLimitReached) && (
+            <div className="my-8 rounded-lg bg-red-900/30 border border-red-500 px-4 py-4">
+              <p className="font-raleway text-base font-semibold text-red-400 mb-2">
+                ⚠️ Scan Limit Reached
+              </p>
+              <p className="font-raleway text-sm text-red-300">
+                {data.message}
+              </p>
+              {data.ipLimitReached && (
+                <p className="font-raleway text-xs text-gray-300 mt-2">
+                  Each IP address can scan a maximum of 5 times. The card allows a total of 250 scans from at least 50 unique IP addresses.
+                </p>
+              )}
+            </div>
+          )}
+
+          {data && data.scansRemaining > 0 && data.success && !data.limitReached && !data.ipLimitReached && (
             <div>
               <div className="my-8 flex w-full gap-4 rounded-lg bg-[#505050] px-4 py-3">
                 {/* Checkbox */}

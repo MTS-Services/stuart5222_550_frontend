@@ -32,6 +32,8 @@ const WelcomeScanView = lazy(
 
 // 🛂 Auth Pages
 const LoginView = lazy(() => import("../page/auth/login/LoginView.jsx"));
+const ForgotPassword = lazy(() => import("../page/auth/ForgotPassword.jsx"));
+const ResetPassword = lazy(() => import("../page/auth/ResetPassword.jsx"));
 const CheckoutView = lazy(
   () => import("../page/auth/checkout/CheckoutView.jsx"),
 );
@@ -44,6 +46,7 @@ const EditProfileView = lazy(
 
 // 🔒 Private Pages
 const AdminView = lazy(() => import("../page/private/admin/AdminView.jsx"));
+const AddDummyUser = lazy(() => import("../page/private/admin/AddDummyUser.jsx"));
 const AllQRCodes = lazy(() => import("../page/private/QR/AllQRCodes.jsx"));
 const UserView = lazy(() => import("../page/public/profile/UserView.jsx"));
 const UserManageView = lazy(
@@ -101,6 +104,8 @@ const router = createBrowserRouter(
       <Route element={<AuthGuard />}>
         <Route path="/auth" element={<AuthLayout />}>
           <Route index path="login" element={<LoginView />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="reset-password/:token" element={<ResetPassword />} />
         </Route>
       </Route>
 
@@ -108,6 +113,7 @@ const router = createBrowserRouter(
       <Route element={<PrivateGuard />}>
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminView />} />
+          <Route path="add-dummy-user" element={<AddDummyUser />} />
           <Route path="user-management" element={<UserManageView />} />
           <Route path="user-management/:id" element={<UserDetailsView />} />
           <Route path="notifications" element={<NotificationView />} />

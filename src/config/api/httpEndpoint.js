@@ -4,6 +4,8 @@ export const endpoints = {
     REGISTER: "/auth/register",
     PAYMENT_INTENT: "/payment/create-one-time-payment",
     PAYMENT_SUBSCRIPTION: "/payment/create-subscription",
+    FORGOT_PASSWORD: "/auth/admin/forgot-password",
+    RESET_PASSWORD: "/auth/admin/reset-password",
   },
   admin: {
     HOME_DATA: "/admin/dashboard",
@@ -39,6 +41,9 @@ export const endpoints = {
     UPDATE_MAIL_TEMPLATE_REJECTED: "/admin/templates/registration_rejected",
     UPDATE_MAIL_TEMPLATE_APPROVED: "/admin/templates/registration_approved",
     UPDATE_MAIL_TEMPLATE_DRAFT: "/admin/templates/draft_notification",
+
+    // Dummy User Creation
+    CREATE_DUMMY_USER: "/admin/users/create-dummy",
   },
   user: {
     LOGIN: "/auth/login",

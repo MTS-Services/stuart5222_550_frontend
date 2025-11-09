@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../../features/auth/authFetch";
 import { resetAuthError } from "../../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const LoginView = () => {
   const dispatch = useDispatch();
@@ -37,8 +38,10 @@ const LoginView = () => {
     try {
       await dispatch(loginUser(formData)).unwrap();
       console.log("✅ Login successful");
+      toast.success("Login successful!");
     } catch (err) {
       console.error("❌ Login failed:", err);
+      toast.error(err?.message || "Invalid email or password");
     }
   };
   const togglePasswordVisibility = () => {
@@ -144,12 +147,12 @@ const LoginView = () => {
                 </label>
               </div>
 
-              {/* <a
-                href='#'
-                className='text-sm font-medium text-[#000044] hover:text-[#000066] transition-colors'
+              <a
+                href='/auth/forgot-password'
+                className='text-sm font-medium text-[#F07400] hover:text-[#D66400] transition-colors'
               >
                 Forgot password?
-              </a> */}
+              </a>
             </div>
 
             {/* Submit Button */}
