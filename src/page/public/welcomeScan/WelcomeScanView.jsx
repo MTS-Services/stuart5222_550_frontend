@@ -91,11 +91,11 @@ const WelcomeScanView = () => {
                         {data.message}
                       </p>
                     )}
-                    {data.scansRemaining !== undefined && (
+                    {/* {data.scansRemaining !== undefined && (
                       <p className="font-raleway text-sm font-semibold text-blue-400 mt-2">
                         📊 Card Scans Remaining: {data.scansRemaining} out of {data.maxScans}
                       </p>
-                    )}
+                    )} */}
                     {data.totalScans !== undefined && (
                       <p className="font-raleway text-xs text-gray-300 mt-1">
                         Total scans used: {data.totalScans}/{data.maxScans}
