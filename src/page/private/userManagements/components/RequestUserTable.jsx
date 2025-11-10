@@ -3,6 +3,7 @@ import { PiCheckBold } from "react-icons/pi";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { FiX } from "react-icons/fi";
+import { toast } from "react-toastify";
 import {
   adminUserApprovedProfile,
   adminUserRejectedProfile,
@@ -29,8 +30,10 @@ export const RequestUserTable = () => {
     setLoadingRow((prev) => ({ ...prev, approve: userId }));
     try {
       await dispatch(adminUserApprovedProfile({ id: userId })).unwrap();
+      toast.success("User approved successfully!"); // ✅ Add success toast
     } catch (err) {
       setError(err.message || "Failed to approve user");
+      toast.error(err.message || "Failed to approve user"); // ✅ Add error toast
     } finally {
       setLoadingRow((prev) => ({ ...prev, approve: null }));
     }
@@ -40,6 +43,7 @@ export const RequestUserTable = () => {
   const handleSend = async () => {
     if (!selectedUserId || !reasonText.trim()) {
       setError("Please provide a reason for rejection");
+      toast.error("Please provide a reason for rejection"); // ✅ Add error toast
       return;
     }
 
@@ -51,11 +55,12 @@ export const RequestUserTable = () => {
           reason: reasonText,
         }),
       ).unwrap();
-      toast;
+      toast.success("User rejected successfully!"); // ✅ Add success toast
       setError(""); // Clear any previous errors
     } catch (err) {
       console.error(err);
       setError(err.message || "Failed to reject user");
+      toast.error(err.message || "Failed to reject user"); // ✅ Add error toast
     } finally {
       setLoadingRow((prev) => ({ ...prev, reject: null }));
       closeModal();

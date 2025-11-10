@@ -16,6 +16,7 @@ const initialState = {
   users: [],
   approved_list: [],
   drafts_list: [],
+  userProfiles: [], // ✅ Add userProfiles array
   isLoading: false,
   error: null,
 };
@@ -130,9 +131,17 @@ const adminUserManagementSlice = createSlice({
         state.error = null;
       })
       .addCase(adminUserApprovedProfile.fulfilled, (state, action) => {
+        // Handle both old and new response formats
+        const profileId = action.payload.data?.id || action.payload.id;
+        
+        // Update both arrays to remove the user immediately
         state.approved_list = state.approved_list.filter(
-          (user) => user.id !== action.payload.id,
+          (user) => user.id !== profileId,
         );
+        state.userProfiles = state.userProfiles ? state.userProfiles.filter(
+          (user) => user.id !== profileId,
+        ) : [];
+        
         state.error = null;
       })
       .addCase(adminUserApprovedProfile.rejected, (state, action) => {
@@ -146,9 +155,17 @@ const adminUserManagementSlice = createSlice({
         state.error = null;
       })
       .addCase(adminUserRejectedProfile.fulfilled, (state, action) => {
+        // Handle both old and new response formats
+        const profileId = action.payload.data?.id || action.payload.id;
+        
+        // Update both arrays to remove the user immediately
         state.approved_list = state.approved_list.filter(
-          (user) => user.id !== action.payload.id,
+          (user) => user.id !== profileId,
         );
+        state.userProfiles = state.userProfiles ? state.userProfiles.filter(
+          (user) => user.id !== profileId,
+        ) : [];
+        
         state.error = null;
       })
       .addCase(adminUserRejectedProfile.rejected, (state, action) => {
