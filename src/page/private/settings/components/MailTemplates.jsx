@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import MailEditor from "./mail/MailEditor";
 import { useDispatch, useSelector } from "react-redux";
 import { updateMailTemplates } from "../../../../features/admin/mail/mailFetch";
+import { toast } from "react-toastify";
 
 const MailTemplates = () => {
-  const { templates } = useSelector((state) => state.mail);
+  const { templates, isLoading, isError, success } = useSelector((state) => state.mail);
   const [template, setTemplate] = useState(templates);
 
   const [selectedId, setSelectedId] = useState(null);
@@ -17,16 +18,30 @@ const MailTemplates = () => {
     );
   };
 
-  const handleSave = () => {
-    const selected = templates.find((t) => t.id === selectedId);
-    if (!selected) return alert("Please select a template first.");
-    console.log("Processing...");
-    dispatch(updateMailTemplates({ templateData: selected }));
-    alert(`✅ Saved template: ${selected.name}`);
-    console.log("Saved Template:", selected);
+  const handleSave = async () => {
+    const selected = template.find((t) => t.id === selectedId);
+    if (!selected) {
+      toast.error("Please select a template first.");
+      return;
+    }
+    
+    console.log("Updating template:", selected.name);
+    console.log("Template data:", selected);
+    
+    try {
+      await dispatch(updateMailTemplates({ templateData: selected })).unwrap();
+      toast.success("Template updated successfully!");
+    } catch (error) {
+      toast.error(`Update failed: ${error}`);
+      console.error("Error updating template:", error);
+    }
   };
 
   const selectedTemplate = template.find((t) => t.id === selectedId);
+
+  useEffect(() => {
+    setTemplate(templates);
+  }, [templates]);
 
   const templateNames = {
     profile_approved: "Profile Approved",
@@ -63,6 +78,7 @@ const MailTemplates = () => {
             selectedTemplate={selectedTemplate}
             handleChange={handleChange}
             handleSave={handleSave}
+            isLoading={isLoading}
           />
           <div className="mt-6 bg-white">
             {selectedTemplate && (

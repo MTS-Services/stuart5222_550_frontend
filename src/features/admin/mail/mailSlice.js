@@ -41,14 +41,19 @@ const mailSlice = createSlice({
       })
       .addCase(updateMailTemplates.fulfilled, (state, action) => {
         state.isLoading = false;
+        // Update the specific template in the array
         state.templates = state.templates.map((template) =>
-          template.id === action.payload.id ? action.payload : template,
+          template.name === action.payload.name 
+            ? { ...template, ...action.payload.template } 
+            : template
         );
         state.isError = null;
+        state.success = true;
       })
       .addCase(updateMailTemplates.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = action.payload;
+        state.success = false;
       });
   },
 });
