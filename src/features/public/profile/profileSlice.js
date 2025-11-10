@@ -4,6 +4,7 @@ import {
   fetchUserProfile,
   profileStatusChange,
   submitProfile,
+  submitEditProfile,
 } from "./profileFetch";
 
 const profileSlice = createSlice({
@@ -70,6 +71,23 @@ const profileSlice = createSlice({
       })
 
       //EDIT PROFILE
+      .addCase(submitEditProfile.pending, (state) => {
+        state.submitLoading = true;
+        state.success = false;
+        state.error = null;
+      })
+      .addCase(submitEditProfile.fulfilled, (state, action) => {
+        state.submitLoading = false;
+        state.success = true;
+        state.errors = {};
+      })
+      .addCase(submitEditProfile.rejected, (state, action) => {
+        state.submitLoading = false;
+        state.error = action.payload;
+        state.success = false;
+      })
+
+      //STATUS CHANGE
       .addCase(profileStatusChange.pending, (state) => {
         state.submitLoading = true;
         state.success = false;

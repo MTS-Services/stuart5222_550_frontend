@@ -11,6 +11,7 @@ import { validateForm } from "../../../utils/validateForm";
 import {
   profileStatusChange,
   submitEditProfile,
+  fetchUserProfile,
 } from "../../../features/public/profile/profileFetch";
 import { useParams } from "react-router-dom";
 
@@ -20,6 +21,8 @@ const EditProfileView = () => {
   const [success, setSuccess] = useState(false);
   const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const fileInputRef = useRef(null);
   const { user_email } = useParams();
 
@@ -29,8 +32,11 @@ const EditProfileView = () => {
   // ============================================
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    if (selectedFiles.length > 13) {
-      toast.warn("Maximum 13 images allowed (3 required + 10 optional)");
+    const existingImageCount = profileData?.images?.length || 0;
+    const maxNewFiles = 13 - existingImageCount;
+    
+    if (selectedFiles.length > maxNewFiles) {
+      toast.warn(`You can only upload ${maxNewFiles} more image${maxNewFiles > 1 ? 's' : ''} (you already have ${existingImageCount})`);
       return;
     }
 
@@ -44,16 +50,31 @@ const EditProfileView = () => {
     }
 
     setFiles(validFiles);
-    const previews = validFiles.map((file) => URL.createObjectURL(file));
-    setImagePreviews(previews);
+    const newPreviews = validFiles.map((file) => URL.createObjectURL(file));
+    
+    // Combine existing image URLs with new file previews
+    const existingImageUrls = profileData?.images?.map(img => img.url) || [];
+    setImagePreviews([...existingImageUrls, ...newPreviews]);
     e.target.value = "";
   };
 
   const removeImage = (index) => {
-    const newFiles = files.filter((_, i) => i !== index);
-    const newPreviews = imagePreviews.filter((_, i) => i !== index);
+    const existingImageCount = profileData?.images?.length || 0;
+    
+    // Only allow removing newly uploaded files, not existing images
+    if (index < existingImageCount) {
+      toast.warn("Cannot remove existing images. You can only remove newly uploaded files.");
+      return;
+    }
+    
+    const newFileIndex = index - existingImageCount;
+    const newFiles = files.filter((_, i) => i !== newFileIndex);
     setFiles(newFiles);
-    setImagePreviews(newPreviews);
+    
+    // Update imagePreviews by removing only the new file preview
+    const existingPreviews = imagePreviews.slice(0, existingImageCount);
+    const newPreviews = imagePreviews.slice(existingImageCount).filter((_, i) => i !== newFileIndex);
+    setImagePreviews([...existingPreviews, ...newPreviews]);
   };
 
   const handleClick = () => {
@@ -83,17 +104,26 @@ const EditProfileView = () => {
       gmail: form.gmail.value || null,
     };
 
-    // ✅ Validate with files
-    const validationErrors = validateForm(formData, files);
+    // ✅ Validate form data (excluding images since we handle that separately)
+    const validationErrors = validateForm(formData, []); // Pass empty array for files to skip image validation
+    
+    // Remove image validation from the form errors since we handle it separately
+    delete validationErrors.images;
+    
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       toast.warn("Please fix all errors before submitting");
       return;
     }
 
-    if (files.length < 3) {
-      setErrors({ images: "Minimum 3 images required" });
-      toast.warn("Please upload at least 3 images before submitting");
+    // Calculate total image count (existing + new)
+    const existingImageCount = profileData?.images?.length || 0;
+    const totalImageCount = existingImageCount + files.length;
+
+    if (totalImageCount < 3) {
+      const needed = 3 - totalImageCount;
+      setErrors({ images: `Minimum 3 images required. You need ${needed} more image${needed > 1 ? 's' : ''}` });
+      toast.warn(`Please upload ${needed} more image${needed > 1 ? 's' : ''} before submitting`);
       return;
     }
 
@@ -115,8 +145,9 @@ const EditProfileView = () => {
       });
 
       await dispatch(submitEditProfile(submitData)).unwrap();
-      await dispatch(profileStatusChange({ email: user_email }));
-      toast.success("Profile submitted successfully for review!");
+      // Note: For profile editing, we don't need to change status again
+      // The backend will handle the status change if needed
+      toast.success("Profile updated successfully!");
       form.reset();
       setSuccess(true);
       setFiles([]);
@@ -136,6 +167,66 @@ const EditProfileView = () => {
     };
   }, [imagePreviews]);
 
+  // 🔄 Fetch profile data when component mounts
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!user_email) {
+        toast.error("No email provided");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        console.log("Fetching profile for email:", user_email);
+        const result = await dispatch(fetchUserProfile({ userMail: user_email }));
+        console.log("Fetch result:", result);
+        
+        if (result.type === "user/fetchProfile/fulfilled") {
+          console.log("Fetched profile data:", result.payload);
+          setProfileData(result.payload);
+          
+          // Pre-populate images if they exist
+          if (result.payload?.images?.length > 0) {
+            const imageUrls = result.payload.images.map(img => img.url);
+            setImagePreviews(imageUrls);
+            // Note: We can't set the actual files since they're URLs, not File objects
+            // The backend should handle existing images separately
+          } else {
+            setImagePreviews([]);
+          }
+        } else {
+          console.error("Fetch failed:", result);
+          toast.error(result.payload || "Failed to fetch profile data");
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+        toast.error("Failed to load profile data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [user_email, dispatch]);
+
+  // 🔄 Loading state
+  if (loading) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[#3B3B3D] px-[10px] py-10 font-raleway text-white">
+        <div className="text-center">
+          <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-orange-500 border-t-transparent mx-auto"></div>
+          <h2 className="mb-4 font-raleway text-xl font-bold">
+            Loading your profile...
+          </h2>
+          <p className="font-raleway text-gray-400">
+            Please wait while we fetch your data
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (success) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#3B3B3D] px-[10px] py-10 font-raleway text-white sm:py-4 md:py-6 lg:py-8">
@@ -143,7 +234,7 @@ const EditProfileView = () => {
           Your Profile Updated Successfully!
         </h2>
         <p className="font-raleway text-gray-400">
-          Your Updated profile has been submitted for review.
+          Your profile changes have been saved and submitted for review.
         </p>
         <button
           onClick={() => window.location.replace("/")}
@@ -157,7 +248,7 @@ const EditProfileView = () => {
 
   return (
     <div className="min-h-screen bg-[#3B3B3D] px-[10px] font-raleway text-white sm:py-4 md:py-6 lg:py-8">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} key={profileData ? 'loaded' : 'loading'}>
         <div className="mx-auto max-w-[600px]">
           {/* Header */}
           <div className="flex justify-center py-[40px]">
@@ -171,6 +262,11 @@ const EditProfileView = () => {
             <h2 className="font-raleway text-xl font-bold md:text-[32px]">
               Update Your Profile
             </h2>
+            {profileData && (
+              <p className="mt-2 text-sm text-gray-400">
+                Profile loaded: {profileData.email}
+              </p>
+            )}
           </div>
 
           {/* Form Fields */}
@@ -183,6 +279,7 @@ const EditProfileView = () => {
                 type="text"
                 name="firstName"
                 placeholder="Enter Display Name"
+                defaultValue={profileData?.displayName || ""}
                 className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
                   errors.firstName ? "border-red-500" : "border-gray-500"
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
@@ -202,6 +299,7 @@ const EditProfileView = () => {
                 type="number"
                 name="age"
                 placeholder="Enter your age"
+                defaultValue={profileData?.age || ""}
                 className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
                   errors.age ? "border-red-500" : "border-gray-500"
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
@@ -229,6 +327,7 @@ const EditProfileView = () => {
                 type="text"
                 name="height"
                 placeholder="Enter your Height"
+                defaultValue={profileData?.height || ""}
                 className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
                   errors.height ? "border-red-500" : "border-gray-500"
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
@@ -248,6 +347,7 @@ const EditProfileView = () => {
                 type="text"
                 name="bodyType"
                 placeholder="Describe your body type"
+                defaultValue={profileData?.bodyType || ""}
                 className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
                   errors.bodyType ? "border-red-500" : "border-gray-500"
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
@@ -268,6 +368,7 @@ const EditProfileView = () => {
                 type="text"
                 name="area"
                 placeholder="Enter your country and state"
+                defaultValue={profileData?.area || ""}
                 className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
                   errors.area ? "border-red-500" : "border-gray-500"
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
@@ -287,6 +388,7 @@ const EditProfileView = () => {
                 type="text"
                 name="dealBreaks"
                 placeholder="Enter your no go's"
+                defaultValue={profileData?.dealbreakers || ""}
                 className="h-11 rounded-lg border border-gray-500 bg-transparent px-3 text-sm font-medium text-white outline-none placeholder:text-gray-400 focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300"
               />
             </div>
@@ -300,6 +402,7 @@ const EditProfileView = () => {
                 rows="5"
                 name="textArea"
                 placeholder="Write your message here..."
+                defaultValue={profileData?.bio || ""}
                 className={`max-h-[265px] min-h-[265px] w-full border bg-transparent px-3 pt-1 text-white placeholder:text-gray-400 ${
                   errors.textArea ? "border-red-500" : "border-gray-500"
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
@@ -325,6 +428,7 @@ const EditProfileView = () => {
                 <input
                   type="date"
                   name="startDate"
+                  defaultValue={profileData?.startDate || ""}
                   className="h-11 rounded-lg bg-white px-3 text-sm font-medium text-gray-800 outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
                 />
               </div>
@@ -335,6 +439,7 @@ const EditProfileView = () => {
                 <input
                   type="date"
                   name="endDate"
+                  defaultValue={profileData?.endDate || ""}
                   className="h-11 rounded-lg bg-white px-3 text-sm font-medium text-gray-800 outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
                 />
               </div>
@@ -347,6 +452,7 @@ const EditProfileView = () => {
                 type="text"
                 name="location"
                 placeholder="Enter your location"
+                defaultValue={profileData?.location || ""}
                 className="h-11 rounded-lg bg-white px-3 text-sm font-medium text-gray-800 outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
               />
             </div>
@@ -390,26 +496,26 @@ const EditProfileView = () => {
                 <div className="mb-4 w-full max-w-xs">
                   <div className="mb-1 flex justify-between text-xs text-gray-600">
                     <span>Upload Progress</span>
-                    <span>{files.length}/13 images</span>
+                    <span>{(profileData?.images?.length || 0) + files.length}/13 images</span>
                   </div>
                   <div className="h-2 w-full rounded-full bg-gray-200">
                     <div
                       className="h-2 rounded-full bg-orange-500 transition-all duration-300"
-                      style={{ width: `${(files.length / 13) * 100}%` }}
+                      style={{ width: `${(((profileData?.images?.length || 0) + files.length) / 13) * 100}%` }}
                     ></div>
                   </div>
                   <div className="mt-1 flex justify-between text-xs text-gray-500">
                     <span>Min: 3</span>
                     <span
                       className={
-                        files.length < 3
+                        ((profileData?.images?.length || 0) + files.length) < 3
                           ? "font-semibold text-red-500"
                           : "font-semibold text-green-500"
                       }
                     >
-                      {files.length >= 3
+                      {((profileData?.images?.length || 0) + files.length) >= 3
                         ? "✓ Requirement met"
-                        : "Need more images"}
+                        : `Need ${3 - ((profileData?.images?.length || 0) + files.length)} more image${(3 - ((profileData?.images?.length || 0) + files.length)) > 1 ? 's' : ''}`}
                     </span>
                   </div>
                 </div>
@@ -427,54 +533,65 @@ const EditProfileView = () => {
                 {/* Image Previews */}
                 {imagePreviews.length > 0 && (
                   <div className="mt-4 w-full">
+                    <div className="mb-2 text-center text-sm text-gray-400">
+                      {profileData?.images?.length > 0 && (
+                        <span>Existing: {profileData.images.length} | </span>
+                      )}
+                      New uploads: {files.length} | Total: {(profileData?.images?.length || 0) + files.length}
+                    </div>
                     <div className="mb-4 grid grid-cols-3 gap-3">
-                      {imagePreviews.map((preview, idx) => (
-                        <div key={idx} className="group relative">
-                          <img
-                            src={preview}
-                            alt={`Preview ${idx + 1}`}
-                            className="h-24 w-full rounded-lg border-2 border-gray-200 object-cover"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => removeImage(idx)}
-                            className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition group-hover:opacity-100"
-                          >
-                            <RiDeleteBinLine className="h-4 w-4" />
-                          </button>
+                      {imagePreviews.map((preview, idx) => {
+                        const isExistingImage = idx < (profileData?.images?.length || 0);
+                        return (
+                          <div key={idx} className="group relative">
+                            <img
+                              src={preview}
+                              alt={`Preview ${idx + 1}`}
+                              className="h-24 w-full rounded-lg border-2 border-gray-200 object-cover"
+                            />
+                            {!isExistingImage && (
+                              <button
+                                type="button"
+                                onClick={() => removeImage(idx)}
+                                className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition group-hover:opacity-100"
+                              >
+                                <RiDeleteBinLine className="h-4 w-4" />
+                              </button>
+                            )}
 
-                          {/* 🔖 Image Type Label */}
-                          <div className="absolute bottom-1 left-1 rounded bg-black bg-opacity-60 px-2 py-[2px] text-[10px] text-white">
-                            {idx === 0
-                              ? "Face"
-                              : idx === 1
-                                ? "Full Body"
-                                : idx === 2
-                                  ? "Third"
-                                  : `Extra ${idx - 2}`}
+                            {/* 🔖 Image Type Label */}
+                            <div className={`absolute bottom-1 left-1 rounded px-2 py-[2px] text-[10px] text-white ${isExistingImage ? 'bg-blue-600 bg-opacity-80' : 'bg-black bg-opacity-60'}`}>
+                              {isExistingImage ? 'Existing' : 'New'} - {idx === 0
+                                ? "Face"
+                                : idx === 1
+                                  ? "Full Body"
+                                  : idx === 2
+                                    ? "Third"
+                                    : `Extra ${idx - 2}`}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
 
                     {/* Upload Status */}
                     <div
                       className={`rounded-lg p-2 text-center ${
-                        files.length >= 3
+                        ((profileData?.images?.length || 0) + files.length) >= 3
                           ? "bg-green-100 text-green-700"
                           : "bg-yellow-100 text-yellow-700"
                       }`}
                     >
-                      {files.length >= 3 ? (
+                      {((profileData?.images?.length || 0) + files.length) >= 3 ? (
                         <div className="flex items-center justify-center gap-2">
                           <GiCheckMark className="h-4 w-4" />
-                          Ready to submit! ({files.length}/13 images)
+                          Ready to submit! ({(profileData?.images?.length || 0) + files.length}/13 images)
                         </div>
                       ) : (
                         <div className="flex items-center justify-center gap-2">
                           <BiErrorCircle className="h-4 w-4" />
-                          {3 - files.length} more image
-                          {3 - files.length !== 1 ? "s" : ""} needed
+                          {3 - ((profileData?.images?.length || 0) + files.length)} more image
+                          {3 - ((profileData?.images?.length || 0) + files.length) !== 1 ? "s" : ""} needed
                         </div>
                       )}
                     </div>
@@ -559,6 +676,7 @@ const EditProfileView = () => {
                   type="text"
                   name="name"
                   placeholder="Enter your display name"
+                  defaultValue={profileData?.displayName || ""}
                   className="h-11 rounded-lg bg-white px-3 text-sm font-medium text-gray-700 outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
                 />
               </div>
@@ -571,6 +689,7 @@ const EditProfileView = () => {
                   type="gmail"
                   name="gmail"
                   placeholder="Enter your unique email"
+                  defaultValue={profileData?.gmail || user_email}
                   className={`h-11 rounded-lg bg-white px-3 text-sm font-medium text-gray-700 outline outline-1 ${
                     errors.gamil ? "outline-red-500" : "outline-gray-300"
                   } focus:outline-orange-500 focus:ring-2 focus:ring-orange-400`}
@@ -596,6 +715,7 @@ const EditProfileView = () => {
                   type="tel"
                   name="number"
                   placeholder="Enter your dedicated phone number"
+                  defaultValue={profileData?.phone || ""}
                   className="h-11 rounded-lg bg-white px-3 text-sm font-medium text-gray-700 outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
                 />
               </div>

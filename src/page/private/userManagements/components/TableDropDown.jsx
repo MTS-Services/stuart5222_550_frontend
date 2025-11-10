@@ -7,7 +7,6 @@ export const TableDropDown = ({ value, onChange }) => {
     >
       <option value='REJECTED'>REJECTED</option>
       <option value='DRAFT'>DRAFT</option>
-      <option value='PENDING'>PENDING</option>
     </select>
   );
 };
