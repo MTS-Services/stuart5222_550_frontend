@@ -115,38 +115,6 @@ const WelcomeScanView = () => {
             </div>
           </div>
 
-          {/* Show error message if limit reached */}
-          {data && (data.limitReached || data.ipLimitReached) && (
-            <div className="my-8 rounded-lg bg-red-900/30 border border-red-500 px-4 py-4">
-              <p className="font-raleway text-base font-semibold text-red-400 mb-2">
-                ⚠️ {data.ipLimitReached ? 'Your IP Scan Limit Reached' : 'Card Scan Limit Reached'}
-              </p>
-              <p className="font-raleway text-sm text-red-300">
-                {data.message}
-              </p>
-              {data.ipLimitReached && (
-                <>
-                  <p className="font-raleway text-xs text-gray-300 mt-2">
-                    Your IP has used all 5 allowed scans for this card.
-                  </p>
-                  <p className="font-raleway text-xs text-green-300 mt-1">
-                    ✅ You can still scan from a different network (mobile data, VPN, or different WiFi)
-                  </p>
-                  {data.totalCardScans && data.maxScans && (
-                    <p className="font-raleway text-xs text-blue-300 mt-1">
-                      📊 Card still has {data.maxScans - data.totalCardScans} scans remaining (out of {data.maxScans} total)
-                    </p>
-                  )}
-                </>
-              )}
-              {data.limitReached && (
-                <p className="font-raleway text-xs text-gray-300 mt-2">
-                  This card has been scanned the maximum 250 times by {data.uniqueIPs || 'multiple'} different IP addresses.
-                </p>
-              )}
-            </div>
-          )}
-
           {data && data.scansRemaining > 0 && data.success && !data.limitReached && !data.ipLimitReached && (
             <div>
               <div className="my-8 flex w-full gap-4 rounded-lg bg-[#505050] px-4 py-3">
