@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GiCheckMark } from "react-icons/gi";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+// 🚨 BETA TESTING: Stripe imports commented out
+// import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
 // Keep your plans array as-is
 const plans = [
@@ -20,21 +21,22 @@ const plans = [
   },
 ];
 
-const CARD_ELEMENT_OPTIONS = {
-  style: {
-    base: {
-      fontSize: "16px",
-      color: "#fff",
-      "::placeholder": {
-        color: "#aab7c4",
-      },
-    },
-    invalid: {
-      color: "#fa755a",
-      iconColor: "#fa755a",
-    },
-  },
-};
+// 🚨 BETA TESTING: Card element options commented out
+// const CARD_ELEMENT_OPTIONS = {
+//   style: {
+//     base: {
+//       fontSize: "16px",
+//       color: "#fff",
+//       "::placeholder": {
+//         color: "#aab7c4",
+//       },
+//     },
+//     invalid: {
+//       color: "#fa755a",
+//       iconColor: "#fa755a",
+//     },
+//   },
+// };
 
 const CheckoutView = () => {
   const [loading, setLoading] = useState(false);
@@ -43,106 +45,145 @@ const CheckoutView = () => {
 
   const [errorMsg, setErrorMsg] = useState("");
   const [selectedPlan, setSelectedPlan] = useState(plans[0].priceId);
-  const [cardComplete, setCardComplete] = useState(false);
-  const [cardError, setCardError] = useState("");
+  // 🚨 BETA TESTING: Card state variables commented out
+  // const [cardComplete, setCardComplete] = useState(false);
+  // const [cardError, setCardError] = useState("");
   const { user_email } = useParams();
 
-  const stripe = useStripe();
-  const elements = useElements();
+  // 🚨 BETA TESTING: Stripe hooks commented out
+  // const stripe = useStripe();
+  // const elements = useElements();
 
-  const handleCardChange = (event) => {
-    setCardComplete(event.complete);
-    setCardError(event.error ? event.error.message : "");
-  };
+  // 🚨 BETA TESTING: Card change handler commented out
+  // const handleCardChange = (event) => {
+  //   setCardComplete(event.complete);
+  //   setCardError(event.error ? event.error.message : "");
+  // };
 
+  // 🚨 BETA TESTING: Payment bypass handler
   const handlePayment = async () => {
-    if (!stripe || !elements) return;
-
-    if (!cardComplete) {
-      setErrorMsg("Please complete your card details");
-      return;
-    }
-
     setLoading(true);
     setSuccessMsg("");
     setErrorMsg("");
 
     try {
-      // 🪄 Step 1: Create Payment Method from card input
-      const { paymentMethod, error } = await stripe.createPaymentMethod({
-        type: "card",
-        card: elements.getElement(CardElement),
-        billing_details: { email: user_email },
-      });
-
-      if (error) {
-        setErrorMsg(error.message);
-        setLoading(false);
-        return;
-      }
-
-      const payment = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/payment/create-one-time-payment`,
+      console.log('🚨 BETA MODE: Bypassing payment for', user_email);
+      
+      // Call beta bypass endpoint
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/payment/beta-bypass`,
         {
           email: user_email,
-          amount: "69",
-          paymentMethodId: paymentMethod.id,
         },
       );
 
-      console.log("payment:", payment);
-
-      // 🪄 Step 2: Send the paymentMethod.id to your backend
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/payment/create-subscription`,
-        {
-          email: user_email,
-          priceId: selectedPlan,
-          paymentMethodId: paymentMethod.id,
-        },
-      );
-
-      if (res.data?.success) {
-        // 🪄 Step 3: Confirm client-side if 3D Secure is required
-        if (res.data.clientSecret) {
-          const { paymentIntent, error: confirmError } =
-            await stripe.confirmCardPayment(res.data.clientSecret);
-          if (confirmError) throw confirmError;
-          if (paymentIntent.status === "succeeded") {
-            setSuccessMsg(`Successfully completed!`);
-          }
-        } else {
-          console.log("Subscriptions:", res.data);
-          setSuccessMsg(res?.data);
-        }
+      if (response.data?.success) {
+        setSuccessMsg({
+          customerId: `beta_customer_${user_email}`,
+          plan: 'BETA',
+          stripeStatus: 'active',
+          amount: 0,
+          betaTesting: true
+        });
+        console.log('🚨 BETA MODE: Payment bypassed successfully');
       } else {
-        setErrorMsg("❌ Payment failed.");
+        setErrorMsg("❌ Beta bypass failed.");
       }
     } catch (err) {
-      console.error(err);
+      console.error('Beta bypass error:', err);
       setErrorMsg(err?.response?.data?.message || "Something went wrong!");
     } finally {
       setLoading(false);
     }
   };
 
-  // Check if form can be submitted
-  const canSubmit = stripe && cardComplete && !loading && !cardError;
+  // 🚨 BETA TESTING: Original payment handler commented out
+  // const handlePayment = async () => {
+  //   if (!stripe || !elements) return;
+  //   if (!cardComplete) {
+  //     setErrorMsg("Please complete your card details");
+  //     return;
+  //   }
+  //   setLoading(true);
+  //   setSuccessMsg("");
+  //   setErrorMsg("");
+  //   try {
+  //     const { paymentMethod, error } = await stripe.createPaymentMethod({
+  //       type: "card",
+  //       card: elements.getElement(CardElement),
+  //       billing_details: { email: user_email },
+  //     });
+  //     if (error) {
+  //       setErrorMsg(error.message);
+  //       setLoading(false);
+  //       return;
+  //     }
+  //     const payment = await axios.post(
+  //       `${import.meta.env.VITE_API_BASE_URL}/payment/create-one-time-payment`,
+  //       {
+  //         email: user_email,
+  //         amount: "69",
+  //         paymentMethodId: paymentMethod.id,
+  //       },
+  //     );
+  //     const res = await axios.post(
+  //       `${import.meta.env.VITE_API_BASE_URL}/payment/create-subscription`,
+  //       {
+  //         email: user_email,
+  //         priceId: selectedPlan,
+  //         paymentMethodId: paymentMethod.id,
+  //       },
+  //     );
+  //     if (res.data?.success) {
+  //       if (res.data.clientSecret) {
+  //         const { paymentIntent, error: confirmError } =
+  //           await stripe.confirmCardPayment(res.data.clientSecret);
+  //         if (confirmError) throw confirmError;
+  //         if (paymentIntent.status === "succeeded") {
+  //           setSuccessMsg(`Successfully completed!`);
+  //         }
+  //       } else {
+  //         setSuccessMsg(res?.data);
+  //       }
+  //     } else {
+  //       setErrorMsg("❌ Payment failed.");
+  //     }
+  //   } catch (err) {
+  //     setErrorMsg(err?.response?.data?.message || "Something went wrong!");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // 🚨 BETA TESTING: Simplified submit logic
+  const canSubmit = !loading;
+  // Original logic commented out:
+  // const canSubmit = stripe && cardComplete && !loading && !cardError;
 
   if (successMsg) {
     return (
       <section className="mx-auto flex h-screen max-w-[600px] items-center justify-center px-[10px] py-4 font-raleway text-white">
         <div className="space-y-8 text-center">
           <h2 className="mb-4 text-2xl font-bold text-green-100 md:text-[32px]">
-            Subscription Successfully Done🎉
+            {successMsg?.betaTesting ? '🚨 Beta Access Granted 🎉' : 'Subscription Successfully Done🎉'}
           </h2>
           <div className="rounded-xl border border-green-500 p-4 text-left shadow-md shadow-green-700">
+            {successMsg?.betaTesting && (
+              <p className="text-yellow-400 mb-2">
+                ⚠️ BETA TESTING MODE - No payment required
+              </p>
+            )}
             <p className="text-green-400">
               Customer-ID: {successMsg?.customerId}
             </p>
             <p>Plan : {successMsg?.plan.toLowerCase()}</p>
             <p>Status : {successMsg?.stripeStatus}</p>
             <p>Amount : ${successMsg?.amount}</p>
+            {successMsg?.betaTesting && (
+              <p className="text-blue-400">
+                Beta Testing: Payment bypassed
+              </p>
+            )}
           </div>
           <p className="py-5">Follow Next Step:</p>
           <Link
@@ -252,8 +293,21 @@ const CheckoutView = () => {
           </div>
         </div>
 
-        {/* Stripe Card Element */}
+        {/* 🚨 BETA TESTING: Card element replaced with beta notice */}
         <div className="mt-6">
+          <div className="rounded-lg bg-gradient-to-r from-yellow-600 to-orange-600 p-4 border-2 border-yellow-400">
+            <h3 className="font-bold text-white text-center mb-2">
+              🚨 BETA TESTING MODE
+            </h3>
+            <p className="text-white text-center text-sm">
+              No payment required during beta testing phase.
+              Your account will be automatically activated.
+            </p>
+          </div>
+        </div>
+
+        {/* Original Stripe Card Element commented out */}
+        {/* <div className="mt-6">
           <label className="mb-2 block font-raleway text-white">
             Card Details
           </label>
@@ -275,20 +329,20 @@ const CheckoutView = () => {
               ✓ Card details are valid
             </p>
           )}
-        </div>
+        </div> */
 
         <button
           onClick={handlePayment}
           disabled={!canSubmit}
           className={`mt-6 w-full rounded-xl py-3 font-semibold text-white transition-all ${
             canSubmit
-              ? "cursor-pointer bg-orange-500 hover:bg-orange-600"
+              ? "cursor-pointer bg-green-500 hover:bg-green-600"
               : "cursor-not-allowed bg-gray-500"
           }`}
         >
-          {loading ? "Processing..." : "Complete Payment"}
+          {loading ? "Activating Beta Access..." : "🚨 Activate Beta Access (No Payment)"}
         </button>
-
+}
         {errorMsg && <p className="mt-4 text-red-400">{errorMsg}</p>}
       </div>
     </section>

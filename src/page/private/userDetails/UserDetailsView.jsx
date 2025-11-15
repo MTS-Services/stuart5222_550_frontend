@@ -92,7 +92,7 @@ const UserDetailsView = () => {
       </div>
 
       {/* Traveling Component */}
-      <Traveling />
+      <Traveling profile={user} />
 
       {/* Image Gallery */}
       <div className="pt-8">

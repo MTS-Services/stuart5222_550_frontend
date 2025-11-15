@@ -6,6 +6,7 @@ import {
 } from "../../../features/admin/management/usreFetch";
 import { useEffect, useState } from "react";
 import QRCard from "../../../components/common/QRCard";
+import { shouldShowTravelMode, formatTravelDate } from "../../../utils/travelMode";
 // import CustomModal from "../../../components/common/CustomModal";
 // import { formatDate } from "../../../utils/formatDate";
 import { getUserQRcode } from "../../../features/admin/home/dashboardFetch";
@@ -59,6 +60,10 @@ const EditDetailsView = () => {
     try {
       await dispatch(adminUserApprovedProfile({ id: user.id })).unwrap();
       toast.success("User approved!");
+      // Redirect to user-edit after successful approval
+      setTimeout(() => {
+        navigate("/admin/user-edit");
+      }, 1000);
     } catch (err) {
       toast.error(err.message || "Approval failed");
     } finally {
@@ -83,6 +88,10 @@ const EditDetailsView = () => {
       ).unwrap();
       toast.success("User rejected!");
       setRejectionReason(""); // clear after success
+      // Redirect to user-edit after successful rejection
+      setTimeout(() => {
+        navigate("/admin/user-edit");
+      }, 1000);
     } catch (err) {
       toast.error(err.message || "Rejection failed");
     } finally {
@@ -176,41 +185,43 @@ const EditDetailsView = () => {
         </div>
       </div>
 
-      {/* Traveling Component */}
-      <div className="flex flex-col gap-6 rounded-lg border bg-gradient-to-b from-orange-500/10 to-white p-6">
-        <div className="text-xl font-bold text-neutral-800">
-          <span className="font-raleway uppercase">I </span>
-          <span className="font-raleway lowercase">
-            am traveling and will be in:
-          </span>
+      {/* Traveling Component - Only show if travel data is valid and not expired */}
+      {shouldShowTravelMode(user) && (
+        <div className="flex flex-col gap-6 rounded-lg border bg-gradient-to-b from-orange-500/10 to-white p-6">
+          <div className="text-xl font-bold text-neutral-800">
+            <span className="font-raleway uppercase">I </span>
+            <span className="font-raleway lowercase">
+              am traveling and will be in:
+            </span>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            {/* Location */}
+            <div className="flex items-center gap-3">
+              <span className="font-raleway text-2xl text-orange-500">📍</span>
+              <span className="font-raleway text-xl font-medium text-neutral-800">
+                Location: {location}
+              </span>
+            </div>
+
+            {/* Start Date */}
+            <div className="flex items-center gap-3">
+              <span className="font-raleway text-2xl text-orange-500">📅</span>
+              <span className="font-raleway text-xl font-medium text-neutral-800">
+                Start-Date: {formatTravelDate(startDate)}
+              </span>
+            </div>
+
+            {/* End Date */}
+            <div className="flex items-center gap-3">
+              <span className="font-raleway text-2xl text-orange-500">📅</span>
+              <span className="font-raleway text-xl font-medium text-neutral-800">
+                End-Date: {formatTravelDate(endDate)}
+              </span>
+            </div>
+          </div>
         </div>
-
-        <div className="flex flex-col gap-4">
-          {/* Location */}
-          <div className="flex items-center gap-3">
-            <span className="font-raleway text-2xl text-orange-500">📍</span>
-            <span className="font-raleway text-xl font-medium text-neutral-800">
-              Location: {location}
-            </span>
-          </div>
-
-          {/* Start Date */}
-          <div className="flex items-center gap-3">
-            <span className="font-raleway text-2xl text-orange-500">📅</span>
-            <span className="font-raleway text-xl font-medium text-neutral-800">
-              Start-Date: {startDate}
-            </span>
-          </div>
-
-          {/* End Date */}
-          <div className="flex items-center gap-3">
-            <span className="font-raleway text-2xl text-orange-500">📅</span>
-            <span className="font-raleway text-xl font-medium text-neutral-800">
-              End-Date: {endDate}
-            </span>
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* Image Gallery */}
       <div className="pt-4">

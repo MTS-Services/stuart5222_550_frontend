@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { endpoints } from "../../../config/api/httpEndpoint";
 import { STORAGE } from "../../../config/storage/auth/authStorage";
+import { calculateAge, generateMonths, generateYears } from "../../../utils/ageUtils";
 
 const AddDummyUser = () => {
   const [loading, setLoading] = useState(false);
@@ -10,12 +11,14 @@ const AddDummyUser = () => {
     email: "",
     name: "",
     phone: "",
-    age: "",
+    birthMonth: "",
+    birthYear: "",
     height: "",
     bodyType: "",
     dealbreakers: "",
     bio: "",
-    location: "",
+    area: "",
+    county: "",
   });
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -168,12 +171,16 @@ const AddDummyUser = () => {
           email: formData.email,
           name: formData.name,
           phone: formData.phone,
-          age: parseInt(formData.age),
+          age: calculateAge(parseInt(formData.birthMonth), parseInt(formData.birthYear)),
+          birthMonth: parseInt(formData.birthMonth),
+          birthYear: parseInt(formData.birthYear),
           height: formData.height,
           bodyType: formData.bodyType,
           dealbreakers: formData.dealbreakers,
           bio: formData.bio,
-          location: formData.location,
+          area: formData.area,
+          county: formData.county,
+          location: `${formData.area}, ${formData.county}`, // Combine for backward compatibility
           images: imageUrls,
         }),
       });
@@ -194,12 +201,14 @@ const AddDummyUser = () => {
         email: "",
         name: "",
         phone: "",
-        age: "",
+        birthMonth: "",
+        birthYear: "",
         height: "",
         bodyType: "",
         dealbreakers: "",
         bio: "",
-        location: "",
+        area: "",
+        county: "",
       });
       setImages([]);
       setImagePreviews([]);
@@ -324,27 +333,75 @@ const AddDummyUser = () => {
                   />
                 </div>
 
-                {/* Age */}
+                {/* Birth Month */}
                 <div className="group">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     <span className="flex items-center gap-2">
                       <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                       </svg>
-                      Age <span className="text-red-500">*</span>
+                      Birth Month <span className="text-red-500">*</span>
                     </span>
                   </label>
-                  <input
-                    type="number"
-                    name="age"
-                    value={formData.age}
+                  <select
+                    name="birthMonth"
+                    value={formData.birthMonth}
                     onChange={handleChange}
-                    placeholder="25"
-                    min="18"
-                    max="100"
                     required
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F07400] focus:border-[#F07400] transition-all duration-200 group-hover:border-gray-300"
-                  />
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F07400] focus:border-[#F07400] transition-all duration-200 group-hover:border-gray-300 appearance-none bg-white"
+                    style={{
+                      backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                      backgroundPosition: 'right 0.5rem center',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundSize: '1.5em 1.5em',
+                      paddingRight: '2.5rem'
+                    }}
+                  >
+                    <option value="">Select Month</option>
+                    {generateMonths().map((month) => (
+                      <option key={month.value} value={month.value}>
+                        {month.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Birth Year */}
+                <div className="group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <span className="flex items-center gap-2">
+                      <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                      </svg>
+                      Birth Year <span className="text-red-500">*</span>
+                    </span>
+                  </label>
+                  <select
+                    name="birthYear"
+                    value={formData.birthYear}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F07400] focus:border-[#F07400] transition-all duration-200 group-hover:border-gray-300 appearance-none bg-white"
+                    style={{
+                      backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
+                      backgroundPosition: 'right 0.5rem center',
+                      backgroundRepeat: 'no-repeat',
+                      backgroundSize: '1.5em 1.5em',
+                      paddingRight: '2.5rem'
+                    }}
+                  >
+                    <option value="">Select Year</option>
+                    {generateYears().map((year) => (
+                      <option key={year.value} value={year.value}>
+                        {year.label}
+                      </option>
+                    ))}
+                  </select>
+                  {formData.birthMonth && formData.birthYear && (
+                    <p className="text-sm text-green-600 mt-1">
+                      Age: {calculateAge(parseInt(formData.birthMonth), parseInt(formData.birthYear))} years old
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -427,22 +484,43 @@ const AddDummyUser = () => {
               </h4>
 
               <div className="grid md:grid-cols-1 gap-5">
-                {/* Location */}
+                {/* Area */}
                 <div className="group">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     <span className="flex items-center gap-2">
                       <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                       </svg>
-                      Location <span className="text-red-500">*</span>
+                      Area <span className="text-red-500">*</span>
                     </span>
                   </label>
                   <input
                     type="text"
-                    name="location"
-                    value={formData.location}
+                    name="area"
+                    value={formData.area}
                     onChange={handleChange}
-                    placeholder="New York, NY"
+                    placeholder="New York City"
+                    required
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F07400] focus:border-[#F07400] transition-all duration-200 group-hover:border-gray-300"
+                  />
+                </div>
+
+                {/* County */}
+                <div className="group">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <span className="flex items-center gap-2">
+                      <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                      </svg>
+                      County <span className="text-red-500">*</span>
+                    </span>
+                  </label>
+                  <input
+                    type="text"
+                    name="county"
+                    value={formData.county}
+                    onChange={handleChange}
+                    placeholder="Manhattan County"
                     required
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F07400] focus:border-[#F07400] transition-all duration-200 group-hover:border-gray-300"
                   />

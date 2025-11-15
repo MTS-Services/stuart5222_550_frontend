@@ -11,6 +11,10 @@ import {
   submitProfile,
 } from "../../../features/public/profile/profileFetch";
 import { validateForm } from "../../../utils/validateForm";
+import { calculateAge, estimateBirthFromAge } from "../../../utils/ageUtils";
+import AgeInput from "../../../components/common/AgeInput";
+import LocationInput from "../../../components/common/LocationInput";
+import HeightInput from "../../../components/common/HeightInput";
 import { FaCamera } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 
@@ -22,6 +26,11 @@ const SetupProfileView = () => {
   const [success, setSuccess] = useState(false);
   const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
+  const [birthMonth, setBirthMonth] = useState(null);
+  const [birthYear, setBirthYear] = useState(null);
+  const [county, setCounty] = useState("");
+  const [heightFeet, setHeightFeet] = useState("");
+  const [heightInches, setHeightInches] = useState("");
   const fileInputRef = useRef(null);
 
   const dispatch = useDispatch();
@@ -68,12 +77,20 @@ const SetupProfileView = () => {
     e.preventDefault();
     const form = e.currentTarget;
 
+    // Combine feet and inches into a single height string
+    const heightString = heightFeet && heightInches ? `${heightFeet}'${heightInches}"` : '';
+
+    // Calculate age from birth month and year
+    const calculatedAge = calculateAge(parseInt(birthMonth), parseInt(birthYear));
+
     const formData = {
       displayName: form.firstName.value,
-      age: form.age.value,
-      height: form.height.value,
+      birthMonth: birthMonth,
+      birthYear: birthYear,
+      age: calculatedAge, // Store calculated age for backward compatibility
+      height: heightString,
       bodyType: form.bodyType.value,
-      area: form.area.value,
+      county: county,
       bio: form.textArea.value,
       dealbreakers: form.dealBreaks.value,
       startDate: form.startDate.value || null,
@@ -194,47 +211,23 @@ const SetupProfileView = () => {
               )}
             </div>
 
-            <div className="my-5 flex flex-col gap-2 self-stretch">
-              <label className="mb-4 font-raleway text-xl font-medium text-white">
-                Age <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                name="age"
-                placeholder="Enter your age"
-                className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
-                  errors.age ? "border-red-500" : "border-gray-500"
-                } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
-              />
-              {errors.age && (
-                <p className="text-sm text-red-500">{errors.age}</p>
-              )}
-              <p className="my-2 font-raleway text-xs font-normal text-gray-400">
-                (We only store your month and year of birth which will calculate
-                your age as of the 28th of your birth month.)
-              </p>
-              <p className="mb-1 flex items-center gap-2 font-raleway text-xs font-normal text-gray-400 md:mb-2">
-                <BiErrorCircle className="h-5 w-5 text-orange-500" />
-                Must be 18 or older
-              </p>
-            </div>
+            {/* Age Input Component */}
+            <AgeInput
+              birthMonth={birthMonth}
+              birthYear={birthYear}
+              onBirthMonthChange={setBirthMonth}
+              onBirthYearChange={setBirthYear}
+              errors={errors}
+            />
 
-            <div className="flex w-full flex-col gap-2">
-              <label className="mb-[8px] font-raleway text-xl font-medium text-white">
-                Height <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                name="height"
-                placeholder="Enter your Height"
-                className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
-                  errors.height ? "border-red-500" : "border-gray-500"
-                } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
-              />
-              {errors.height && (
-                <p className="text-sm text-red-500">{errors.height}</p>
-              )}
-            </div>
+            {/* Height Input Component */}
+            <HeightInput
+              heightFeet={heightFeet}
+              heightInches={heightInches}
+              onHeightFeetChange={setHeightFeet}
+              onHeightInchesChange={setHeightInches}
+              errors={errors}
+            />
 
             <div className="my-5 flex w-full flex-col gap-2">
               <label className="mb-[8px] font-raleway text-xl font-medium text-white">
@@ -254,22 +247,13 @@ const SetupProfileView = () => {
               )}
             </div>
 
-            <div className="my-5 flex w-full flex-col gap-2 self-stretch">
-              <label className="mb-[8px] font-raleway text-xl font-medium text-white">
-                Area <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="area"
-                placeholder="Enter your country and state"
-                className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
-                  errors.area ? "border-red-500" : "border-gray-500"
-                } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
-              />
-              {errors.area && (
-                <p className="text-sm text-red-500">{errors.area}</p>
-              )}
-            </div>
+            {/* Location Input Component */}
+            <LocationInput
+              county={county}
+              onCountyChange={setCounty}
+              errors={errors}
+              className="my-5"
+            />
 
             <div className="my-5 flex w-full flex-col gap-2 self-stretch">
               <label className="mb-[8px] font-raleway text-xl font-medium text-white">
@@ -441,7 +425,7 @@ const SetupProfileView = () => {
                               : idx === 1
                                 ? "Full Body"
                                 : idx === 2
-                                  ? "Third"
+                                  ? "Toothy Grin"
                                   : `Extra ${idx - 2}`}
                           </div>
                         </div>

@@ -1,3 +1,7 @@
+// 🚨 BETA TESTING: Payment method component commented out
+// This component is not used during beta testing as payment is bypassed
+
+/*
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -37,7 +41,6 @@ export const PaymentMethod = () => {
               }`}
             >
               <div className='flex sm:flex-row items-start sm:items-center gap-4'>
-                {/* Custom Radio */}
                 <div
                   className={`w-6 h-6 flex items-center justify-center rounded-full border-2 transition-colors duration-300 ${
                     selectedPlan === plan.id
@@ -52,7 +55,6 @@ export const PaymentMethod = () => {
                   />
                 </div>
 
-                {/* Plan Info */}
                 <div className='flex-1 font-raleway'>
                   <div className='text-white text-base font-bold mb-1'>
                     {plan.title}
@@ -66,16 +68,23 @@ export const PaymentMethod = () => {
           ))}
         </div>
       </div>
+    </div>
+  );
+};
+*/
 
-      {/* Button */}
-      {/* <Link to='/checkout/setup-profile'>
-        <button
-          type='submit'
-          className='w-full p-2.5 bg-orange-500 rounded-lg text-white text-base font-semibold hover:bg-orange-600 transition'
-        >
-          Payment method
-        </button>
-      </Link> */}
+// 🚨 BETA TESTING: Export a simple placeholder component
+export const PaymentMethod = () => {
+  return (
+    <div className='md:mt-8 mt-5 text-center'>
+      <div className='rounded-lg bg-gradient-to-r from-yellow-600 to-orange-600 p-4 border-2 border-yellow-400'>
+        <h3 className='font-bold text-white text-center mb-2'>
+          🚨 BETA TESTING MODE
+        </h3>
+        <p className='text-white text-center text-sm'>
+          Payment method selection is disabled during beta testing.
+        </p>
+      </div>
     </div>
   );
 };

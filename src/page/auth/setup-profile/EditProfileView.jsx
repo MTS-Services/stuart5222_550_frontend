@@ -8,6 +8,10 @@ import { FaCamera } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { MdOutlinePrivacyTip } from "react-icons/md";
 import { validateForm } from "../../../utils/validateForm";
+import { calculateAge, estimateBirthFromAge } from "../../../utils/ageUtils";
+import AgeInput from "../../../components/common/AgeInput";
+import LocationInput from "../../../components/common/LocationInput";
+import HeightInput from "../../../components/common/HeightInput";
 import {
   profileStatusChange,
   submitEditProfile,
@@ -19,24 +23,31 @@ const EditProfileView = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [success, setSuccess] = useState(false);
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState([]); // New files to upload
+  const [existingImages, setExistingImages] = useState([]); // Existing images from profile
+  const [deletedImageUrls, setDeletedImageUrls] = useState([]); // Track deleted existing images
   const [errors, setErrors] = useState({});
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [birthMonth, setBirthMonth] = useState(null);
+  const [birthYear, setBirthYear] = useState(null);
+  const [county, setCounty] = useState("");
+  const [heightFeet, setHeightFeet] = useState("");
+  const [heightInches, setHeightInches] = useState("");
   const fileInputRef = useRef(null);
   const { user_email } = useParams();
 
   const dispatch = useDispatch();
   // ============================================
-  // 📸 Image Upload Handler with Preview
+  // 📸 Improved Image Management
   // ============================================
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    const existingImageCount = profileData?.images?.length || 0;
-    const maxNewFiles = 13 - existingImageCount;
+    const totalCurrentImages = existingImages.length + files.length;
+    const maxNewFiles = 13 - totalCurrentImages;
     
     if (selectedFiles.length > maxNewFiles) {
-      toast.warn(`You can only upload ${maxNewFiles} more image${maxNewFiles > 1 ? 's' : ''} (you already have ${existingImageCount})`);
+      toast.warn(`You can only upload ${maxNewFiles} more image${maxNewFiles > 1 ? 's' : ''} (you already have ${totalCurrentImages})`); 
       return;
     }
 
@@ -49,32 +60,82 @@ const EditProfileView = () => {
       return;
     }
 
-    setFiles(validFiles);
-    const newPreviews = validFiles.map((file) => URL.createObjectURL(file));
+    // Add new files to the existing files array
+    setFiles(prevFiles => [...prevFiles, ...validFiles]);
     
-    // Combine existing image URLs with new file previews
-    const existingImageUrls = profileData?.images?.map(img => img.url) || [];
-    setImagePreviews([...existingImageUrls, ...newPreviews]);
+    // Create previews for new files
+    const newPreviews = validFiles.map((file) => ({
+      url: URL.createObjectURL(file),
+      isNew: true,
+      file: file
+    }));
+    
+    // Update all image previews (existing + new)
+    updateImagePreviews(existingImages, [...files, ...validFiles]);
     e.target.value = "";
   };
 
-  const removeImage = (index) => {
-    const existingImageCount = profileData?.images?.length || 0;
+  const updateImagePreviews = (existing, newFiles) => {
+    const existingPreviews = existing.map((img, index) => ({
+      url: img.url,
+      isNew: false,
+      index: index,
+      originalUrl: img.url
+    }));
     
-    // Only allow removing newly uploaded files, not existing images
-    if (index < existingImageCount) {
-      toast.warn("Cannot remove existing images. You can only remove newly uploaded files.");
-      return;
-    }
+    const newPreviews = newFiles.map((file, index) => ({
+      url: URL.createObjectURL(file),
+      isNew: true,
+      index: index,
+      file: file
+    }));
     
-    const newFileIndex = index - existingImageCount;
-    const newFiles = files.filter((_, i) => i !== newFileIndex);
-    setFiles(newFiles);
-    
-    // Update imagePreviews by removing only the new file preview
-    const existingPreviews = imagePreviews.slice(0, existingImageCount);
-    const newPreviews = imagePreviews.slice(existingImageCount).filter((_, i) => i !== newFileIndex);
     setImagePreviews([...existingPreviews, ...newPreviews]);
+  };
+
+  const removeExistingImage = async (imageUrl, imageIndex) => {
+    try {
+      // Call API to delete the image
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/profile/${user_email}/image/${imageIndex}`,
+        {
+          method: 'DELETE',
+        }
+      );
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete image');
+      }
+      
+      // Update local state
+      const updatedExisting = existingImages.filter((_, index) => index !== imageIndex);
+      setExistingImages(updatedExisting);
+      updateImagePreviews(updatedExisting, files);
+      toast.success('Image deleted successfully');
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      toast.error(error.message || 'Failed to delete image');
+    }
+  };
+
+  const removeNewImage = (fileIndex) => {
+    const updatedFiles = files.filter((_, index) => index !== fileIndex);
+    setFiles(updatedFiles);
+    updateImagePreviews(existingImages, updatedFiles);
+  };
+
+  const removeImage = (index, isExisting = false) => {
+    if (isExisting) {
+      const imageUrl = existingImages[index]?.url;
+      if (imageUrl) {
+        removeExistingImage(imageUrl, index);
+      }
+    } else {
+      // Calculate the index in the new files array
+      const newFileIndex = index - existingImages.length;
+      removeNewImage(newFileIndex);
+    }
   };
 
   const handleClick = () => {
@@ -88,12 +149,20 @@ const EditProfileView = () => {
     e.preventDefault();
     const form = e.currentTarget;
 
+    // Combine feet and inches into a single height string
+    const heightString = heightFeet && heightInches ? `${heightFeet}'${heightInches}"` : '';
+
+    // Calculate age from birth month and year
+    const calculatedAge = calculateAge(parseInt(birthMonth), parseInt(birthYear));
+
     const formData = {
       displayName: form.firstName.value,
-      age: form.age.value,
-      height: form.height.value,
+      birthMonth: birthMonth,
+      birthYear: birthYear,
+      age: calculatedAge, // Store calculated age for backward compatibility
+      height: heightString,
       bodyType: form.bodyType.value,
-      area: form.area.value,
+      county: county,
       bio: form.textArea.value,
       dealbreakers: form.dealBreaks.value,
       startDate: form.startDate.value || null,
@@ -117,8 +186,7 @@ const EditProfileView = () => {
     }
 
     // Calculate total image count (existing + new)
-    const existingImageCount = profileData?.images?.length || 0;
-    const totalImageCount = existingImageCount + files.length;
+    const totalImageCount = existingImages.length + files.length;
 
     if (totalImageCount < 3) {
       const needed = 3 - totalImageCount;
@@ -186,13 +254,36 @@ const EditProfileView = () => {
           console.log("Fetched profile data:", result.payload);
           setProfileData(result.payload);
           
-          // Pre-populate images if they exist
+          // Initialize birth month/year from age or existing birth data
+          if (result.payload.birthMonth && result.payload.birthYear) {
+            setBirthMonth(result.payload.birthMonth);
+            setBirthYear(result.payload.birthYear);
+          } else if (result.payload.age) {
+            // Estimate from age for backward compatibility
+            const { birthMonth, birthYear } = estimateBirthFromAge(result.payload.age);
+            setBirthMonth(birthMonth);
+            setBirthYear(birthYear);
+          }
+          
+          // Initialize county
+          setCounty(result.payload.county || "");
+          
+          // Initialize height from existing data
+          if (result.payload.height) {
+            const heightParts = result.payload.height.split("'");
+            if (heightParts.length >= 2) {
+              setHeightFeet(heightParts[0] || "");
+              setHeightInches(heightParts[1]?.replace('"', '') || "");
+            }
+          }
+          
+          // Initialize existing images
           if (result.payload?.images?.length > 0) {
-            const imageUrls = result.payload.images.map(img => img.url);
-            setImagePreviews(imageUrls);
-            // Note: We can't set the actual files since they're URLs, not File objects
-            // The backend should handle existing images separately
+            const images = result.payload.images.map(img => ({ url: img.url }));
+            setExistingImages(images);
+            updateImagePreviews(images, []);
           } else {
+            setExistingImages([]);
             setImagePreviews([]);
           }
         } else {
@@ -291,53 +382,25 @@ const EditProfileView = () => {
               )}
             </div>
 
-            <div className="my-5 flex flex-col gap-2 self-stretch">
-              <label className="mb-4 font-raleway text-xl font-medium text-white">
-                Age <span className="font-raleway text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                name="age"
-                placeholder="Enter your age"
-                defaultValue={profileData?.age || ""}
-                className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
-                  errors.age ? "border-red-500" : "border-gray-500"
-                } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
-              />
-              {errors.age && (
-                <p className="font-raleway text-sm text-red-500">
-                  {errors.age}
-                </p>
-              )}
-              <p className="my-2 font-raleway text-xs font-normal text-gray-400">
-                (We only store your month and year of birth which will calculate
-                your age as of the 28th of your birth month.)
-              </p>
-              <p className="mb-1 flex items-center gap-2 font-raleway text-xs font-normal text-gray-400 md:mb-2">
-                <BiErrorCircle className="h-5 w-5 text-orange-500" />
-                Must be 18 or older
-              </p>
-            </div>
+            {/* Age Input Component */}
+            <AgeInput
+              birthMonth={birthMonth}
+              birthYear={birthYear}
+              onBirthMonthChange={setBirthMonth}
+              onBirthYearChange={setBirthYear}
+              errors={errors}
+            />
 
-            <div className="flex w-full flex-col gap-2">
-              <label className="mb-[8px] font-raleway text-xl font-medium text-white">
-                Height <span className="font-raleway text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="height"
-                placeholder="Enter your Height"
-                defaultValue={profileData?.height || ""}
-                className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
-                  errors.height ? "border-red-500" : "border-gray-500"
-                } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
-              />
-              {errors.height && (
-                <p className="font-raleway text-sm text-red-500">
-                  {errors.height}
-                </p>
-              )}
-            </div>
+            {/* Height Input Component */}
+            <HeightInput
+              heightFeet={heightFeet}
+              heightInches={heightInches}
+              onHeightFeetChange={setHeightFeet}
+              onHeightInchesChange={setHeightInches}
+              errors={errors}
+              defaultFeet={profileData?.height ? profileData.height.split("'")[0] : ""}
+              defaultInches={profileData?.height ? profileData.height.split("'")[1]?.replace('"', '') : ""}
+            />
 
             <div className="my-5 flex w-full flex-col gap-2">
               <label className="mb-[8px] font-raleway text-xl font-medium text-white">
@@ -360,25 +423,14 @@ const EditProfileView = () => {
               )}
             </div>
 
-            <div className="my-5 flex w-full flex-col gap-2 self-stretch">
-              <label className="mb-[8px] font-raleway text-xl font-medium text-white">
-                Area <span className="font-raleway text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="area"
-                placeholder="Enter your country and state"
-                defaultValue={profileData?.area || ""}
-                className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
-                  errors.area ? "border-red-500" : "border-gray-500"
-                } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
-              />
-              {errors.area && (
-                <p className="font-raleway text-sm text-red-500">
-                  {errors.area}
-                </p>
-              )}
-            </div>
+            {/* Location Input Component */}
+            <LocationInput
+              county={county}
+              onCountyChange={setCounty}
+              errors={errors}
+              defaultCounty={profileData?.county || ""}
+              className="my-5"
+            />
 
             <div className="my-5 flex w-full flex-col gap-2 self-stretch">
               <label className="mb-[8px] font-raleway text-xl font-medium text-white">
@@ -496,26 +548,26 @@ const EditProfileView = () => {
                 <div className="mb-4 w-full max-w-xs">
                   <div className="mb-1 flex justify-between text-xs text-gray-600">
                     <span>Upload Progress</span>
-                    <span>{(profileData?.images?.length || 0) + files.length}/13 images</span>
+                    <span>{existingImages.length + files.length}/13 images</span>
                   </div>
                   <div className="h-2 w-full rounded-full bg-gray-200">
                     <div
                       className="h-2 rounded-full bg-orange-500 transition-all duration-300"
-                      style={{ width: `${(((profileData?.images?.length || 0) + files.length) / 13) * 100}%` }}
+                      style={{ width: `${((existingImages.length + files.length) / 13) * 100}%` }}
                     ></div>
                   </div>
                   <div className="mt-1 flex justify-between text-xs text-gray-500">
                     <span>Min: 3</span>
                     <span
                       className={
-                        ((profileData?.images?.length || 0) + files.length) < 3
+                        (existingImages.length + files.length) < 3
                           ? "font-semibold text-red-500"
                           : "font-semibold text-green-500"
                       }
                     >
-                      {((profileData?.images?.length || 0) + files.length) >= 3
+                      {(existingImages.length + files.length) >= 3
                         ? "✓ Requirement met"
-                        : `Need ${3 - ((profileData?.images?.length || 0) + files.length)} more image${(3 - ((profileData?.images?.length || 0) + files.length)) > 1 ? 's' : ''}`}
+                        : `Need ${3 - (existingImages.length + files.length)} more image${(3 - (existingImages.length + files.length)) > 1 ? 's' : ''}`}
                     </span>
                   </div>
                 </div>
@@ -534,64 +586,70 @@ const EditProfileView = () => {
                 {imagePreviews.length > 0 && (
                   <div className="mt-4 w-full">
                     <div className="mb-2 text-center text-sm text-gray-400">
-                      {profileData?.images?.length > 0 && (
-                        <span>Existing: {profileData.images.length} | </span>
-                      )}
-                      New uploads: {files.length} | Total: {(profileData?.images?.length || 0) + files.length}
+                      Existing: {existingImages.length} | New uploads: {files.length} | Total: {existingImages.length + files.length}
                     </div>
                     <div className="mb-4 grid grid-cols-3 gap-3">
-                      {imagePreviews.map((preview, idx) => {
-                        const isExistingImage = idx < (profileData?.images?.length || 0);
-                        return (
-                          <div key={idx} className="group relative">
-                            <img
-                              src={preview}
-                              alt={`Preview ${idx + 1}`}
-                              className="h-24 w-full rounded-lg border-2 border-gray-200 object-cover"
-                            />
-                            {!isExistingImage && (
-                              <button
-                                type="button"
-                                onClick={() => removeImage(idx)}
-                                className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition group-hover:opacity-100"
-                              >
-                                <RiDeleteBinLine className="h-4 w-4" />
-                              </button>
-                            )}
+                      {imagePreviews.map((imageData, idx) => (
+                        <div key={`${imageData.isNew ? 'new' : 'existing'}-${idx}`} className="group relative">
+                          <img
+                            src={imageData.url}
+                            alt={`Preview ${idx + 1}`}
+                            className="h-24 w-full rounded-lg border-2 border-gray-200 object-cover"
+                          />
+                          
+                          {/* Delete Button - now available for all images */}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (imageData.isNew) {
+                                // For new images, calculate the correct index in the files array
+                                const newImageIndex = idx - existingImages.length;
+                                removeNewImage(newImageIndex);
+                              } else {
+                                // For existing images, use the imageData.index
+                                removeExistingImage(imageData.originalUrl, imageData.index);
+                              }
+                            }}
+                            className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition group-hover:opacity-100 hover:bg-red-600"
+                            title={`Delete ${imageData.isNew ? 'new' : 'existing'} image`}
+                          >
+                            <RiDeleteBinLine className="h-4 w-4" />
+                          </button>
 
-                            {/* 🔖 Image Type Label */}
-                            <div className={`absolute bottom-1 left-1 rounded px-2 py-[2px] text-[10px] text-white ${isExistingImage ? 'bg-blue-600 bg-opacity-80' : 'bg-black bg-opacity-60'}`}>
-                              {isExistingImage ? 'Existing' : 'New'} - {idx === 0
-                                ? "Face"
-                                : idx === 1
-                                  ? "Full Body"
-                                  : idx === 2
-                                    ? "Third"
-                                    : `Extra ${idx - 2}`}
-                            </div>
+                          {/* 🔖 Image Type Label */}
+                          <div className={`absolute bottom-1 left-1 rounded px-2 py-[2px] text-[10px] text-white ${
+                            imageData.isNew ? 'bg-green-600 bg-opacity-80' : 'bg-blue-600 bg-opacity-80'
+                          }`}>
+                            {imageData.isNew ? 'New' : 'Existing'} - {idx === 0
+                              ? "Face"
+                              : idx === 1
+                                ? "Full Body" 
+                                : idx === 2
+                                  ? "Toothy Grin"
+                                  : `Extra ${idx - 2}`}
                           </div>
-                        );
-                      })}
+                        </div>
+                      ))}
                     </div>
 
                     {/* Upload Status */}
                     <div
                       className={`rounded-lg p-2 text-center ${
-                        ((profileData?.images?.length || 0) + files.length) >= 3
+                        (existingImages.length + files.length) >= 3
                           ? "bg-green-100 text-green-700"
                           : "bg-yellow-100 text-yellow-700"
                       }`}
                     >
-                      {((profileData?.images?.length || 0) + files.length) >= 3 ? (
+                      {(existingImages.length + files.length) >= 3 ? (
                         <div className="flex items-center justify-center gap-2">
                           <GiCheckMark className="h-4 w-4" />
-                          Ready to submit! ({(profileData?.images?.length || 0) + files.length}/13 images)
+                          Ready to submit! ({existingImages.length + files.length}/13 images)
                         </div>
                       ) : (
                         <div className="flex items-center justify-center gap-2">
                           <BiErrorCircle className="h-4 w-4" />
-                          {3 - ((profileData?.images?.length || 0) + files.length)} more image
-                          {3 - ((profileData?.images?.length || 0) + files.length) !== 1 ? "s" : ""} needed
+                          {3 - (existingImages.length + files.length)} more image
+                          {3 - (existingImages.length + files.length) !== 1 ? "s" : ""} needed
                         </div>
                       )}
                     </div>

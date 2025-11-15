@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../../../features/public/profile/profileFetch";
+import { shouldShowTravelMode, formatTravelDate } from "../../../utils/travelMode";
 
 const UserView = () => {
   const dispatch = useDispatch();
@@ -79,39 +80,42 @@ const UserView = () => {
           {userProfile.displayName || "Anonymous User"}
         </h1>
 
-        <div className="flex w-full items-center justify-center text-center">
-          <div className="my-6 w-[600px] overflow-hidden rounded-lg border-l border-t border-orange-500 bg-gradient-to-b from-orange-500/10 to-white/0 p-8 shadow-lg">
-            {/* Content */}
-            <h2 className="mb-[21px] text-start font-raleway text-xl font-bold text-gray-100 md:text-[32px]">
-              I am traveling and will be in:
-            </h2>
+        {/* Travel Mode Section - Only show if travel data is valid and not expired */}
+        {shouldShowTravelMode(userProfile) && (
+          <div className="flex w-full items-center justify-center text-center">
+            <div className="my-6 w-[600px] overflow-hidden rounded-lg border-l border-t border-orange-500 bg-gradient-to-b from-orange-500/10 to-white/0 p-8 shadow-lg">
+              {/* Content */}
+              <h2 className="mb-[21px] text-start font-raleway text-xl font-bold text-gray-100 md:text-[32px]">
+                I am traveling and will be in:
+              </h2>
 
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <span className="font-raleway text-orange-600">
-                  <FaRegCalendar size={20} />
-                </span>
-                <div className="text-start">
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <span className="font-raleway text-orange-600">
+                    <FaRegCalendar size={20} />
+                  </span>
+                  <div className="text-start">
+                    <p className="font-raleway text-xl font-medium text-gray-300">
+                      Start-Date: {formatTravelDate(userProfile.startDate)}
+                    </p>
+                    <p className="font-raleway text-xl font-medium text-gray-300">
+                      End-Date: {formatTravelDate(userProfile.endDate)}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 text-start">
+                  <span className="font-raleway text-xl text-orange-600">
+                    <GrLocation size={20} />
+                  </span>
                   <p className="font-raleway text-xl font-medium text-gray-300">
-                    Start-Date: October 1, 2025
-                  </p>
-                  <p className="font-raleway text-xl font-medium text-gray-300">
-                    End-Date: October 20, 2025
+                    Location: {userProfile.location}
                   </p>
                 </div>
               </div>
-
-              <div className="flex items-center gap-4 text-start">
-                <span className="font-raleway text-xl text-orange-600">
-                  <GrLocation size={20} />
-                </span>
-                <p className="font-raleway text-xl font-medium text-gray-300">
-                  Location: {userProfile.location}
-                </p>
-              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Image */}
         <div className="">

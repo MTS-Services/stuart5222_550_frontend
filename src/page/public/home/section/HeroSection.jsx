@@ -10,7 +10,7 @@ const HeroSection = () => {
             <img
               src="/img/assets/logo.png"
               alt="preview"
-              className="h-24 w-36 object-cover"
+              className="h-56 w-56 object-contain"
             />
           </div>
 

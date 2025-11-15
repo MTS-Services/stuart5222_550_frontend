@@ -6,6 +6,7 @@ import {
   adminUserApprovedProfile,
   adminUserRejectedProfile,
 } from "../../../features/admin/management/usreFetch";
+import { shouldShowTravelMode, formatTravelDate } from "../../../utils/travelMode";
 
 const UserDetailsView = () => {
   const navigate = useNavigate();
@@ -44,6 +45,10 @@ const UserDetailsView = () => {
     try {
       await dispatch(adminUserApprovedProfile({ id: user.id })).unwrap();
       toast.success("User approved!");
+      // Redirect to user management after successful approval
+      setTimeout(() => {
+        navigate("/admin/user-management");
+      }, 1000);
     } catch (err) {
       toast.error(err.message || "Approval failed");
     } finally {
@@ -68,6 +73,10 @@ const UserDetailsView = () => {
       ).unwrap();
       toast.success("User rejected!");
       setRejectionReason(""); // clear after success
+      // Redirect to user management after successful rejection
+      setTimeout(() => {
+        navigate("/admin/user-management");
+      }, 1000);
     } catch (err) {
       toast.error(err.message || "Rejection failed");
     } finally {
@@ -140,35 +149,37 @@ const UserDetailsView = () => {
         </div>
       </div>
 
-      {/* Travel Info */}
-      <div className="rounded-lg border bg-gradient-to-b from-orange-500/10 to-white p-6">
-        <div className="text-xl font-bold text-neutral-800">
-          <span className="font-raleway uppercase">I </span>
-          <span className="font-raleway lowercase">
-            am traveling and will be in:
-          </span>
+      {/* Travel Info - Only show if travel data is valid and not expired */}
+      {shouldShowTravelMode(user) && (
+        <div className="rounded-lg border bg-gradient-to-b from-orange-500/10 to-white p-6">
+          <div className="text-xl font-bold text-neutral-800">
+            <span className="font-raleway uppercase">I </span>
+            <span className="font-raleway lowercase">
+              am traveling and will be in:
+            </span>
+          </div>
+          <div className="mt-4 flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <span className="font-raleway text-2xl text-orange-500">📍</span>
+              <span className="font-raleway text-xl font-medium">
+                Location: {location}
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="font-raleway text-2xl text-orange-500">📅</span>
+              <span className="font-raleway text-xl font-medium">
+                Start Date: {formatTravelDate(startDate)}
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="font-raleway text-2xl text-orange-500">📅</span>
+              <span className="font-raleway text-xl font-medium">
+                End Date: {formatTravelDate(endDate)}
+              </span>
+            </div>
+          </div>
         </div>
-        <div className="mt-4 flex flex-col gap-4">
-          <div className="flex items-center gap-3">
-            <span className="font-raleway text-2xl text-orange-500">📍</span>
-            <span className="font-raleway text-xl font-medium">
-              Location: {location}
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="font-raleway text-2xl text-orange-500">📅</span>
-            <span className="font-raleway text-xl font-medium">
-              Start Date: {startDate}
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="font-raleway text-2xl text-orange-500">📅</span>
-            <span className="font-raleway text-xl font-medium">
-              End Date: {endDate}
-            </span>
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* Images */}
       <div>
