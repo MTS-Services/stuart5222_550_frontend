@@ -34,12 +34,18 @@ export const endpoints = {
     GET_UNREAD_COUNT: "/admin/notifications/unread-count",
     GET_USER_QR_CODE: "/qr-cards/by-email",
 
-    // Mail Templates Endpoints
-    GET_MAIL_TEMPLATES_ALL: "/admin/templates",
+    // Email Templates Endpoints
+    EMAIL_TEMPLATES: "/admin/templates",
+    EMAIL_TEMPLATE_BY_NAME: "/admin/templates", // Use with /:name parameter
+    EMAIL_TEMPLATE_TEST: "/admin/templates", // Use with /:name/test parameter
+    EMAIL_TEMPLATE_PREVIEW: "/admin/templates", // Use with /:name/preview parameter
+    EMAIL_TEMPLATE_DUPLICATE: "/admin/templates/duplicate",
+    EMAIL_TEMPLATE_VARIABLES: "/admin/templates/variables",
 
+    // Legacy Mail Templates Endpoints (kept for backward compatibility)
+    GET_MAIL_TEMPLATES_ALL: "/admin/templates",
     UPDATE_MAIL_TEMPLATE_APPROVED: "/admin/templates/registration_approved",
     UPDATE_MAIL_TEMPLATE_REJECTED: "/admin/templates/registration_rejected",
-    UPDATE_MAIL_TEMPLATE_APPROVED: "/admin/templates/registration_approved",
     UPDATE_MAIL_TEMPLATE_DRAFT: "/admin/templates/draft_notification",
 
     // Dummy User Creation

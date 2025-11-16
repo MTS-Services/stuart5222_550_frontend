@@ -29,6 +29,9 @@ export const UPDATE = async (url, payload) => {
   return responseData;
 };
 
+// Add PUT as an alias for UPDATE to maintain compatibility
+export const PUT = UPDATE;
+
 export const DELETE = async (url) => {
   const { data: responseData } = await api.delete(url);
   return responseData;

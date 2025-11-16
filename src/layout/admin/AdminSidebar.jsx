@@ -3,7 +3,7 @@ import { useState } from "react";
 import { CgDice4 } from "react-icons/cg";
 import { FaPowerOff, FaRegBell, FaUsers, FaUsersCog } from "react-icons/fa";
 import { FaGear } from "react-icons/fa6";
-import { FiMenu, FiX } from "react-icons/fi";
+import { FiMenu, FiX, FiMail } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { STORAGE } from "../../config/storage/auth/authStorage";
 
@@ -24,6 +24,11 @@ const navLinks = [
     name: "User Edit",
     icon: <FaUsersCog size={20} />,
     path: "/admin/user-edit",
+  },
+  {
+    name: "Email Templates", 
+    icon: <FiMail size={20} />, 
+    path: "/admin/email-templates"
   },
   { name: "Settings", icon: <FaGear size={20} />, path: "/admin/settings" },
 ];
