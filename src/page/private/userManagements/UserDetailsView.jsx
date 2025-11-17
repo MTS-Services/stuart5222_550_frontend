@@ -6,7 +6,10 @@ import {
   adminUserApprovedProfile,
   adminUserRejectedProfile,
 } from "../../../features/admin/management/usreFetch";
-import { shouldShowTravelMode, formatTravelDate } from "../../../utils/travelMode";
+import {
+  shouldShowTravelMode,
+  formatTravelDate,
+} from "../../../utils/travelMode";
 
 const UserDetailsView = () => {
   const navigate = useNavigate();
@@ -190,7 +193,7 @@ const UserDetailsView = () => {
               <img
                 src={img}
                 alt={`Img ${idx + 1}`}
-                className="h-full w-full rounded-md object-cover"
+                className="h-96 w-96 rounded-lg border border-gray-300 object-cover"
                 onError={(e) => (e.target.src = "/img/placeholder.jpg")}
               />
             </div>

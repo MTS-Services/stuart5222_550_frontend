@@ -6,7 +6,10 @@ import {
 } from "../../../features/admin/management/usreFetch";
 import { useEffect, useState } from "react";
 import QRCard from "../../../components/common/QRCard";
-import { shouldShowTravelMode, formatTravelDate } from "../../../utils/travelMode";
+import {
+  shouldShowTravelMode,
+  formatTravelDate,
+} from "../../../utils/travelMode";
 // import CustomModal from "../../../components/common/CustomModal";
 // import { formatDate } from "../../../utils/formatDate";
 import { getUserQRcode } from "../../../features/admin/home/dashboardFetch";
@@ -104,14 +107,14 @@ const EditDetailsView = () => {
   };
 
   return (
-    <div className="space-y-8 font-raleway text-black">
+    <div className="space-y-8 px-10 font-raleway text-black">
       {/* User Info Section */}
       <div className="rounded-sm p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="h-[80px] w-[80px]">
               <img
-                className="h-full w-full rounded-full object-cover"
+                className="h-full w-full rounded-full border border-gray-300 object-cover"
                 src={image[0]}
                 alt={userInfo.name || "User"}
               />
@@ -232,7 +235,7 @@ const EditDetailsView = () => {
               <img
                 src={img}
                 alt={`Image ${index + 1}`}
-                className="h-full w-full bg-yellow-200 object-cover"
+                className="h-96 w-96 rounded-lg border border-gray-300 bg-yellow-200 object-cover"
               />
             </div>
           ))}

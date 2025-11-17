@@ -209,11 +209,9 @@ const EmailTemplatesPage = () => {
       </div>
 
       {/* Template Types Quick Start */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h3 className="mb-4 text-lg font-semibold text-gray-900">
-          Quick Start Templates
-        </h3>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {/* <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Start Templates</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {templateTypes.map((type) => {
             const existingTemplate = templates.find(
               (t) => t.name === type.name,
@@ -262,7 +260,7 @@ const EmailTemplatesPage = () => {
             );
           })}
         </div>
-      </div>
+      </div> */}
 
       {/* Existing Templates */}
       <div className="rounded-lg border border-gray-200 bg-white shadow-sm">

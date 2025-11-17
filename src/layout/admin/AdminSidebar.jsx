@@ -1,7 +1,13 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { CgDice4 } from "react-icons/cg";
-import { FaPowerOff, FaRegBell, FaUsers, FaUsersCog } from "react-icons/fa";
+import {
+  FaPowerOff,
+  FaRegBell,
+  FaUser,
+  FaUsers,
+  FaUsersCog,
+} from "react-icons/fa";
 import { FaGear } from "react-icons/fa6";
 import { FiMenu, FiX, FiMail } from "react-icons/fi";
 import { useSelector } from "react-redux";
@@ -12,7 +18,7 @@ const navLinks = [
   { name: "Dashboard", icon: <CgDice4 size={18} />, path: "/admin" },
   {
     name: "Add Dummy User",
-    icon: <FaUsers size={20} />,
+    icon: <FaUser size={18} />,
     path: "/admin/add-dummy-user",
   },
   {
@@ -26,9 +32,9 @@ const navLinks = [
     path: "/admin/user-edit",
   },
   {
-    name: "Email Templates", 
-    icon: <FiMail size={20} />, 
-    path: "/admin/email-templates"
+    name: "Email Templates",
+    icon: <FiMail size={20} />,
+    path: "/admin/email-templates",
   },
   { name: "Settings", icon: <FaGear size={20} />, path: "/admin/settings" },
 ];
@@ -130,7 +136,11 @@ const AdminSidebar = () => {
             <SidebarLink
               key={link.name}
               link={link}
-              active={location.pathname === link.path}
+              active={
+                link.path === "/admin"
+                  ? location.pathname === "/admin"
+                  : location.pathname.startsWith(link.path)
+              }
               onClick={() => handleNavigate(link.path)}
             />
           ))}

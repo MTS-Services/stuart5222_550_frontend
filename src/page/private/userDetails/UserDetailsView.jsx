@@ -39,7 +39,7 @@ const UserDetailsView = () => {
   } = user;
 
   return (
-    <div className="font-raleway text-black">
+    <div className="px-10 font-raleway text-black">
       {/* User Info Section */}
       <div className="rounded-sm p-4">
         <div className="flex items-center justify-between">
