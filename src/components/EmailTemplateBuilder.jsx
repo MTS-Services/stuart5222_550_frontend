@@ -347,15 +347,16 @@ const EmailTemplateBuilder = ({
           const headerSubtitle = isPreview ? replaceVariablesWithSamples(component.props.subtitle || '') : component.props.subtitle || '';
           return `
             <div class="header" style="background-color: ${component.props.backgroundColor}; color: ${component.props.textColor}; text-align: ${component.props.alignment}; padding: ${component.props.padding};">
-              <h1 style="margin: 0; font-size: 32px;">${headerTitle}</h1>
-              ${headerSubtitle ? `<p style="margin: 10px 0 0 0;">${isPreview ? headerSubtitle : headerSubtitle.replace(/\{\{/g, '&#123;&#123;').replace(/\}\}/g, '&#125;&#125;')}</p>` : ''}
+              <h1 style="margin: 0; font-size: 32px; color: ${component.props.textColor};">${headerTitle}</h1>
+              ${headerSubtitle ? `<p style="margin: 10px 0 0 0; color: ${component.props.textColor};">${isPreview ? headerSubtitle : headerSubtitle.replace(/\{\{/g, '&#123;&#123;').replace(/\}\}/g, '&#125;&#125;')}</p>` : ''}
             </div>
           `;
         case 'text':
+        case 'paragraph':
           const textContent = isPreview ? replaceVariablesWithSamples(component.props.content) : component.props.content;
           return `
             <div class="text-block" style="background-color: ${component.props.backgroundColor}; color: ${component.props.textColor}; text-align: ${component.props.alignment}; padding: ${component.props.padding}; font-size: ${component.props.fontSize};">
-              ${textContent.split('\n').map(line => `<p style="margin: 0 0 16px 0;">${isPreview ? line : line.replace(/\{\{/g, '&#123;&#123;').replace(/\}\}/g, '&#125;&#125;')}</p>`).join('')}
+              ${textContent.split('\n').map(line => `<p style="margin: 0 0 16px 0; color: ${component.props.textColor}; font-size: ${component.props.fontSize};">${isPreview ? line : line.replace(/\{\{/g, '&#123;&#123;').replace(/\}\}/g, '&#125;&#125;')}</p>`).join('')}
             </div>
           `;
         case 'button':
@@ -363,7 +364,7 @@ const EmailTemplateBuilder = ({
           const buttonUrl = isPreview ? replaceVariablesWithSamples(component.props.url) : component.props.url;
           return `
             <div class="button-container" style="text-align: ${component.props.alignment}; padding: ${component.props.padding};">
-              <a href="${buttonUrl}" class="button" style="background-color: ${component.props.backgroundColor}; color: ${component.props.textColor}; border-radius: ${component.props.borderRadius}; padding: ${component.props.padding};">
+              <a href="${buttonUrl}" class="button" style="display: inline-block; background-color: ${component.props.backgroundColor}; color: ${component.props.textColor}; border-radius: ${component.props.borderRadius}; padding: ${component.props.padding}; text-decoration: none; font-weight: bold;">
                 ${isPreview ? buttonText : buttonText.replace(/\{\{/g, '&#123;&#123;').replace(/\}\}/g, '&#125;&#125;')}
               </a>
             </div>
@@ -380,9 +381,10 @@ const EmailTemplateBuilder = ({
           `;
         case 'footer':
           const footerContent = isPreview ? replaceVariablesWithSamples(component.props.content) : component.props.content;
+          const footerLines = isPreview ? footerContent : footerContent.replace(/\{\{/g, '&#123;&#123;').replace(/\}\}/g, '&#125;&#125;');
           return `
             <div class="footer" style="background-color: ${component.props.backgroundColor}; color: ${component.props.textColor}; text-align: ${component.props.alignment}; padding: ${component.props.padding}; font-size: ${component.props.fontSize};">
-              ${isPreview ? footerContent : footerContent.replace(/\{\{/g, '&#123;&#123;').replace(/\}\}/g, '&#125;&#125;')}
+              ${footerLines.split('\n').map(line => `<p style="margin: 5px 0; color: ${component.props.textColor}; font-size: ${component.props.fontSize};">${line}</p>`).join('')}
             </div>
           `;
         default:
