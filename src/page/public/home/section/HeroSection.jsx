@@ -6,7 +6,7 @@ const HeroSection = () => {
       <div className="flex items-center justify-center">
         <div className="text-center">
           {/* Image */}
-          <div className="flex justify-center py-[40px]">
+          <div className="flex justify-center pt-[40px]">
             <img
               src="/img/assets/logo.png"
               alt="preview"

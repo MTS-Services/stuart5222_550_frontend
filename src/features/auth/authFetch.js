@@ -1,8 +1,8 @@
 // src/features/auth/authFetch.js
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { endpoints } from "../../config/api/httpEndpoint";
-import { STORAGE } from "../../config/storage/auth/authStorage";
 import { POST } from "../../config/api/httpMethods";
+import { AUTH_COOKIE } from "../../utils/authCookie";
 
 // ========== Login ==========
 export const loginUser = createAsyncThunk(
@@ -12,11 +12,12 @@ export const loginUser = createAsyncThunk(
       const res = await POST(endpoints.auth.LOGIN, { email, password });
 
       if (res?.access_token) {
-        STORAGE.setToken(res.access_token);
+        AUTH_COOKIE.set(res.access_token); // <-- store cookie
       }
 
       return res;
     } catch (err) {
+      console.error("loginUser error:", err);
       return rejectWithValue(
         err.response?.data?.message || "Failed to login user",
       );
@@ -30,12 +31,11 @@ export const paymentIntent = createAsyncThunk(
   async ({ paymentData }, { rejectWithValue }) => {
     try {
       const res = await POST(endpoints.auth.PAYMENT_INTENT, paymentData);
-      console.log("paymentIntent:", res);
+
       if (res?.success) {
         return res;
       }
     } catch (err) {
-      console.log("paymentIntent:", err);
       return rejectWithValue(
         err.response?.data?.message || "Failed to process payment",
       );
@@ -49,7 +49,7 @@ export const paymentSubscriptions = createAsyncThunk(
   async ({ paymentData }, { rejectWithValue }) => {
     try {
       const res = await POST(endpoints.auth.PAYMENT_SUBSCRIPTION, paymentData);
-      console.log("paymentSubscriptions:", res);
+
       if (res?.success) {
         return res;
       }

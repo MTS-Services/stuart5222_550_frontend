@@ -8,6 +8,7 @@ import adminUserManagementReducer from "../features/admin/management/usreSlice";
 import notificationsReducer from "./admin/notifications/notificationsSlice";
 import dashboardReducer from "./admin/home/dashboardSlice";
 import mailReducer from "./admin/mail/mailSlice";
+import counterReducer from "../features/admin/counter/counterSlice";
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     notifications: notificationsReducer,
     qrcode: qrCodeRequetReducer,
     mail: mailReducer,
+    counter: counterReducer,
     // Add other reducers here
   },
 

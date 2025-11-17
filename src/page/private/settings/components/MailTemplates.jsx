@@ -5,7 +5,9 @@ import { updateMailTemplates } from "../../../../features/admin/mail/mailFetch";
 import { toast } from "react-toastify";
 
 const MailTemplates = () => {
-  const { templates, isLoading, isError, success } = useSelector((state) => state.mail);
+  const { templates, isLoading, isError, success } = useSelector(
+    (state) => state.mail,
+  );
   const [template, setTemplate] = useState(templates);
 
   const [selectedId, setSelectedId] = useState(null);
@@ -24,10 +26,7 @@ const MailTemplates = () => {
       toast.error("Please select a template first.");
       return;
     }
-    
-    console.log("Updating template:", selected.name);
-    console.log("Template data:", selected);
-    
+
     try {
       await dispatch(updateMailTemplates({ templateData: selected })).unwrap();
       toast.success("Template updated successfully!");

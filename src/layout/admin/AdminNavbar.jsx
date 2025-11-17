@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
-import { FaPowerOff, FaRegBell, FaRegUser } from "react-icons/fa";
-import { STORAGE } from "../../config/storage/auth/authStorage";
-import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { AUTH_COOKIE } from "../../utils/authCookie";
+import { useSelector, useDispatch } from "react-redux";
+import { FaPowerOff, FaRegBell, FaRegUser } from "react-icons/fa";
 import { fetchAdminSettingsProfile } from "../../features/admin/home/dashboardFetch";
 
 const AdminNavbar = () => {
@@ -16,14 +16,12 @@ const AdminNavbar = () => {
   }, [dispatch]);
 
   const handleLogout = () => {
-    STORAGE.clearAll();
+    AUTH_COOKIE.remove();
     window.location.href = "/auth/login";
   };
 
   // Get display name - prioritize firstName, fallback to username, then email
   const getDisplayName = () => {
-    console.log("Profile settings:", profileSettings); // Debug log
-
     if (loading) return "Loading...";
     if (!profileSettings || Object.keys(profileSettings).length === 0) {
       return "Admin User";

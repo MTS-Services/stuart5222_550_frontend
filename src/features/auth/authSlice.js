@@ -2,8 +2,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { loginUser, paymentIntent, paymentSubscriptions } from "./authFetch";
 import { STORAGE } from "../../config/storage/auth/authStorage";
+import { AUTH_COOKIE } from "../../utils/authCookie";
 
-const token = STORAGE.getToken();
+// const token = STORAGE.getToken();
+const token = AUTH_COOKIE.get();
 
 const initialState = {
   user: null,

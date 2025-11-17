@@ -1,6 +1,6 @@
 // src/api/axiosInstance.js
-import axios from 'axios';
-import { STORAGE } from '../storage/auth/authStorage';
+import axios from "axios";
+import { AUTH_COOKIE } from "../../utils/authCookie";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -10,7 +10,7 @@ const api = axios.create({
 // =============== Request Interceptor ===============
 api.interceptors.request.use(
   (config) => {
-    const token = STORAGE.getToken();
+    const token = AUTH_COOKIE.get();
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -18,12 +18,12 @@ api.interceptors.request.use(
 
     // Optional logging (for debugging)
     if (import.meta.env.DEV) {
-      console.log('📤 Request:', config.method?.toUpperCase(), config.url);
+      console.log("📤 Request:", config.method?.toUpperCase(), config.url);
     }
 
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 // =============== Response Interceptor ===============
@@ -33,16 +33,16 @@ api.interceptors.response.use(
     const status = error.response?.status;
 
     if (status === 401) {
-      console.warn('🚫 Unauthorized — redirecting to login...');
+      console.warn("🚫 Unauthorized — redirecting to login...");
       // example: window.location.href = '/login';
     }
 
     if (status >= 500) {
-      console.error('💥 Server error:', error.response.data);
+      console.error("💥 Server error:", error.response.data);
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

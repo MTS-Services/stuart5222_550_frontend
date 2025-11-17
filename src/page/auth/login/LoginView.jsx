@@ -37,7 +37,6 @@ const LoginView = () => {
     e.preventDefault();
     try {
       await dispatch(loginUser(formData)).unwrap();
-      console.log("✅ Login successful");
       toast.success("Login successful!");
     } catch (err) {
       console.error("❌ Login failed:", err);
@@ -52,6 +51,7 @@ const LoginView = () => {
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="w-full max-w-md">
         {/* Card Container */}
+
         <div className="overflow-hidden rounded-2xl bg-white shadow">
           {/* Header */}
           <div className="p-8 text-center text-white">
@@ -148,8 +148,8 @@ const LoginView = () => {
               </div>
 
               <a
-                href='/auth/forgot-password'
-                className='text-sm font-medium text-[#F07400] hover:text-[#D66400] transition-colors'
+                href="/auth/forgot-password"
+                className="text-sm font-medium text-[#F07400] transition-colors hover:text-[#D66400]"
               >
                 Forgot password?
               </a>
