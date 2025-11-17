@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import {
-  PlusIcon,
-  TrashIcon,
-  EyeIcon,
+import React, { useState, useRef, useEffect } from 'react';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { 
+  PlusIcon, 
+  TrashIcon, 
+  EyeIcon, 
   CodeBracketIcon,
   SwatchIcon,
   PhotoIcon,
@@ -11,189 +11,142 @@ import {
   LinkIcon,
   RectangleStackIcon,
   CheckIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+  XMarkIcon
+} from '@heroicons/react/24/outline';
 
-const EmailTemplateBuilder = ({
-  template = null,
-  onSave,
-  onPreview,
+const EmailTemplateBuilder = ({ 
+  template = null, 
+  onSave, 
+  onPreview, 
   onCancel,
-  isLoading = false,
+  isLoading = false 
 }) => {
   const [components, setComponents] = useState([]);
   const [selectedComponent, setSelectedComponent] = useState(null);
   const [templateSettings, setTemplateSettings] = useState({
-    subject: "",
-    preheader: "",
-    backgroundColor: "#f4f4f4",
+    subject: '',
+    preheader: '',
+    backgroundColor: '#f4f4f4',
     containerWidth: 600,
-    fontFamily: "Arial, sans-serif",
+    fontFamily: 'Arial, sans-serif'
   });
   const [showCodeView, setShowCodeView] = useState(false);
   const [variables, setVariables] = useState([
-    {
-      key: "currentYear",
-      label: "Current Year",
-      defaultValue: "2025",
-      description: "Current year (auto-generated)",
-    },
-    {
-      key: "appName",
-      label: "App Name",
-      defaultValue: "Scan Me Maybe",
-      description: "Application name",
-    },
-    {
-      key: "userName",
-      label: "User Name",
-      defaultValue: "John Doe",
-      description: "User's full name",
-    },
-    {
-      key: "userEmail",
-      label: "User Email",
-      defaultValue: "user@example.com",
-      description: "Recipient email address",
-    },
-    {
-      key: "email",
-      label: "Email (alias)",
-      defaultValue: "user@example.com",
-      description: "Same as userEmail",
-    },
-    {
-      key: "subject",
-      label: "Email Subject",
-      defaultValue: "Welcome Message",
-      description: "Template subject line",
-    },
-    {
-      key: "body",
-      label: "Email Body",
-      defaultValue: "Email body content",
-      description: "Template body content",
-    },
-    {
-      key: "editProfileUrl",
-      label: "Edit Profile URL",
-      defaultValue: "/profile/edit/user@example.com",
-      description: "Link to edit profile page",
-    },
-    {
-      key: "checkoutUrl",
-      label: "Checkout URL",
-      defaultValue: "/checkout/user@example.com",
-      description: "Link to complete profile",
-    },
+    { key: 'currentYear', label: 'Current Year', defaultValue: '2025', description: 'Current year (auto-generated)' },
+    { key: 'appName', label: 'App Name', defaultValue: 'Scan Me Maybe', description: 'Application name' },
+    { key: 'userName', label: 'User Name', defaultValue: 'John Doe', description: 'User\'s full name' },
+    { key: 'userEmail', label: 'User Email', defaultValue: 'user@example.com', description: 'Recipient email address' },
+    { key: 'email', label: 'Email (alias)', defaultValue: 'user@example.com', description: 'Same as userEmail' },
+    { key: 'subject', label: 'Email Subject', defaultValue: 'Welcome Message', description: 'Template subject line' },
+    { key: 'body', label: 'Email Body', defaultValue: 'Email body content', description: 'Template body content' },
+    { key: 'editProfileUrl', label: 'Edit Profile URL', defaultValue: '/profile/edit/user@example.com', description: 'Link to edit profile page' },
+    { key: 'checkoutUrl', label: 'Checkout URL', defaultValue: '/checkout/user@example.com', description: 'Link to complete profile' }
   ]);
   const [showVariablesModal, setShowVariablesModal] = useState(false);
 
   // Component types available in the builder
   const componentTypes = [
     {
-      type: "header",
+      type: 'header',
       icon: RectangleStackIcon,
-      label: "Header",
+      label: 'Header',
       defaultProps: {
-        title: "Scan Me Maybe",
-        subtitle: "Welcome to our platform",
-        backgroundColor: "#667eea",
-        textColor: "#ffffff",
-        alignment: "center",
-        padding: "40px 20px",
-      },
+        title: 'Scan Me Maybe',
+        subtitle: 'Welcome to our platform',
+        backgroundColor: '#667eea',
+        textColor: '#ffffff',
+        alignment: 'center',
+        padding: '40px 20px'
+      }
     },
     {
-      type: "text",
+      type: 'text',
       icon: ChatBubbleLeftIcon,
-      label: "Body Text",
+      label: 'Body Text',
       defaultProps: {
-        content:
-          "Hello {{userEmail}},\n\nThis is your main email body content. You can write your message here and use variables like {{checkoutUrl}} and {{currentYear}}.\n\nBest regards,\nThe Scan Me Maybe Team",
-        fontSize: "16px",
-        textColor: "#333333",
-        backgroundColor: "transparent",
-        alignment: "left",
-        padding: "20px",
-      },
+        content: 'Hello {{userEmail}},\n\nThis is your main email body content. You can write your message here and use variables like {{checkoutUrl}} and {{currentYear}}.\n\nBest regards,\nThe Scan Me Maybe Team',
+        fontSize: '16px',
+        textColor: '#333333',
+        backgroundColor: 'transparent',
+        alignment: 'left',
+        padding: '20px'
+      }
     },
     {
-      type: "paragraph",
+      type: 'paragraph',
       icon: ChatBubbleLeftIcon,
-      label: "Paragraph",
+      label: 'Paragraph',
       defaultProps: {
-        content:
-          "Add a paragraph of text here. Perfect for additional information, disclaimers, or secondary messages.",
-        fontSize: "14px",
-        textColor: "#666666",
-        backgroundColor: "transparent",
-        alignment: "left",
-        padding: "10px 20px",
-      },
+        content: 'Add a paragraph of text here. Perfect for additional information, disclaimers, or secondary messages.',
+        fontSize: '14px',
+        textColor: '#666666',
+        backgroundColor: 'transparent',
+        alignment: 'left',
+        padding: '10px 20px'
+      }
     },
     {
-      type: "button",
+      type: 'button',
       icon: LinkIcon,
-      label: "Button",
+      label: 'Button',
       defaultProps: {
-        text: "Click Here",
-        url: "https://example.com",
-        backgroundColor: "#667eea",
-        textColor: "#ffffff",
-        borderRadius: "8px",
-        padding: "15px 30px",
-        alignment: "center",
-      },
+        text: 'Click Here',
+        url: 'https://example.com',
+        backgroundColor: '#667eea',
+        textColor: '#ffffff',
+        borderRadius: '8px',
+        padding: '15px 30px',
+        alignment: 'center'
+      }
     },
     {
-      type: "image",
+      type: 'image',
       icon: PhotoIcon,
-      label: "Image",
+      label: 'Image',
       defaultProps: {
-        src: "",
-        alt: "Image",
-        width: "100%",
-        alignment: "center",
-        padding: "20px",
-      },
+        src: '',
+        alt: 'Image',
+        width: '100%',
+        alignment: 'center',
+        padding: '20px'
+      }
     },
     {
-      type: "divider",
+      type: 'divider',
       icon: SwatchIcon,
-      label: "Divider",
+      label: 'Divider',
       defaultProps: {
-        height: "2px",
-        color: "#e5e5e5",
-        margin: "20px 0",
-      },
+        height: '2px',
+        color: '#e5e5e5',
+        margin: '20px 0'
+      }
     },
     {
-      type: "footer",
+      type: 'footer',
       icon: RectangleStackIcon,
-      label: "Footer",
+      label: 'Footer',
       defaultProps: {
-        content: "© {{currentYear}} {{appName}}. All rights reserved.",
-        fontSize: "12px",
-        textColor: "#666666",
-        backgroundColor: "#f8f8f8",
-        alignment: "center",
-        padding: "20px",
-      },
-    },
+        content: '© {{currentYear}} {{appName}}. All rights reserved.',
+        fontSize: '12px',
+        textColor: '#666666',
+        backgroundColor: '#f8f8f8',
+        alignment: 'center',
+        padding: '20px'
+      }
+    }
   ];
 
   // Load template data if editing
   useEffect(() => {
     if (template) {
       setTemplateSettings({
-        subject: template.subject || "",
-        preheader: template.preheader || "",
-        backgroundColor: template.backgroundColor || "#f4f4f4",
-        containerWidth: template.containerWidth || 600,
-        fontFamily: template.fontFamily || "Arial, sans-serif",
+        subject: template.subject || '',
+        preheader: template.preheader || '',
+        backgroundColor: template.settings?.backgroundColor || template.backgroundColor || '#f4f4f4',
+        containerWidth: template.settings?.containerWidth || template.containerWidth || 600,
+        fontFamily: template.settings?.fontFamily || template.fontFamily || 'Arial, sans-serif'
       });
-
+      
       if (template.components) {
         setComponents(template.components);
       } else if (template.htmlTemplate) {
@@ -207,33 +160,33 @@ const EmailTemplateBuilder = ({
     // Simplified HTML to components parser
     // In a real implementation, you'd want a more sophisticated parser
     const tempComponents = [];
-
+    
     // Look for common patterns and convert to components
-    if (html.includes("Welcome to")) {
+    if (html.includes('Welcome to')) {
       tempComponents.push({
         id: Date.now() + 1,
-        type: "header",
+        type: 'header',
         props: {
-          title: "Welcome to {{appName}}",
-          backgroundColor: "#667eea",
-          textColor: "#ffffff",
-          alignment: "center",
-          padding: "40px 20px",
-        },
+          title: 'Welcome to {{appName}}',
+          backgroundColor: '#667eea',
+          textColor: '#ffffff',
+          alignment: 'center',
+          padding: '40px 20px'
+        }
       });
     }
-
+    
     setComponents(tempComponents);
   };
 
   const addComponent = (type) => {
-    const componentType = componentTypes.find((ct) => ct.type === type);
+    const componentType = componentTypes.find(ct => ct.type === type);
     if (!componentType) return;
 
     const newComponent = {
       id: Date.now(),
       type,
-      props: { ...componentType.defaultProps },
+      props: { ...componentType.defaultProps }
     };
 
     setComponents([...components, newComponent]);
@@ -241,17 +194,13 @@ const EmailTemplateBuilder = ({
   };
 
   const updateComponent = (id, newProps) => {
-    setComponents(
-      components.map((comp) =>
-        comp.id === id
-          ? { ...comp, props: { ...comp.props, ...newProps } }
-          : comp,
-      ),
-    );
+    setComponents(components.map(comp => 
+      comp.id === id ? { ...comp, props: { ...comp.props, ...newProps } } : comp
+    ));
   };
 
   const removeComponent = (id) => {
-    setComponents(components.filter((comp) => comp.id !== id));
+    setComponents(components.filter(comp => comp.id !== id));
     if (selectedComponent === id) {
       setSelectedComponent(null);
     }
@@ -270,15 +219,15 @@ const EmailTemplateBuilder = ({
   const addVariable = () => {
     const newVariable = {
       key: `variable${variables.length + 1}`,
-      label: "New Variable",
-      defaultValue: "Default Value",
+      label: 'New Variable',
+      defaultValue: 'Default Value'
     };
     setVariables([...variables, newVariable]);
   };
 
   const updateVariable = (index, field, value) => {
-    const updatedVariables = variables.map((variable, i) =>
-      i === index ? { ...variable, [field]: value } : variable,
+    const updatedVariables = variables.map((variable, i) => 
+      i === index ? { ...variable, [field]: value } : variable
     );
     setVariables(updatedVariables);
   };
@@ -291,8 +240,8 @@ const EmailTemplateBuilder = ({
   const replaceVariablesWithSamples = (text) => {
     if (!text) return text;
     let result = text;
-    variables.forEach((variable) => {
-      const regex = new RegExp(`{{${variable.key}}}`, "g");
+    variables.forEach(variable => {
+      const regex = new RegExp(`{{${variable.key}}}`, 'g');
       result = result.replace(regex, variable.defaultValue);
     });
     return result;
@@ -301,15 +250,15 @@ const EmailTemplateBuilder = ({
   const generateHTML = (isPreview = false) => {
     const style = `
       <style>
-      * {
-        box-sizing: border-box;
-      }
         body { 
           font-family: ${templateSettings.fontFamily}; 
           margin: 0; 
           padding: 0; 
           background-color: ${templateSettings.backgroundColor}; 
           line-height: 1.6;
+        }
+        * {
+          box-sizing: border-box;
         }
         .email-container { 
           max-width: ${templateSettings.containerWidth}px; 
@@ -391,89 +340,57 @@ const EmailTemplateBuilder = ({
       </style>
     `;
 
-    const bodyComponents = components
-      .map((component) => {
-        switch (component.type) {
-          case "header":
-            const headerTitle = isPreview
-              ? replaceVariablesWithSamples(
-                  component.props.title || "Scan Me Maybe",
-                )
-              : component.props.title || "Scan Me Maybe";
-            const headerSubtitle = isPreview
-              ? replaceVariablesWithSamples(component.props.subtitle || "")
-              : component.props.subtitle || "";
-            return `
+    const bodyComponents = components.map(component => {
+      switch (component.type) {
+        case 'header':
+          const headerTitle = isPreview ? replaceVariablesWithSamples(component.props.title || 'Scan Me Maybe') : component.props.title || 'Scan Me Maybe';
+          const headerSubtitle = isPreview ? replaceVariablesWithSamples(component.props.subtitle || '') : component.props.subtitle || '';
+          return `
             <div class="header" style="background-color: ${component.props.backgroundColor}; color: ${component.props.textColor}; text-align: ${component.props.alignment}; padding: ${component.props.padding};">
               <h1 style="margin: 0; font-size: 32px; color: ${component.props.textColor};">${headerTitle}</h1>
-              ${headerSubtitle ? `<p style="margin: 10px 0 0 0; color: ${component.props.textColor};">${isPreview ? headerSubtitle : headerSubtitle.replace(/\{\{/g, "&#123;&#123;").replace(/\}\}/g, "&#125;&#125;")}</p>` : ""}
+              ${headerSubtitle ? `<p style="margin: 10px 0 0 0; color: ${component.props.textColor};">${isPreview ? headerSubtitle : headerSubtitle.replace(/\{\{/g, '&#123;&#123;').replace(/\}\}/g, '&#125;&#125;')}</p>` : ''}
             </div>
           `;
-          case "text":
-          case "paragraph":
-            const textContent = isPreview
-              ? replaceVariablesWithSamples(component.props.content)
-              : component.props.content;
-            return `
+        case 'text':
+        case 'paragraph':
+          const textContent = isPreview ? replaceVariablesWithSamples(component.props.content) : component.props.content;
+          return `
             <div class="text-block" style="background-color: ${component.props.backgroundColor}; color: ${component.props.textColor}; text-align: ${component.props.alignment}; padding: ${component.props.padding}; font-size: ${component.props.fontSize};">
-              ${textContent
-                .split("\n")
-                .map(
-                  (line) =>
-                    `<p style="margin: 0 0 16px 0; color: ${component.props.textColor}; font-size: ${component.props.fontSize};">${isPreview ? line : line.replace(/\{\{/g, "&#123;&#123;").replace(/\}\}/g, "&#125;&#125;")}</p>`,
-                )
-                .join("")}
+              ${textContent.split('\n').map(line => `<p style="margin: 0 0 16px 0; color: ${component.props.textColor}; font-size: ${component.props.fontSize};">${isPreview ? line : line.replace(/\{\{/g, '&#123;&#123;').replace(/\}\}/g, '&#125;&#125;')}</p>`).join('')}
             </div>
           `;
-          case "button":
-            const buttonText = isPreview
-              ? replaceVariablesWithSamples(component.props.text)
-              : component.props.text;
-            const buttonUrl = isPreview
-              ? replaceVariablesWithSamples(component.props.url)
-              : component.props.url;
-            return `
-            <div class="button-container" style="text-align: ${component.props.alignment}; padding: ${component.props.padding};">
+        case 'button':
+          const buttonText = isPreview ? replaceVariablesWithSamples(component.props.text) : component.props.text;
+          const buttonUrl = isPreview ? replaceVariablesWithSamples(component.props.url) : component.props.url;
+          return `
+            <div class="button-container" style="background-color: ${component.props.sectionBackgroundColor || 'transparent'}; text-align: ${component.props.alignment}; padding: 20px;">
               <a href="${buttonUrl}" class="button" style="display: inline-block; background-color: ${component.props.backgroundColor}; color: ${component.props.textColor}; border-radius: ${component.props.borderRadius}; padding: ${component.props.padding}; text-decoration: none; font-weight: bold;">
-                ${isPreview ? buttonText : buttonText.replace(/\{\{/g, "&#123;&#123;").replace(/\}\}/g, "&#125;&#125;")}
+                ${isPreview ? buttonText : buttonText.replace(/\{\{/g, '&#123;&#123;').replace(/\}\}/g, '&#125;&#125;')}
               </a>
             </div>
           `;
-          case "image":
-            return `
+        case 'image':
+          return `
             <div class="image-container" style="text-align: ${component.props.alignment}; padding: ${component.props.padding};">
               <img src="${component.props.src}" alt="${component.props.alt}" style="width: ${component.props.width}; height: auto;">
             </div>
           `;
-          case "divider":
-            return `
+        case 'divider':
+          return `
             <div class="divider" style="height: ${component.props.height}; background-color: ${component.props.color}; margin: ${component.props.margin};"></div>
           `;
-          case "footer":
-            const footerContent = isPreview
-              ? replaceVariablesWithSamples(component.props.content)
-              : component.props.content;
-            const footerLines = isPreview
-              ? footerContent
-              : footerContent
-                  .replace(/\{\{/g, "&#123;&#123;")
-                  .replace(/\}\}/g, "&#125;&#125;");
-            return `
+        case 'footer':
+          const footerContent = isPreview ? replaceVariablesWithSamples(component.props.content) : component.props.content;
+          const footerLines = isPreview ? footerContent : footerContent.replace(/\{\{/g, '&#123;&#123;').replace(/\}\}/g, '&#125;&#125;');
+          return `
             <div class="footer" style="background-color: ${component.props.backgroundColor}; color: ${component.props.textColor}; text-align: ${component.props.alignment}; padding: ${component.props.padding}; font-size: ${component.props.fontSize};">
-              ${footerLines
-                .split("\n")
-                .map(
-                  (line) =>
-                    `<p style="margin: 5px 0; color: ${component.props.textColor}; font-size: ${component.props.fontSize};">${line}</p>`,
-                )
-                .join("")}
+              ${footerLines.split('\n').map(line => `<p style="margin: 5px 0; color: ${component.props.textColor}; font-size: ${component.props.fontSize};">${line}</p>`).join('')}
             </div>
           `;
-          default:
-            return "";
-        }
-      })
-      .join("");
+        default:
+          return '';
+      }
+    }).join('');
 
     return `
       <!DOCTYPE html>
@@ -481,7 +398,7 @@ const EmailTemplateBuilder = ({
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${templateSettings.subject.replace(/\{\{/g, "&#123;&#123;").replace(/\}\}/g, "&#125;&#125;")}</title>
+
         ${style}
       </head>
       <body>
@@ -497,43 +414,36 @@ const EmailTemplateBuilder = ({
     const templateData = {
       subject: templateSettings.subject,
       preheader: templateSettings.preheader,
-      body: components
-        .map((c) => c.props.content || c.props.subtitle || "")
-        .join("\n\n"),
+      body: components.map(c => c.props.content || c.props.subtitle || '').join('\n\n'),
       html_template: generateHTML(),
       components: components,
       settings: templateSettings,
-      variables: variables,
+      variables: variables
     };
-
-    console.log(
-      "EmailTemplateBuilder - Saving template with data:",
-      templateData,
-    );
+    
+    console.log('EmailTemplateBuilder - Saving template with data:', templateData);
     onSave(templateData);
   };
 
   const handlePreview = () => {
     const html = generateHTML(true); // true for preview mode
-    const previewSubject = replaceVariablesWithSamples(
-      templateSettings.subject,
-    );
+    const previewSubject = replaceVariablesWithSamples(templateSettings.subject);
     onPreview(html, previewSubject);
   };
 
-  const selectedComp = components.find((c) => c.id === selectedComponent);
+  const selectedComp = components.find(c => c.id === selectedComponent);
 
   return (
-    <div className="flex bg-gray-100">
+    <div className="flex h-screen bg-gray-100">
       {/* Left Sidebar - Components */}
-      <div className="flex min-h-0 w-72 flex-col border-l border-gray-300 bg-white">
-        <div className="border-b border-gray-200 p-6">
+      <div className="w-80 bg-white border-r border-gray-300 flex flex-col min-h-0">
+        <div className="p-4 border-b border-gray-200">
           <h3 className="text-lg font-semibold text-gray-800">Email Builder</h3>
         </div>
-
+        
         {/* Template Settings */}
-        <div className="flex-shrink-0 border-b border-gray-200 p-6">
-          <div className="mb-3 flex items-center justify-between">
+        <div className="p-4 border-b border-gray-200 flex-shrink-0">
+          <div className="flex justify-between items-center mb-3">
             <h4 className="font-medium text-gray-700">Template Settings</h4>
             <button
               onClick={() => {
@@ -541,135 +451,110 @@ const EmailTemplateBuilder = ({
                 const demoComponents = [
                   {
                     id: Date.now() + 1,
-                    type: "header",
+                    type: 'header',
                     props: {
-                      title: "Welcome to {{appName}}!",
-                      subtitle: "Your account is ready",
-                      backgroundColor: "#667eea",
-                      textColor: "#ffffff",
-                      alignment: "center",
-                      padding: "40px 20px",
-                    },
+                      title: 'Welcome to {{appName}}!',
+                      subtitle: 'Your account is ready',
+                      backgroundColor: '#667eea',
+                      textColor: '#ffffff',
+                      alignment: 'center',
+                      padding: '40px 20px'
+                    }
                   },
                   {
                     id: Date.now() + 2,
-                    type: "text",
+                    type: 'text',
                     props: {
-                      content:
-                        "Hello {{userName}},\n\nWelcome to {{appName}}! We're excited to have you join our community. Your account has been successfully created and you're ready to start connecting with others.\n\nTo get started, please complete your profile and upload your best photos.",
-                      fontSize: "16px",
-                      textColor: "#333333",
-                      backgroundColor: "transparent",
-                      alignment: "left",
-                      padding: "20px",
-                    },
+                      content: 'Hello {{userName}},\n\nWelcome to {{appName}}! We\'re excited to have you join our community. Your account has been successfully created and you\'re ready to start connecting with others.\n\nTo get started, please complete your profile and upload your best photos.',
+                      fontSize: '16px',
+                      textColor: '#333333',
+                      backgroundColor: 'transparent',
+                      alignment: 'left',
+                      padding: '20px'
+                    }
                   },
                   {
                     id: Date.now() + 3,
-                    type: "button",
+                    type: 'button',
                     props: {
-                      text: "Complete Your Profile",
-                      url: "{{editProfileUrl}}",
-                      backgroundColor: "#4CAF50",
-                      textColor: "#ffffff",
-                      borderRadius: "8px",
-                      padding: "15px 30px",
-                      alignment: "center",
-                    },
+                      text: 'Complete Your Profile',
+                      url: '{{editProfileUrl}}',
+                      backgroundColor: '#4CAF50',
+                      textColor: '#ffffff',
+                      borderRadius: '8px',
+                      padding: '15px 30px',
+                      alignment: 'center'
+                    }
                   },
                   {
                     id: Date.now() + 4,
-                    type: "footer",
+                    type: 'footer',
                     props: {
-                      content:
-                        "© {{currentYear}} {{appName}}. All rights reserved.\nIf you no longer wish to receive these emails, you can unsubscribe at any time.",
-                      fontSize: "12px",
-                      textColor: "#999999",
-                      backgroundColor: "#f8f8f8",
-                      alignment: "center",
-                      padding: "20px",
-                    },
-                  },
+                      content: '© {{currentYear}} {{appName}}. All rights reserved.\nIf you no longer wish to receive these emails, you can unsubscribe at any time.',
+                      fontSize: '12px',
+                      textColor: '#999999',
+                      backgroundColor: '#f8f8f8',
+                      alignment: 'center',
+                      padding: '20px'
+                    }
+                  }
                 ];
                 setComponents(demoComponents);
                 setTemplateSettings({
                   ...templateSettings,
-                  subject: "Welcome! Your account is ready - {{userEmail}}",
+                  subject: 'Welcome! Your account is ready - {{userEmail}}'
                 });
               }}
-              className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-700 hover:bg-blue-200"
+              className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200"
             >
               Demo
             </button>
           </div>
           <div className="space-y-3">
             <div>
-              <label className="mb-1 block text-sm text-gray-600">
-                Subject Line
-              </label>
+              <label className="block text-sm text-gray-600 mb-1">Subject Line</label>
               <input
                 type="text"
                 value={templateSettings.subject}
-                onChange={(e) =>
-                  setTemplateSettings({
-                    ...templateSettings,
-                    subject: e.target.value,
-                  })
-                }
-                className="w-full rounded-md border border-gray-300 p-2 text-sm"
+                onChange={(e) => setTemplateSettings({...templateSettings, subject: e.target.value})}
+                className="w-full p-2 border border-gray-300 rounded-md text-sm"
                 placeholder="Email subject..."
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm text-gray-600">
-                Preheader Text
-              </label>
+              <label className="block text-sm text-gray-600 mb-1">Preheader Text</label>
               <input
                 type="text"
                 value={templateSettings.preheader}
-                onChange={(e) =>
-                  setTemplateSettings({
-                    ...templateSettings,
-                    preheader: e.target.value,
-                  })
-                }
-                className="w-full rounded-md border border-gray-300 p-2 text-sm"
+                onChange={(e) => setTemplateSettings({...templateSettings, preheader: e.target.value})}
+                className="w-full p-2 border border-gray-300 rounded-md text-sm"
                 placeholder="Preview text..."
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm text-gray-600">
-                Background Color
-              </label>
+              <label className="block text-sm text-gray-600 mb-1">Background Color</label>
               <input
                 type="color"
                 value={templateSettings.backgroundColor}
-                onChange={(e) =>
-                  setTemplateSettings({
-                    ...templateSettings,
-                    backgroundColor: e.target.value,
-                  })
-                }
-                className="h-10 w-full rounded-md border border-gray-300"
+                onChange={(e) => setTemplateSettings({...templateSettings, backgroundColor: e.target.value})}
+                className="w-full h-10 border border-gray-300 rounded-md"
               />
             </div>
           </div>
         </div>
 
         {/* Components Palette */}
-        <div className="flex-shrink-0 border-b border-gray-200 p-4">
-          <h4 className="mb-3 font-medium text-gray-700">Components</h4>
+        <div className="p-4 border-b border-gray-200 flex-shrink-0">
+          <h4 className="font-medium text-gray-700 mb-3">Components</h4>
           <div className="grid grid-cols-2 gap-2">
             {componentTypes.map((componentType) => (
               <button
                 key={componentType.type}
                 onClick={() => addComponent(componentType.type)}
-                className="flex flex-col items-center rounded-lg border border-gray-200 p-3 transition-colors hover:border-blue-300 hover:bg-gray-50"
+                className="flex flex-col items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-colors"
               >
-                <componentType.icon className="mb-1 h-6 w-6 text-gray-600" />
-                <span className="text-xs text-gray-700">
-                  {componentType.label}
-                </span>
+                <componentType.icon className="h-6 w-6 text-gray-600 mb-1" />
+                <span className="text-xs text-gray-700">{componentType.label}</span>
               </button>
             ))}
           </div>
@@ -677,12 +562,12 @@ const EmailTemplateBuilder = ({
 
         {/* Variables Button */}
         <div className="flex-shrink-0">
-          <div className="border-b border-gray-200 p-3">
+          <div className="p-3 border-b border-gray-200">
             <button
               onClick={() => setShowVariablesModal(true)}
-              className="flex w-full items-center justify-center rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700"
+              className="w-full flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm font-medium"
             >
-              <CodeBracketIcon className="mr-2 h-4 w-4" />
+              <CodeBracketIcon className="h-4 w-4 mr-2" />
               Show Variables
             </button>
           </div>
@@ -690,65 +575,60 @@ const EmailTemplateBuilder = ({
       </div>
 
       {/* Main Canvas */}
-      <div className="flex flex-1 flex-col">
+      <div className="flex-1 flex flex-col">
         {/* Top Toolbar */}
-        <div className="border-b border-gray-200 bg-white p-4">
-          <div className="flex items-center justify-between">
+        <div className="bg-white border-b border-gray-200 p-4">
+          <div className="flex justify-between items-center">
             <div className="flex space-x-2">
               <button
                 onClick={handlePreview}
-                className="flex items-center rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               >
-                <EyeIcon className="mr-2 h-4 w-4" />
+                <EyeIcon className="h-4 w-4 mr-2" />
                 Preview
               </button>
               <button
                 onClick={() => setShowCodeView(!showCodeView)}
-                className="flex items-center rounded-md bg-gray-600 px-4 py-2 text-white hover:bg-gray-700"
+                className="flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
               >
-                <CodeBracketIcon className="mr-2 h-4 w-4" />
-                {showCodeView ? "Design View" : "Code View"}
+                <CodeBracketIcon className="h-4 w-4 mr-2" />
+                {showCodeView ? 'Design View' : 'Code View'}
               </button>
             </div>
             <div className="flex space-x-2">
               <button
                 onClick={onCancel}
-                className="px-4 py-2 text-red-600 hover:text-gray-800"
+                className="px-4 py-2 text-gray-600 hover:text-gray-800"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
                 disabled={isLoading}
-                className="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700 disabled:opacity-50"
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
               >
-                {isLoading ? "Saving..." : "Save"}
+                {isLoading ? 'Saving...' : 'Save Template'}
               </button>
             </div>
           </div>
         </div>
 
         {/* Canvas Content */}
-        <div
-          className="flex-1"
-          style={{ backgroundColor: templateSettings.backgroundColor }}
-        >
+        <div className="flex-1 overflow-auto p-6" style={{ backgroundColor: templateSettings.backgroundColor }}>
           {showCodeView ? (
-            <div className="rounded-lg bg-white p-4 shadow-lg">
+            <div className="bg-white rounded-lg shadow-lg p-4">
               <textarea
                 value={generateHTML()}
                 readOnly
-                className="h-full w-full rounded border border-gray-300 p-4 font-mono text-sm"
-                style={{ minHeight: "900px" }}
+                className="w-full h-full font-mono text-sm border border-gray-300 rounded p-4"
+                style={{ minHeight: '600px' }}
               />
             </div>
           ) : (
-            <div className="flex h-96 min-h-full justify-center overflow-auto p-6">
-              <div
-                className="rounded-lg bg-white shadow-lg"
-                style={{
-                  width: templateSettings.containerWidth,
-                }}
+            <div className="flex justify-center min-h-full py-8">
+              <div 
+                className="bg-white rounded-lg shadow-lg overflow-hidden"
+                style={{ maxWidth: `${templateSettings.containerWidth}px`, width: '100%' }}
               >
                 <DragDropContext onDragEnd={onDragEnd}>
                   <Droppable droppableId="email-components">
@@ -756,18 +636,13 @@ const EmailTemplateBuilder = ({
                       <div
                         {...provided.droppableProps}
                         ref={provided.innerRef}
-                        className="bg-white p-4"
+                        className="min-h-96"
                       >
                         {components.length === 0 ? (
-                          <div className="mx-4 my-8 rounded-lg border-2 border-dashed border-gray-300 py-20 text-center">
-                            <RectangleStackIcon className="mx-auto mb-4 h-12 w-12 text-gray-400" />
-                            <p className="mb-2 text-lg text-gray-500">
-                              Start Building Your Email
-                            </p>
-                            <p className="text-sm text-gray-400">
-                              Drag components from the left panel to build your
-                              email template
-                            </p>
+                          <div className="text-center py-20 border-2 border-dashed border-gray-300 rounded-lg mx-4 my-8">
+                            <RectangleStackIcon className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                            <p className="text-gray-500 text-lg mb-2">Start Building Your Email</p>
+                            <p className="text-gray-400 text-sm">Drag components from the left panel to build your email template</p>
                           </div>
                         ) : (
                           components.map((component, index) => (
@@ -781,46 +656,37 @@ const EmailTemplateBuilder = ({
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className={`group relative transition-all duration-200 ${
-                                    selectedComponent === component.id
-                                      ? "border-2 border-blue-500 bg-blue-50"
-                                      : "border-2 border-transparent hover:border-gray-300"
-                                  } ${snapshot.isDragging ? "rotate-2 shadow-lg" : ""} cursor-pointer`}
-                                  onClick={() =>
-                                    setSelectedComponent(component.id)
-                                  }
+                                  className={`relative group transition-all duration-200 ${
+                                    selectedComponent === component.id 
+                                      ? 'border-2 border-blue-500 bg-blue-50' 
+                                      : 'border-2 border-transparent hover:border-gray-300'
+                                  } ${snapshot.isDragging ? 'shadow-lg rotate-2' : ''} cursor-pointer`}
+                                  onClick={() => setSelectedComponent(component.id)}
                                 >
                                   {/* Component content would be rendered here based on type */}
                                   <div className="component">
-                                    <ComponentRenderer
-                                      component={component}
-                                      variables={variables}
-                                    />
+                                    <ComponentRenderer component={component} variables={variables} />
                                   </div>
-
+                                  
                                   {/* Component controls */}
-                                  <div className="absolute right-2 top-2 flex space-x-1 opacity-0 transition-opacity group-hover:opacity-100">
-                                    <div className="rounded bg-blue-500 px-2 py-1 text-xs font-medium text-white">
-                                      {
-                                        componentTypes.find(
-                                          (ct) => ct.type === component.type,
-                                        )?.label
-                                      }
+                                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex space-x-1">
+                                    <div className="bg-blue-500 text-white px-2 py-1 rounded text-xs font-medium">
+                                      {componentTypes.find(ct => ct.type === component.type)?.label}
                                     </div>
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         removeComponent(component.id);
                                       }}
-                                      className="rounded bg-red-500 p-1 text-white transition-colors hover:bg-red-600"
+                                      className="bg-red-500 text-white p-1 rounded hover:bg-red-600 transition-colors"
                                     >
                                       <TrashIcon className="h-4 w-4" />
                                     </button>
                                   </div>
-
+                                  
                                   {/* Drag indicator */}
-                                  <div className="absolute left-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
-                                    <div className="rounded bg-gray-600 px-2 py-1 text-xs text-white">
+                                  <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="bg-gray-600 text-white px-2 py-1 rounded text-xs">
                                       ⋮⋮ Drag
                                     </div>
                                   </div>
@@ -841,15 +707,11 @@ const EmailTemplateBuilder = ({
       </div>
 
       {/* Right Sidebar - Properties */}
-      <div className="flex w-80 flex-col border-l border-gray-300 bg-white">
+      <div className="w-80 bg-white border-l border-gray-300 flex flex-col">
         {selectedComp ? (
-          <div className="flex-1 overflow-y-auto p-4">
-            <h3 className="mb-4 text-lg font-semibold text-gray-800">
-              {
-                componentTypes.find((ct) => ct.type === selectedComp.type)
-                  ?.label
-              }{" "}
-              Properties
+          <div className="p-4 flex-1 overflow-y-auto">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              {componentTypes.find(ct => ct.type === selectedComp.type)?.label} Properties
             </h3>
             <ComponentProperties
               component={selectedComp}
@@ -857,9 +719,9 @@ const EmailTemplateBuilder = ({
             />
           </div>
         ) : (
-          <div className="flex flex-1 items-center justify-center p-4">
+          <div className="p-4 flex-1 flex items-center justify-center">
             <div className="text-center text-gray-500">
-              <RectangleStackIcon className="mx-auto mb-2 h-12 w-12" />
+              <RectangleStackIcon className="h-12 w-12 mx-auto mb-2" />
               <p>Select a component to edit its properties</p>
             </div>
           </div>
@@ -868,57 +730,46 @@ const EmailTemplateBuilder = ({
 
       {/* Variables Modal */}
       {showVariablesModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="mx-4 max-h-[80vh] w-full max-w-2xl overflow-hidden rounded-lg bg-white shadow-xl">
-            <div className="flex items-center justify-between bg-green-600 px-6 py-4 text-white">
-              <h3 className="flex items-center text-lg font-semibold">
-                <CodeBracketIcon className="mr-2 h-5 w-5" />
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden">
+            <div className="bg-green-600 text-white px-6 py-4 flex justify-between items-center">
+              <h3 className="text-lg font-semibold flex items-center">
+                <CodeBracketIcon className="h-5 w-5 mr-2" />
                 Available Variables
               </h3>
               <button
                 onClick={() => setShowVariablesModal(false)}
-                className="text-white transition-colors hover:text-gray-200"
+                className="text-white hover:text-gray-200 transition-colors"
               >
                 <XMarkIcon className="h-6 w-6" />
               </button>
             </div>
-
-            <div className="max-h-[60vh] overflow-y-auto p-6">
+            
+            <div className="p-6 overflow-y-auto max-h-[60vh]">
               <div className="mb-4">
-                <div className="mb-3 flex items-center">
-                  <CheckIcon className="mr-2 h-5 w-5 text-green-600" />
-                  <span className="text-lg font-medium text-gray-900">
-                    Working Variables
-                  </span>
+                <div className="flex items-center mb-3">
+                  <CheckIcon className="h-5 w-5 text-green-600 mr-2" />
+                  <span className="text-lg font-medium text-gray-900">Working Variables</span>
                 </div>
-                <p className="mb-4 text-sm text-gray-600">
-                  These variables are confirmed to work with your backend
-                  system. Copy and paste them into your email content.
+                <p className="text-sm text-gray-600 mb-4">
+                  These variables are confirmed to work with your backend system. Copy and paste them into your email content.
                 </p>
               </div>
 
               <div className="grid gap-4">
                 {variables.map((variable) => (
-                  <div
-                    key={variable.key}
-                    className="rounded-lg border border-gray-200 p-4 transition-colors hover:border-green-300"
-                  >
+                  <div key={variable.key} className="border border-gray-200 rounded-lg p-4 hover:border-green-300 transition-colors">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="mb-2 flex items-center">
-                          <code className="rounded bg-green-100 px-2 py-1 font-mono text-sm text-green-800">
+                        <div className="flex items-center mb-2">
+                          <code className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-mono">
                             {`{{${variable.key}}}`}
                           </code>
-                          <span className="ml-2 text-sm font-medium text-gray-900">
-                            {variable.label}
-                          </span>
+                          <span className="ml-2 text-sm font-medium text-gray-900">{variable.label}</span>
                         </div>
-                        <p className="mb-2 text-sm text-gray-600">
-                          {variable.description}
-                        </p>
+                        <p className="text-sm text-gray-600 mb-2">{variable.description}</p>
                         <div className="text-xs text-gray-500">
-                          <span className="font-medium">Example output:</span>{" "}
-                          {variable.defaultValue}
+                          <span className="font-medium">Example output:</span> {variable.defaultValue}
                         </div>
                       </div>
                       <button
@@ -926,7 +777,7 @@ const EmailTemplateBuilder = ({
                           navigator.clipboard.writeText(`{{${variable.key}}}`);
                           // You could add a toast notification here
                         }}
-                        className="ml-3 rounded bg-gray-100 px-3 py-1 text-xs text-gray-700 transition-colors hover:bg-gray-200"
+                        className="ml-3 px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
                         title="Copy to clipboard"
                       >
                         Copy
@@ -936,38 +787,21 @@ const EmailTemplateBuilder = ({
                 ))}
               </div>
 
-              <div className="mt-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
-                <h4 className="mb-2 text-sm font-medium text-blue-900">
-                  How to Use Variables:
-                </h4>
-                <ul className="space-y-1 text-sm text-blue-800">
-                  <li>
-                    • Wrap variable names in double curly braces:{" "}
-                    <code className="rounded bg-blue-100 px-1">{`{{variableName}}`}</code>
-                  </li>
-                  <li>
-                    • Variables work in text content, button text, and email
-                    subjects
-                  </li>
-                  <li>
-                    • Variables are replaced with actual values when emails are
-                    sent
-                  </li>
-                  <li>
-                    • Use{" "}
-                    <code className="rounded bg-blue-100 px-1">{`{{editProfileUrl}}`}</code>{" "}
-                    and{" "}
-                    <code className="rounded bg-blue-100 px-1">{`{{checkoutUrl}}`}</code>{" "}
-                    for button links
-                  </li>
+              <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 className="text-sm font-medium text-blue-900 mb-2">How to Use Variables:</h4>
+                <ul className="text-sm text-blue-800 space-y-1">
+                  <li>• Wrap variable names in double curly braces: <code className="bg-blue-100 px-1 rounded">{`{{variableName}}`}</code></li>
+                  <li>• Variables work in text content, button text, and email subjects</li>
+                  <li>• Variables are replaced with actual values when emails are sent</li>
+                  <li>• Use <code className="bg-blue-100 px-1 rounded">{`{{editProfileUrl}}`}</code> and <code className="bg-blue-100 px-1 rounded">{`{{checkoutUrl}}`}</code> for button links</li>
                 </ul>
               </div>
             </div>
 
-            <div className="flex justify-end border-t bg-gray-50 px-6 py-3">
+            <div className="bg-gray-50 px-6 py-3 flex justify-end border-t">
               <button
                 onClick={() => setShowVariablesModal(false)}
-                className="rounded-md bg-green-600 px-4 py-2 text-white transition-colors hover:bg-green-700"
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
               >
                 Close
               </button>
@@ -987,84 +821,76 @@ const ComponentRenderer = ({ component, variables = [] }) => {
   const replaceVariablesWithSamples = (text) => {
     if (!text) return text;
     let result = text;
-    variables.forEach((variable) => {
-      const regex = new RegExp(`\\{\\{${variable.key}\\}\\}`, "g");
+    variables.forEach(variable => {
+      const regex = new RegExp(`\\{\\{${variable.key}\\}\\}`, 'g');
       result = result.replace(regex, variable.defaultValue);
     });
     return result;
   };
 
   switch (type) {
-    case "header":
+    case 'header':
       return (
-        <div
+        <div 
           style={{
             backgroundColor: props.backgroundColor,
             color: props.textColor,
             textAlign: props.alignment,
             padding: props.padding,
-            fontSize: "14px",
-            lineHeight: "1.4",
+            fontSize: '14px',
+            lineHeight: '1.4'
           }}
         >
-          <h1
-            style={{
-              margin: "0 0 10px 0",
-              fontSize: "32px",
-              lineHeight: "1.2",
-              fontWeight: "bold",
-            }}
-          >
-            {replaceVariablesWithSamples(props.title || "Scan Me Maybe")}
+          <h1 style={{ 
+            margin: '0 0 10px 0', 
+            fontSize: '32px', 
+            lineHeight: '1.2', 
+            fontWeight: 'bold' 
+          }}>
+            {replaceVariablesWithSamples(props.title || 'Scan Me Maybe')}
           </h1>
           {props.subtitle && (
-            <p
-              style={{
-                margin: "10px 0 0 0",
-                fontSize: "16px",
-                lineHeight: "1.4",
-              }}
-            >
+            <p style={{ 
+              margin: '10px 0 0 0', 
+              fontSize: '16px', 
+              lineHeight: '1.4' 
+            }}>
               {replaceVariablesWithSamples(props.subtitle)}
             </p>
           )}
         </div>
       );
-    case "text":
-    case "paragraph":
+    case 'text':
+    case 'paragraph':
       return (
-        <div
+        <div 
           style={{
             backgroundColor: props.backgroundColor,
             color: props.textColor,
             textAlign: props.alignment,
             padding: props.padding,
             fontSize: props.fontSize,
-            lineHeight: "1.6",
+            lineHeight: '1.6'
           }}
         >
-          {replaceVariablesWithSamples(props.content)
-            .split("\n")
-            .map((line, i) => (
-              <p key={i} style={{ margin: "0 0 16px 0", lineHeight: "1.6" }}>
-                {line}
-              </p>
-            ))}
+          {replaceVariablesWithSamples(props.content).split('\n').map((line, i) => (
+            <p key={i} style={{ margin: '0 0 16px 0', lineHeight: '1.6' }}>{line}</p>
+          ))}
         </div>
       );
-    case "button":
+    case 'button':
       return (
-        <div style={{ textAlign: props.alignment, padding: props.padding }}>
+        <div style={{ backgroundColor: props.sectionBackgroundColor || 'transparent', textAlign: props.alignment, padding: '20px' }}>
           <a
             href="#"
             style={{
-              display: "inline-block",
+              display: 'inline-block',
               backgroundColor: props.backgroundColor,
               color: props.textColor,
-              textDecoration: "none",
+              textDecoration: 'none',
               borderRadius: props.borderRadius,
               padding: props.padding,
-              fontWeight: "bold",
+              fontWeight: 'bold'
             }}
             onClick={(e) => e.preventDefault()}
           >
@@ -1072,51 +898,51 @@ const ComponentRenderer = ({ component, variables = [] }) => {
           </a>
         </div>
       );
-    case "image":
+    case 'image':
       return (
         <div style={{ textAlign: props.alignment, padding: props.padding }}>
           {props.src ? (
-            <img
-              src={props.src}
-              alt={props.alt}
-              style={{ width: props.width, height: "auto" }}
+            <img 
+              src={props.src} 
+              alt={props.alt} 
+              style={{ width: props.width, height: 'auto' }}
             />
           ) : (
-            <div
-              style={{
-                width: props.width,
-                height: "200px",
-                backgroundColor: "#f0f0f0",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                border: "2px dashed #ccc",
+            <div 
+              style={{ 
+                width: props.width, 
+                height: '200px', 
+                backgroundColor: '#f0f0f0', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                border: '2px dashed #ccc'
               }}
             >
-              <span style={{ color: "#999" }}>No image selected</span>
+              <span style={{ color: '#999' }}>No image selected</span>
             </div>
           )}
         </div>
       );
-    case "divider":
+    case 'divider':
       return (
-        <div
+        <div 
           style={{
             height: props.height,
             backgroundColor: props.color,
-            margin: props.margin,
+            margin: props.margin
           }}
         />
       );
-    case "footer":
+    case 'footer':
       return (
-        <div
+        <div 
           style={{
             backgroundColor: props.backgroundColor,
             color: props.textColor,
             textAlign: props.alignment,
             padding: props.padding,
-            fontSize: props.fontSize,
+            fontSize: props.fontSize
           }}
         >
           {replaceVariablesWithSamples(props.content)}
@@ -1138,21 +964,21 @@ const ComponentProperties = ({ component, onUpdate }) => {
   const commonProps = (
     <>
       <div className="mb-4">
-        <label className="mb-1 block text-sm text-gray-600">Padding</label>
+        <label className="block text-sm text-gray-600 mb-1">Padding</label>
         <input
           type="text"
-          value={props.padding || "20px"}
-          onChange={(e) => handleChange("padding", e.target.value)}
-          className="w-full rounded-md border border-gray-300 p-2 text-sm"
+          value={props.padding || '20px'}
+          onChange={(e) => handleChange('padding', e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md text-sm"
           placeholder="20px"
         />
       </div>
       <div className="mb-4">
-        <label className="mb-1 block text-sm text-gray-600">Alignment</label>
+        <label className="block text-sm text-gray-600 mb-1">Alignment</label>
         <select
-          value={props.alignment || "left"}
-          onChange={(e) => handleChange("alignment", e.target.value)}
-          className="w-full rounded-md border border-gray-300 p-2 text-sm"
+          value={props.alignment || 'left'}
+          onChange={(e) => handleChange('alignment', e.target.value)}
+          className="w-full p-2 border border-gray-300 rounded-md text-sm"
         >
           <option value="left">Left</option>
           <option value="center">Center</option>
@@ -1160,82 +986,74 @@ const ComponentProperties = ({ component, onUpdate }) => {
         </select>
       </div>
       <div className="mb-4">
-        <label className="mb-1 block text-sm text-gray-600">
-          Background Color
-        </label>
+        <label className="block text-sm text-gray-600 mb-1">Background Color</label>
         <input
           type="color"
-          value={props.backgroundColor || "#ffffff"}
-          onChange={(e) => handleChange("backgroundColor", e.target.value)}
-          className="h-10 w-full rounded-md border border-gray-300"
+          value={props.backgroundColor || '#ffffff'}
+          onChange={(e) => handleChange('backgroundColor', e.target.value)}
+          className="w-full h-10 border border-gray-300 rounded-md"
         />
       </div>
     </>
   );
 
   switch (type) {
-    case "header":
+    case 'header':
       return (
         <div>
-          <div className="mb-44">
-            <label className="mb-1 block text-sm text-gray-600">Title</label>
+          <div className="mb-4">
+            <label className="block text-sm text-gray-600 mb-1">Title</label>
             <input
               type="text"
-              value={props.title || "Scan Me Maybe"}
-              onChange={(e) => handleChange("title", e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              value={props.title || 'Scan Me Maybe'}
+              onChange={(e) => handleChange('title', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
               placeholder="Enter header title"
             />
           </div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">Subtitle</label>
+            <label className="block text-sm text-gray-600 mb-1">Subtitle</label>
             <input
               type="text"
-              value={props.subtitle || ""}
-              onChange={(e) => handleChange("subtitle", e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              value={props.subtitle || ''}
+              onChange={(e) => handleChange('subtitle', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
               placeholder="Optional subtitle text"
             />
           </div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">
-              Text Color
-            </label>
+            <label className="block text-sm text-gray-600 mb-1">Text Color</label>
             <input
               type="color"
-              value={props.textColor || "#000000"}
-              onChange={(e) => handleChange("textColor", e.target.value)}
-              className="h-10 w-full rounded-md border border-gray-300"
+              value={props.textColor || '#000000'}
+              onChange={(e) => handleChange('textColor', e.target.value)}
+              className="w-full h-10 border border-gray-300 rounded-md"
             />
           </div>
           {commonProps}
         </div>
       );
 
-    case "text":
-    case "paragraph":
+    case 'text':
+    case 'paragraph':
       return (
         <div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">
-              Body Text
-            </label>
+            <label className="block text-sm text-gray-600 mb-1">Body Text</label>
             <textarea
-              value={props.content || ""}
-              onChange={(e) => handleChange("content", e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              value={props.content || ''}
+              onChange={(e) => handleChange('content', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
               rows={8}
               placeholder="Enter your email content here...\n\nYou can use variables like:\n{{userName}} - User's name\n{{userEmail}} - User's email\n{{appName}} - App name\n{{currentYear}} - Current year"
             />
           </div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">
-              Font Size
-            </label>
+            <label className="block text-sm text-gray-600 mb-1">Font Size</label>
             <select
-              value={props.fontSize || "16px"}
-              onChange={(e) => handleChange("fontSize", e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              value={props.fontSize || '16px'}
+              onChange={(e) => handleChange('fontSize', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
             >
               <option value="12px">12px - Small</option>
               <option value="14px">14px - Regular</option>
@@ -1246,21 +1064,19 @@ const ComponentProperties = ({ component, onUpdate }) => {
             </select>
           </div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">
-              Text Color
-            </label>
+            <label className="block text-sm text-gray-600 mb-1">Text Color</label>
             <div className="flex space-x-2">
               <input
                 type="color"
-                value={props.textColor || "#000000"}
-                onChange={(e) => handleChange("textColor", e.target.value)}
-                className="h-10 w-12 rounded-md border border-gray-300"
+                value={props.textColor || '#000000'}
+                onChange={(e) => handleChange('textColor', e.target.value)}
+                className="w-12 h-10 border border-gray-300 rounded-md"
               />
               <input
                 type="text"
-                value={props.textColor || "#000000"}
-                onChange={(e) => handleChange("textColor", e.target.value)}
-                className="flex-1 rounded-md border border-gray-300 p-2 text-sm"
+                value={props.textColor || '#000000'}
+                onChange={(e) => handleChange('textColor', e.target.value)}
+                className="flex-1 p-2 border border-gray-300 rounded-md text-sm"
                 placeholder="#000000"
               />
             </div>
@@ -1269,189 +1085,202 @@ const ComponentProperties = ({ component, onUpdate }) => {
         </div>
       );
 
-    case "button":
+    case 'button':
       return (
         <div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">
-              Button Text
-            </label>
+            <label className="block text-sm text-gray-600 mb-1">Button Text</label>
             <input
               type="text"
-              value={props.text || ""}
-              onChange={(e) => handleChange("text", e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              value={props.text || ''}
+              onChange={(e) => handleChange('text', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
             />
           </div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">
-              Button URL
-            </label>
+            <label className="block text-sm text-gray-600 mb-1">Button URL</label>
             <div className="space-y-2">
               <select
-                value={props.url || ""}
-                onChange={(e) => handleChange("url", e.target.value)}
-                className="w-full rounded-md border border-gray-300 p-2 text-sm"
+                value={props.url || ''}
+                onChange={(e) => handleChange('url', e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-md text-sm"
               >
                 <option value="">Choose URL type...</option>
                 <option value="{{editProfileUrl}}">Edit Profile URL</option>
                 <option value="{{checkoutUrl}}">Checkout URL</option>
                 <option value="custom">Custom URL</option>
               </select>
-              {props.url === "custom" && (
+              {props.url === 'custom' && (
                 <input
                   type="url"
                   placeholder="Enter custom URL"
-                  onChange={(e) => handleChange("url", e.target.value)}
-                  className="w-full rounded-md border border-gray-300 p-2 text-sm"
+                  onChange={(e) => handleChange('url', e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded-md text-sm"
                 />
               )}
-              {props.url && props.url !== "custom" && (
+              {props.url && props.url !== 'custom' && (
                 <p className="text-xs text-gray-500">
-                  This will use:{" "}
-                  <code className="rounded bg-gray-100 px-1">{props.url}</code>
+                  This will use: <code className="bg-gray-100 px-1 rounded">{props.url}</code>
                 </p>
               )}
             </div>
           </div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">
-              Button Color
-            </label>
+            <label className="block text-sm text-gray-600 mb-1">Button Color</label>
             <input
               type="color"
-              value={props.backgroundColor || "#007bff"}
-              onChange={(e) => handleChange("backgroundColor", e.target.value)}
-              className="h-10 w-full rounded-md border border-gray-300"
+              value={props.backgroundColor || '#007bff'}
+              onChange={(e) => handleChange('backgroundColor', e.target.value)}
+              className="w-full h-10 border border-gray-300 rounded-md"
             />
           </div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">
-              Text Color
-            </label>
+            <label className="block text-sm text-gray-600 mb-1">Text Color</label>
             <input
               type="color"
-              value={props.textColor || "#ffffff"}
-              onChange={(e) => handleChange("textColor", e.target.value)}
-              className="h-10 w-full rounded-md border border-gray-300"
+              value={props.textColor || '#ffffff'}
+              onChange={(e) => handleChange('textColor', e.target.value)}
+              className="w-full h-10 border border-gray-300 rounded-md"
             />
           </div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">
-              Border Radius
-            </label>
+            <label className="block text-sm text-gray-600 mb-1">Border Radius</label>
             <input
               type="text"
-              value={props.borderRadius || "8px"}
-              onChange={(e) => handleChange("borderRadius", e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              value={props.borderRadius || '8px'}
+              onChange={(e) => handleChange('borderRadius', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
             />
           </div>
-          {commonProps}
+          <div className="mb-4">
+            <label className="block text-sm text-gray-600 mb-1">Button Padding</label>
+            <input
+              type="text"
+              value={props.padding || '15px 30px'}
+              onChange={(e) => handleChange('padding', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
+              placeholder="15px 30px"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm text-gray-600 mb-1">Alignment</label>
+            <select
+              value={props.alignment || 'center'}
+              onChange={(e) => handleChange('alignment', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
+            >
+              <option value="left">Left</option>
+              <option value="center">Center</option>
+              <option value="right">Right</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm text-gray-600 mb-1">Section Background Color</label>
+            <input
+              type="color"
+              value={props.sectionBackgroundColor || '#ffffff'}
+              onChange={(e) => handleChange('sectionBackgroundColor', e.target.value)}
+              className="w-full h-10 border border-gray-300 rounded-md"
+            />
+          </div>
         </div>
       );
 
-    case "image":
+    case 'image':
       return (
         <div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">
-              Image URL
-            </label>
+            <label className="block text-sm text-gray-600 mb-1">Image URL</label>
             <input
               type="url"
-              value={props.src || ""}
-              onChange={(e) => handleChange("src", e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              value={props.src || ''}
+              onChange={(e) => handleChange('src', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
             />
           </div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">Alt Text</label>
+            <label className="block text-sm text-gray-600 mb-1">Alt Text</label>
             <input
               type="text"
-              value={props.alt || ""}
-              onChange={(e) => handleChange("alt", e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              value={props.alt || ''}
+              onChange={(e) => handleChange('alt', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
             />
           </div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">Width</label>
+            <label className="block text-sm text-gray-600 mb-1">Width</label>
             <input
               type="text"
-              value={props.width || "100%"}
-              onChange={(e) => handleChange("width", e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              value={props.width || '100%'}
+              onChange={(e) => handleChange('width', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
             />
           </div>
           {commonProps}
         </div>
       );
 
-    case "divider":
+    case 'divider':
       return (
         <div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">Height</label>
+            <label className="block text-sm text-gray-600 mb-1">Height</label>
             <input
               type="text"
-              value={props.height || "2px"}
-              onChange={(e) => handleChange("height", e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              value={props.height || '2px'}
+              onChange={(e) => handleChange('height', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
             />
           </div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">Color</label>
+            <label className="block text-sm text-gray-600 mb-1">Color</label>
             <input
               type="color"
-              value={props.color || "#e5e5e5"}
-              onChange={(e) => handleChange("color", e.target.value)}
-              className="h-10 w-full rounded-md border border-gray-300"
+              value={props.color || '#e5e5e5'}
+              onChange={(e) => handleChange('color', e.target.value)}
+              className="w-full h-10 border border-gray-300 rounded-md"
             />
           </div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">Margin</label>
+            <label className="block text-sm text-gray-600 mb-1">Margin</label>
             <input
               type="text"
-              value={props.margin || "20px 0"}
-              onChange={(e) => handleChange("margin", e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              value={props.margin || '20px 0'}
+              onChange={(e) => handleChange('margin', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
             />
           </div>
         </div>
       );
 
-    case "footer":
+    case 'footer':
       return (
         <div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">Content</label>
+            <label className="block text-sm text-gray-600 mb-1">Content</label>
             <textarea
-              value={props.content || ""}
-              onChange={(e) => handleChange("content", e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              value={props.content || ''}
+              onChange={(e) => handleChange('content', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
               rows={3}
             />
           </div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">
-              Font Size
-            </label>
+            <label className="block text-sm text-gray-600 mb-1">Font Size</label>
             <input
               type="text"
-              value={props.fontSize || "12px"}
-              onChange={(e) => handleChange("fontSize", e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              value={props.fontSize || '12px'}
+              onChange={(e) => handleChange('fontSize', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md text-sm"
             />
           </div>
           <div className="mb-4">
-            <label className="mb-1 block text-sm text-gray-600">
-              Text Color
-            </label>
+            <label className="block text-sm text-gray-600 mb-1">Text Color</label>
             <input
               type="color"
-              value={props.textColor || "#666666"}
-              onChange={(e) => handleChange("textColor", e.target.value)}
-              className="h-10 w-full rounded-md border border-gray-300"
+              value={props.textColor || '#666666'}
+              onChange={(e) => handleChange('textColor', e.target.value)}
+              className="w-full h-10 border border-gray-300 rounded-md"
             />
           </div>
           {commonProps}
