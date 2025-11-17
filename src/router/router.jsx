@@ -47,9 +47,14 @@ const EditProfileView = lazy(
 
 // 🔒 Private Pages
 const AdminView = lazy(() => import("../page/private/admin/AdminView.jsx"));
-const AddDummyUser = lazy(() => import("../page/private/admin/AddDummyUser.jsx"));
+const AddDummyUser = lazy(
+  () => import("../page/private/allUsers/AddDummyUser.jsx"),
+);
 const EmailTemplatesPage = lazy(() => import("../page/EmailTemplatesPage.jsx"));
-const AllQRCodes = lazy(() => import("../page/private/QR/AllQRCodes.jsx"));
+// const AllQRCodes = lazy(() => import("../page/private/QR/AllQRCodes.jsx"));
+const AllUsersView = lazy(
+  () => import("../page/private/allUsers/AllUsersView.jsx"),
+);
 const UserView = lazy(() => import("../page/public/profile/UserView.jsx"));
 const UserManageView = lazy(
   () => import("../page/private/userManagements/UserManageView.jsx"),
@@ -113,8 +118,8 @@ const router = createBrowserRouter(
 
       {/* 🔒 Private Routes */}
       <Route element={<PrivateGuard />}>
-        <Route 
-          path="/admin" 
+        <Route
+          path="/admin"
           element={
             <ErrorBoundary>
               <AdminLayout />
@@ -123,19 +128,20 @@ const router = createBrowserRouter(
           errorElement={<ErrorBoundary />}
         >
           <Route index element={<AdminView />} />
-          <Route path="add-dummy-user" element={<AddDummyUser />} />
+          <Route path="all-users" element={<AllUsersView />} />
+          <Route path="all-users/add-user" element={<AddDummyUser />} />
           <Route path="user-management" element={<UserManageView />} />
           <Route path="user-management/:id" element={<UserDetailsView />} />
           <Route path="notifications" element={<NotificationView />} />
           <Route path="user-edit" element={<UserEditView />} />
           <Route path="user-edit/:id" element={<EditDetailsView />} />
-          <Route 
-            path="email-templates" 
+          <Route
+            path="email-templates"
             element={
               <ErrorBoundary>
                 <EmailTemplatesPage />
               </ErrorBoundary>
-            } 
+            }
           />
           {/* <Route path="user-edit/qr-code/:email" element={<AllQRCodes />} /> */}
           <Route path="settings" element={<SettingsView />} />

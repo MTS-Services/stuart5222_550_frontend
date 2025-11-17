@@ -1,10 +1,10 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { endpoints } from '../../../config/api/httpEndpoint';
-import { GET, POST } from '../../../config/api/httpMethods';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { endpoints } from "../../../config/api/httpEndpoint";
+import { GET, POST } from "../../../config/api/httpMethods";
 
 // ========== GET User-list ==========
 export const adminUserList = createAsyncThunk(
-  'admin/userlist',
+  "admin/userlist",
   async ({ page, limit, status }, { rejectWithValue }) => {
     try {
       const res = await GET(endpoints.admin.GET_ALL_USERS, {
@@ -15,90 +15,91 @@ export const adminUserList = createAsyncThunk(
       return res;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || 'Failed to fetch user list'
+        err.response?.data?.message || "Failed to fetch user list",
       );
     }
-  }
+  },
 );
 
 // ========== POST Wait-list ==========
 export const adminApprove = createAsyncThunk(
-  'admin/approve',
+  "admin/approve",
   async ({ user_id }, { rejectWithValue }) => {
     try {
       const res = await POST(
         `${endpoints.admin.APPROVED_WAITLIST_USERS}?user_id=${user_id}`,
-        {}
+        {},
       );
 
       return res;
     } catch (err) {
-      console.error('Approve error:', err.response?.data || err.message);
+      console.error("Approve error:", err.response?.data || err.message);
       return rejectWithValue(
         err.response?.data?.message ||
           err.response?.data?.error ||
-          'Approval failed, check server logs.'
+          "Approval failed, check server logs.",
       );
     }
-  }
+  },
 );
 
 // ========== POST reject waitlist =====================
 export const adminReject = createAsyncThunk(
-  'admin/reject',
+  "admin/reject",
   async ({ user_id }, { rejectWithValue }) => {
     try {
       const res = await POST(
         `${endpoints.admin.REJECT_USER}?user_id=${user_id}`,
-        {}
       );
+
       return res;
     } catch (err) {
-      console.error('Reject error:', err.response?.data || err.message);
+      console.error("Reject error:", err.response?.data || err.message);
       return rejectWithValue(
         err.response?.data?.message ||
           err.response?.data?.error ||
-          'Rejection failed, check server logs.'
+          "Rejection failed, check server logs.",
       );
     }
-  }
+  },
 );
 
 // ========== GET Single User Details ==========
 export const adminUserDetailsProfiles = createAsyncThunk(
-  'admin/userDetailsProfiles',
+  "admin/userDetailsProfiles",
   async ({ user_id }, { rejectWithValue }) => {
     try {
       const res = await GET(`${endpoints.admin.GET_USER_DETAILS}/${user_id}`);
       return res;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || 'Failed to fetch user details'
+        err.response?.data?.message || "Failed to fetch user details",
       );
     }
-  }
+  },
 );
 
 // ========== GET APPROVED LIST AFTER SUBSCRIPTION ==========
 export const adminUserVerifiedProfile = createAsyncThunk(
-  'admin/adminUserVerifiedProfile',
+  "admin/adminUserVerifiedProfile",
   async ({ page = 1, limit, status }, { rejectWithValue }) => {
     try {
       const res = await GET(endpoints.admin.APPROVE_LIST, {
-        params: { page, limit, status }, // ✅ send as query params
+        params: { page, limit, status },
       });
+      console.log("adminUserVerifiedProfile response:", res);
       return res;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || 'Failed to update user details'
+        err.response?.data?.message || "Failed to update user details",
       );
     }
-  }
+  },
 );
 
 // ========== GET ALL_PROFILES =====================
 export const adminUserDraftProfile = createAsyncThunk(
-  'admin/allProfiles',
+  "admin/allProfiles",
   async ({ page = 1, limit, status }, { rejectWithValue }) => {
     try {
       const res = await GET(endpoints.admin.ALL_PROFILES, {
@@ -109,50 +110,50 @@ export const adminUserDraftProfile = createAsyncThunk(
 
       return res;
     } catch (err) {
-      console.log('ERROR DRAFT_PROFILE:', err);
+      console.log("ERROR DRAFT_PROFILE:", err);
       return rejectWithValue(
-        err.response?.data?.message || 'Failed to create draft'
+        err.response?.data?.message || "Failed to create draft",
       );
     }
-  }
+  },
 );
 
 // ========== POST APPROVED LIST ==========
 export const adminUserApprovedProfile = createAsyncThunk(
-  'admin/adminUserApprovedProfile',
+  "admin/adminUserApprovedProfile",
   async ({ id }, { rejectWithValue }) => {
     try {
       const res = await POST(
         `${endpoints.admin.APPROVED_DRAFT}/${id}/approve`,
-        {}
+        {},
       );
 
       return res;
     } catch (err) {
-      console.log('❌ ERROR APPROVED_PROFILE:', err);
+      console.log("❌ ERROR APPROVED_PROFILE:", err);
       return rejectWithValue(
-        err.response?.data?.message || 'Failed to approve profile'
+        err.response?.data?.message || "Failed to approve profile",
       );
     }
-  }
+  },
 );
 
 // ========== POST_USER_REJECTED_PROFILE ==========
 export const adminUserRejectedProfile = createAsyncThunk(
-  'admin/adminUserRejectedProfile',
+  "admin/adminUserRejectedProfile",
   async ({ id, reason }, { rejectWithValue }) => {
     try {
       const res = await POST(
         `${endpoints.admin.REJECTED_DRAFT}/${id}/reject`,
-        { reason } // ✅ send the reason here
+        { reason }, // ✅ send the reason here
       );
       console.log(`✅ adminUserRejected ${id} Profile:`, res);
       return res.data;
     } catch (err) {
-      console.log('❌ ERROR REJECTED_PROFILE:', err);
+      console.log("❌ ERROR REJECTED_PROFILE:", err);
       return rejectWithValue(
-        err.response?.data?.message || 'Failed to reject profile'
+        err.response?.data?.message || "Failed to reject profile",
       );
     }
-  }
+  },
 );

@@ -9,6 +9,7 @@ import notificationsReducer from "./admin/notifications/notificationsSlice";
 import dashboardReducer from "./admin/home/dashboardSlice";
 import mailReducer from "./admin/mail/mailSlice";
 import counterReducer from "../features/admin/counter/counterSlice";
+import allUserReducer from "../features/admin/all-user/allUserSlice";
 
 export const store = configureStore({
   reducer: {
@@ -21,7 +22,7 @@ export const store = configureStore({
     qrcode: qrCodeRequetReducer,
     mail: mailReducer,
     counter: counterReducer,
-    // Add other reducers here
+    userList: allUserReducer,
   },
 
   middleware: (getDefaultMiddleware) =>

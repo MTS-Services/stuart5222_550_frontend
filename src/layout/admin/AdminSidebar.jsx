@@ -17,18 +17,19 @@ import { STORAGE } from "../../config/storage/auth/authStorage";
 const navLinks = [
   { name: "Dashboard", icon: <CgDice4 size={18} />, path: "/admin" },
   {
-    name: "Add Dummy User",
-    icon: <FaUser size={18} />,
-    path: "/admin/add-dummy-user",
+    name: "All Users",
+    icon: <FaUsers size={20} />,
+    path: "/admin/all-users",
   },
+
   {
     name: "User Management",
-    icon: <FaUsers size={20} />,
+    icon: <FaUsersCog size={20} />,
     path: "/admin/user-management",
   },
   {
     name: "User Edit",
-    icon: <FaUsersCog size={20} />,
+    icon: <FaUser size={17} />,
     path: "/admin/user-edit",
   },
   {

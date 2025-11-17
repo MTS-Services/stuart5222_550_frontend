@@ -1,3 +1,5 @@
+import { GET } from "./httpMethods";
+
 export const endpoints = {
   auth: {
     LOGIN: "/auth/admin/login",
@@ -10,6 +12,7 @@ export const endpoints = {
   admin: {
     HOME_DATA: "/admin/dashboard",
     GET_ALL_USERS: "/admin/users/all",
+    GET_USER_LIST: "/admin/profiles/all",
     GET_WAITLIST: "/admin/users/waitlist",
     APPROVED_WAITLIST_USERS: `/admin/users/approve`,
     GET_PENDING_USERS: "/admin/users/pending",

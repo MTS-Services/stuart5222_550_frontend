@@ -84,10 +84,12 @@ export const RequestUserTable = () => {
     setError("");
   };
 
+  // ✅ Pagination handlers
   const handlePrevious = () => {
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
+  // ✅ Next page handler
   const handleNext = () => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };

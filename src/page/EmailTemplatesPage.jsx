@@ -201,7 +201,7 @@ const EmailTemplatesPage = () => {
         </div>
         <button
           onClick={() => setCurrentView("create")}
-          className="flex items-center rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          className="flex items-center rounded-lg bg-orange-600 px-4 py-2 text-white hover:bg-orange-700"
         >
           <PlusIcon className="mr-2 h-5 w-5" />
           Create Template

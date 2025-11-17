@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import Overviews from "../common/Overviews";
 import { WaitListTable } from "./components/WaitListTable";
 import { adminUserList } from "../../../features/admin/management/usreFetch";
-import { fetchDashboardData } from "../../../features/admin/home/dashboardFetch";
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();
@@ -11,7 +10,7 @@ const AdminDashboard = () => {
   const limit = 10;
 
   useEffect(() => {
-    dispatch(adminUserList({ page: page, limit: 50, status: "WAITLIST" }));
+    dispatch(adminUserList({ page: page, limit: limit, status: "WAITLIST" }));
   }, [dispatch, page]);
 
   return (

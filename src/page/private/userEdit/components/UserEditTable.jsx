@@ -20,6 +20,7 @@ export const UserEditTable = ({ searchQuery }) => {
       user.user.email.toLowerCase().includes(searchQuery?.toLowerCase() || ""),
   );
 
+  // ✅ Calculate pagination values
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentData = filteredUsers.slice(

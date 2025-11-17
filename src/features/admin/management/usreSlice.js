@@ -57,7 +57,7 @@ const adminUserManagementSlice = createSlice({
       })
       .addCase(adminUserDetailsProfiles.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.userProfile = action.payload;
+        state.userProfiles = action.payload;
         state.error = null;
       })
       .addCase(adminUserDetailsProfiles.rejected, (state, action) => {
@@ -131,17 +131,14 @@ const adminUserManagementSlice = createSlice({
         state.error = null;
       })
       .addCase(adminUserApprovedProfile.fulfilled, (state, action) => {
-        // Handle both old and new response formats
         const profileId = action.payload.data?.id || action.payload.id;
-        
-        // Update both arrays to remove the user immediately
         state.approved_list = state.approved_list.filter(
           (user) => user.id !== profileId,
         );
-        state.userProfiles = state.userProfiles ? state.userProfiles.filter(
-          (user) => user.id !== profileId,
-        ) : [];
-        
+        state.userProfiles = state.userProfiles
+          ? state.userProfiles.filter((user) => user.id !== profileId)
+          : [];
+
         state.error = null;
       })
       .addCase(adminUserApprovedProfile.rejected, (state, action) => {
@@ -155,17 +152,14 @@ const adminUserManagementSlice = createSlice({
         state.error = null;
       })
       .addCase(adminUserRejectedProfile.fulfilled, (state, action) => {
-        // Handle both old and new response formats
         const profileId = action.payload.data?.id || action.payload.id;
-        
-        // Update both arrays to remove the user immediately
         state.approved_list = state.approved_list.filter(
           (user) => user.id !== profileId,
         );
-        state.userProfiles = state.userProfiles ? state.userProfiles.filter(
-          (user) => user.id !== profileId,
-        ) : [];
-        
+        state.userProfiles = state.userProfiles
+          ? state.userProfiles.filter((user) => user.id !== profileId)
+          : [];
+
         state.error = null;
       })
       .addCase(adminUserRejectedProfile.rejected, (state, action) => {
