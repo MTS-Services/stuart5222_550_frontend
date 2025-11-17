@@ -398,13 +398,20 @@ const EmailTemplateBuilder = ({
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${templateSettings.subject.replace(/\{\{/g, '&#123;&#123;').replace(/\}\}/g, '&#125;&#125;')}</title>
 
         ${style}
       </head>
-      <body>
-        <div class="email-container">
-          ${bodyComponents}
-        </div>
+      <body style="font-family: ${templateSettings.fontFamily}; margin: 0; padding: 0; line-height: 1.6;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: ${templateSettings.backgroundColor}; margin: 0; padding: 0;">
+          <tr>
+            <td align="center" style="padding: 0;">
+              <div class="email-container" style="max-width: ${templateSettings.containerWidth}px; margin: 0 auto; background-color: #ffffff; font-size: 0; display: block;">
+                ${bodyComponents}
+              </div>
+            </td>
+          </tr>
+        </table>
       </body>
       </html>
     `;
