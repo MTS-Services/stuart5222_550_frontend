@@ -8,6 +8,7 @@ export const endpoints = {
     PAYMENT_SUBSCRIPTION: "/payment/create-subscription",
     FORGOT_PASSWORD: "/auth/admin/forgot-password",
     RESET_PASSWORD: "/auth/admin/reset-password",
+    SET_PASSWORD: "/auth/set-password",
   },
   admin: {
     HOME_DATA: "/admin/dashboard",

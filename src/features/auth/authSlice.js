@@ -1,6 +1,11 @@
 // src/features/auth/authSlice.js -> authFetch.js -> httpEndpoint.js
 import { createSlice } from "@reduxjs/toolkit";
-import { loginUser, paymentIntent, paymentSubscriptions } from "./authFetch";
+import {
+  loginUser,
+  paymentIntent,
+  paymentSubscriptions,
+  resetPassword,
+} from "./authFetch";
 import { STORAGE } from "../../config/storage/auth/authStorage";
 import { AUTH_COOKIE } from "../../utils/authCookie";
 
@@ -37,6 +42,18 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // ===== Reset Password =====
+      .addCase(resetPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

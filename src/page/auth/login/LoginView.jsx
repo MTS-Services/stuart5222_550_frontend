@@ -3,7 +3,7 @@ import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../../features/auth/authFetch";
 import { resetAuthError } from "../../../features/auth/authSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const LoginView = () => {
@@ -147,12 +147,12 @@ const LoginView = () => {
                 </label>
               </div>
 
-              <a
-                href="/auth/forgot-password"
+              <Link
+                to="/auth/forgot-password"
                 className="text-sm font-medium text-[#F07400] transition-colors hover:text-[#D66400]"
               >
                 Forgot password?
-              </a>
+              </Link>
             </div>
 
             {/* Submit Button */}

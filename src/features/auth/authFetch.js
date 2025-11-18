@@ -25,6 +25,24 @@ export const loginUser = createAsyncThunk(
   },
 );
 
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const res = await POST(endpoints.auth.SET_PASSWORD, {
+        email,
+        password,
+      });
+      return res;
+    } catch (err) {
+      console.error("resetPassword error:", err);
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to reset password",
+      );
+    }
+  },
+);
+
 // ========== Payment Intent ==========
 export const paymentIntent = createAsyncThunk(
   "auth/paymentIntent",

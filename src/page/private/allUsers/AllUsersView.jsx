@@ -5,6 +5,7 @@ import { TableDropDown } from "./components/TableDropDown";
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Overviews from "../common/Overviews";
+import { formatDate } from "../../../utils/formatDate";
 
 const AllUsersView = () => {
   const dispatch = useDispatch();
@@ -62,6 +63,7 @@ const AllUsersView = () => {
               <th className="p-3">#</th>
               <th className="p-3">Name</th>
               <th className="p-3">Email</th>
+              <th className="p-3">Date</th>
               <th className="p-3">Status</th>
             </tr>
           </thead>
@@ -69,7 +71,7 @@ const AllUsersView = () => {
           <tbody>
             {isLoading ? (
               <tr className="h-96">
-                <td colSpan={4} className="p-4 text-center text-gray-700">
+                <td colSpan={5} className="p-4 text-center text-gray-700">
                   ⏳ Loading...
                 </td>
               </tr>
@@ -85,6 +87,7 @@ const AllUsersView = () => {
                   <td className="p-3">{idx + 1}</td>
                   <td className="p-3">{u.displayName}</td>
                   <td className="p-3">{u.email}</td>
+                  <td className="p-3">{formatDate(u.createdAt)}</td>
                   <td className="p-3">{u.status}</td>
                 </tr>
               ))

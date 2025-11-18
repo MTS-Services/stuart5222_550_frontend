@@ -16,7 +16,7 @@ import AgeInput from "../../../components/common/AgeInput";
 import LocationInput from "../../../components/common/LocationInput";
 import HeightInput from "../../../components/common/HeightInput";
 import { FaCamera } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const SetupProfileView = () => {
   const { user_email } = useParams();
@@ -78,10 +78,14 @@ const SetupProfileView = () => {
     const form = e.currentTarget;
 
     // Combine feet and inches into a single height string
-    const heightString = heightFeet && heightInches ? `${heightFeet}'${heightInches}"` : '';
+    const heightString =
+      heightFeet && heightInches ? `${heightFeet}'${heightInches}"` : "";
 
     // Calculate age from birth month and year
-    const calculatedAge = calculateAge(parseInt(birthMonth), parseInt(birthYear));
+    const calculatedAge = calculateAge(
+      parseInt(birthMonth),
+      parseInt(birthYear),
+    );
 
     const formData = {
       displayName: form.firstName.value,
@@ -164,12 +168,12 @@ const SetupProfileView = () => {
         <p className="text-gray-400">
           Your profile has been submitted for review.
         </p>
-        <button
-          onClick={() => window.location.replace("/")}
-          className="mt-6 rounded-md bg-orange-500 px-4 py-2 text-white hover:bg-orange-600"
+        <Link
+          to={`/user-profile/${user_email}`}
+          className="border px-4 py-2 text-white"
         >
-          Go to Home
-        </button>
+          Go to profile
+        </Link>
       </div>
     );
   }

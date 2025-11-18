@@ -47,8 +47,12 @@ const EditProfileView = lazy(
 
 // 🔒 Private Pages
 const AdminView = lazy(() => import("../page/private/admin/AdminView.jsx"));
-const AddDummyUser = lazy(
-  () => import("../page/private/allUsers/AddDummyUser.jsx"),
+// const AddDummyUser = lazy(
+//   () => import("../page/private/allUsers/AddDummyUser.jsx"),
+// );
+
+const AddUserView = lazy(
+  () => import("../page/private/allUsers/AddUserView.jsx"),
 );
 const EmailTemplatesPage = lazy(() => import("../page/EmailTemplatesPage.jsx"));
 // const AllQRCodes = lazy(() => import("../page/private/QR/AllQRCodes.jsx"));
@@ -86,8 +90,11 @@ const router = createBrowserRouter(
           <Route index element={<HomeView />} />
           <Route path="welcome/:id" element={<WelcomeScanView />} />
           <Route path="user-profile/:mail" element={<UserView />} />
-          <Route path="user-profile/gallery" element={<GalleryView />} />
-          <Route path="user-profile/connect" element={<LetsConnectView />} />
+          <Route path="user-profile/:mail/gallery" element={<GalleryView />} />
+          <Route
+            path="user-profile/:mail/connect"
+            element={<LetsConnectView />}
+          />
           <Route
             path="checkout/:user_email"
             element={
@@ -95,10 +102,6 @@ const router = createBrowserRouter(
                 <CheckoutView />
               </Elements>
             }
-          />
-          <Route
-            path="checkout/setup-profile/:user_email"
-            element={<SetupProfileView />}
           />
           <Route
             path="checkout/setup-profile/edit/:user_email"
@@ -112,7 +115,11 @@ const router = createBrowserRouter(
         <Route path="/auth" element={<AuthLayout />}>
           <Route index path="login" element={<LoginView />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
-          <Route path="reset-password/:token" element={<ResetPassword />} />
+          <Route path="reset-password/:mail" element={<ResetPassword />} />
+          <Route
+            path="reset-password/:user_email/setup-profile"
+            element={<SetupProfileView />}
+          />
         </Route>
       </Route>
 
@@ -129,7 +136,7 @@ const router = createBrowserRouter(
         >
           <Route index element={<AdminView />} />
           <Route path="all-users" element={<AllUsersView />} />
-          <Route path="all-users/add-user" element={<AddDummyUser />} />
+          <Route path="all-users/add-user" element={<AddUserView />} />
           <Route path="user-management" element={<UserManageView />} />
           <Route path="user-management/:id" element={<UserDetailsView />} />
           <Route path="notifications" element={<NotificationView />} />

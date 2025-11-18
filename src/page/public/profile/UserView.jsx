@@ -4,7 +4,10 @@ import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../../../features/public/profile/profileFetch";
-import { shouldShowTravelMode, formatTravelDate } from "../../../utils/travelMode";
+import {
+  shouldShowTravelMode,
+  formatTravelDate,
+} from "../../../utils/travelMode";
 
 const UserView = () => {
   const dispatch = useDispatch();
@@ -147,7 +150,7 @@ const UserView = () => {
           </div>
 
           <div className="mx-auto my-2 max-w-[600px]">
-            <Link to={`/user-profile/gallery`}>
+            <Link to={`/user-profile/${userProfile.email}/gallery`}>
               <p className="flex items-center justify-end font-raleway text-base font-semibold underline hover:text-orange-500">
                 See more photos
               </p>
@@ -196,7 +199,7 @@ const UserView = () => {
               It's not a scam, it's a Scan.
             </h2>
 
-            <Link to={`/user-profile/connect`}>
+            <Link to={`/user-profile/${userProfile.email}/connect`}>
               <button className="my-8 w-full rounded-lg bg-orange-500 p-2.5 text-base font-semibold text-white transition hover:bg-orange-600 md:my-4">
                 Let’s Connect
               </button>

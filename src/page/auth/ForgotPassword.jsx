@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { endpoints } from '../../config/api/httpEndpoint';
-import api from '../../config/api/axiosInstance';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { endpoints } from "../../config/api/httpEndpoint";
+import api from "../../config/api/axiosInstance";
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
 
@@ -13,7 +13,7 @@ const ForgotPassword = () => {
     e.preventDefault();
 
     if (!email) {
-      toast.error('Please enter your email address');
+      toast.error("Please enter your email address");
       return;
     }
 
@@ -23,11 +23,13 @@ const ForgotPassword = () => {
         email,
       });
 
-      toast.success('Password reset link sent to your email!');
+      toast.success("Password reset link sent to your email!");
       setEmailSent(true);
     } catch (error) {
-      console.error('Error sending reset email:', error);
-      toast.error(error.response?.data?.message || 'Failed to send reset email');
+      console.error("Error sending reset email:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to send reset email",
+      );
     } finally {
       setLoading(false);
     }
@@ -35,13 +37,13 @@ const ForgotPassword = () => {
 
   if (emailSent) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FFFCFA] px-4">
-        <div className="max-w-md w-full">
-          <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-gray-100">
+      <div className="flex min-h-screen items-center justify-center px-4">
+        <div className="w-full max-w-md">
+          <div className="rounded-2xl border-2 border-gray-100 bg-white p-8 shadow-lg">
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
                 <svg
-                  className="w-8 h-8 text-green-600"
+                  className="h-8 w-8 text-green-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -54,16 +56,19 @@ const ForgotPassword = () => {
                   />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-[#000044] mb-2">Check Your Email</h2>
-              <p className="text-gray-600 mb-6">
+              <h2 className="mb-2 text-2xl font-bold text-[#000044]">
+                Check Your Email
+              </h2>
+              <p className="mb-6 text-gray-600">
                 We've sent a password reset link to <strong>{email}</strong>
               </p>
-              <p className="text-sm text-gray-500 mb-6">
-                The link will expire in 1 hour. If you don't see the email, check your spam folder.
+              <p className="mb-6 text-sm text-gray-500">
+                The link will expire in 1 hour. If you don't see the email,
+                check your spam folder.
               </p>
               <Link
                 to="/auth/login"
-                className="inline-block bg-[#F07400] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#D66400] transition-colors"
+                className="inline-block rounded-xl bg-[#F07400] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#D66400]"
               >
                 Back to Login
               </Link>
@@ -75,21 +80,27 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FFFCFA] px-4">
-      <div className="max-w-md w-full">
-        <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-gray-100">
+    <div className="flex min-h-screen items-center justify-center px-4">
+      <div className="w-full max-w-md">
+        <div className="rounded-2xl border-2 border-gray-100 bg-white p-8 shadow-lg">
           {/* Header */}
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-[#000044] mb-2">Forgot Password?</h2>
+          <div className="mb-8 text-center">
+            <h2 className="mb-2 text-3xl font-bold text-[#000044]">
+              Forgot Password?
+            </h2>
             <p className="text-gray-600">
-              Enter your email address and we'll send you a link to reset your password.
+              Enter your email address and we'll send you a link to reset your
+              password.
             </p>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-[#000044] mb-2">
+              <label
+                htmlFor="email"
+                className="mb-2 block text-sm font-semibold text-[#000044]"
+              >
                 Email Address
               </label>
               <input
@@ -97,7 +108,7 @@ const ForgotPassword = () => {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F07400] focus:border-[#F07400] outline-none transition-all"
+                className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 outline-none transition-all focus:border-[#F07400] focus:ring-2 focus:ring-[#F07400]"
                 placeholder="Enter your email"
                 required
               />
@@ -106,12 +117,12 @@ const ForgotPassword = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#F07400] text-white py-3 rounded-xl font-semibold hover:bg-[#D66400] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full rounded-xl bg-[#F07400] py-3 font-semibold text-white transition-colors hover:bg-[#D66400] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? (
                 <span className="flex items-center justify-center">
                   <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -133,7 +144,7 @@ const ForgotPassword = () => {
                   Sending...
                 </span>
               ) : (
-                'Send Reset Link'
+                "Send Reset Link"
               )}
             </button>
           </form>
@@ -142,7 +153,7 @@ const ForgotPassword = () => {
           <div className="mt-6 text-center">
             <Link
               to="/auth/login"
-              className="text-[#F07400] hover:text-[#D66400] font-semibold text-sm"
+              className="text-sm font-semibold text-[#F07400] hover:text-[#D66400]"
             >
               ← Back to Login
             </Link>

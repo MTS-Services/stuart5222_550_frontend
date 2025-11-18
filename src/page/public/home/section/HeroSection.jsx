@@ -1,6 +1,8 @@
+import { STORAGE } from "../../../../config/storage/auth/authStorage";
 import { JoinWaitlist } from "../components/JoinWaitlist";
 
 const HeroSection = () => {
+  const waitlistStatus = STORAGE.getWaitlist();
   return (
     <div className="mx-auto max-w-[600px] md:py-6">
       <div className="flex items-center justify-center">
@@ -72,6 +74,10 @@ const HeroSection = () => {
               </p>
               {/* Form */}
               <JoinWaitlist />
+
+              <button className="mt-4 w-full rounded-lg bg-orange-500 p-2.5 text-base font-semibold text-white transition hover:bg-orange-600 disabled:opacity-50">
+                Login
+              </button>
             </div>
           </div>
         </div>
