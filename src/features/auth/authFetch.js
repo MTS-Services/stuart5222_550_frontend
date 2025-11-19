@@ -4,7 +4,7 @@ import { endpoints } from "../../config/api/httpEndpoint";
 import { POST } from "../../config/api/httpMethods";
 import { AUTH_COOKIE } from "../../utils/authCookie";
 
-// ========== Login ==========
+// ========== Admin Login ==========
 export const adminLoginUser = createAsyncThunk(
   "auth/adminLoginUser",
   async ({ email, password }, { rejectWithValue }) => {
@@ -12,10 +12,19 @@ export const adminLoginUser = createAsyncThunk(
       const res = await POST(endpoints.auth.ADMIN_LOGIN, { email, password });
 
       if (res?.access_token) {
-        AUTH_COOKIE.setToken(res.access_token); // <-- store cookie
+        AUTH_COOKIE.setToken(res.access_token);
       }
 
-      return res;
+      // Store user data in cookie for admin
+      if (res?.user) {
+        AUTH_COOKIE.setUser(res.user);
+      }
+
+      return {
+        user: res.user,
+        token: res.access_token,
+        ...res,
+      };
     } catch (err) {
       console.error("admin Login User error:", err);
       return rejectWithValue(
@@ -25,7 +34,7 @@ export const adminLoginUser = createAsyncThunk(
   },
 );
 
-// ========== Login ==========
+// ========== User Login ==========
 export const userLoginUser = createAsyncThunk(
   "auth/userLoginUser",
   async ({ email, password }, { rejectWithValue }) => {
@@ -33,14 +42,18 @@ export const userLoginUser = createAsyncThunk(
       const res = await POST(endpoints.auth.USER_LOGIN, { email, password });
 
       if (res?.data?.access_token) {
-        AUTH_COOKIE.setToken(res.data.access_token); // <-- store cookie
+        AUTH_COOKIE.setToken(res.data.access_token);
       }
 
-      if (res?.data) {
+      if (res?.data?.user) {
         AUTH_COOKIE.setUser(res.data.user);
       }
 
-      return res;
+      return {
+        user: res.data.user,
+        token: res.data.access_token,
+        ...res.data,
+      };
     } catch (err) {
       console.error("userLoginUser error:", err);
       return rejectWithValue(

@@ -348,7 +348,7 @@ const EmailTemplatesPage = () => {
                   >
                     <PencilIcon className="h-5 w-5" />
                   </button>
-                  <button
+                  {/* <button
                     onClick={() => handleDuplicateTemplate(template)}
                     className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 hover:text-blue-600"
                     title="Duplicate"
@@ -361,7 +361,7 @@ const EmailTemplatesPage = () => {
                     title="Delete"
                   >
                     <TrashIcon className="h-5 w-5" />
-                  </button>
+                  </button> */}
                 </div>
               </div>
             ))}

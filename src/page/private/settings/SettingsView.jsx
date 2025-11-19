@@ -17,15 +17,14 @@ const SettingsView = () => {
 
   const tabs = [
     { id: "account", label: "Account Info" },
-    { id: "mail", label: "Mail Template" },
+    { id: "mail", label: "Template" },
   ];
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "account":
         return <AdminDetails />;
-      case "mail":
-        return <MailTemplates />;
+
       default:
         return <p className="text-gray-500">Content not available yet.</p>;
     }

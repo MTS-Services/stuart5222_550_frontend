@@ -9,7 +9,6 @@ import {
 } from "./authFetch";
 import { AUTH_COOKIE } from "../../utils/authCookie";
 
-// const token = STORAGE.getToken();
 const user = AUTH_COOKIE.getUser();
 
 const initialState = {
@@ -27,25 +26,19 @@ const authSlice = createSlice({
     resetAuthError: (state) => {
       state.error = null;
     },
+    logout: (state) => {
+      state.user = null;
+      state.token = null;
+      state.isAuthenticated = false;
+      state.error = null;
+      state.loading = false;
+      // Clear cookies
+      AUTH_COOKIE.removeToken();
+      AUTH_COOKIE.removeUser();
+    },
   },
   extraReducers: (builder) => {
     builder
-      // ===== Admin Login =====
-      .addCase(adminLoginUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(adminLoginUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.isAuthenticated = true;
-      })
-      .addCase(adminLoginUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
       // ===== User Login =====
       .addCase(userLoginUser.pending, (state) => {
         state.loading = true;
@@ -56,11 +49,35 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.isAuthenticated = true;
+        state.error = null;
       })
       .addCase(userLoginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.isAuthenticated = false;
+        state.user = null;
+        state.token = null;
       })
+      // ===== Admin Login =====
+      .addCase(adminLoginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(adminLoginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
+        state.error = null;
+      })
+      .addCase(adminLoginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.isAuthenticated = false;
+        state.user = null;
+        state.token = null;
+      })
+
       // ===== Reset Password =====
       .addCase(resetPassword.pending, (state) => {
         state.loading = true;
@@ -104,5 +121,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { resetAuthError } = authSlice.actions;
+export const { resetAuthError, logout } = authSlice.actions;
 export default authSlice.reducer;

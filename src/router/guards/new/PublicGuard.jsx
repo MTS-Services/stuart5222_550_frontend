@@ -8,7 +8,8 @@ const PublicGuard = () => {
   if (user?.role === "admin") return <Navigate to="/admin" replace />;
   if (user?.role === "user") return <Navigate to="/user" replace />;
 
-  return <Navigate to="/" replace />;
+  // Fallback for unexpected state
+  return <Navigate to="/auth/login" replace />;
 };
 
 export default PublicGuard;

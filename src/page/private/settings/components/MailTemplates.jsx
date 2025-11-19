@@ -5,9 +5,7 @@ import { updateMailTemplates } from "../../../../features/admin/mail/mailFetch";
 import { toast } from "react-toastify";
 
 const MailTemplates = () => {
-  const { templates, isLoading, isError, success } = useSelector(
-    (state) => state.mail,
-  );
+  const { templates, isLoading } = useSelector((state) => state.mail);
   const [template, setTemplate] = useState(templates);
 
   const [selectedId, setSelectedId] = useState(null);

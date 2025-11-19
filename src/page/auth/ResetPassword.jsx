@@ -8,9 +8,9 @@ import { resetPassword } from "../../features/auth/authFetch";
 
 const ResetPassword = () => {
   const dispatch = useDispatch();
-  const { mail } = useParams();
+  const { user_email } = useParams();
+  console.log("user_email:", user_email);
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     newPassword: "",
     confirmPassword: "",
@@ -48,10 +48,10 @@ const ResetPassword = () => {
     setLoading(true);
     try {
       await dispatch(
-        resetPassword({ email: mail, password: formData.newPassword }),
+        resetPassword({ email: user_email, password: formData.newPassword }),
       ).unwrap();
+      navigate(`/auth/login`, { replace: true });
       toast.success("Password has been reset successfully!");
-      navigate(`/auth/login`);
     } catch (error) {
       setError(error);
       console.error("Error resetting password:", error);

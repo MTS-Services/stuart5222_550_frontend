@@ -5,37 +5,18 @@ import {
   adminLoginUser,
   userLoginUser,
 } from "../../../features/auth/authFetch";
-import { resetAuthError } from "../../../features/auth/authSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AUTH_COOKIE } from "../../../utils/authCookie";
+import { handlePostLoginRedirect } from "../../../utils/authFlow";
 
 const LoginView = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { loading } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({ email: "", password: "" });
-
-  const { loading, isAuthenticated, user, token } = useSelector(
-    (state) => state.auth,
-  );
-
-  console.log("AUTH_COOKIE Token:", token);
-  console.log("AUTH_COOKIE User:", user);
-  console.log("isAuthenticated:", isAuthenticated);
-
   const [showPassword, setShowPassword] = useState(false);
 
-  // ✅ Reset error on mount/unmount
-  useEffect(() => {
-    return () => dispatch(resetAuthError());
-  }, [dispatch]);
-
-  // ✅ Redirect when authenticated
-  useEffect(() => {
-    if (user && isAuthenticated) {
-      navigate(user?.role === "admin" ? "/admin" : "/user");
-    }
-  }, [navigate, user, isAuthenticated]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,15 +26,29 @@ const LoginView = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(userLoginUser(formData)).unwrap();
-      console.log("✅ Login successful");
+      // Try user login first
+      let loginResult;
+      try {
+        loginResult = await dispatch(userLoginUser(formData)).unwrap();
+      } catch (userError) {
+        // If user login fails, try admin login
+        try {
+          loginResult = await dispatch(adminLoginUser(formData)).unwrap();
+        } catch (adminError) {
+          console.error("❌ Both login attempts failed");
+          throw adminError; // Throw the admin error if both fail
+        }
+      }
 
+      // Use the auth flow helper to handle redirect based on role
+      handlePostLoginRedirect(navigate, loginResult, "/");
       toast.success("Login successful!");
     } catch (err) {
       console.error("❌ Login failed:", err);
       toast.error(err?.message || "Invalid email or password");
     }
   };
+
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
