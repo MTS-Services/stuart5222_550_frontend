@@ -49,6 +49,11 @@ const EmailTemplatesPage = () => {
       label: "Password Reset",
       description: "Help users reset their passwords",
     },
+    {
+      name: "dashboardUrl",
+      label: "Dashboard URL",
+      description: "Redirect users to their dashboard after login",
+    }
   ];
 
   useEffect(() => {

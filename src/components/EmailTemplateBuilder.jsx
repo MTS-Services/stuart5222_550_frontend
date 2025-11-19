@@ -106,6 +106,12 @@ const EmailTemplateBuilder = ({
       defaultValue: "Your profile does not meet our requirements",
       description: "Reason for profile or registration rejection",
     },
+     {
+      key: "dashboardUrl",
+      label: "Dashboard URL",
+      defaultValue: "/dashboard",
+      description: "Link to user dashboard",
+    },
   ]);
   const [showVariablesModal, setShowVariablesModal] = useState(false);
 
@@ -1269,6 +1275,7 @@ const ComponentProperties = ({ component, onUpdate }) => {
                 <option value="{{editProfileUrl}}">Edit Profile URL</option>
                 <option value="{{checkoutUrl}}">Checkout URL</option>
                 <option value="{{resetPasswordUrl}}">Reset Password URL</option>
+                <option value="{{dashboardUrl}}">Dashboard URL</option>
                 <option value="custom">Custom URL</option>
               </select>
 
