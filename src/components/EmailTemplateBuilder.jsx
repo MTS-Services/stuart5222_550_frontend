@@ -100,6 +100,12 @@ const EmailTemplateBuilder = ({
       defaultValue: "sample-reset-token-123",
       description: "Secure token for password reset verification",
     },
+    {
+      key: "rejectionReason",
+      label: "Rejection Reason",
+      defaultValue: "Your profile does not meet our requirements",
+      description: "Reason for profile or registration rejection",
+    },
   ]);
   const [showVariablesModal, setShowVariablesModal] = useState(false);
 
@@ -502,8 +508,6 @@ const EmailTemplateBuilder = ({
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${templateSettings.subject.replace(/\{\{/g, "&#123;&#123;").replace(/\}\}/g, "&#125;&#125;")}</title>
-
         ${style}
       </head>
       <body style="font-family: ${templateSettings.fontFamily}; margin: 0; padding: 0; line-height: 1.6;">
