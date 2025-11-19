@@ -2,7 +2,8 @@ import { GET } from "./httpMethods";
 
 export const endpoints = {
   auth: {
-    LOGIN: "/auth/admin/login",
+    ADMIN_LOGIN: "/auth/admin/login",
+    USER_LOGIN: "/auth/user/login",
     REGISTER: "/auth/register",
     PAYMENT_INTENT: "/payment/create-one-time-payment",
     PAYMENT_SUBSCRIPTION: "/payment/create-subscription",

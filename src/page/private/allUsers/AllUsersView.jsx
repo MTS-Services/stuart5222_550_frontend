@@ -48,7 +48,7 @@ const AllUsersView = () => {
           <TableDropDown value={status} onChange={setStatus} />
 
           <Link
-            to="/admin/all-users/add-user"
+            to="/admin/all-users/add"
             className="rounded-full bg-orange-500 px-4 py-2 text-white shadow-md hover:bg-orange-600"
           >
             Add User

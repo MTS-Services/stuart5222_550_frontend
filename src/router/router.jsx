@@ -6,11 +6,11 @@ import {
 } from "react-router-dom";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import PublicGuard from "./guards/new/PublicGuard.jsx";
+import PrivateGuard from "./guards/new/PrivateGuard.jsx";
+import RoleGuard from "./guards/new/RoleGuard.jsx";
 
 // Guards
-import PrivateGuard from "./guards/PrivateGuard";
-import PublicGuard from "./guards/PublicGuard";
-import AuthGuard from "./guards/AuthGuard";
 
 // Layouts
 const AuthLayout = lazy(() => import("../layout/auth/AuthLayout.jsx"));
@@ -21,6 +21,10 @@ const ErrorBoundary = lazy(() => import("../components/ErrorBoundary.jsx"));
 // 🔓 Public Pages
 const ErrorView = lazy(() => import("../page/public/error/ErrorView.jsx"));
 const HomeView = lazy(() => import("../page/public/home/HomeView.jsx"));
+const UserProfileView = lazy(
+  () => import("../page/public/profile/UserProfileView.jsx"),
+);
+
 const LetsConnectView = lazy(
   () => import("../page/public/connect/ConnectView.jsx"),
 );
@@ -35,22 +39,13 @@ const WelcomeScanView = lazy(
 const LoginView = lazy(() => import("../page/auth/login/LoginView.jsx"));
 const ForgotPassword = lazy(() => import("../page/auth/ForgotPassword.jsx"));
 const ResetPassword = lazy(() => import("../page/auth/ResetPassword.jsx"));
-const CheckoutView = lazy(
-  () => import("../page/auth/checkout/CheckoutView.jsx"),
-);
 const SetupProfileView = lazy(
   () => import("../page/auth/setup-profile/SetupProfileView.jsx"),
 );
-const EditProfileView = lazy(
-  () => import("../page/auth/setup-profile/EditProfileView.jsx"),
-);
+const UserView = lazy(() => import("../page/public/profile/UserView.jsx"));
 
 // 🔒 Private Pages
 const AdminView = lazy(() => import("../page/private/admin/AdminView.jsx"));
-// const AddDummyUser = lazy(
-//   () => import("../page/private/allUsers/AddDummyUser.jsx"),
-// );
-
 const AddUserView = lazy(
   () => import("../page/private/allUsers/AddUserView.jsx"),
 );
@@ -59,7 +54,6 @@ const EmailTemplatesPage = lazy(() => import("../page/EmailTemplatesPage.jsx"));
 const AllUsersView = lazy(
   () => import("../page/private/allUsers/AllUsersView.jsx"),
 );
-const UserView = lazy(() => import("../page/public/profile/UserView.jsx"));
 const UserManageView = lazy(
   () => import("../page/private/userManagements/UserManageView.jsx"),
 );
@@ -79,83 +73,59 @@ const UserDetailsView = lazy(
   () => import("../page/private/userManagements/UserDetailsView.jsx"),
 );
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
-
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      {/* 🔓 Public Routes */}
+      {/* 🔓 Public - Only logged-out users can access */}
       <Route element={<PublicGuard />}>
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<HomeView />} />
-          <Route path="welcome/:id" element={<WelcomeScanView />} />
-          <Route path="user-profile/:mail" element={<UserView />} />
-          <Route path="user-profile/:mail/gallery" element={<GalleryView />} />
-          <Route
-            path="user-profile/:mail/connect"
-            element={<LetsConnectView />}
-          />
-          <Route
-            path="checkout/:user_email"
-            element={
-              <Elements stripe={stripePromise}>
-                <CheckoutView />
-              </Elements>
-            }
-          />
-          <Route
-            path="checkout/setup-profile/edit/:user_email"
-            element={<EditProfileView />}
-          />
-        </Route>
-      </Route>
-
-      {/* 🛂 Auth Routes */}
-      <Route element={<AuthGuard />}>
-        <Route path="/auth" element={<AuthLayout />}>
-          <Route index path="login" element={<LoginView />} />
-          <Route path="forgot-password" element={<ForgotPassword />} />
-          <Route path="reset-password/:mail" element={<ResetPassword />} />
-          <Route
-            path="reset-password/:user_email/setup-profile"
-            element={<SetupProfileView />}
-          />
-        </Route>
-      </Route>
-
-      {/* 🔒 Private Routes */}
-      <Route element={<PrivateGuard />}>
+        <Route path="/" element={<HomeView />} />
+        <Route path="/welcome-scan/:id" element={<WelcomeScanView />} />
+        <Route path="/user/:email/profile" element={<UserView />} />
+        <Route path="/user/:email/gallery" element={<GalleryView />} />
+        <Route path="/user/:email/lets-connect" element={<LetsConnectView />} />
+        <Route path="/auth/login" element={<LoginView />} />
+        <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+        <Route path="/auth/reset/:user_email" element={<ResetPassword />} />
         <Route
-          path="/admin"
-          element={
-            <ErrorBoundary>
-              <AdminLayout />
-            </ErrorBoundary>
-          }
-          errorElement={<ErrorBoundary />}
-        >
+          path="/auth/reset/:user_email/setup-profile"
+          element={<SetupProfileView />}
+        />
+      </Route>
+
+      {/* 🔐 Private - Any logged-in user */}
+      <Route element={<PrivateGuard />}>
+        <Route path="/profile" element={<UserProfileView />} />
+      </Route>
+
+      {/* 👑 Admin-only */}
+      <Route element={<RoleGuard allowedRoles={["admin"]} />}>
+        <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminView />} />
+
           <Route path="all-users" element={<AllUsersView />} />
-          <Route path="all-users/add-user" element={<AddUserView />} />
+          <Route path="all-users/add" element={<AddUserView />} />
           <Route path="user-management" element={<UserManageView />} />
-          <Route path="user-management/:id" element={<UserDetailsView />} />
-          <Route path="notifications" element={<NotificationView />} />
+          <Route path="user-management/:userId" element={<UserDetailsView />} />
           <Route path="user-edit" element={<UserEditView />} />
-          <Route path="user-edit/:id" element={<EditDetailsView />} />
+          <Route path="user-edit/:userId" element={<EditDetailsView />} />
           <Route
-            path="email-templates"
-            element={
-              <ErrorBoundary>
-                <EmailTemplatesPage />
-              </ErrorBoundary>
-            }
+            path="user-edit/details/:userId"
+            element={<EditDetailsView />}
           />
-          {/* <Route path="user-edit/qr-code/:email" element={<AllQRCodes />} /> */}
+
           <Route path="settings" element={<SettingsView />} />
+          <Route path="notifications" element={<NotificationView />} />
+          <Route path="email-templates" element={<EmailTemplatesPage />} />
         </Route>
       </Route>
 
-      {/* ⚠️ 404 */}
+      {/* 🙋 User-only */}
+      <Route element={<RoleGuard allowedRoles={["user"]} />}>
+        <Route path="/user" element={<UserProfileView />} />
+        <Route path="/user/profile" element={<UserView />} />
+      </Route>
+
+      {/* ⚠️ 404 Fallback */}
       <Route path="*" element={<ErrorView />} />
     </>,
   ),

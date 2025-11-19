@@ -1,18 +1,27 @@
 import { useState, useEffect } from "react";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../../features/auth/authFetch";
+import {
+  adminLoginUser,
+  userLoginUser,
+} from "../../../features/auth/authFetch";
 import { resetAuthError } from "../../../features/auth/authSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { AUTH_COOKIE } from "../../../utils/authCookie";
 
 const LoginView = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const { user, loading, error, isAuthenticated } = useSelector(
+
+  const { loading, isAuthenticated, user, token } = useSelector(
     (state) => state.auth,
   );
+
+  console.log("AUTH_COOKIE Token:", token);
+  console.log("AUTH_COOKIE User:", user);
+  console.log("isAuthenticated:", isAuthenticated);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -23,10 +32,10 @@ const LoginView = () => {
 
   // ✅ Redirect when authenticated
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/admin"); // change this route as needed
+    if (user && isAuthenticated) {
+      navigate(user?.role === "admin" ? "/admin" : "/user");
     }
-  }, [isAuthenticated, navigate]);
+  }, [navigate, user, isAuthenticated]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,7 +45,9 @@ const LoginView = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(loginUser(formData)).unwrap();
+      await dispatch(userLoginUser(formData)).unwrap();
+      console.log("✅ Login successful");
+
       toast.success("Login successful!");
     } catch (err) {
       console.error("❌ Login failed:", err);
@@ -48,7 +59,7 @@ const LoginView = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-100 to-orange-100 p-4">
       <div className="w-full max-w-md">
         {/* Card Container */}
 

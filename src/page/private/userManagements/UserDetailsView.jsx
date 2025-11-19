@@ -25,9 +25,12 @@ const UserDetailsView = () => {
   const [loading, setLoading] = useState({ approve: false, reject: false });
 
   if (isLoading) return <div className="p-6 text-center">Loading...</div>;
+
   if (error)
     return <div className="p-6 text-center text-red-600">Error: {error}</div>;
-  if (!user) return <div className="p-6 text-center">User not found</div>;
+
+  if (!user)
+    return <div className="pt-10 text-center"> User Details not found!</div>;
 
   const {
     user: userInfo,

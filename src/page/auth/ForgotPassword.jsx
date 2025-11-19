@@ -37,7 +37,7 @@ const ForgotPassword = () => {
 
   if (emailSent) {
     return (
-      <div className="flex min-h-screen items-center justify-center px-4">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-100 to-orange-100 px-4">
         <div className="w-full max-w-md">
           <div className="rounded-2xl border-2 border-gray-100 bg-white p-8 shadow-lg">
             <div className="text-center">
@@ -80,7 +80,7 @@ const ForgotPassword = () => {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-100 to-orange-100 px-4">
       <div className="w-full max-w-md">
         <div className="rounded-2xl border-2 border-gray-100 bg-white p-8 shadow-lg">
           {/* Header */}

@@ -5,19 +5,44 @@ import { POST } from "../../config/api/httpMethods";
 import { AUTH_COOKIE } from "../../utils/authCookie";
 
 // ========== Login ==========
-export const loginUser = createAsyncThunk(
-  "auth/login",
+export const adminLoginUser = createAsyncThunk(
+  "auth/adminLoginUser",
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const res = await POST(endpoints.auth.LOGIN, { email, password });
+      const res = await POST(endpoints.auth.ADMIN_LOGIN, { email, password });
 
       if (res?.access_token) {
-        AUTH_COOKIE.set(res.access_token); // <-- store cookie
+        AUTH_COOKIE.setToken(res.access_token); // <-- store cookie
       }
 
       return res;
     } catch (err) {
-      console.error("loginUser error:", err);
+      console.error("admin Login User error:", err);
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to login user",
+      );
+    }
+  },
+);
+
+// ========== Login ==========
+export const userLoginUser = createAsyncThunk(
+  "auth/userLoginUser",
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const res = await POST(endpoints.auth.USER_LOGIN, { email, password });
+
+      if (res?.data?.access_token) {
+        AUTH_COOKIE.setToken(res.data.access_token); // <-- store cookie
+      }
+
+      if (res?.data) {
+        AUTH_COOKIE.setUser(res.data.user);
+      }
+
+      return res;
+    } catch (err) {
+      console.error("userLoginUser error:", err);
       return rejectWithValue(
         err.response?.data?.message || "Failed to login user",
       );

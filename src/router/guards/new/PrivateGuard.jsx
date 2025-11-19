@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 const PrivateGuard = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
-  return isAuthenticated ? <Outlet /> : <Navigate to="/" />;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/" replace />;
 };
 
 export default PrivateGuard;

@@ -51,7 +51,7 @@ const ResetPassword = () => {
         resetPassword({ email: mail, password: formData.newPassword }),
       ).unwrap();
       toast.success("Password has been reset successfully!");
-      navigate("/auth/login");
+      navigate(`/auth/login`);
     } catch (error) {
       setError(error);
       console.error("Error resetting password:", error);
@@ -65,22 +65,20 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-100 to-orange-100 px-4">
       <div className="w-full max-w-md">
         <div className="rounded-2xl border-2 border-gray-100 p-8 shadow-lg">
           {/* Header */}
           <div className="mb-4 flex justify-center">
             <img
-              src="/img/assets/logo.png"
-              alt="preview"
-              className="h-24 w-36 object-cover"
+              src="/img/page/home/remove_preview.png"
+              alt="Logo"
+              className="mx-auto"
             />
           </div>
           <div className="mb-8 text-center">
-            <h2 className="mb-2 text-3xl font-bold text-white">
-              Reset Password
-            </h2>
-            <p className="text-gray-200">Enter your new password below</p>
+            <h2 className="mb-2 text-3xl font-bold">Reset Password</h2>
+            <p className="text-gray-700">Enter your new password below</p>
           </div>
 
           {/* Form */}
@@ -89,7 +87,7 @@ const ResetPassword = () => {
             <div>
               <label
                 htmlFor="newPassword"
-                className="mb-2 block text-sm font-semibold text-white"
+                className="mb-2 block text-sm font-semibold text-gray-700"
               >
                 New Password
               </label>
@@ -121,7 +119,7 @@ const ResetPassword = () => {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="mb-2 block text-sm font-semibold text-white"
+                className="mb-2 block text-sm font-semibold text-gray-700"
               >
                 Confirm Password
               </label>

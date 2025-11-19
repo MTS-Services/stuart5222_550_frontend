@@ -1,23 +1,23 @@
 // src/features/auth/authSlice.js -> authFetch.js -> httpEndpoint.js
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  loginUser,
+  adminLoginUser,
+  userLoginUser,
   paymentIntent,
   paymentSubscriptions,
   resetPassword,
 } from "./authFetch";
-import { STORAGE } from "../../config/storage/auth/authStorage";
 import { AUTH_COOKIE } from "../../utils/authCookie";
 
 // const token = STORAGE.getToken();
-const token = AUTH_COOKIE.get();
+const user = AUTH_COOKIE.getUser();
 
 const initialState = {
-  user: null,
-  token: token || null,
+  user: user,
+  token: AUTH_COOKIE.getToken() || null,
   loading: false,
   error: null,
-  isAuthenticated: !!token,
+  isAuthenticated: !!user,
 };
 
 const authSlice = createSlice({
@@ -30,18 +30,34 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // ===== Login =====
-      .addCase(loginUser.pending, (state) => {
+      // ===== Admin Login =====
+      .addCase(adminLoginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(loginUser.fulfilled, (state, action) => {
+      .addCase(adminLoginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.isAuthenticated = true;
       })
-      .addCase(loginUser.rejected, (state, action) => {
+      .addCase(adminLoginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // ===== User Login =====
+      .addCase(userLoginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(userLoginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+        state.isAuthenticated = true;
+      })
+      .addCase(userLoginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

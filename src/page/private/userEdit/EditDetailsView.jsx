@@ -42,7 +42,7 @@ const EditDetailsView = () => {
   if (error)
     return <div className="mx-auto justify-center">Error: {error}</div>;
   if (!user)
-    return <div className="mx-auto justify-center">User not found</div>;
+    return <div className="pt-10 text-center">User Edit not found!</div>;
 
   const {
     user: userInfo,
@@ -243,7 +243,7 @@ const EditDetailsView = () => {
       </div>
 
       {/* Feedback Section */}
-      <div className="rounded-lg border border-gray-200 bg-white p-4">
+      {/* <div className="rounded-lg border border-gray-200 bg-white p-4">
         <h3 className="mb-3 font-raleway text-xl font-medium">
           Reject with Feedback
         </h3>
@@ -285,7 +285,7 @@ const EditDetailsView = () => {
             Cancel
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
