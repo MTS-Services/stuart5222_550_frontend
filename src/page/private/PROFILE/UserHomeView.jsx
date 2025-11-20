@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchUserProfile } from "../../../features/public/profile/profileFetch";
 import ProfileInfoView from "./components/ProfileInfoView";
+import { updateUser } from "../../../features/auth/authSlice";
+import { GET } from "../../../config/api/httpMethods";
+import { endpoints } from "../../../config/api/httpEndpoint";
 
 const UserHomeView = () => {
   const dispatch = useDispatch();
@@ -18,6 +21,19 @@ const UserHomeView = () => {
     if (email) {
       dispatch(fetchUserProfile({ userMail: email }));
     }
+    
+    // Fetch latest user data to ensure status is current
+    const fetchUserData = async () => {
+      try {
+        const response = await GET(endpoints.user.USER_PROFILE);
+        if (response?.data) {
+          dispatch(updateUser(response.data));
+        }
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
+    };
+    fetchUserData();
   }, [dispatch, email]);
 
   return (

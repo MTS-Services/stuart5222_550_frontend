@@ -15,6 +15,9 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { submitProfile } from "../../../../features/public/profile/profileFetch";
 import { validateForm } from "../../../../utils/validateForm";
 import { AUTH_COOKIE } from "../../../../utils/authCookie";
+import { updateUser } from "../../../../features/auth/authSlice";
+import { GET } from "../../../../config/api/httpMethods";
+import { endpoints } from "../../../../config/api/httpEndpoint";
 
 const SetupProfileView = () => {
   const { email } = useParams();
@@ -138,6 +141,17 @@ const SetupProfileView = () => {
       });
 
       await dispatch(submitProfile(submitData)).unwrap();
+      
+      // Fetch updated user data to refresh user status
+      try {
+        const response = await GET(endpoints.user.USER_PROFILE);
+        if (response?.data) {
+          dispatch(updateUser(response.data));
+        }
+      } catch (error) {
+        console.error("Failed to fetch updated user data:", error);
+      }
+      
       toast.success("Profile submitted successfully for review!");
       setSuccess(true);
       setImagePreviews([]);
