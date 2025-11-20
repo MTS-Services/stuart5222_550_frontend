@@ -33,7 +33,7 @@ const AgeInput = ({
             value={birthMonth || ""}
             onChange={(e) => onBirthMonthChange(e.target.value)}
             className={`h-11 w-full border bg-transparent px-3 ${
-              errors.birthMonth ? "border-red-500" : "border-gray-500"
+              errors.birthMonth ? "border-red-500" : "border-gray-300"
             } appearance-none rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
             style={{
               backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,
@@ -42,15 +42,11 @@ const AgeInput = ({
               backgroundSize: "1.5em 1.5em",
             }}
           >
-            <option value="" disabled className="bg-gray-800 text-gray-400">
+            <option value="" disabled className="text-gray-400">
               Select Month
             </option>
             {months.map((month) => (
-              <option
-                key={month.value}
-                value={month.value}
-                className="bg-gray-800"
-              >
+              <option key={month.value} value={month.value} className="">
                 {month.label}
               </option>
             ))}
@@ -64,7 +60,7 @@ const AgeInput = ({
             value={birthYear || ""}
             onChange={(e) => onBirthYearChange(e.target.value)}
             className={`h-11 w-full border bg-transparent px-3 ${
-              errors.birthYear ? "border-red-500" : "border-gray-500"
+              errors.birthYear ? "border-red-500" : "border-gray-300"
             } appearance-none rounded-lg bg-white text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
             style={{
               backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`,

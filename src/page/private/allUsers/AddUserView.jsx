@@ -134,7 +134,6 @@ const AddUserView = () => {
       await dispatch(submitProfile(submitData)).unwrap();
 
       toast.success("Profile submitted successfully for review!");
-      // form.reset();
       setSuccess(true);
       setImagePreviews([]);
       setFiles([]);
@@ -183,7 +182,7 @@ const AddUserView = () => {
                 name="firstName"
                 placeholder="Enter Display Name"
                 className={`h-11 border bg-transparent px-3 placeholder:text-gray-400 ${
-                  errors.firstName ? "border-red-500" : "border-gray-500"
+                  errors.firstName ? "border-red-500" : "border-gray-300"
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
               {errors.firstName && (
@@ -217,8 +216,8 @@ const AddUserView = () => {
                 type="text"
                 name="bodyType"
                 placeholder="Describe your body type"
-                className={`h-11 border bg-transparent px-3 placeholder:text-gray-400 ${
-                  errors.bodyType ? "border-red-500" : "border-gray-500"
+                className={`h-11 border border-gray-300 bg-transparent px-3 placeholder:text-gray-400 ${
+                  errors.bodyType ? "border-red-500" : "border-gray-300"
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
 
@@ -243,7 +242,7 @@ const AddUserView = () => {
                 type="text"
                 name="dealBreaks"
                 placeholder="Enter your no go's"
-                className="h-11 rounded-lg border border-gray-500 bg-transparent px-3 text-sm font-medium outline-none placeholder:text-gray-400 focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300"
+                className="h-11 rounded-lg border border-gray-300 bg-transparent px-3 text-sm font-medium outline-none placeholder:text-gray-400 focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300"
               />
             </div>
 
@@ -256,17 +255,19 @@ const AddUserView = () => {
                 name="textArea"
                 placeholder="Write your message here..."
                 className={`max-h-[265px] min-h-[265px] w-full border bg-transparent px-3 pt-1 placeholder:text-gray-400 ${
-                  errors.textArea ? "border-red-500" : "border-gray-500"
+                  errors.textArea ? "border-red-500" : "border-gray-300"
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
               {errors.textArea && (
-                <p className="text-sm text-red-500">{errors.textArea}</p>
+                <p className="font-raleway text-sm text-red-500">
+                  {errors.textArea}
+                </p>
               )}
             </div>
           </div>
 
           {/* Travel Mode */}
-          <div className="rounded-lg bg-[#434343] px-3 py-8 font-raleway">
+          <div className="rounded-lg border border-gray-300 px-3 py-8 font-raleway">
             <h2 className="text-center font-raleway text-2xl font-bold">
               Travel Mode
             </h2>
@@ -306,12 +307,12 @@ const AddUserView = () => {
           </div>
 
           {/* Add Images */}
-          <div className="my-10">
-            <h2 className="font-raleway text-xl font-medium">
+          <div className="my-10 rounded-lg border border-red-300 bg-[#ffc0c033] px-3 py-8">
+            <h2 className="text-center font-raleway text-xl font-medium">
               Add Images{" "}
               <span className="font-raleway text-red-500">* (Min 3)</span>
             </h2>
-            <div className="my-6 flex items-center gap-4 rounded-lg bg-[#FFFFFF33] px-3 py-8">
+            <div className="my-6 flex items-center gap-4 rounded-lg bg-[#FFFFFF33] px-3">
               <BiErrorCircle className="h-10 w-10 text-orange-500" />
               <p className="font-raleway text-base font-normal">
                 One showing eyes, one showing a toothy grin and one showing full
@@ -329,7 +330,7 @@ const AddUserView = () => {
                   className="mb-4 flex h-16 w-16 cursor-pointer items-center justify-center rounded-2xl bg-orange-500 transition hover:bg-orange-600"
                   onClick={handleClick}
                 >
-                  <Upload className="h-8 w-8" strokeWidth={2.5} />
+                  <Upload className="h-8 w-8 text-white" strokeWidth={2.5} />
                 </div>
 
                 <h2 className="mb-2 font-raleway text-lg font-semibold text-gray-800">
@@ -470,9 +471,9 @@ const AddUserView = () => {
           </div>
 
           {/* Safety Notice */}
-          <div className="my-8 rounded-lg bg-[#FFFFFF33] p-5">
+          <div className="my-8 rounded-lg border border-gray-300 bg-[#FFFFFF33] p-5">
             <div className="relative mx-auto mb-5 flex h-10 w-10 justify-center overflow-hidden rounded bg-orange-500 p-1 text-center">
-              <MdOutlinePrivacyTip className="h-full w-full" />
+              <MdOutlinePrivacyTip className="h-full w-full text-white" />
             </div>
             <p className="text-center font-raleway text-base font-normal leading-6">
               Your safety is what inspired us. You don't know anything about the
@@ -481,7 +482,7 @@ const AddUserView = () => {
             </p>
           </div>
 
-          <div className="my-10 flex items-center gap-4 rounded-lg bg-[#FFFFFF33] px-3 py-8">
+          <div className="border-gray-300px-3 my-10 flex items-center gap-4 rounded-lg border bg-[#FFFFFF33] px-8 py-8">
             <RiDeleteBinLine className="h-14 w-14 text-orange-500" />
             <p className="font-raleway text-base font-normal">
               Your cards will be sent to you after your profile has been
@@ -490,7 +491,7 @@ const AddUserView = () => {
           </div>
 
           {/* Contact Information */}
-          <div className="rounded-lg bg-[#434343] px-4 py-8">
+          <div className="rounded-lg border border-gray-300 px-8 py-8">
             <div className="mb-6">
               <h2 className="mb-6 font-raleway text-xl font-bold leading-6">
                 Person to person dating, but with a safer approach.
@@ -558,7 +559,7 @@ const AddUserView = () => {
           <button
             type="submit"
             disabled={submitLoading}
-            className="mt-10 w-full rounded-lg bg-orange-500 px-6 py-3 text-lg font-semibold transition hover:bg-orange-600"
+            className="mt-10 w-full rounded-lg bg-orange-500 px-6 py-3 text-lg font-semibold text-white transition hover:bg-orange-600"
           >
             {submitLoading ? "Submitting..." : "Submit Profile for Review"}
           </button>

@@ -34,15 +34,15 @@ const HeightInput = ({
             name="heightFeet"
             value={heightFeet || defaultFeet}
             onChange={(e) => onHeightFeetChange(e.target.value)}
-            className={`h-11 border bg-[#3B3B3D] px-3 ${
-              errors.height ? "border-red-500" : "border-gray-500"
+            className={`h-11 border px-3 ${
+              errors.height ? "border-red-500" : "border-gray-300"
             } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
           >
-            <option value="" className="bg-[#3B3B3D] text-gray-400">
+            <option value="" className="text-gray-400">
               Feet
             </option>
             {feetOptions.map((feet) => (
-              <option key={feet} value={feet} className="bg-[#3B3B3D]">
+              <option key={feet} value={feet} className="">
                 {feet} ft
               </option>
             ))}
@@ -55,15 +55,15 @@ const HeightInput = ({
             name="heightInches"
             value={heightInches || defaultInches}
             onChange={(e) => onHeightInchesChange(e.target.value)}
-            className={`h-11 border bg-[#3B3B3D] px-3 ${
-              errors.height ? "border-red-500" : "border-gray-500"
+            className={`h-11 border px-3 ${
+              errors.height ? "border-red-500" : "border-gray-300"
             } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
           >
-            <option value="" className="bg-[#3B3B3D] text-gray-400">
+            <option value="" className="text-gray-400">
               Inches
             </option>
             {inchesOptions.map((inches) => (
-              <option key={inches} value={inches} className="bg-[#3B3B3D]">
+              <option key={inches} value={inches} className="">
                 {inches} in
               </option>
             ))}
