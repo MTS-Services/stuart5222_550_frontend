@@ -18,7 +18,6 @@ const WelcomeScanView = () => {
   const { data, loading, error, success } = useSelector(
     (state) => state.qrcode,
   );
-  console.log("data:", data?.profile?.contactEmail);
 
   const mail = data?.profile?.contactEmail;
 
@@ -102,10 +101,14 @@ const WelcomeScanView = () => {
                       </p>
                     )} */}
                     {data.ipScansUsed !== undefined && data.yourIpAddress && (
-                      <p className="font-raleway text-xs text-orange-400 mt-1">
-                        Your IP ({data.yourIpAddress}): {data.ipScansUsed}/5 scans used
+                      <p className="mt-1 font-raleway text-xs text-orange-400">
+                        Your IP ({data.yourIpAddress}): {data.ipScansUsed}/5
+                        scans used
                         {data.ipScansRemaining !== null && (
-                          <span> • {data.ipScansRemaining} remaining for your IP</span>
+                          <span>
+                            {" "}
+                            • {data.ipScansRemaining} remaining for your IP
+                          </span>
                         )}
                       </p>
                     )}
@@ -115,63 +118,67 @@ const WelcomeScanView = () => {
             </div>
           </div>
 
-          {data && data.scansRemaining > 0 && data.success && !data.limitReached && !data.ipLimitReached && (
-            <div>
-              <div className="my-8 flex w-full gap-4 rounded-lg bg-[#505050] px-4 py-3">
-                {/* Checkbox */}
-                <div className="inline-flex items-center">
-                  <label className="relative flex cursor-pointer items-center">
-                    <input
-                      type="checkbox"
-                      className="peer h-5 w-5 cursor-pointer appearance-none rounded border border-orange-500 transition-all checked:border-orange-500 checked:bg-orange-500"
-                    />
-                    {/* Checkmark */}
-                    <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-white opacity-0 peer-checked:opacity-100">
-                      <BsCheck className="h-3.5 w-3.5 text-white" />
-                    </span>
-                  </label>
-                </div>
-
-                {/* Text */}
-                <div className="flex flex-col text-start text-sm">
-                  <p
-                    className="cursor-pointer font-raleway font-semibold text-white underline transition-colors hover:text-orange-400"
-                    onClick={openTermsModal}
-                  >
-                    Read terms and conditions
-                  </p>
-                  <p className="font-raleway text-sm text-orange-500">
-                    Yes, I have accepted the terms and conditions.
-                  </p>
-                </div>
-              </div>
-
-              <div className="mb-10 md:mb-0">
-                <h2 className="my-4 text-center font-raleway text-base font-bold md:my-6 md:text-[26px]">
-                  It’s not a scam, it’s a Scan
-                </h2>
-                <div className="mx-auto mt-[20px] flex w-[70%] items-center gap-4 font-raleway font-semibold md:w-full">
-                  <div className="w-full">
-                    <Link to={`/user-profile/${mail}`}>
-                      <button
-                        type="submit"
-                        className="w-full rounded-lg bg-orange-500 p-2.5 text-base text-white transition hover:bg-orange-600"
-                      >
-                        Let’s go
-                      </button>
-                    </Link>
+          {data &&
+            data.scansRemaining > 0 &&
+            data.success &&
+            !data.limitReached &&
+            !data.ipLimitReached && (
+              <div>
+                <div className="my-8 flex w-full gap-4 rounded-lg bg-[#505050] px-4 py-3">
+                  {/* Checkbox */}
+                  <div className="inline-flex items-center">
+                    <label className="relative flex cursor-pointer items-center">
+                      <input
+                        type="checkbox"
+                        className="peer h-5 w-5 cursor-pointer appearance-none rounded border border-orange-500 transition-all checked:border-orange-500 checked:bg-orange-500"
+                      />
+                      {/* Checkmark */}
+                      <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-white opacity-0 peer-checked:opacity-100">
+                        <BsCheck className="h-3.5 w-3.5 text-white" />
+                      </span>
+                    </label>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => navigate(-1)}
-                    className="w-full rounded-lg bg-orange-500 p-2.5 text-base text-white transition hover:bg-orange-600"
-                  >
-                    No Thanks
-                  </button>
+
+                  {/* Text */}
+                  <div className="flex flex-col text-start text-sm">
+                    <p
+                      className="cursor-pointer font-raleway font-semibold text-white underline transition-colors hover:text-orange-400"
+                      onClick={openTermsModal}
+                    >
+                      Read terms and conditions
+                    </p>
+                    <p className="font-raleway text-sm text-orange-500">
+                      Yes, I have accepted the terms and conditions.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mb-10 md:mb-0">
+                  <h2 className="my-4 text-center font-raleway text-base font-bold md:my-6 md:text-[26px]">
+                    It’s not a scam, it’s a Scan
+                  </h2>
+                  <div className="mx-auto mt-[20px] flex w-[70%] items-center gap-4 font-raleway font-semibold md:w-full">
+                    <div className="w-full">
+                      <Link to={`/user/${mail}/profile`}>
+                        <button
+                          type="submit"
+                          className="w-full rounded-lg bg-orange-500 p-2.5 text-base text-white transition hover:bg-orange-600"
+                        >
+                          Let’s go
+                        </button>
+                      </Link>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => navigate(-1)}
+                      className="w-full rounded-lg bg-orange-500 p-2.5 text-base text-white transition hover:bg-orange-600"
+                    >
+                      No Thanks
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </div>
 

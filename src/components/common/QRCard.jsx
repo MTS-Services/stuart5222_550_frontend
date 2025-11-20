@@ -7,7 +7,7 @@ import jsPDF from "jspdf";
 const QRCard = ({ qrCode, userInfo }) => {
   const cardRef = useRef(null);
   const winkIconRef = useRef(null);
-  const scanUrl = `https://scanmemaybe.com/welcome/${qrCode}`;
+  const scanUrl = `https://scanmemaybe.com/welcome-scan/${qrCode}`;
 
   const handleDownload = async () => {
     if (!cardRef.current) return;
@@ -51,12 +51,12 @@ const QRCard = ({ qrCode, userInfo }) => {
     const pdf = new jsPDF({
       orientation: "portrait",
       unit: "mm",
-      format: "a4"
+      format: "a4",
     });
 
     const pageWidth = 210; // A4 width
     const pageHeight = 297; // A4 height
-    
+
     // Business card dimensions in PORTRAIT orientation (55mm wide x 85mm tall - Industry Standard)
     const cardWidth = 55;
     const cardHeight = 85;
@@ -108,7 +108,11 @@ const QRCard = ({ qrCode, userInfo }) => {
     pdf.setTextColor(210, 105, 30); // Orange color matching sparkly logo
     const logoText = "SCAN ME MAYBE";
     const logoWidth = pdf.getTextWidth(logoText);
-    pdf.text(logoText, card1X + (cardWidth - logoWidth) / 2, card1StartY + 25 + 5);
+    pdf.text(
+      logoText,
+      card1X + (cardWidth - logoWidth) / 2,
+      card1StartY + 25 + 5,
+    );
 
     // ============ CARD 2: Back (Info + QR Side) - PORTRAIT ============
     // Dark gray background (#3b3b3d) - NO WHITE SCREEN
@@ -116,7 +120,7 @@ const QRCard = ({ qrCode, userInfo }) => {
     pdf.roundedRect(card2X, cardY, cardWidth, cardHeight, 2, 2, "F");
 
     const contentCenterX = card2X + cardWidth / 2;
-    
+
     // QR Code - BIGGER SIZE and centered in upper area
     if (qrCodeDataUrl) {
       const qrSize = 40; // Much bigger QR code
@@ -129,20 +133,27 @@ const QRCard = ({ qrCode, userInfo }) => {
     pdf.setFont("Raleway", "bold"); // Raleway style - bold weight
     pdf.setFontSize(12);
     pdf.setTextColor(255, 255, 255); // Light gray text
-    
+
     const checkMeText = "Check me out";
     const checkMeTextWidth = pdf.getTextWidth(checkMeText);
     const winkIconSize = 3.5;
     const winkIconPadding = 1.5;
     const totalContentWidth = checkMeTextWidth + winkIconPadding + winkIconSize;
     const contentStartX = contentCenterX - totalContentWidth / 2;
-    
+
     pdf.text(checkMeText, contentStartX, cardY + cardHeight - 25);
 
     if (winkIconDataUrl) {
       const winkIconX = contentStartX + checkMeTextWidth + winkIconPadding;
       const winkIconY = cardY + cardHeight - 25 - winkIconSize + 0.5;
-      pdf.addImage(winkIconDataUrl, "PNG", winkIconX, winkIconY, winkIconSize, winkIconSize);
+      pdf.addImage(
+        winkIconDataUrl,
+        "PNG",
+        winkIconX,
+        winkIconY,
+        winkIconSize,
+        winkIconSize,
+      );
     }
 
     // Name with dash - PERFECTLY CENTERED at bottom
@@ -152,7 +163,7 @@ const QRCard = ({ qrCode, userInfo }) => {
     const userName = userInfo.displayName || "User Name";
     const nameWithDash = `— ${userName}`;
     const nameWidth = pdf.getTextWidth(nameWithDash);
-    const nameX = contentCenterX - (nameWidth / 2);
+    const nameX = contentCenterX - nameWidth / 2;
     pdf.text(nameWithDash, nameX, cardY + cardHeight - 15);
 
     // Save the PDF
@@ -198,8 +209,11 @@ const QRCard = ({ qrCode, userInfo }) => {
 
   return (
     <div className="group relative inline-block">
-      <div style={{ position: 'absolute', left: '-9999px' }}>
-        <div ref={winkIconRef} style={{ display: 'inline-block', fontSize: '24px' }}>
+      <div style={{ position: "absolute", left: "-9999px" }}>
+        <div
+          ref={winkIconRef}
+          style={{ display: "inline-block", fontSize: "24px" }}
+        >
           <FaRegGrinWink color="#FFC107" size={24} />
         </div>
       </div>
