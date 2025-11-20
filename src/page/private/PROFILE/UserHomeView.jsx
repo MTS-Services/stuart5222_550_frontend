@@ -21,7 +21,7 @@ const UserHomeView = () => {
     if (email) {
       dispatch(fetchUserProfile({ userMail: email }));
     }
-    
+
     // Fetch latest user data to ensure status is current
     const fetchUserData = async () => {
       try {

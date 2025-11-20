@@ -5,10 +5,6 @@ import { AUTH_COOKIE } from "../../../../utils/authCookie";
 import { shouldShowTravelMode } from "../../../../utils/travelMode";
 
 const ProfileInfoView = ({ profileData, images }) => {
-  if (!profileData) {
-    return <div className="p-4 text-gray-100">Loading profile data...</div>;
-  }
-
   const {
     email,
     age,
@@ -21,7 +17,7 @@ const ProfileInfoView = ({ profileData, images }) => {
     startDate,
     endDate,
     area,
-  } = profileData;
+  } = profileData || {};
 
   // Format date for better readability
   const formatDate = (dateString) => {
@@ -37,6 +33,15 @@ const ProfileInfoView = ({ profileData, images }) => {
     window.location.href = "/auth/login";
   };
 
+  if (!profileData && images) {
+    return (
+      <div className="p-6 text-center text-gray-200">
+        <div className="mx-auto mb-3 h-10 w-10 animate-spin rounded-full border-b-2 border-gray-300"></div>
+        Loading profile...
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-[600px] p-6">
       <div className="my-8 flex items-center justify-center">
@@ -47,7 +52,7 @@ const ProfileInfoView = ({ profileData, images }) => {
         />
       </div>
       {/* Profile Header */}
-      <div className="rounded-xl border border-gray-500/50 bg-gray-800/30 p-4 shadow-md backdrop-blur-sm">
+      <div className="mb-8 rounded-xl border border-gray-500/50 bg-gray-800/30 p-4 shadow-md backdrop-blur-sm">
         <div className="flex items-center justify-between gap-4">
           {/* Profile Card */}
           <div className="flex items-center gap-4 rounded-2xl">
