@@ -17,6 +17,9 @@ import {
   fetchUserProfile,
 } from "../../../../features/public/profile/profileFetch";
 import { Link, useParams } from "react-router-dom";
+import { updateUser } from "../../../../features/auth/authSlice";
+import { GET } from "../../../../config/api/httpMethods";
+import { endpoints } from "../../../../config/api/httpEndpoint";
 
 const EditProfileView = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -224,8 +227,17 @@ const EditProfileView = () => {
       });
 
       await dispatch(submitEditProfile(submitData)).unwrap();
-      // Note: For profile editing, we don't need to change status again
-      // The backend will handle the status change if needed
+      
+      // Fetch updated user data to refresh user status
+      try {
+        const response = await GET(endpoints.user.USER_PROFILE);
+        if (response?.data) {
+          dispatch(updateUser(response.data));
+        }
+      } catch (error) {
+        console.error("Failed to fetch updated user data:", error);
+      }
+      
       toast.success("Profile updated successfully!");
       form.reset();
       setSuccess(true);

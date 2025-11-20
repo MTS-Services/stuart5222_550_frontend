@@ -64,6 +64,7 @@ export const endpoints = {
     EDIT_PROFILE: "/profile",
     STATUS_CHANGE: "/profile/submit",
     SETTINGS: "/user/settings",
+    USER_PROFILE: "/user/profile",
     QR_CODE: (qr_code) => `/qr-cards/scan/${qr_code}`,
     FETCH_PROFILE: (userMail) => `/profile/${userMail}`,
   },
