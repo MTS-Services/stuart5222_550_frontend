@@ -132,7 +132,6 @@ const AddUserView = () => {
       });
 
       await dispatch(submitProfile(submitData)).unwrap();
-
       toast.success("Profile submitted successfully for review!");
       setSuccess(true);
       setImagePreviews([]);
@@ -171,8 +170,12 @@ const AddUserView = () => {
         <div className="mx-auto max-w-[600px]">
           {/* Header */}
 
+          <h1 className="mb-4 text-center font-raleway text-3xl font-bold">
+            Add New User
+          </h1>
+
           {/* Form Fields */}
-          <div className="my-10 md:my-20">
+          <div className="my-10">
             <div className="my-5 flex flex-col gap-2 self-stretch">
               <label className="mb-4 font-raleway text-xl font-medium">
                 Name <span className="text-red-500">*</span>
