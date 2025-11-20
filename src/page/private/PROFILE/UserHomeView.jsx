@@ -7,13 +7,11 @@ import ProfileInfoView from "./components/ProfileInfoView";
 const UserHomeView = () => {
   const dispatch = useDispatch();
 
-  const { user } = useSelector((state) => state.auth);
   const { userProfile } = useSelector((state) => state.profile);
+  const { user } = useSelector((state) => state.auth);
 
   const isVerified = user?.status === "VERIFIED";
-
   const images = userProfile?.images || [];
-
   const email = user?.email;
 
   useEffect(() => {
@@ -30,7 +28,7 @@ const UserHomeView = () => {
         </>
       ) : (
         <div className="mt-10 h-screen w-full max-w-md text-center">
-          <div className="flex flex-col items-center justify-center border p-8">
+          <div className="flex flex-col items-center justify-center rounded-lg border border-orange-500 p-8">
             <span className="font-semibold">{user?.email}</span>
             <p className="text-lg text-gray-400">
               Your profile status is{" "}
@@ -43,7 +41,7 @@ const UserHomeView = () => {
                 {user?.status === "ACTIVE" ? (
                   <Link
                     to={`/user/setup-profile/${user?.email}`}
-                    className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-700"
+                    className="rounded bg-orange-600 px-4 py-2 hover:bg-orange-700"
                   >
                     Setup Profile
                   </Link>
@@ -58,7 +56,7 @@ const UserHomeView = () => {
                 {user?.status === "PAID_SETUP" && (
                   <Link
                     to={`/user/edit-profile/${user?.email}`}
-                    className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-700"
+                    className="rounded bg-orange-600 px-4 py-2 hover:bg-orange-700"
                   >
                     Edit Profile
                   </Link>

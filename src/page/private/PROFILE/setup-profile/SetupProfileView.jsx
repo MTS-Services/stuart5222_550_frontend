@@ -14,12 +14,14 @@ import HeightInput from "../../../../components/common/HeightInput";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { submitProfile } from "../../../../features/public/profile/profileFetch";
 import { validateForm } from "../../../../utils/validateForm";
+import { AUTH_COOKIE } from "../../../../utils/authCookie";
 
 const SetupProfileView = () => {
   const { email } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const existUser = AUTH_COOKIE.getUser();
+  console.log("existUser:", existUser);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [success, setSuccess] = useState(false);
@@ -31,6 +33,7 @@ const SetupProfileView = () => {
   const [heightFeet, setHeightFeet] = useState("");
   const [heightInches, setHeightInches] = useState("");
   const fileInputRef = useRef(null);
+
   // ============================================
   // 📸 Image Upload Handler with Preview
   // ============================================
@@ -135,8 +138,6 @@ const SetupProfileView = () => {
       });
 
       await dispatch(submitProfile(submitData)).unwrap();
-
-      navigate(`/user`);
       toast.success("Profile submitted successfully for review!");
       setSuccess(true);
       setImagePreviews([]);
