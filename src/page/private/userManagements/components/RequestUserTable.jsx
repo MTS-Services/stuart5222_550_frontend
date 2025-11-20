@@ -169,12 +169,12 @@ export const RequestUserTable = () => {
                       {row.status === "DRAFT" ? (
                         <td className="flex items-center justify-center gap-3 whitespace-nowrap px-7 py-2.5">
                           <Link to={`/admin/user-management/${row.id}`}>
-                            <button className="whitespace-nowrap rounded-xl bg-[#F07400] px-4 py-2.5 font-raleway text-xs text-white">
+                            <button className="whitespace-nowrap rounded-xl bg-[#F07400] px-4 py-2.5 font-raleway text-xs text-white hover:bg-[#af5500]">
                               See Details
                             </button>
                           </Link>
                           <button
-                            className="cursor-pointer rounded-full bg-green-300 p-1 text-green-50 hover:bg-slate-400 disabled:opacity-50"
+                            className="cursor-pointer rounded-full bg-orange-400 p-1 text-white hover:bg-slate-400 disabled:opacity-50"
                             onClick={() => handleApprove(row.id)}
                             disabled={loadingRow.approve === row.id}
                             aria-label={`Approve ${row.name}`}

@@ -18,7 +18,7 @@ const AdminDashboard = () => {
       {/* Header */}
       <Overviews />
       <div>
-        <h2 className="my-3 font-raleway font-semibold text-black md:text-[28px]">
+        <h2 className="my-8 font-raleway font-semibold text-black md:text-[28px]">
           Wait List
         </h2>
         {/* 🧾 Waitlist Table */}

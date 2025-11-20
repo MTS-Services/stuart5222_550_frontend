@@ -21,6 +21,21 @@ const AllUsersView = () => {
     dispatch(allUserList({ page, limit, status: status }));
   }, [dispatch, page, status]);
 
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "APPROVED":
+        return "text-green-600 font-semibold";
+      case "DRAFT":
+        return "text-yellow-600 font-semibold";
+      case "REJECTED":
+        return "text-red-600 font-semibold";
+      case "VERIFIED":
+        return "text-blue-600 font-semibold";
+      default:
+        return "text-gray-600 font-medium";
+    }
+  };
+
   if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
 
   return (
@@ -64,7 +79,7 @@ const AllUsersView = () => {
               <th className="p-3">Name</th>
               <th className="p-3">Email</th>
               <th className="p-3">Date</th>
-              <th className="p-3">Status</th>
+              <th className="p-3 text-center">Status</th>
             </tr>
           </thead>
 
@@ -88,7 +103,11 @@ const AllUsersView = () => {
                   <td className="p-3">{u.displayName}</td>
                   <td className="p-3">{u.email}</td>
                   <td className="p-3">{formatDate(u.createdAt)}</td>
-                  <td className="p-3">{u.status}</td>
+                  <td
+                    className={`p-3 text-center text-sm ${getStatusColor(u.status)}`}
+                  >
+                    {u.status}
+                  </td>
                 </tr>
               ))
             )}

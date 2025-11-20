@@ -27,7 +27,7 @@ const UserDetailsView = () => {
   if (isLoading) return <div className="p-6 text-center">Loading...</div>;
 
   if (error)
-    return <div className="p-6 text-center text-red-600">Error: {error}</div>;
+    return <div className="pt-10 text-center text-red-600">Error: {error}</div>;
 
   if (!user)
     return <div className="pt-10 text-center"> User Details not found!</div>;

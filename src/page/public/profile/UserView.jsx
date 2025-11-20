@@ -128,7 +128,7 @@ const UserView = () => {
                 <img
                   src={images[0]?.url || "/img/page/home/remove_preview.png"}
                   alt="Profile photo"
-                  className="h-full w-full rounded-xl bg-cover object-cover"
+                  className="h-full w-full rounded-xl border border-gray-400/50 bg-cover object-cover"
                 />
               </div>
 
@@ -137,12 +137,12 @@ const UserView = () => {
                 <img
                   src={images[1]?.url || "/img/page/home/remove_preview.png"}
                   alt="Full body photo"
-                  className="h-full w-full rounded-xl bg-cover object-cover"
+                  className="h-full w-full rounded-xl border border-gray-400/50 bg-cover object-cover"
                 />
                 <img
                   src={images[2]?.url || "/img/page/home/remove_preview.png"}
                   alt="Additional photo"
-                  className="h-full w-full rounded-xl bg-cover object-cover"
+                  className="h-full w-full rounded-xl border border-gray-400/50 bg-cover object-cover"
                 />
               </div>
             </div>
