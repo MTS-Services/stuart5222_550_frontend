@@ -23,7 +23,7 @@ export const submitProfile = createAsyncThunk(
   async (submitData, { rejectWithValue }) => {
     try {
       const res = await POST(endpoints.user.SETUP_PROFILE, submitData);
-
+      console.log("SETUP_PROFILE:", res);
       return res;
     } catch (err) {
       console.error("Failed to submit profile:", err);
@@ -39,6 +39,8 @@ export const submitEditProfile = createAsyncThunk(
   async (submitData, { rejectWithValue }) => {
     try {
       const res = await UPDATE(endpoints.user.EDIT_PROFILE, submitData);
+
+      console.log("EDIT_PROFILE:", res);
       return res;
     } catch (err) {
       console.error("Failed to submit profile:", err);

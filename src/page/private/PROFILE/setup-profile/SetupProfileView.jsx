@@ -11,14 +11,13 @@ import { calculateAge } from "../../../../utils/ageUtils";
 import AgeInput from "../../../../components/common/AgeInput";
 import LocationInput from "../../../../components/common/LocationInput";
 import HeightInput from "../../../../components/common/HeightInput";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { submitProfile } from "../../../../features/public/profile/profileFetch";
 import { validateForm } from "../../../../utils/validateForm";
 import { AUTH_COOKIE } from "../../../../utils/authCookie";
 
 const SetupProfileView = () => {
   const { email } = useParams();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const existUser = AUTH_COOKIE.getUser();
   console.log("existUser:", existUser);
@@ -122,7 +121,7 @@ const SetupProfileView = () => {
     setSubmitLoading(true);
 
     try {
-      // 📤 Build FormData with image array
+      // Build FormData with image array
       const submitData = new FormData();
 
       // Append all text fields
@@ -132,7 +131,7 @@ const SetupProfileView = () => {
         }
       });
 
-      // ✅ Append ALL files under "image" (as array)
+      // Append image files
       files.forEach((file) => {
         submitData.append("image", file);
       });
@@ -143,7 +142,6 @@ const SetupProfileView = () => {
       setImagePreviews([]);
       setFiles([]);
     } catch (err) {
-      console.error(err);
       toast.error(err || "❌ Failed to submit profile. Please try again.");
     } finally {
       setSubmitLoading(false);

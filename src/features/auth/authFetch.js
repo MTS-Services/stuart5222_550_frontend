@@ -10,7 +10,6 @@ export const adminLoginUser = createAsyncThunk(
   async ({ email, password }, { rejectWithValue }) => {
     try {
       const res = await POST(endpoints.auth.ADMIN_LOGIN, { email, password });
-
       if (res?.access_token) {
         AUTH_COOKIE.setToken(res.access_token);
       }
