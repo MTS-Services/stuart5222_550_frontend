@@ -71,9 +71,7 @@ const UserDetailsView = lazy(
 const UserHomeView = lazy(
   () => import("../page/private/PROFILE/UserHomeView.jsx"),
 );
-const UserProfileView = lazy(
-  () => import("../page/private/PROFILE/UserProfileView.jsx"),
-);
+
 const SetupProfileView = lazy(
   () => import("../page/private/PROFILE/setup-profile/SetupProfileView.jsx"),
 );
@@ -126,7 +124,6 @@ const router = createBrowserRouter(
       {/* 🙋 User-only */}
       <Route element={<RoleGuard allowedRoles={["user"]} />}>
         <Route path="/user" element={<UserHomeView />} />
-        <Route path="/user/profile" element={<UserProfileView />} />
         <Route
           path="/user/setup-profile/:email"
           element={<SetupProfileView />}

@@ -6,7 +6,7 @@ import { Upload } from "lucide-react";
 import { toast } from "react-toastify";
 import { FaCamera } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { MdOutlinePrivacyTip } from "react-icons/md";
+import { MdArrowBack, MdOutlinePrivacyTip } from "react-icons/md";
 import { validateForm } from "../../../../utils/validateForm";
 import { calculateAge, estimateBirthFromAge } from "../../../../utils/ageUtils";
 import AgeInput from "../../../../components/common/AgeInput";
@@ -16,7 +16,7 @@ import {
   submitEditProfile,
   fetchUserProfile,
 } from "../../../../features/public/profile/profileFetch";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const EditProfileView = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -34,7 +34,7 @@ const EditProfileView = () => {
   const [heightFeet, setHeightFeet] = useState("");
   const [heightInches, setHeightInches] = useState("");
   const fileInputRef = useRef(null);
-  const { user_email } = useParams();
+  const { email } = useParams();
 
   const dispatch = useDispatch();
   // ============================================
@@ -98,7 +98,7 @@ const EditProfileView = () => {
     try {
       // Call API to delete the image
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/profile/${user_email}/image/${imageIndex}`,
+        `${import.meta.env.VITE_API_BASE_URL}/profile/${email}/image/${imageIndex}`,
         {
           method: "DELETE",
         },
@@ -175,7 +175,7 @@ const EditProfileView = () => {
       startDate: form.startDate.value || null,
       endDate: form.endDate.value || null,
       location: form.location.value,
-      email: user_email,
+      email: email,
       phone: form.number.value || null,
       gmail: form.gmail.value || null,
     };
@@ -249,7 +249,7 @@ const EditProfileView = () => {
   // 🔄 Fetch profile data when component mounts
   useEffect(() => {
     const fetchData = async () => {
-      if (!user_email) {
+      if (!email) {
         toast.error("No email provided");
         setLoading(false);
         return;
@@ -257,14 +257,10 @@ const EditProfileView = () => {
 
       try {
         setLoading(true);
-        console.log("Fetching profile for email:", user_email);
-        const result = await dispatch(
-          fetchUserProfile({ userMail: user_email }),
-        );
-        console.log("Fetch result:", result);
+        console.log("Fetching profile for email:", email);
+        const result = await dispatch(fetchUserProfile({ userMail: email }));
 
         if (result.type === "user/fetchProfile/fulfilled") {
-          console.log("Fetched profile data:", result.payload);
           setProfileData(result.payload);
 
           // Initialize birth month/year from age or existing birth data
@@ -316,7 +312,7 @@ const EditProfileView = () => {
     };
 
     fetchData();
-  }, [user_email, dispatch]);
+  }, [email, dispatch]);
 
   // 🔄 Loading state
   if (loading) {
@@ -345,7 +341,7 @@ const EditProfileView = () => {
           Your profile changes have been saved and submitted for review.
         </p>
         <button
-          onClick={() => window.location.replace("/")}
+          onClick={() => window.location.replace("/user")}
           className="mt-6 rounded-md bg-orange-500 px-4 py-2 text-white hover:bg-orange-600"
         >
           Go to Home
@@ -358,6 +354,9 @@ const EditProfileView = () => {
     <div className="min-h-screen bg-[#3B3B3D] px-[10px] font-raleway text-white sm:py-4 md:py-6 lg:py-8">
       <form onSubmit={handleSubmit} key={profileData ? "loaded" : "loading"}>
         <div className="mx-auto max-w-[600px]">
+          <Link to="/user" className="mb-4 flex items-center gap-2 text-white">
+            <MdArrowBack /> Back
+          </Link>
           {/* Header */}
           <div className="flex justify-center py-[40px]">
             <img
@@ -793,7 +792,7 @@ const EditProfileView = () => {
                   type="gmail"
                   name="gmail"
                   placeholder="Enter your unique email"
-                  defaultValue={profileData?.gmail || user_email}
+                  defaultValue={profileData?.gmail || email}
                   className={`h-11 rounded-lg bg-white px-3 text-sm font-medium text-gray-700 outline outline-1 ${
                     errors.gamil ? "outline-red-500" : "outline-gray-300"
                   } focus:outline-orange-500 focus:ring-2 focus:ring-orange-400`}

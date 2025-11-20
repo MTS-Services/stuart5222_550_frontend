@@ -78,8 +78,7 @@ const UserView = () => {
             className="h-24 w-36 object-cover"
           />
         </div>
-
-        <h1 className="text-center font-raleway text-2xl font-bold">
+        <h1 className="mb-8 text-center font-raleway text-3xl font-bold">
           {userProfile.displayName || "Anonymous User"}
         </h1>
 

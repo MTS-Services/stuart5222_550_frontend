@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Upload } from "lucide-react";
 import { toast } from "react-toastify";
-import { FaBackward, FaCamera } from "react-icons/fa";
+import { FaCamera } from "react-icons/fa";
 import { GiCheckMark } from "react-icons/gi";
 import { BiErrorCircle } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
@@ -18,7 +18,8 @@ import { validateForm } from "../../../../utils/validateForm";
 const SetupProfileView = () => {
   const { email } = useParams();
   const navigate = useNavigate();
-  console.log("email:", email);
+  const dispatch = useDispatch();
+
   const [submitLoading, setSubmitLoading] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [success, setSuccess] = useState(false);
@@ -30,8 +31,6 @@ const SetupProfileView = () => {
   const [heightFeet, setHeightFeet] = useState("");
   const [heightInches, setHeightInches] = useState("");
   const fileInputRef = useRef(null);
-
-  const dispatch = useDispatch();
   // ============================================
   // 📸 Image Upload Handler with Preview
   // ============================================
@@ -136,6 +135,7 @@ const SetupProfileView = () => {
       });
 
       await dispatch(submitProfile(submitData)).unwrap();
+
       navigate(`/user`);
       toast.success("Profile submitted successfully for review!");
       setSuccess(true);

@@ -29,26 +29,42 @@ const UserHomeView = () => {
           <ProfileInfoView profileData={userProfile} images={images} />
         </>
       ) : (
-        <div className="w-full max-w-md rounded-lg border border-gray-400 p-6 text-center shadow-lg">
-          <span className="font-semibold">{user?.email}</span>
-          <p className="text-lg text-gray-400">
-            Your profile status is{" "}
-            <span className="font-semibold">{user?.status}</span>.
-            <br /> You can’t access your profile until verification is complete.
-          </p>
-          <div className="mt-4">
-            {user?.status === "ACTIVE" ? (
-              <Link
-                to={`/user/setup-profile/${user?.email}`}
-                className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-700"
-              >
-                Setup Profile
-              </Link>
-            ) : (
-              <span className="text-yellow-400">
-                Please wait for admin approval.
-              </span>
-            )}
+        <div className="mt-10 h-screen w-full max-w-md text-center">
+          <div className="flex flex-col items-center justify-center border p-8">
+            <span className="font-semibold">{user?.email}</span>
+            <p className="text-lg text-gray-400">
+              Your profile status is{" "}
+              <span className="font-semibold">{user?.status}</span>.
+              <br /> You can’t access your profile until verification is
+              complete.
+            </p>
+            <div className="mt-4 space-y-4">
+              <div>
+                {user?.status === "ACTIVE" ? (
+                  <Link
+                    to={`/user/setup-profile/${user?.email}`}
+                    className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-700"
+                  >
+                    Setup Profile
+                  </Link>
+                ) : (
+                  <span className="text-yellow-400">
+                    Please wait for admin approval.
+                  </span>
+                )}
+              </div>
+
+              <div>
+                {user?.status === "PAID_SETUP" && (
+                  <Link
+                    to={`/user/edit-profile/${user?.email}`}
+                    className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-700"
+                  >
+                    Edit Profile
+                  </Link>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       )}
