@@ -89,7 +89,7 @@ const router = createBrowserRouter(
         <Route element={<MainLayout />} errorElement={<ErrorBoundary />}>
           {/* Public pages */}
           <Route index element={<HomeView />} />
-          <Route path="welcome-scan/:id" element={<WelcomeScanView />} />
+          <Route path="welcome/:id" element={<WelcomeScanView />} />
           <Route path="user/:email/profile" element={<UserView />} />
           <Route path="user/:email/gallery" element={<GalleryView />} />
           <Route
