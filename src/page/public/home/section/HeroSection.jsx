@@ -1,4 +1,3 @@
-import { STORAGE } from "../../../../config/storage/auth/authStorage";
 import { JoinWaitlist } from "../components/JoinWaitlist";
 
 const HeroSection = () => {
@@ -76,6 +75,8 @@ const HeroSection = () => {
               </p>
               {/* Form */}
               <JoinWaitlist />
+
+              <p className="mt-3 text-center font-raleway">or</p>
 
               <button
                 onClick={handleNavigate}
