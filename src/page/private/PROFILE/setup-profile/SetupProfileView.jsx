@@ -2,23 +2,23 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Upload } from "lucide-react";
 import { toast } from "react-toastify";
-import { FaCamera } from "react-icons/fa";
+import { FaBackward, FaCamera } from "react-icons/fa";
 import { GiCheckMark } from "react-icons/gi";
 import { BiErrorCircle } from "react-icons/bi";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { MdOutlinePrivacyTip } from "react-icons/md";
-
-import { calculateAge, estimateBirthFromAge } from "../../../../utils/ageUtils";
+import { MdOutlinePrivacyTip, MdArrowBack } from "react-icons/md";
+import { calculateAge } from "../../../../utils/ageUtils";
 import AgeInput from "../../../../components/common/AgeInput";
 import LocationInput from "../../../../components/common/LocationInput";
 import HeightInput from "../../../../components/common/HeightInput";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { submitProfile } from "../../../../features/public/profile/profileFetch";
 import { validateForm } from "../../../../utils/validateForm";
 
 const SetupProfileView = () => {
-  const { user_email } = useParams();
-
+  const { email } = useParams();
+  const navigate = useNavigate();
+  console.log("email:", email);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [success, setSuccess] = useState(false);
@@ -98,7 +98,7 @@ const SetupProfileView = () => {
       startDate: form.startDate.value || null,
       endDate: form.endDate.value || null,
       location: form.location.value,
-      email: user_email,
+      email: email,
       phone: form.number.value || null,
     };
 
@@ -136,15 +136,14 @@ const SetupProfileView = () => {
       });
 
       await dispatch(submitProfile(submitData)).unwrap();
-
+      navigate(`/user`);
       toast.success("Profile submitted successfully for review!");
-      // form.reset();
       setSuccess(true);
       setImagePreviews([]);
       setFiles([]);
     } catch (err) {
       console.error(err);
-      alert(err || "❌ Failed to submit profile. Please try again.");
+      toast.error(err || "❌ Failed to submit profile. Please try again.");
     } finally {
       setSubmitLoading(false);
     }
@@ -166,10 +165,7 @@ const SetupProfileView = () => {
         <p className="text-gray-400">
           Your profile has been submitted for review.
         </p>
-        <Link
-          to={`/user-profile/${user_email}`}
-          className="border px-4 py-2 text-white"
-        >
+        <Link to={`/user`} className="border px-4 py-2 text-white">
           Go to profile
         </Link>
       </div>
@@ -180,6 +176,10 @@ const SetupProfileView = () => {
     <div className="min-h-screen bg-[#3B3B3D] px-[10px] font-raleway text-white sm:py-4 md:py-6 lg:py-8">
       <form onSubmit={handleSubmit}>
         <div className="mx-auto max-w-[600px]">
+          <Link to="/user" className="mb-4 flex items-center gap-2 text-white">
+            <MdArrowBack /> Back
+          </Link>
+
           {/* Header */}
           <div className="flex justify-center py-[40px]">
             <img
@@ -200,6 +200,7 @@ const SetupProfileView = () => {
               <label className="mb-4 font-raleway text-xl font-medium text-white">
                 Name <span className="text-red-500">*</span>
               </label>
+
               <input
                 type="text"
                 name="firstName"
@@ -208,6 +209,7 @@ const SetupProfileView = () => {
                   errors.firstName ? "border-red-500" : "border-gray-500"
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
+
               {errors.firstName && (
                 <p className="text-sm text-red-500">{errors.firstName}</p>
               )}

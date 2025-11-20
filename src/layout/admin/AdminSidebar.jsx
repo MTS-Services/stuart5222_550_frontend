@@ -17,23 +17,22 @@ import { STORAGE } from "../../config/storage/auth/authStorage";
 const navLinks = [
   { name: "Dashboard", icon: <CgDice4 size={18} />, path: "/admin" },
   {
-    name: "All Users",
-    icon: <FaUsers size={20} />,
-    path: "/admin/all-users",
-  },
-
-  {
-    name: "User Management",
+    name: "Management",
     icon: <FaUsersCog size={20} />,
     path: "/admin/user-management",
   },
   {
-    name: "User Edit",
+    name: "Profile List",
     icon: <FaUser size={17} />,
     path: "/admin/user-edit",
   },
   {
-    name: "Email Templates",
+    name: "All Users",
+    icon: <FaUsers size={20} />,
+    path: "/admin/all-users",
+  },
+  {
+    name: "Templates",
     icon: <FiMail size={20} />,
     path: "/admin/email-templates",
   },

@@ -13,13 +13,13 @@ import {
 
 const UserDetailsView = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { userId } = useParams();
   const dispatch = useDispatch();
   const { userProfiles, isLoading, error } = useSelector(
     (state) => state.adminUsers,
   );
 
-  const user = userProfiles?.find((u) => u.id === Number(id));
+  const user = userProfiles?.find((u) => u.id === Number(userId));
 
   const [rejectionReason, setRejectionReason] = useState("");
   const [loading, setLoading] = useState({ approve: false, reject: false });

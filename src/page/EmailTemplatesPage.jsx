@@ -53,7 +53,7 @@ const EmailTemplatesPage = () => {
       name: "dashboardUrl",
       label: "Dashboard URL",
       description: "Redirect users to their dashboard after login",
-    }
+    },
   ];
 
   useEffect(() => {
@@ -204,68 +204,7 @@ const EmailTemplatesPage = () => {
             Design and manage your email templates
           </p>
         </div>
-        <button
-          onClick={() => setCurrentView("create")}
-          className="flex items-center rounded-lg bg-orange-600 px-4 py-2 text-white hover:bg-orange-700"
-        >
-          <PlusIcon className="mr-2 h-5 w-5" />
-          Create Template
-        </button>
       </div>
-
-      {/* Template Types Quick Start */}
-      {/* <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Start Templates</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {templateTypes.map((type) => {
-            const existingTemplate = templates.find(
-              (t) => t.name === type.name,
-            );
-            return (
-              <div
-                key={type.name}
-                className="rounded-lg border border-gray-200 p-4"
-              >
-                <h4 className="mb-2 font-medium text-gray-900">{type.label}</h4>
-                <p className="mb-3 text-sm text-gray-600">{type.description}</p>
-                {existingTemplate ? (
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => {
-                        setSelectedTemplate(existingTemplate);
-                        setCurrentView("edit");
-                      }}
-                      className="flex-1 rounded bg-gray-100 px-3 py-2 text-sm text-gray-700 hover:bg-gray-200"
-                    >
-                      <PencilIcon className="mr-1 inline h-4 w-4" />
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDuplicateTemplate(existingTemplate)}
-                      className="rounded bg-gray-100 px-3 py-2 text-sm text-gray-700 hover:bg-gray-200"
-                    >
-                      <DocumentDuplicateIcon className="h-4 w-4" />
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setSelectedTemplate({
-                        name: type.name,
-                        label: type.label,
-                      });
-                      setCurrentView("create");
-                    }}
-                    className="w-full rounded bg-blue-100 px-3 py-2 text-sm text-blue-700 hover:bg-blue-200"
-                  >
-                    Create {type.label}
-                  </button>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div> */}
 
       {/* Existing Templates */}
       <div className="rounded-lg border border-gray-200 bg-white shadow-sm">

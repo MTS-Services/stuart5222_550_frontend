@@ -127,8 +127,11 @@ const router = createBrowserRouter(
       <Route element={<RoleGuard allowedRoles={["user"]} />}>
         <Route path="/user" element={<UserHomeView />} />
         <Route path="/user/profile" element={<UserProfileView />} />
-        <Route path="/user/setup-profile" element={<SetupProfileView />} />
-        <Route path="/user/edit-profile/:id" element={<EditProfileView />} />
+        <Route
+          path="/user/setup-profile/:email"
+          element={<SetupProfileView />}
+        />
+        <Route path="/user/edit-profile/:email" element={<EditProfileView />} />
       </Route>
 
       {/* ⚠️ 404 Fallback */}

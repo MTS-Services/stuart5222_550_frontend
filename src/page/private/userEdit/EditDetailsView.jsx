@@ -16,14 +16,14 @@ import { getUserQRcode } from "../../../features/admin/home/dashboardFetch";
 
 const EditDetailsView = () => {
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const { userId } = useParams();
   const { qrCodeList, isQrLoading } = useSelector((state) => state.dashboard);
   console.log("qrCodeList:", qrCodeList);
   const { approved_list, isLoading, error } = useSelector(
     (state) => state.adminUsers,
   );
 
-  const user = approved_list.find((u) => u.id === Number(id));
+  const user = approved_list.find((u) => u.id === Number(userId));
 
   const [loading, setLoading] = useState({ approve: false, reject: false });
 
