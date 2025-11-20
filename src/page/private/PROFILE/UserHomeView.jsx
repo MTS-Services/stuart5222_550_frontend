@@ -4,13 +4,17 @@ import { Link } from "react-router-dom";
 
 const UserHomeView = () => {
   const { user } = useSelector((state) => state.auth);
+  console.log("USER PROFILE:", user);
   const isVerified = user?.status === "VERIFIED";
+  console.log("VERIFIED", isVerified);
 
+  const isStatusActive = user?.status === "ACTIVE";
+  console.log("status:", isStatusActive);
   return (
     <div className="flex h-screen flex-col items-center justify-center bg-[#3B3B3D] px-4 text-white">
       {isVerified ? (
         <>
-          <div className="mb-6 w-full max-w-md rounded-lg p-6 shadow-lg">
+          <div className="mb-6 w-full max-w-md rounded-lg border border-gray-400 p-6 shadow-lg">
             <h2 className="mb-4 text-xl font-semibold">👤 User Information</h2>
 
             <div className="space-y-2 text-sm">
@@ -36,27 +40,36 @@ const UserHomeView = () => {
                 {user?.isApproved ? "Yes" : "No"}
               </p>
             </div>
-
-            <div className="mt-4">
-              <Link
-                to={`/user/setup-profile`}
-                className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-700"
-              >
-                Setup Profile
-              </Link>
-            </div>
           </div>
         </>
       ) : (
-        <p className="text-lg text-gray-400">
-          Your profile is <span className="font-semibold">{user?.status}</span>.
-          You can’t access profile until verification is complete.
-        </p>
+        <div className="w-full max-w-md rounded-lg border border-gray-400 p-6 text-center shadow-lg">
+          <p className="text-lg text-gray-400">
+            Your profile is <span className="font-semibold">{user?.email}</span>
+            . You can’t access profile until verification is complete.
+          </p>
+          <div className="mt-4">
+            <Link
+              to={`/user/setup-profile`}
+              className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-700"
+            >
+              Setup Profile
+            </Link>
+          </div>
+        </div>
       )}
-
-      <h1 className="mt-4 text-2xl font-semibold text-gray-200">
-        User Profile
-      </h1>
+      <div className="mt-4">
+        {!isStatusActive ? (
+          <Link
+            to={`/user/edit-profile/${user?.id}`}
+            className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-700"
+          >
+            Edit Profile
+          </Link>
+        ) : (
+          ""
+        )}
+      </div>
     </div>
   );
 };
