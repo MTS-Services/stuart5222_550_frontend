@@ -215,7 +215,7 @@ export const RequestUserTable = () => {
 
           {/* 💬 Modal - MOVED OUTSIDE THE TABLE ROW */}
           {isModalOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
               <div className="relative mx-auto w-full max-w-md rounded-lg bg-white p-6">
                 <button
                   className="absolute right-3 top-3 text-gray-500 hover:text-black"
@@ -237,7 +237,7 @@ export const RequestUserTable = () => {
                 />
                 {error && <p className="mb-2 text-sm text-red-500">{error}</p>}
                 <button
-                  className="w-full rounded-lg bg-[#FF8C00] py-2.5 text-black hover:bg-orange-600 disabled:opacity-50"
+                  className="w-full cursor-pointer rounded-lg bg-orange-400 py-2.5 font-raleway font-medium text-white hover:bg-orange-300"
                   onClick={handleSend}
                   disabled={
                     loadingRow.reject === selectedUserId || !reasonText.trim()

@@ -1,10 +1,20 @@
-import React from "react";
-import { FaPowerOff, FaRegCalendar } from "react-icons/fa";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  FaPowerOff,
+  FaRegCalendar,
+  FaChevronDown,
+  FaChevronUp,
+} from "react-icons/fa";
 import { GrLocation } from "react-icons/gr";
 import { AUTH_COOKIE } from "../../../../utils/authCookie";
 import { shouldShowTravelMode } from "../../../../utils/travelMode";
 
 const ProfileInfoView = ({ profileData, images }) => {
+  const [showAllPhotos, setShowAllPhotos] = useState(false);
+  const [isExpanding, setIsExpanding] = useState(false);
+  const [visiblePhotos, setVisiblePhotos] = useState(3);
+  const photosContainerRef = useRef(null);
+
   const {
     email,
     age,
@@ -32,6 +42,41 @@ const ProfileInfoView = ({ profileData, images }) => {
     AUTH_COOKIE.remove();
     window.location.href = "/auth/login";
   };
+
+  const handleLoadMore = () => {
+    if (isExpanding) return; // Prevent multiple clicks during animation
+
+    setIsExpanding(true);
+
+    if (!showAllPhotos) {
+      // Show more photos with smooth reveal
+      setShowAllPhotos(true);
+      setTimeout(() => {
+        if (images?.length > 3) {
+          setVisiblePhotos(Math.min(images.length, visiblePhotos + 3));
+        }
+        setIsExpanding(false);
+      }, 150);
+    } else {
+      // Collapse photos
+      setVisiblePhotos(3);
+      setShowAllPhotos(false);
+      setIsExpanding(false);
+
+      // Smooth scroll back to photos section
+      if (photosContainerRef.current) {
+        photosContainerRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    }
+  };
+
+  // Get displayed images based on current state
+  const displayedImages = images?.slice(0, visiblePhotos) || [];
+  const hasMorePhotos = images?.length > 3;
+  const canLoadMore = visiblePhotos < images?.length;
 
   if (!profileData && images) {
     return (
@@ -123,36 +168,80 @@ const ProfileInfoView = ({ profileData, images }) => {
       )}
 
       {/* Photos Section */}
-      <div className="flex flex-col gap-5">
+      <div ref={photosContainerRef} className="flex flex-col gap-5">
         {/* Main photo */}
-        <div className="flex items-center justify-center">
+
+        <div className="rounded-xl border border-gray-400/50">
           <img
-            src={images[0]?.url || "/img/page/home/remove_preview.png"}
+            src={displayedImages[0]?.url || "/img/page/home/remove_preview.png"}
             alt="Profile photo"
-            className="h-full w-full rounded-xl border border-gray-400/50 bg-cover object-cover"
+            className="h-full w-full bg-cover object-cover"
           />
         </div>
 
-        {/* Secondary photos */}
+        {/* Secondary photos grid */}
         <div className="grid grid-cols-2 gap-4">
-          <img
-            src={images[1]?.url || "/img/page/home/remove_preview.png"}
-            alt="Full body photo"
-            className="h-full w-full rounded-xl border border-gray-400/50 bg-cover object-cover"
-          />
-          <img
-            src={images[2]?.url || "/img/page/home/remove_preview.png"}
-            alt="Additional photo"
-            className="h-full w-full rounded-xl border border-gray-400/50 bg-cover object-cover"
-          />
+          {displayedImages.slice(1, 3).map((image, index) => (
+            <div
+              key={`secondary-${index}`}
+              className="group relative overflow-hidden rounded-xl border border-gray-400/50 transition-all duration-300 hover:border-orange-500/50"
+            >
+              <img
+                src={image?.url || "/img/page/home/remove_preview.png"}
+                alt={`Photo ${index + 2}`}
+                className="h-full w-full bg-cover object-cover"
+              />
+            </div>
+          ))}
         </div>
 
-        <button className="mt-2 self-end">
-          <p className="flex items-center justify-end font-raleway text-base font-semibold underline hover:text-orange-500">
-            See more photos
-          </p>
-        </button>
+        {/* Additional photos (revealed on load more) */}
+        {showAllPhotos && displayedImages.length > 3 && (
+          <div
+            className={`grid gap-4 overflow-hidden transition-all duration-500 ease-in-out ${
+              isExpanding ? "max-h-0 opacity-0" : "max-h-[2000px] opacity-100"
+            } ${displayedImages.length > 6 ? "grid-cols-3" : "grid-cols-2"}`}
+            style={{
+              transform: isExpanding ? "translateY(-20px)" : "translateY(0)",
+            }}
+          >
+            {displayedImages.slice(3).map((image, index) => (
+              <div
+                key={`additional-${index}`}
+                className="group relative overflow-hidden rounded-xl border border-gray-400/50 transition-all duration-300 hover:border-orange-500/50"
+                style={{
+                  animationDelay: `${index * 100}ms`,
+                  animation: !isExpanding
+                    ? "slideInUp 0.6s ease-out forwards"
+                    : "none",
+                }}
+              >
+                <img
+                  src={image?.url || "/img/page/home/remove_preview.png"}
+                  alt={`Additional photo ${index + 4}`}
+                  className="h-full w-full bg-cover object-cover"
+                />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Load More / Show Less Button */}
+        {hasMorePhotos && (
+          <button
+            onClick={handleLoadMore}
+            disabled={isExpanding}
+            className="text-right underline"
+          >
+            {!showAllPhotos
+              ? `See ${Math.min(3, (images?.length || 0) - 3)} more photos`
+              : canLoadMore
+                ? `Load ${Math.min(3, (images?.length || 0) - visiblePhotos)} more`
+                : "Show less photos"}
+          </button>
+        )}
       </div>
+
       <div className="">
         <h2 className="font-raleway text-2xl font-semibold text-[#F07400]">
           Profile Details
@@ -189,6 +278,18 @@ const ProfileInfoView = ({ profileData, images }) => {
 };
 
 export default ProfileInfoView;
+
+// Add these styles to your global CSS or as a styled component
+// @keyframes slideInUp {
+//   from {
+//     opacity: 0;
+//     transform: translateY(30px);
+//   }
+//   to {
+//     opacity: 1;
+//     transform: translateY(0);
+//   }
+// }
 
 {
   /* Date Information */
