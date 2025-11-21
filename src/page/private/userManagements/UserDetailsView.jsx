@@ -10,6 +10,8 @@ import {
   shouldShowTravelMode,
   formatTravelDate,
 } from "../../../utils/travelMode";
+import { GrLocation } from "react-icons/gr";
+import { FaRegCalendar } from "react-icons/fa";
 
 const UserDetailsView = () => {
   const navigate = useNavigate();
@@ -172,19 +174,19 @@ const UserDetailsView = () => {
           </div>
           <div className="mt-4 flex flex-col gap-4">
             <div className="flex items-center gap-3">
-              <span className="font-raleway text-2xl text-orange-500">📍</span>
+              <GrLocation size={20} />
               <span className="font-raleway text-xl font-medium">
                 Location: {location}
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="font-raleway text-2xl text-orange-500">📅</span>
+              <FaRegCalendar size={20} />
               <span className="font-raleway text-xl font-medium">
                 Start Date: {formatTravelDate(startDate)}
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="font-raleway text-2xl text-orange-500">📅</span>
+              <FaRegCalendar size={20} />
               <span className="font-raleway text-xl font-medium">
                 End Date: {formatTravelDate(endDate)}
               </span>

@@ -43,7 +43,9 @@ const AdminView = lazy(() => import("../page/private/admin/AdminView.jsx"));
 const AddUserView = lazy(
   () => import("../page/private/allUsers/AddUserView.jsx"),
 );
-const EmailTemplatesPage = lazy(() => import("../page/EmailTemplatesPage.jsx"));
+const EmailTemplatesPage = lazy(
+  () => import("../page/private/email/EmailTemplatesPage.jsx"),
+);
 const AllUsersView = lazy(
   () => import("../page/private/allUsers/AllUsersView.jsx"),
 );

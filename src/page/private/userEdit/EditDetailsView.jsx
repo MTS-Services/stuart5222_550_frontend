@@ -133,7 +133,7 @@ const EditDetailsView = () => {
               <p className="text-xs text-[#464646]">{userInfo.phone}</p>
               <p>
                 Status:{" "}
-                <span className="rounded-full bg-green-300 p-1 font-raleway text-xs text-white">
+                <span className="rounded-full bg-green-400 px-2 py-1 font-raleway text-xs font-bold text-white">
                   {user.status}
                 </span>
               </p>

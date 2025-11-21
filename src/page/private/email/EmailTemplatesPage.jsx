@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  PlusIcon,
-  PencilIcon,
-  TrashIcon,
-  EyeIcon,
-  EnvelopeIcon,
-  DocumentDuplicateIcon,
-  CheckIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
-import EmailTemplateBuilder from "../components/EmailTemplateBuilder";
-import { adminAPI } from "../services/api";
+import { PencilIcon, EyeIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
+import { IoArrowBackCircleOutline, IoMailOutline } from "react-icons/io5";
+import EmailTemplateBuilder from "./components/EmailTemplateBuilder";
 import { toast } from "react-toastify";
+import { adminAPI } from "../../../services/api";
+import { FaAt } from "react-icons/fa";
+import { LucideSend } from "lucide-react";
 
 const EmailTemplatesPage = () => {
   const [templates, setTemplates] = useState([]);
@@ -21,40 +15,6 @@ const EmailTemplatesPage = () => {
   const [previewData, setPreviewData] = useState(null);
   const [testEmail, setTestEmail] = useState("");
   const [sendingTest, setSendingTest] = useState(false);
-
-  // Default template types that can be created
-  const templateTypes = [
-    {
-      name: "welcome",
-      label: "Welcome Email",
-      description: "Welcome new users to your platform",
-    },
-    {
-      name: "registration_approved",
-      label: "Registration Approved",
-      description: "Notify users when their registration is approved",
-    },
-    {
-      name: "registration_rejected",
-      label: "Registration Rejected",
-      description: "Inform users about registration rejection",
-    },
-    {
-      name: "payment_reminder",
-      label: "Payment Reminder",
-      description: "Remind users about pending payments",
-    },
-    {
-      name: "password_reset",
-      label: "Password Reset",
-      description: "Help users reset their passwords",
-    },
-    {
-      name: "dashboardUrl",
-      label: "Dashboard URL",
-      description: "Redirect users to their dashboard after login",
-    },
-  ];
 
   useEffect(() => {
     loadTemplates();
@@ -67,41 +27,6 @@ const EmailTemplatesPage = () => {
       setTemplates(response.data || []);
     } catch (error) {
       console.error("Error loading templates:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCreateTemplate = async (templateData) => {
-    try {
-      setLoading(true);
-
-      const response = await adminAPI.createEmailTemplate({
-        name: selectedTemplate?.name || "custom_template",
-        subject: templateData.subject,
-        body: templateData.body,
-        html_template: templateData.html_template,
-        components: templateData.components,
-        settings: templateData.settings,
-        variables: templateData.variables,
-      });
-
-      if (response.success || response.message) {
-        await loadTemplates();
-        setCurrentView("list");
-        setSelectedTemplate(null);
-        toast.success("Template created successfully!");
-      } else {
-        console.error("Unexpected response format:", response);
-        toast.error(
-          "Error creating template. Please check console for details.",
-        );
-      }
-    } catch (error) {
-      console.error("Error creating template:", error);
-      toast.error(
-        `Error creating template: ${error.message || "Unknown error"}`,
-      );
     } finally {
       setLoading(false);
     }
@@ -147,22 +72,6 @@ const EmailTemplatesPage = () => {
     }
   };
 
-  const handleDeleteTemplate = async (templateName) => {
-    if (!window.confirm("Are you sure you want to delete this template?")) {
-      return;
-    }
-
-    try {
-      setLoading(true);
-      await adminAPI.deleteEmailTemplate(templateName);
-      await loadTemplates();
-    } catch (error) {
-      console.error("Error deleting template:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handlePreview = (html, subject) => {
     setPreviewData({ html, subject });
     setCurrentView("preview");
@@ -184,18 +93,8 @@ const EmailTemplatesPage = () => {
     }
   };
 
-  const handleDuplicateTemplate = async (template) => {
-    const newTemplate = {
-      ...template,
-      name: `${template.name}_copy_${Date.now()}`,
-      subject: `Copy of ${template.subject}`,
-    };
-    setSelectedTemplate(newTemplate);
-    setCurrentView("create");
-  };
-
   const renderTemplatesList = () => (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-10">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -208,9 +107,9 @@ const EmailTemplatesPage = () => {
 
       {/* Existing Templates */}
       <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-        <div className="border-b border-gray-200 px-6 py-4">
+        <div className="border-b border-gray-200 bg-slate-100 px-6 py-4">
           <h3 className="text-lg font-semibold text-gray-900">
-            Existing Templates
+            Active Templates
           </h3>
         </div>
 
@@ -260,17 +159,6 @@ const EmailTemplatesPage = () => {
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => {
-                      setSelectedTemplate(template);
-                      setTestEmail("");
-                      setCurrentView("test");
-                    }}
-                    className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 hover:text-blue-600"
-                    title="Send Test Email"
-                  >
-                    <EnvelopeIcon className="h-5 w-5" />
-                  </button>
-                  <button
-                    onClick={() => {
                       setPreviewData({
                         html: template.htmlTemplate,
                         subject: template.subject,
@@ -292,20 +180,17 @@ const EmailTemplatesPage = () => {
                   >
                     <PencilIcon className="h-5 w-5" />
                   </button>
-                  {/* <button
-                    onClick={() => handleDuplicateTemplate(template)}
-                    className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 hover:text-blue-600"
-                    title="Duplicate"
-                  >
-                    <DocumentDuplicateIcon className="h-5 w-5" />
-                  </button>
                   <button
-                    onClick={() => handleDeleteTemplate(template.name)}
-                    className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 hover:text-red-600"
-                    title="Delete"
+                    onClick={() => {
+                      setSelectedTemplate(template);
+                      setTestEmail("");
+                      setCurrentView("test");
+                    }}
+                    className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 hover:text-blue-600"
+                    title="Send Test Email"
                   >
-                    <TrashIcon className="h-5 w-5" />
-                  </button> */}
+                    <EnvelopeIcon className="h-5 w-5" />
+                  </button>
                 </div>
               </div>
             ))}
@@ -316,25 +201,26 @@ const EmailTemplatesPage = () => {
   );
 
   const renderPreview = () => (
-    <div className="space-y-4 p-6">
-      <div className="flex items-center gap-4">
-        <button
-          onClick={() => setCurrentView("list")}
-          className="rounded-full bg-slate-200 px-2 text-gray-600 hover:bg-slate-400 hover:text-gray-800"
-        >
-          ←
+    <div className="space-y-4 p-10">
+      <div className="flex items-center justify-between gap-4">
+        <button onClick={() => setCurrentView("list")} className="">
+          <IoArrowBackCircleOutline
+            size={30}
+            className="text-gray-400 hover:text-gray-600"
+          />
         </button>
         <h1 className="text-2xl font-bold text-gray-900">Template Preview</h1>
       </div>
 
       <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h3 className="mb-2 text-lg font-semibold text-gray-900">
-          Subject: {previewData?.subject}
+        <h3 className="mb-4 text-lg font-semibold text-gray-900">
+          {previewData?.subject}
         </h3>
-        <div className="overflow-hidde h-screen rounded-lg border border-gray-300">
+
+        <div className="overflow-hidden rounded-lg border border-gray-300">
           <iframe
             srcDoc={previewData?.html}
-            className="h-screen w-full"
+            className="h-[600px] w-full"
             title="Email Preview"
           />
         </div>
@@ -343,56 +229,152 @@ const EmailTemplatesPage = () => {
   );
 
   const renderTestEmailModal = () => (
-    <div className="space-y-4 p-6">
-      <div className="flex items-center gap-4">
-        <button
-          onClick={() => setCurrentView("list")}
-          className="rounded-full bg-slate-200 px-2 text-gray-600 hover:bg-slate-400 hover:text-gray-800"
-        >
-          ←
-        </button>
-        <h1 className="text-2xl font-bold text-gray-900">Send Test Email</h1>
-      </div>
-
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h3 className="mb-4 text-lg font-semibold text-gray-900">
-          Test Template: {selectedTemplate?.subject}
-        </h3>
-
-        <div className="space-y-4">
-          <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              Test Email Address
-            </label>
-            <input
-              type="email"
-              value={testEmail}
-              onChange={(e) => setTestEmail(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 p-3"
-              placeholder="Enter email address to send test"
+    <div className="p-10">
+      <div className="mx-auto max-w-2xl space-y-6">
+        {/* Header */}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setCurrentView("list")}
+            className="group flex items-center gap-2 text-gray-600 transition-colors hover:text-gray-900"
+          >
+            <IoArrowBackCircleOutline
+              size={24}
+              className="transition-transform group-hover:scale-110"
             />
+            <span className="text-sm font-medium">Back to Templates</span>
+          </button>
+        </div>
+
+        {/* Main Card */}
+        <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm">
+          {/* Card Header */}
+          <div className="border-b border-gray-100 bg-orange-50 px-6 py-4">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Send Test Email
+            </h1>
+            <p className="mt-1 text-gray-600">
+              Preview and test your email template before sending
+            </p>
           </div>
 
-          <div className="flex space-x-4">
-            <button
-              onClick={handleSendTest}
-              disabled={!testEmail || sendingTest}
-              className="rounded-lg bg-blue-600 px-6 py-3 text-white hover:bg-blue-700 disabled:opacity-50"
+          <div className="space-y-6 p-6">
+            {/* Template Info */}
+            <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+              <div className="flex items-start gap-3">
+                <div className="rounded-lg bg-orange-100 p-2">
+                  <IoMailOutline className="h-10 w-10 text-gray-600" />
+                </div>
+                <div>
+                  <h3 className="mb-1 text-lg font-semibold text-gray-900">
+                    {selectedTemplate?.subject || "No subject"}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Template preview and testing
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Email Input */}
+            <div className="space-y-3">
+              <label className="block text-sm font-semibold text-gray-900">
+                Send test to email address
+              </label>
+              <div className="relative">
+                <input
+                  type="email"
+                  value={testEmail}
+                  onChange={(e) => setTestEmail(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 placeholder-gray-400 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter email address for testing"
+                />
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                  <FaAt className="h-5 w-5 text-gray-400" />
+                </div>
+              </div>
+              <p className="text-xs text-gray-500">
+                We'll send a test version of this template to the email above
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-3 pt-4 sm:flex-row">
+              <button
+                onClick={handleSendTest}
+                disabled={!testEmail || sendingTest}
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition-all duration-200 hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+              >
+                {sendingTest ? (
+                  <>
+                    <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    Sending Test...
+                  </>
+                ) : (
+                  <>
+                    <LucideSend className="h-5 w-5" />
+                    Send Test Email
+                  </>
+                )}
+              </button>
+
+              <button
+                onClick={() => {
+                  setPreviewData({
+                    html: selectedTemplate.htmlTemplate,
+                    subject: selectedTemplate.subject,
+                  });
+                  setCurrentView("preview");
+                }}
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 font-semibold text-gray-700 transition-all duration-200 hover:border-gray-400"
+              >
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+                Preview Template
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Help Text */}
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+          <div className="flex items-start gap-3">
+            <svg
+              className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              {sendingTest ? "Sending..." : "Send Test Email"}
-            </button>
-            <button
-              onClick={() => {
-                setPreviewData({
-                  html: selectedTemplate.htmlTemplate,
-                  subject: selectedTemplate.subject,
-                });
-                setCurrentView("preview");
-              }}
-              className="rounded-lg bg-gray-600 px-6 py-3 text-white hover:bg-gray-700"
-            >
-              Preview Template
-            </button>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <div>
+              <p className="text-sm font-medium text-blue-800">Testing Tips</p>
+              <p className="mt-1 text-sm text-blue-700">
+                Send test emails to verify formatting, links, and content before
+                sending to your audience.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -401,19 +383,6 @@ const EmailTemplatesPage = () => {
 
   // Render based on current view
   switch (currentView) {
-    case "create":
-      return (
-        <EmailTemplateBuilder
-          template={selectedTemplate}
-          onSave={handleCreateTemplate}
-          onPreview={handlePreview}
-          onCancel={() => {
-            setCurrentView("list");
-            setSelectedTemplate(null);
-          }}
-          isLoading={loading}
-        />
-      );
     case "edit":
       return (
         <EmailTemplateBuilder

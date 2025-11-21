@@ -106,7 +106,7 @@ const EmailTemplateBuilder = ({
       defaultValue: "Your profile does not meet our requirements",
       description: "Reason for profile or registration rejection",
     },
-     {
+    {
       key: "dashboardUrl",
       label: "Dashboard URL",
       defaultValue: "/dashboard",
@@ -544,10 +544,6 @@ const EmailTemplateBuilder = ({
       variables: variables,
     };
 
-    console.log(
-      "EmailTemplateBuilder - Saving template with data:",
-      templateData,
-    );
     onSave(templateData);
   };
 
@@ -562,7 +558,7 @@ const EmailTemplateBuilder = ({
   const selectedComp = components.find((c) => c.id === selectedComponent);
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-50">
       {/* Left Sidebar - Components */}
       <div className="flex min-h-0 w-80 flex-col border-l border-r border-gray-300 bg-white">
         <div className="border-gray-200 p-4">
@@ -691,7 +687,7 @@ const EmailTemplateBuilder = ({
               <button
                 onClick={handleSave}
                 disabled={isLoading}
-                className="rounded-md bg-orange-600 px-4 py-2 text-white hover:bg-orange-700 disabled:opacity-50"
+                className="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700 disabled:opacity-50"
               >
                 {isLoading ? "Saving..." : "Save"}
               </button>
