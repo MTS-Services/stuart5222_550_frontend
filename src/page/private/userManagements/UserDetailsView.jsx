@@ -95,9 +95,9 @@ const UserDetailsView = () => {
   };
 
   return (
-    <div className="space-y-8 p-6 font-raleway text-black">
+    <div className="space-y-8 p-10 font-raleway text-black">
       {/* User Info */}
-      <div className="rounded-sm p-4">
+      <div className="">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div className="flex items-center gap-4">
             <div className="h-[80px] w-[80px]">
@@ -108,6 +108,7 @@ const UserDetailsView = () => {
                 onError={(e) => (e.target.src = "/img/placeholder.jpg")}
               />
             </div>
+
             <div>
               <h3 className="font-raleway text-base font-medium text-[#252525]">
                 {userInfo.name}
@@ -120,14 +121,19 @@ const UserDetailsView = () => {
               </p>
               <p className="flex items-center gap-2 font-raleway">
                 Status:
-                <span className="rounded-full bg-yellow-400 px-2 py-1 font-raleway text-xs text-white">
+                <span
+                  className={`rounded-full px-2 py-1 font-raleway text-xs font-bold text-white ${user.status === "DRAFT" ? "bg-yellow-400" : "bg-red-500"}`}
+                >
                   {user.status}
                 </span>
               </p>
             </div>
           </div>
 
-          <div className="space-y-1 text-[#404040]">
+          <div className="flex items-center gap-4 space-y-1">
+            <div className="flex h-[140px] w-[150px] items-center justify-center rounded-lg border border-red-100 text-gray-500">
+              No QR Available
+            </div>
             <div>
               <p className="font-raleway">Age: {age}</p>
               <p className="font-raleway">Height: {height}</p>
@@ -205,49 +211,51 @@ const UserDetailsView = () => {
       </div>
 
       {/* Action Section – NO MODAL */}
-      <div className="rounded-lg border border-gray-200 bg-white p-4">
-        <h3 className="mb-3 font-raleway text-xl font-medium">
-          Reject with Feedback
-        </h3>
-        <textarea
-          value={rejectionReason}
-          onChange={(e) => setRejectionReason(e.target.value)}
-          placeholder="Write a reason for rejection..."
-          className="min-h-[120px] w-full rounded border border-gray-300 bg-[#E6EEF6] p-3 focus:outline-none focus:ring-2 focus:ring-orange-300"
-        />
-        <div className="mt-4 space-x-4">
-          <button
-            onClick={handleApprove}
-            disabled={loading.approve}
-            className={`w-64 flex-1 rounded py-2.5 font-raleway font-medium ${
-              loading.approve
-                ? "cursor-not-allowed bg-green-400"
-                : "bg-green-600 text-white hover:bg-green-700"
-            }`}
-          >
-            {loading.approve ? "Approving..." : "Approve"}
-          </button>
+      {user.status !== "REJECTED" && (
+        <section className="rounded-lg border border-gray-200 bg-white p-4">
+          <h3 className="mb-3 font-raleway text-xl font-medium">
+            Reject with Feedback
+          </h3>
+          <textarea
+            value={rejectionReason}
+            onChange={(e) => setRejectionReason(e.target.value)}
+            placeholder="Write a reason for rejection..."
+            className="min-h-[120px] w-full rounded border border-gray-300 bg-[#E6EEF6] p-3 focus:outline-none focus:ring-2 focus:ring-orange-300"
+          />
+          <div className="mt-4 space-x-4">
+            <button
+              onClick={handleApprove}
+              disabled={loading.approve}
+              className={`w-64 flex-1 rounded py-2.5 font-raleway font-medium ${
+                loading.approve
+                  ? "cursor-not-allowed bg-green-400"
+                  : "bg-green-600 text-white hover:bg-green-700"
+              }`}
+            >
+              {loading.approve ? "Approving..." : "Approve"}
+            </button>
 
-          <button
-            onClick={handleReject}
-            disabled={loading.reject}
-            className={`w-64 flex-1 rounded py-2.5 font-raleway font-medium ${
-              loading.reject
-                ? "cursor-not-allowed bg-orange-400"
-                : "bg-orange-500 text-white hover:bg-orange-600"
-            }`}
-          >
-            {loading.reject ? "Rejecting..." : "Reject"}
-          </button>
+            <button
+              onClick={handleReject}
+              disabled={loading.reject}
+              className={`w-64 flex-1 rounded py-2.5 font-raleway font-medium ${
+                loading.reject
+                  ? "cursor-not-allowed bg-orange-400"
+                  : "bg-orange-500 text-white hover:bg-orange-600"
+              }`}
+            >
+              {loading.reject ? "Rejecting..." : "Reject"}
+            </button>
 
-          <button
-            onClick={handleCencel}
-            className={`w-64 flex-1 rounded bg-red-500 py-2.5 font-raleway font-medium text-white hover:bg-orange-600`}
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
+            <button
+              onClick={handleCencel}
+              className={`w-64 flex-1 rounded bg-red-500 py-2.5 font-raleway font-medium text-white hover:bg-orange-600`}
+            >
+              Cancel
+            </button>
+          </div>
+        </section>
+      )}
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import {
-  adminUserApprovedProfile,
-  adminUserRejectedProfile,
-} from "../../../features/admin/management/usreFetch";
+// import {
+//   adminUserApprovedProfile,
+//   adminUserRejectedProfile,
+// } from "../../../features/admin/management/usreFetch";
 import { useEffect, useState } from "react";
 import QRCard from "../../../components/common/QRCard";
 import {
@@ -13,21 +13,26 @@ import {
 // import CustomModal from "../../../components/common/CustomModal";
 // import { formatDate } from "../../../utils/formatDate";
 import { getUserQRcode } from "../../../features/admin/home/dashboardFetch";
+import {
+  FaPowerOff,
+  FaRegCalendar,
+  FaChevronDown,
+  FaChevronUp,
+} from "react-icons/fa";
+import { GrLocation } from "react-icons/gr";
 
 const EditDetailsView = () => {
   const dispatch = useDispatch();
   const { userId } = useParams();
   const { qrCodeList, isQrLoading } = useSelector((state) => state.dashboard);
-  console.log("qrCodeList:", qrCodeList);
   const { approved_list, isLoading, error } = useSelector(
     (state) => state.adminUsers,
   );
 
   const user = approved_list.find((u) => u.id === Number(userId));
 
-  const [loading, setLoading] = useState({ approve: false, reject: false });
-
-  const [rejectionReason, setRejectionReason] = useState("");
+  // const [loading, setLoading] = useState({ approve: false, reject: false });
+  // const [rejectionReason, setRejectionReason] = useState("");
 
   const user_email = user?.email;
 
@@ -57,59 +62,59 @@ const EditDetailsView = () => {
     endDate,
   } = user;
 
-  // ✅ Approve
-  const handleApprove = async () => {
-    setLoading({ approve: true, reject: false });
-    try {
-      await dispatch(adminUserApprovedProfile({ id: user.id })).unwrap();
-      toast.success("User approved!");
-      // Redirect to user-edit after successful approval
-      setTimeout(() => {
-        navigate("/admin/user-edit");
-      }, 1000);
-    } catch (err) {
-      toast.error(err.message || "Approval failed");
-    } finally {
-      setLoading({ approve: false, reject: false });
-    }
-  };
+  // // ✅ Approve
+  // const handleApprove = async () => {
+  //   setLoading({ approve: true, reject: false });
+  //   try {
+  //     await dispatch(adminUserApprovedProfile({ id: user.id })).unwrap();
+  //     toast.success("User approved!");
+  //     // Redirect to user-edit after successful approval
+  //     setTimeout(() => {
+  //       navigate("/admin/user-edit");
+  //     }, 1000);
+  //   } catch (err) {
+  //     toast.error(err.message || "Approval failed");
+  //   } finally {
+  //     setLoading({ approve: false, reject: false });
+  //   }
+  // };
 
-  // ❌ Reject
-  const handleReject = async () => {
-    if (!rejectionReason.trim()) {
-      toast.error("Please enter a rejection reason");
-      return;
-    }
+  // // ❌ Reject
+  // const handleReject = async () => {
+  //   if (!rejectionReason.trim()) {
+  //     toast.error("Please enter a rejection reason");
+  //     return;
+  //   }
 
-    setLoading({ approve: false, reject: true });
-    try {
-      await dispatch(
-        adminUserRejectedProfile({
-          id: user.id,
-          reason: rejectionReason.trim(),
-        }),
-      ).unwrap();
-      toast.success("User rejected!");
-      setRejectionReason(""); // clear after success
-      // Redirect to user-edit after successful rejection
-      setTimeout(() => {
-        navigate("/admin/user-edit");
-      }, 1000);
-    } catch (err) {
-      toast.error(err.message || "Rejection failed");
-    } finally {
-      setLoading({ approve: false, reject: false });
-    }
-  };
+  //   setLoading({ approve: false, reject: true });
+  //   try {
+  //     await dispatch(
+  //       adminUserRejectedProfile({
+  //         id: user.id,
+  //         reason: rejectionReason.trim(),
+  //       }),
+  //     ).unwrap();
+  //     toast.success("User rejected!");
+  //     setRejectionReason(""); // clear after success
+  //     // Redirect to user-edit after successful rejection
+  //     setTimeout(() => {
+  //       navigate("/admin/user-edit");
+  //     }, 1000);
+  //   } catch (err) {
+  //     toast.error(err.message || "Rejection failed");
+  //   } finally {
+  //     setLoading({ approve: false, reject: false });
+  //   }
+  // };
 
-  const handleCencel = () => {
-    navigate(-1);
-  };
+  // const handleCencel = () => {
+  //   navigate(-1);
+  // };
 
   return (
-    <div className="space-y-8 px-10 font-raleway text-black">
+    <div className="space-y-10 p-10 font-raleway text-black">
       {/* User Info Section */}
-      <div className="rounded-sm p-4">
+      <div className="">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="h-[80px] w-[80px]">
@@ -192,7 +197,7 @@ const EditDetailsView = () => {
       {shouldShowTravelMode(user) && (
         <div className="flex flex-col gap-6 rounded-lg border bg-gradient-to-b from-orange-500/10 to-white p-6">
           <div className="text-xl font-bold text-neutral-800">
-            <span className="font-raleway uppercase">I </span>
+            <span className="font-raleway uppercase">I</span>
             <span className="font-raleway lowercase">
               am traveling and will be in:
             </span>
@@ -201,7 +206,7 @@ const EditDetailsView = () => {
           <div className="flex flex-col gap-4">
             {/* Location */}
             <div className="flex items-center gap-3">
-              <span className="font-raleway text-2xl text-orange-500">📍</span>
+              <GrLocation size={20} />
               <span className="font-raleway text-xl font-medium text-neutral-800">
                 Location: {location}
               </span>
@@ -209,7 +214,7 @@ const EditDetailsView = () => {
 
             {/* Start Date */}
             <div className="flex items-center gap-3">
-              <span className="font-raleway text-2xl text-orange-500">📅</span>
+              <FaRegCalendar size={20} />
               <span className="font-raleway text-xl font-medium text-neutral-800">
                 Start-Date: {formatTravelDate(startDate)}
               </span>
@@ -217,7 +222,7 @@ const EditDetailsView = () => {
 
             {/* End Date */}
             <div className="flex items-center gap-3">
-              <span className="font-raleway text-2xl text-orange-500">📅</span>
+              <FaRegCalendar size={20} />
               <span className="font-raleway text-xl font-medium text-neutral-800">
                 End-Date: {formatTravelDate(endDate)}
               </span>

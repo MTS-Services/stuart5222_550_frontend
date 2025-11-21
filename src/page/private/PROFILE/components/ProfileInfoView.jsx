@@ -1,10 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-  FaPowerOff,
-  FaRegCalendar,
-  FaChevronDown,
-  FaChevronUp,
-} from "react-icons/fa";
+import { FaPowerOff, FaRegCalendar } from "react-icons/fa";
 import { GrLocation } from "react-icons/gr";
 import { AUTH_COOKIE } from "../../../../utils/authCookie";
 import { shouldShowTravelMode } from "../../../../utils/travelMode";

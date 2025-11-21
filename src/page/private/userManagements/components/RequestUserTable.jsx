@@ -146,6 +146,7 @@ export const RequestUserTable = () => {
                   </th>
                 </tr>
               </thead>
+
               <tbody className="text-base font-normal text-black">
                 {currentData.length > 0 ? (
                   currentData.map((row, index) => (
@@ -195,7 +196,13 @@ export const RequestUserTable = () => {
                           />
                         </td>
                       ) : (
-                        <td className="text-center">{row.status}</td>
+                        <td className="text-center">
+                          <Link to={`/admin/user-management/${row.id}`}>
+                            <button className="whitespace-nowrap rounded-xl bg-[#F07400] px-4 py-2.5 font-raleway text-xs text-white hover:bg-[#af5500]">
+                              See Details
+                            </button>
+                          </Link>
+                        </td>
                       )}
                     </tr>
                   ))
