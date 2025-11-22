@@ -388,6 +388,7 @@ const EditProfileView = () => {
               className="h-24 w-36 object-cover"
             />
           </div>
+
           <div className="mb-6 text-center">
             <h2 className="font-raleway text-xl font-bold md:text-[32px]">
               Update Your Profile
