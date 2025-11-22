@@ -65,7 +65,7 @@ const SetupProfileView = () => {
 
     // Add new files to the existing files array instead of replacing
     setFiles((prevFiles) => [...prevFiles, ...validFiles]);
-    
+
     // Create previews for new files and add to existing previews
     const newPreviews = validFiles.map((file) => URL.createObjectURL(file));
     setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
@@ -77,7 +77,7 @@ const SetupProfileView = () => {
     if (imagePreviews[index]) {
       URL.revokeObjectURL(imagePreviews[index]);
     }
-    
+
     const newFiles = files.filter((_, i) => i !== index);
     const newPreviews = imagePreviews.filter((_, i) => i !== index);
     setFiles(newFiles);
@@ -202,21 +202,22 @@ const SetupProfileView = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#3B3B3D] px-[10px] font-raleway text-white sm:py-4 md:py-6 lg:py-8">
+    <div className="min-h-screen bg-[#3B3B3D] px-[10px] font-raleway text-white sm:py-4 md:py-6">
       <form onSubmit={handleSubmit}>
         <div className="mx-auto max-w-[600px]">
-          <Link to="/user" className="mb-4 flex items-center gap-2 text-white">
+          <Link to="/user" className="flex items-center gap-2 py-4 text-white">
             <MdArrowBack /> Back
           </Link>
 
           {/* Header */}
-          <div className="flex justify-center py-[40px]">
+          <div className="flex justify-center py-[20px]">
             <img
               src="/img/assets/logo.png"
               alt="preview"
               className="h-24 w-36 object-cover"
             />
           </div>
+
           <div className="mb-6 text-center">
             <h2 className="font-raleway text-xl font-bold md:text-[32px]">
               Setup Your Profile
@@ -373,6 +374,7 @@ const SetupProfileView = () => {
               </p>
             </div>
           </div>
+
           {/* 🖼️ File Upload - FINALIZED SECTION */}
           <div className="flex items-center justify-center">
             <div className="w-full space-y-4">
@@ -618,7 +620,7 @@ const SetupProfileView = () => {
         </div>
       </form>
 
-      <div className="mx-auto mb-6 mt-10 max-w-[600px]">
+      <div className="mx-auto max-w-[600px] py-10">
         <p className="text-center font-raleway text-sm text-gray-400">
           By submitting your profile, you agree to our{" "}
           <button
