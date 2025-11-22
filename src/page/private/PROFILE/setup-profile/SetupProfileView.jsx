@@ -39,8 +39,13 @@ const SetupProfileView = () => {
   // ============================================
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    if (selectedFiles.length > 13) {
-      toast.warn("Maximum 13 images allowed (3 required + 10 optional)");
+    const totalCurrentImages = files.length;
+    const maxNewFiles = 13 - totalCurrentImages;
+
+    if (selectedFiles.length > maxNewFiles) {
+      toast.warn(
+        `You can only upload ${maxNewFiles} more image${maxNewFiles > 1 ? "s" : ""} (you already have ${totalCurrentImages})`,
+      );
       return;
     }
 
@@ -53,13 +58,21 @@ const SetupProfileView = () => {
       return;
     }
 
-    setFiles(validFiles);
-    const previews = validFiles.map((file) => URL.createObjectURL(file));
-    setImagePreviews(previews);
+    // Add new files to the existing files array instead of replacing
+    setFiles((prevFiles) => [...prevFiles, ...validFiles]);
+    
+    // Create previews for new files and add to existing previews
+    const newPreviews = validFiles.map((file) => URL.createObjectURL(file));
+    setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
     e.target.value = "";
   };
 
   const removeImage = (index) => {
+    // Revoke the object URL to free memory before removing
+    if (imagePreviews[index]) {
+      URL.revokeObjectURL(imagePreviews[index]);
+    }
+    
     const newFiles = files.filter((_, i) => i !== index);
     const newPreviews = imagePreviews.filter((_, i) => i !== index);
     setFiles(newFiles);
