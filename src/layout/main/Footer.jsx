@@ -9,8 +9,8 @@ const Footer = () => {
   const closeTermsModal = () => setIsTermsModalOpen(false);
 
   return (
-    <div className="flex items-center justify-center bg-[#505050] px-4 py-6 font-raleway md:py-10 lg:py-16">
-      <div className="">
+    <div className="bg-[#505050] px-4 py-6 font-raleway md:py-10 lg:py-16">
+      <div className="mx-auto max-w-[600px]">
         {/* Feature header */}
         <div className="flex flex-col items-start justify-start gap-4 self-stretch">
           <img
@@ -59,15 +59,15 @@ const Footer = () => {
         isOpen={isTermsModalOpen}
         onClose={closeTermsModal}
         title="Terms & Conditions"
-        size="2xl"
+        size="xl"
       >
-        <div className="max-h-96 overflow-y-auto bg-[#3B3B3D] py-4 text-sm text-white">
-          <div>
-            <h3 className="mb-2 text-lg font-bold text-orange-400">
+        <div className="max-h-96 overflow-y-auto bg-[#3B3B3D] p-4 text-sm text-white">
+          <div className="">
+            <h3 className="mb-4 text-lg font-bold text-orange-400">
               Yep, this is all the legal gobbledygook.
             </h3>
 
-            <div className="space-y-3">
+            <div className="space-y-10">
               <p className="leading-relaxed text-white">
                 Welcome to Scan Me Maybe! By using our service, you agree to
                 these terms and conditions. Please read them carefully before
@@ -117,8 +117,8 @@ const Footer = () => {
                   case? We have an interesting chat. Best case? Who knows……
                 </p>
               </div>
-
-              <p className="mt-4 text-xs text-gray-300">
+              <p className="text-center text-xs text-gray-300">
+                <hr className="border-1 mb-4 border-gray-600" />
                 Last updated: November 8, 2025
                 <br />© 2025 Scan Me Maybe, LLC. All Rights Reserved.
               </p>

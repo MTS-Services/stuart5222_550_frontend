@@ -5,11 +5,11 @@ const HeroSection = () => {
     window.location.href = "/auth/login";
   };
   return (
-    <div className="mx-auto max-w-[600px] md:py-6">
+    <div className="mx-auto max-w-[600px] py-10 md:py-6">
       <div className="flex items-center justify-center">
         <div className="text-center">
           {/* Image */}
-          <div className="flex justify-center pt-[40px]">
+          <div className="flex justify-center pt-[20px]">
             <img
               src="/img/assets/logo.png"
               alt="preview"
@@ -68,7 +68,7 @@ const HeroSection = () => {
               <h2 className="mb-4 text-center font-raleway text-[32px] font-bold">
                 Scan Me Maybe
               </h2>
-              <p className="mb-[40px] max-w-[568px] text-justify font-raleway leading-6">
+              <p className="mb-[40px] max-w-[600px] text-justify font-raleway leading-6">
                 Revolutionizing dating through personalized cards and genuine
                 connections. because sometimes, the best matches happen when you
                 least expect them.

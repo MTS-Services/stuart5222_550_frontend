@@ -21,9 +21,9 @@ const CustomModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 p-4">
       <div
-        className={`w-full rounded-2xl bg-[#3B3B3D] shadow-xl ${sizeClasses[size]} relative p-6`}
+        className={`w-full rounded-2xl bg-[#3B3B3D] shadow-xl ${sizeClasses[size]} relative p-4`}
       >
         {/* Close button */}
         <button

@@ -48,14 +48,14 @@ const features = [
 
 function AboutSection() {
   return (
-    <div className="mx-auto flex max-w-[600px] justify-center font-raleway">
+    <div className="mx-auto mb-10 max-w-[600px] px-2 font-raleway md:px-0 md:py-6">
       <div className="inline-flex flex-col items-center justify-start gap-8 text-center sm:py-6">
         {/* 🔥 Title and Description (unchanged) */}
         <div className="flex flex-col items-start justify-start gap-4 self-stretch">
           <h2 className="self-stretch text-center font-raleway text-2xl font-bold capitalize text-orange-500">
             What is Scan Me Maybe?{" "}
           </h2>{" "}
-          <p className="max-w-[568px] self-stretch text-justify font-raleway text-base font-normal leading-normal text-white">
+          <p className="max-w-[600px] self-stretch text-justify font-raleway text-base font-normal leading-normal text-white">
             A spontaneous approach to dating that combines the authenticity of
             real-world meetings with the convenience of digital profiles. Get
             your story out there, one card at a time.{" "}
@@ -68,7 +68,7 @@ function AboutSection() {
           return (
             <div
               key={index}
-              className="flex w-full flex-col items-center justify-start gap-2.5 rounded-lg p-5 outline outline-1 outline-orange-500 md:w-[568px]"
+              className="flex w-full flex-col items-center justify-start gap-2.5 rounded-lg p-5 outline outline-1 outline-orange-500 md:w-[600px]"
             >
               <div className="relative h-10 w-10 overflow-hidden rounded bg-orange-500 p-1">
                 <Icon className="h-full w-full text-white" />

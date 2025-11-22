@@ -185,13 +185,13 @@ const WelcomeScanView = () => {
         title="Terms & Conditions"
         size="xl"
       >
-        <div className="max-h-96 space-y-4 overflow-y-auto bg-[#3B3B3D] px-4 text-sm text-white">
-          <div>
-            <h3 className="mb-2 text-lg font-semibold text-orange-400">
+        <div className="max-h-96 overflow-y-auto bg-[#3B3B3D] p-4 text-sm text-white">
+          <div className="">
+            <h3 className="mb-4 text-lg font-bold text-orange-400">
               Yep, this is all the legal gobbledygook.
             </h3>
 
-            <div className="space-y-3">
+            <div className="space-y-10">
               <p className="leading-relaxed text-white">
                 Welcome to Scan Me Maybe! By using our service, you agree to
                 these terms and conditions. Please read them carefully before
@@ -241,8 +241,8 @@ const WelcomeScanView = () => {
                   case? We have an interesting chat. Best case? Who knows……
                 </p>
               </div>
-
-              <p className="mt-4 text-xs text-gray-300">
+              <p className="text-center text-xs text-gray-300">
+                <hr className="border-1 mb-4 border-gray-600" />
                 Last updated: November 8, 2025
                 <br />© 2025 Scan Me Maybe, LLC. All Rights Reserved.
               </p>
