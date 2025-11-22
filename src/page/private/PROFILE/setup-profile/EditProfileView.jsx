@@ -20,6 +20,7 @@ import { Link, useParams } from "react-router-dom";
 import { updateUser } from "../../../../features/auth/authSlice";
 import { GET } from "../../../../config/api/httpMethods";
 import { endpoints } from "../../../../config/api/httpEndpoint";
+import CustomModal from "../../../../components/common/CustomModal";
 
 const EditProfileView = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -27,7 +28,13 @@ const EditProfileView = () => {
   const [success, setSuccess] = useState(false);
   const [files, setFiles] = useState([]); // New files to upload
   const [existingImages, setExistingImages] = useState([]); // Existing images from profile
-  const [deletedImageUrls, setDeletedImageUrls] = useState([]); // Track deleted existing images
+  const [deletedImageUrls, setDeletedImageUrls] = useState([]); // Track deleted
+
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+  const openTermsModal = () => setIsTermsModalOpen(true);
+  const closeTermsModal = () => setIsTermsModalOpen(false);
+
+  // existing images
   const [errors, setErrors] = useState({});
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -227,7 +234,7 @@ const EditProfileView = () => {
       });
 
       await dispatch(submitEditProfile(submitData)).unwrap();
-      
+
       // Fetch updated user data to refresh user status
       try {
         const response = await GET(endpoints.user.USER_PROFILE);
@@ -237,7 +244,7 @@ const EditProfileView = () => {
       } catch (error) {
         console.error("Failed to fetch updated user data:", error);
       }
-      
+
       toast.success("Profile updated successfully!");
       form.reset();
       setSuccess(true);
@@ -559,6 +566,7 @@ const EditProfileView = () => {
               </p>
             </div>
           </div>
+
           {/* 🖼️ File Upload - FINALIZED SECTION */}
           <div className="flex items-center justify-center">
             <div className="w-full space-y-4">
@@ -844,15 +852,13 @@ const EditProfileView = () => {
           >
             {submitLoading ? "Submitting..." : "Submit Profile for Review"}
           </button>
-          <div className="mx-auto mb-6 mt-10 max-w-[600px]">
+
+          {/* <div className="mx-auto mb-6 mt-10 max-w-[600px]">
             <p className="text-center font-raleway text-sm text-gray-400">
-              By submitting your profile, you agree to our{" "}
-              <a
-                href="/terms"
-                className="font-raleway text-orange-500 hover:underline"
-              >
+              By submitting your profile, you agree to our
+              <button className="font-raleway text-orange-500 hover:underline">
                 Terms of Service
-              </a>{" "}
+              </button>
               and{" "}
               <a
                 href="/privacy"
@@ -862,7 +868,7 @@ const EditProfileView = () => {
               </a>
               .
             </p>
-          </div>
+          </div> */}
         </div>
       </form>
     </div>

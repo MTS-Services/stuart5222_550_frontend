@@ -9,10 +9,9 @@ const WelcomeScanView = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
-
-  const openTermsModal = () => setIsTermsModalOpen(true);
-  const closeTermsModal = () => setIsTermsModalOpen(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   // Get QR code state from Redux
   const { data, loading, error, success } = useSelector(
@@ -143,7 +142,7 @@ const WelcomeScanView = () => {
                   <div className="flex flex-col text-start text-sm">
                     <p
                       className="cursor-pointer font-raleway font-semibold text-white underline transition-colors hover:text-orange-400"
-                      onClick={openTermsModal}
+                      onClick={openModal}
                     >
                       Read terms and conditions
                     </p>
@@ -160,10 +159,7 @@ const WelcomeScanView = () => {
                   <div className="mx-auto mt-[20px] flex w-[70%] items-center gap-4 font-raleway font-semibold md:w-full">
                     <div className="w-full">
                       <Link to={`/user/${mail}/profile`}>
-                        <button
-                          type="submit"
-                          className="w-full rounded-lg bg-orange-500 p-2.5 text-base text-white transition hover:bg-orange-600"
-                        >
+                        <button className="w-full rounded-lg bg-orange-500 p-2.5 text-base text-white transition hover:bg-orange-600">
                           Let’s go
                         </button>
                       </Link>
@@ -184,12 +180,12 @@ const WelcomeScanView = () => {
 
       {/* Terms & Conditions Modal */}
       <CustomModal
-        isOpen={isTermsModalOpen}
-        onClose={closeTermsModal}
+        isOpen={isModalOpen}
+        onClose={closeModal}
         title="Terms & Conditions"
-        size="2xl"
+        size="xl"
       >
-        <div className="max-h-96 space-y-4 overflow-y-auto bg-[#3B3B3D] text-sm text-white">
+        <div className="max-h-96 space-y-4 overflow-y-auto bg-[#3B3B3D] px-4 text-sm text-white">
           <div>
             <h3 className="mb-2 text-lg font-semibold text-orange-400">
               Yep, this is all the legal gobbledygook.

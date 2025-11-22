@@ -22,6 +22,7 @@ export const RequestUserTable = () => {
 
   // ✅ Get data from Redux
   const { userProfiles, isLoading } = useSelector((state) => state.adminUsers);
+
   // ✅ Track which row is loading
   const [loadingRow, setLoadingRow] = useState({ approve: null, reject: null });
 

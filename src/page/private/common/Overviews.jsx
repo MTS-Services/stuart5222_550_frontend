@@ -15,7 +15,7 @@ const Overviews = () => {
   const [slectedDate, setSlectedDate] = useState({ from: "", to: today });
   const [filter, setFilter] = useState("");
 
-  // console.log("dashboard:", overview);
+  console.log("dashboard:", overview);
   // console.log("filter:", filter);
 
   useEffect(() => {

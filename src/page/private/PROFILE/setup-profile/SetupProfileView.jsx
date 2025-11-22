@@ -14,7 +14,6 @@ import HeightInput from "../../../../components/common/HeightInput";
 import { Link, useParams } from "react-router-dom";
 import { submitProfile } from "../../../../features/public/profile/profileFetch";
 import { validateForm } from "../../../../utils/validateForm";
-import { AUTH_COOKIE } from "../../../../utils/authCookie";
 import { updateUser } from "../../../../features/auth/authSlice";
 import { GET } from "../../../../config/api/httpMethods";
 import { endpoints } from "../../../../config/api/httpEndpoint";
@@ -22,8 +21,7 @@ import { endpoints } from "../../../../config/api/httpEndpoint";
 const SetupProfileView = () => {
   const { email } = useParams();
   const dispatch = useDispatch();
-  const existUser = AUTH_COOKIE.getUser();
-  console.log("existUser:", existUser);
+
   const [submitLoading, setSubmitLoading] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [success, setSuccess] = useState(false);
@@ -140,7 +138,7 @@ const SetupProfileView = () => {
       });
 
       await dispatch(submitProfile(submitData)).unwrap();
-      
+
       // Fetch updated user data to refresh user status
       try {
         const response = await GET(endpoints.user.USER_PROFILE);
@@ -150,7 +148,7 @@ const SetupProfileView = () => {
       } catch (error) {
         console.error("Failed to fetch updated user data:", error);
       }
-      
+
       toast.success("Profile submitted successfully for review!");
       setSuccess(true);
       setImagePreviews([]);
@@ -599,7 +597,8 @@ const SetupProfileView = () => {
           >
             {submitLoading ? "Submitting..." : "Submit Profile for Review"}
           </button>
-          <div className="mx-auto mb-6 mt-10 max-w-[600px]">
+
+          {/* <div className="mx-auto mb-6 mt-10 max-w-[600px]">
             <p className="text-center font-raleway text-sm text-gray-400">
               By submitting your profile, you agree to our{" "}
               <a
@@ -617,7 +616,7 @@ const SetupProfileView = () => {
               </a>
               .
             </p>
-          </div>
+          </div> */}
         </div>
       </form>
     </div>

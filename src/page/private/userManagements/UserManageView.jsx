@@ -21,7 +21,6 @@ const UserManageView = () => {
           <h2 className="my-3 text-[28px] font-semibold text-black sm:my-4 md:my-5 lg:my-6 xl:my-7">
             Approved User
           </h2>
-
           <TableDropDown value={status} onChange={setStatus} />
         </div>
         <RequestUserTable />

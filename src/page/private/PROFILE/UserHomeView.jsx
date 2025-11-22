@@ -158,11 +158,6 @@ const UserHomeView = () => {
                   </div>
                 )}
               </div>
-
-              {/* Help Text */}
-              <div className="mt-6 text-center">
-                <p className="text-sm text-slate-500">Need help? </p>
-              </div>
             </div>
 
             {/* Progress Steps */}
