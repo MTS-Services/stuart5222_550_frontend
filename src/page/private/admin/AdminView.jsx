@@ -1,28 +1,69 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Overviews from "../common/Overviews";
 import { WaitListTable } from "./components/WaitListTable";
 import { adminUserList } from "../../../features/admin/management/usreFetch";
+import { TableDropDown } from "./components/TableDropDown";
 
 const AdminDashboard = () => {
   const dispatch = useDispatch();
+  const [status, setStatus] = useState("WAITLIST");
+  const {
+    list: users,
+    isLoading,
+    pagination,
+  } = useSelector((state) => state.adminUsers.users);
+
   const [page, setPage] = useState(1);
   const limit = 10;
 
   useEffect(() => {
-    dispatch(adminUserList({ page: page, limit: limit, status: "WAITLIST" }));
-  }, [dispatch, page]);
+    dispatch(adminUserList({ page: page, limit: limit, status: status }));
+  }, [dispatch, page, limit, status]);
+
+  const hasPrevPage = pagination?.page > 1;
+  const hasNextPage = pagination?.page < pagination?.totalPages;
 
   return (
     <div className="text-black md:p-8">
       {/* Header */}
       <Overviews />
       <div>
-        <h2 className="my-8 font-raleway font-semibold text-black md:text-[28px]">
-          Wait List
-        </h2>
+        <div className="flex items-center justify-between py-8">
+          <h2 className="font-raleway font-semibold uppercase text-black md:text-[28px]">
+            {status}-LIST
+          </h2>
+          <TableDropDown value={status} onChange={setStatus} />
+        </div>
         {/* 🧾 Waitlist Table */}
-        <WaitListTable page={page} setPage={setPage} />
+        <WaitListTable list={users} isLoading={isLoading} />
+
+        {/* Pagination */}
+        <div className="mt-4 flex items-center gap-3">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={!hasPrevPage}
+            className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
+          >
+            Prev
+          </button>
+
+          <span className="text-sm text-gray-700">
+            Page {pagination?.page} of {pagination?.totalPages}
+          </span>
+
+          <button
+            onClick={() =>
+              setPage((p) =>
+                hasNextPage ? Math.min(pagination.totalPages, p + 1) : p,
+              )
+            }
+            disabled={!hasNextPage}
+            className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

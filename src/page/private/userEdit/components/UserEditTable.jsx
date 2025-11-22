@@ -11,7 +11,7 @@ export const UserEditTable = ({ searchQuery }) => {
 
   // ✅ Pagination setup
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 50;
 
   // ✅ Filter users by searchQuery
   const filteredUsers = approved_list.filter(
@@ -121,8 +121,8 @@ export const UserEditTable = ({ searchQuery }) => {
       {filteredUsers.length > 0 && (
         <div className="mt-8 flex items-center justify-between gap-2 font-poppins text-sm font-normal text-gray-600 md:gap-0 md:text-base">
           <p className="font-raleway">
-            Showing {startIndex + 1} to {startIndex + currentData.length} of{" "}
-            {filteredUsers.length} results
+            Showing {approved_list.length} to {approved_list.length} of{" "}
+            {approved_list.length} results
           </p>
           <div className="flex gap-4 sm:gap-5 md:gap-6 lg:gap-7">
             <button

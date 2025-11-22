@@ -12,6 +12,8 @@ export const adminUserList = createAsyncThunk(
         limit,
         status,
       });
+
+      console.log("adminUserList response:", res);
       return res;
     } catch (err) {
       return rejectWithValue(
@@ -82,12 +84,12 @@ export const adminUserDetailsProfiles = createAsyncThunk(
 // ========== GET APPROVED LIST AFTER SUBSCRIPTION ==========
 export const adminUserVerifiedProfile = createAsyncThunk(
   "admin/adminUserVerifiedProfile",
-  async ({ page = 1, limit, status }, { rejectWithValue }) => {
+  async ({ page, limit, status }, { rejectWithValue }) => {
     try {
-      const res = await GET(endpoints.admin.APPROVE_LIST, {
+      const res = await GET(endpoints.admin.VARIFIED_LIST, {
         params: { page, limit, status },
       });
-      console.log("adminUserVerifiedProfile response:", res);
+      console.log("Verified Profile:", res);
       return res;
     } catch (err) {
       return rejectWithValue(

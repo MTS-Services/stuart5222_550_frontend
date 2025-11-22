@@ -22,14 +22,14 @@ const navLinks = [
     path: "/admin/user-management",
   },
   {
-    name: "Profile List",
-    icon: <FaUser size={17} />,
-    path: "/admin/user-edit",
-  },
-  {
     name: "All Users",
     icon: <FaUsers size={20} />,
     path: "/admin/all-users",
+  },
+  {
+    name: "Profile List",
+    icon: <FaUser size={17} />,
+    path: "/admin/user-edit",
   },
   {
     name: "Templates",

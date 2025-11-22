@@ -13,10 +13,16 @@ import {
 } from "./usreFetch";
 
 const initialState = {
-  users: [],
+  users: {
+    list: [],
+    stats: {},
+    pagination: {},
+    isLoading: false,
+    error: null,
+  },
   approved_list: [],
   drafts_list: [],
-  userProfiles: [], // ✅ Add userProfiles array
+  userProfiles: [],
   isLoading: false,
   error: null,
 };
@@ -39,8 +45,11 @@ const adminUserManagementSlice = createSlice({
         state.error = null;
       })
       .addCase(adminUserList.fulfilled, (state, action) => {
+        console.log("adminUserList payload:", action.payload);
         state.isLoading = false;
-        state.users = action.payload.users;
+        state.users.list = action.payload.users;
+        state.users.stats = action.payload.stats;
+        state.users.pagination = action.payload.pagination;
         state.error = null;
       })
       .addCase(adminUserList.rejected, (state, action) => {

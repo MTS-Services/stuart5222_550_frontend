@@ -6,6 +6,7 @@ import {
   FaDollarSign,
 } from "react-icons/fa";
 import Skeleton from "../../../components/ui/Skeleton";
+import { Link } from "react-router-dom";
 
 export const AllCard = ({ loading, dashboardData, filter }) => {
   const cardData = [
@@ -15,6 +16,7 @@ export const AllCard = ({ loading, dashboardData, filter }) => {
       value: dashboardData?.users || "0",
       icon: <FaUsers className="h-5 w-5 text-gray-800" />,
       color: "bg-blue-50",
+      link: "/admin/all-users",
     },
     {
       id: 2,
@@ -22,6 +24,7 @@ export const AllCard = ({ loading, dashboardData, filter }) => {
       value: dashboardData?.waitlist || "0",
       icon: <FaClock className="h-5 w-5 text-gray-800" />,
       color: "bg-yellow-50",
+      link: "/admin",
     },
     {
       id: 3,
@@ -29,6 +32,7 @@ export const AllCard = ({ loading, dashboardData, filter }) => {
       value: dashboardData?.active || "0",
       icon: <FaCheckCircle className="h-5 w-5 text-gray-800" />,
       color: "bg-green-50",
+      link: "/admin",
     },
     {
       id: 4,
@@ -36,6 +40,7 @@ export const AllCard = ({ loading, dashboardData, filter }) => {
       value: dashboardData?.verifiedProfiles || "0",
       icon: <FaCheckCircle className="h-5 w-5 text-gray-800" />,
       color: "bg-green-50",
+      link: "/admin/user-edit",
     },
     {
       id: 5,
@@ -43,6 +48,7 @@ export const AllCard = ({ loading, dashboardData, filter }) => {
       value: dashboardData?.cards || "0",
       icon: <FaIdCard className="h-5 w-5 text-gray-800" />,
       color: "bg-purple-50",
+      link: "/admin",
     },
     {
       id: 6,
@@ -50,6 +56,7 @@ export const AllCard = ({ loading, dashboardData, filter }) => {
       value: dashboardData?.scans || "0",
       icon: <FaIdCard className="h-5 w-5 text-gray-800" />,
       color: "bg-purple-50",
+      link: "/admin",
     },
     {
       id: 7,
@@ -57,6 +64,7 @@ export const AllCard = ({ loading, dashboardData, filter }) => {
       value: dashboardData?.totalRevenue || "0",
       icon: <FaDollarSign className="h-5 w-5 text-gray-800" />,
       color: "bg-green-50",
+      link: "/admin",
     },
     {
       id: 8,
@@ -64,6 +72,7 @@ export const AllCard = ({ loading, dashboardData, filter }) => {
       value: dashboardData?.activeSubscriptions || "0",
       icon: <FaIdCard className="h-5 w-5 text-gray-800" />,
       color: "bg-indigo-50",
+      link: "/admin",
     },
   ];
 
@@ -95,18 +104,20 @@ export const AllCard = ({ loading, dashboardData, filter }) => {
           key={item.id}
           className="col-span-1 rounded-xl border bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md"
         >
-          <p className="mb-2 font-raleway text-sm font-semibold text-gray-700 md:text-lg">
-            {item.title}
-          </p>
-          <div className="mb-3 flex items-center justify-between font-raleway">
-            <span className="font-raleway text-2xl font-semibold text-gray-900">
-              {item.value}
-            </span>
-            <div className={`${item.color} rounded-lg p-3`}>{item.icon}</div>
-          </div>
-          <p className="font-raleway text-xs font-light text-gray-500">
-            {filter}
-          </p>
+          <Link to={item.link}>
+            <p className="mb-2 font-raleway text-sm font-semibold text-gray-700 md:text-lg">
+              {item.title}
+            </p>
+            <div className="mb-3 flex items-center justify-between font-raleway">
+              <span className="font-raleway text-2xl font-semibold text-gray-900">
+                {item.value}
+              </span>
+              <div className={`${item.color} rounded-lg p-3`}>{item.icon}</div>
+            </div>
+            <p className="font-raleway text-xs font-light text-gray-500">
+              {filter}
+            </p>
+          </Link>
         </div>
       ))}
     </div>

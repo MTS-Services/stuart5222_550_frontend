@@ -19,7 +19,7 @@ export const endpoints = {
     APPROVED_WAITLIST_USERS: `/admin/users/approve`,
     GET_PENDING_USERS: "/admin/users/pending",
 
-    APPROVE_LIST: `/admin/profiles/approved`,
+    VARIFIED_LIST: `/admin/profiles/all`,
     DRAFTS_LIST: "/admin/profiles/draft",
 
     ALL_PROFILES: "/admin/profiles/all",
