@@ -30,10 +30,12 @@ const AdminDashboard = () => {
       <Overviews />
       <div>
         <div className="flex items-center justify-between py-8">
-          <h2 className="font-raleway font-semibold uppercase text-black md:text-[28px]">
+          <h2 className="font-raleway text-2xl font-semibold uppercase text-[#002244]">
             {status}-LIST
           </h2>
-          <TableDropDown value={status} onChange={setStatus} />
+          <div className="flex items-center gap-4">
+            <TableDropDown value={status} onChange={setStatus} />
+          </div>
         </div>
         {/* 🧾 Waitlist Table */}
         <WaitListTable list={users} isLoading={isLoading} />

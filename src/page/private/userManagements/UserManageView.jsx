@@ -17,8 +17,8 @@ const UserManageView = () => {
     <div className="bg-[#F9FAFB] font-raleway md:p-8">
       <Overviews />
       <div className="">
-        <div className="flex items-center justify-between">
-          <h2 className="my-3 text-[28px] font-semibold text-black sm:my-4 md:my-5 lg:my-6 xl:my-7">
+        <div className="my-8 flex items-center justify-between">
+          <h2 className="font-raleway text-2xl font-semibold uppercase text-[#002244]">
             Approved User
           </h2>
           <TableDropDown value={status} onChange={setStatus} />

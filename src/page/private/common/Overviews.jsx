@@ -15,15 +15,12 @@ const Overviews = () => {
   const [slectedDate, setSlectedDate] = useState({ from: "", to: today });
   const [filter, setFilter] = useState("");
 
-  console.log("dashboard:", overview);
-  // console.log("filter:", filter);
-
   useEffect(() => {
     dispatch(
       fetchDashboardData({
         from: slectedDate.from || null,
         to: slectedDate.to || null,
-        range: filter || "all-time", // fallback
+        range: filter || "ALL",
       }),
     );
   }, [slectedDate, filter, dispatch]);
@@ -37,7 +34,7 @@ const Overviews = () => {
     <>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="font-raleway text-2xl font-semibold text-[#002244]">
+          <h2 className="font-raleway text-2xl font-semibold uppercase text-[#002244]">
             Dashboard Overview
           </h2>
           <p className="mb-4 mt-1 font-raleway text-base font-normal text-[#464646]">

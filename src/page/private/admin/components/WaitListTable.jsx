@@ -5,6 +5,7 @@ import {
   adminReject,
 } from "../../../../features/admin/management/usreFetch";
 import { formatDate } from "../../../../utils/formatDate";
+import { toast } from "react-toastify";
 
 export const WaitListTable = ({ list, isLoading }) => {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ export const WaitListTable = ({ list, isLoading }) => {
     try {
       await dispatch(adminApprove({ user_id: userId })).unwrap();
     } catch (err) {
+      toast.error(err?.message || "Error approving user");
     } finally {
       setLoadingRow((prev) => ({ ...prev, approve: null }));
     }
@@ -27,17 +29,31 @@ export const WaitListTable = ({ list, isLoading }) => {
     try {
       await dispatch(adminReject({ user_id: userId })).unwrap();
     } catch (err) {
+      toast.error(err?.message || "Error rejecting user");
     } finally {
-      setLoadingRow((prev) => ({ ...prev, reject: userId }));
+      setLoadingRow((prev) => ({ ...prev, reject: null }));
+    }
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "ACTIVE":
+        return "text-green-600 font-semibold";
+      case "WAITLIST":
+        return "text-yellow-600 font-semibold";
+      case "REJECTED":
+        return "text-red-600 font-semibold";
+      default:
+        return "text-gray-600 font-medium";
     }
   };
 
   const renderRows = () => {
     if (isLoading) {
       return (
-        <tr>
-          <td colSpan="5" className="p-4 text-center">
-            Loading...
+        <tr className="h-96">
+          <td colSpan={6} className="p-4 text-center text-gray-700">
+            ⏳ Loading...
           </td>
         </tr>
       );
@@ -45,9 +61,12 @@ export const WaitListTable = ({ list, isLoading }) => {
 
     if (!list.length) {
       return (
-        <tr>
-          <td colSpan="5" className="p-4 text-center text-gray-500">
-            No users in waitlist.
+        <tr className="h-72">
+          <td
+            colSpan={6}
+            className="p-4 text-center font-raleway font-bold text-red-500"
+          >
+            Empty List!
           </td>
         </tr>
       );
@@ -55,10 +74,12 @@ export const WaitListTable = ({ list, isLoading }) => {
 
     return list.map((user) => (
       <tr key={user.id} className="hover:bg-gray-50">
-        <td className="border p-2 font-raleway">{user.id}</td>
+        <td className="border p-2 text-center font-raleway">{user.id}</td>
         <td className="border p-2 font-raleway">{user.name}</td>
         <td className="border p-2 font-raleway">{user.email}</td>
-        <td className="border p-2 text-center font-raleway lowercase">
+        <td
+          className={`border p-3 text-center text-sm ${getStatusColor(user.status)}`}
+        >
           {user.status}
         </td>
         <td className="border p-2 text-center font-raleway">
@@ -108,7 +129,7 @@ export const WaitListTable = ({ list, isLoading }) => {
     <table className="w-full border-collapse border border-gray-200 text-left">
       <thead>
         <tr className="bg-gray-100">
-          <th className="border p-2 font-raleway">ID</th>
+          <th className="border p-2 text-center font-raleway">ID</th>
           <th className="border p-2 font-raleway">Name</th>
           <th className="border p-2 font-raleway">Email</th>
           <th className="border p-2 text-center font-raleway">Status</th>

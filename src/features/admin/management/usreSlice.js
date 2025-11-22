@@ -23,6 +23,8 @@ const initialState = {
   approved_list: [],
   drafts_list: [],
   userProfiles: [],
+  isApproved: false,
+  isRejected: false,
   isLoading: false,
   error: null,
 };
@@ -41,20 +43,19 @@ const adminUserManagementSlice = createSlice({
       // ===== User Wait-list Request in HOMEPAGE =====
       // ====================================================
       .addCase(adminUserList.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
+        state.users.isLoading = true;
+        state.users.error = null;
       })
       .addCase(adminUserList.fulfilled, (state, action) => {
-        console.log("adminUserList payload:", action.payload);
-        state.isLoading = false;
+        state.users.isLoading = false;
         state.users.list = action.payload.users;
         state.users.stats = action.payload.stats;
         state.users.pagination = action.payload.pagination;
-        state.error = null;
+        state.users.error = null;
       })
       .addCase(adminUserList.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
+        state.users.isLoading = false;
+        state.users.error = action.payload;
       })
 
       //======================================================
@@ -83,10 +84,24 @@ const adminUserManagementSlice = createSlice({
       })
       .addCase(adminApprove.fulfilled, (state, action) => {
         state.isApproved = false;
-        state.users = state.users.filter(
-          (user) => user.id !== action.payload.id,
-        );
-        toast.success("User approved!");
+
+        const userId =
+          action.payload.data?.userId ||
+          action.payload.userId ||
+          action.payload.data?.user?.id ||
+          action.payload.user?.id ||
+          action.meta.arg.user_id;
+
+        if (userId) {
+          state.users.list = state.users.list.filter(
+            (user) => user.id !== userId,
+          );
+        }
+        // Update pagination total if available
+        if (state.users.pagination?.total) {
+          state.users.pagination.total = state.users.pagination.total - 1;
+        }
+        toast.success("User approved successfully!");
         state.error = null;
       })
       .addCase(adminApprove.rejected, (state, action) => {
@@ -104,10 +119,24 @@ const adminUserManagementSlice = createSlice({
       })
       .addCase(adminReject.fulfilled, (state, action) => {
         state.isRejected = false;
-        state.users = state.users.filter(
-          (user) => user.id !== action.payload.id,
-        );
-        toast.success("User rejected!");
+        // Get user ID from multiple possible sources
+        const userId =
+          action.payload.data?.userId ||
+          action.payload.userId ||
+          action.payload.data?.user?.id ||
+          action.payload.user?.id ||
+          action.meta.arg.user_id;
+
+        if (userId) {
+          state.users.list = state.users.list.filter(
+            (user) => user.id !== userId,
+          );
+        }
+        // Update pagination total if available
+        if (state.users.pagination?.total) {
+          state.users.pagination.total = state.users.pagination.total - 1;
+        }
+        toast.success("User rejected successfully!");
         state.error = null;
       })
       .addCase(adminReject.rejected, (state, action) => {

@@ -13,7 +13,6 @@ export const adminUserList = createAsyncThunk(
         status,
       });
 
-      console.log("adminUserList response:", res);
       return res;
     } catch (err) {
       return rejectWithValue(

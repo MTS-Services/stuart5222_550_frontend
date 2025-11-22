@@ -41,8 +41,8 @@ const AllUsersView = () => {
   return (
     <div className="p-4 md:p-8 lg:p-12">
       <Overviews />
-      <div className="mt-8 flex items-center justify-between">
-        <h2 className="my-3 font-raleway text-[28px] font-semibold text-black sm:my-4 md:my-5 lg:my-6 xl:my-7">
+      <div className="my-8 flex items-center justify-between">
+        <h2 className="font-raleway text-2xl font-semibold uppercase text-[#002244]">
           All Users
         </h2>
 
@@ -75,7 +75,7 @@ const AllUsersView = () => {
         <table className="w-full text-left">
           <thead className="border-b bg-gray-100">
             <tr>
-              <th className="p-3">#</th>
+              <th className="p-3 text-center">#</th>
               <th className="p-3">Name</th>
               <th className="p-3">Email</th>
               <th className="p-3">Date</th>
@@ -99,7 +99,7 @@ const AllUsersView = () => {
             ) : (
               allUsers.map((u, idx) => (
                 <tr key={u.id} className="border-b hover:bg-gray-50">
-                  <td className="p-3">{idx + 1}</td>
+                  <td className="p-3 text-center">{idx + 1}</td>
                   <td className="p-3">{u.displayName}</td>
                   <td className="p-3">{u.email}</td>
                   <td className="p-3">{formatDate(u.createdAt)}</td>
