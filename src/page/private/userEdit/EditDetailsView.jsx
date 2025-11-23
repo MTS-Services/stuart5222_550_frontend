@@ -1,38 +1,26 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-// import {
-//   adminUserApprovedProfile,
-//   adminUserRejectedProfile,
-// } from "../../../features/admin/management/usreFetch";
-import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import QRCard from "../../../components/common/QRCard";
+
 import {
   shouldShowTravelMode,
   formatTravelDate,
 } from "../../../utils/travelMode";
-// import CustomModal from "../../../components/common/CustomModal";
-// import { formatDate } from "../../../utils/formatDate";
+
 import { getUserQRcode } from "../../../features/admin/home/dashboardFetch";
-import {
-  FaPowerOff,
-  FaRegCalendar,
-  FaChevronDown,
-  FaChevronUp,
-} from "react-icons/fa";
+import { FaRegCalendar } from "react-icons/fa";
 import { GrLocation } from "react-icons/gr";
 
 const EditDetailsView = () => {
   const dispatch = useDispatch();
   const { userId } = useParams();
   const { qrCodeList, isQrLoading } = useSelector((state) => state.dashboard);
-  const { approved_list, isLoading, error } = useSelector(
-    (state) => state.adminUsers,
+  const { list, isLoading, error } = useSelector(
+    (state) => state.adminUsers.verified,
   );
 
-  const user = approved_list.find((u) => u.id === Number(userId));
-
-  // const [loading, setLoading] = useState({ approve: false, reject: false });
-  // const [rejectionReason, setRejectionReason] = useState("");
+  const user = list.find((u) => u.id === Number(userId));
 
   const user_email = user?.email;
 
@@ -61,55 +49,6 @@ const EditDetailsView = () => {
     startDate,
     endDate,
   } = user;
-
-  // // ✅ Approve
-  // const handleApprove = async () => {
-  //   setLoading({ approve: true, reject: false });
-  //   try {
-  //     await dispatch(adminUserApprovedProfile({ id: user.id })).unwrap();
-  //     toast.success("User approved!");
-  //     // Redirect to user-edit after successful approval
-  //     setTimeout(() => {
-  //       navigate("/admin/user-edit");
-  //     }, 1000);
-  //   } catch (err) {
-  //     toast.error(err.message || "Approval failed");
-  //   } finally {
-  //     setLoading({ approve: false, reject: false });
-  //   }
-  // };
-
-  // // ❌ Reject
-  // const handleReject = async () => {
-  //   if (!rejectionReason.trim()) {
-  //     toast.error("Please enter a rejection reason");
-  //     return;
-  //   }
-
-  //   setLoading({ approve: false, reject: true });
-  //   try {
-  //     await dispatch(
-  //       adminUserRejectedProfile({
-  //         id: user.id,
-  //         reason: rejectionReason.trim(),
-  //       }),
-  //     ).unwrap();
-  //     toast.success("User rejected!");
-  //     setRejectionReason(""); // clear after success
-  //     // Redirect to user-edit after successful rejection
-  //     setTimeout(() => {
-  //       navigate("/admin/user-edit");
-  //     }, 1000);
-  //   } catch (err) {
-  //     toast.error(err.message || "Rejection failed");
-  //   } finally {
-  //     setLoading({ approve: false, reject: false });
-  //   }
-  // };
-
-  // const handleCencel = () => {
-  //   navigate(-1);
-  // };
 
   return (
     <div className="space-y-10 p-10 font-raleway text-black">
