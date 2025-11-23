@@ -55,10 +55,7 @@ const ResetPassword = () => {
     } catch (error) {
       setError(error);
       console.error("Error resetting password:", error);
-      toast.error(
-        error.response?.data?.message ||
-          "Failed to reset password. The link may be invalid or expired.",
-      );
+      toast.error(error.response?.data?.message || "Failed to reset password!");
     } finally {
       setLoading(false);
     }
@@ -78,7 +75,9 @@ const ResetPassword = () => {
           </div>
           <div className="mb-8 text-center">
             <h2 className="mb-2 text-3xl font-bold">Reset Password</h2>
-            <p className="text-gray-700">Enter your new password below</p>
+            <p className="mb-2 inline-block rounded-full bg-slate-100 px-3 py-1 font-medium text-slate-500">
+              {user_email}
+            </p>
           </div>
 
           {/* Form */}
@@ -221,8 +220,8 @@ const ResetPassword = () => {
           </form>
 
           {error && (
-            <div className="mt-4 text-red-600">
-              {error.message || "An error occurred. Please try again."}
+            <div className="mt-4 text-center text-red-600">
+              {error || "An error occurred. Please try again."}
             </div>
           )}
 

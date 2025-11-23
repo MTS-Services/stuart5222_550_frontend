@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Upload } from "lucide-react";
 import { toast } from "react-toastify";
 import { FaCamera } from "react-icons/fa";
@@ -23,6 +23,8 @@ const SetupProfileView = () => {
   const { email } = useParams();
   const dispatch = useDispatch();
 
+  const { user } = useSelector((state) => state.auth);
+  console.log("user:", user);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [success, setSuccess] = useState(false);
@@ -84,33 +86,36 @@ const SetupProfileView = () => {
     const newPreviews = filesToAdd.map((file) => URL.createObjectURL(file));
     const updatedPreviews = [...imagePreviews, ...newPreviews];
     setImagePreviews(updatedPreviews);
-    
+
     // Generate unique IDs for new images
     const newIds = filesToAdd.map(() => Date.now() + Math.random());
     const updatedIds = [...imageIds, ...newIds];
     setImageIds(updatedIds);
-    
+
     // Ensure arrays are synchronized
-    if (updatedFiles.length !== updatedPreviews.length || updatedFiles.length !== updatedIds.length) {
-      console.error('Arrays out of sync:', {
+    if (
+      updatedFiles.length !== updatedPreviews.length ||
+      updatedFiles.length !== updatedIds.length
+    ) {
+      console.error("Arrays out of sync:", {
         filesLength: updatedFiles.length,
         previewsLength: updatedPreviews.length,
-        idsLength: updatedIds.length
+        idsLength: updatedIds.length,
       });
     }
-    
+
     // Show success message for successfully added files
     // if (filesToAdd.length > 0) {
     //   toast.success(`${filesToAdd.length} image${filesToAdd.length > 1 ? "s" : ""} uploaded successfully!`);
     // }
-    
+
     e.target.value = "";
   };
 
   const removeImage = (index) => {
     // Validate index bounds
     if (index < 0 || index >= files.length || index >= imagePreviews.length) {
-      console.error('Invalid index for image removal:', index);
+      console.error("Invalid index for image removal:", index);
       return;
     }
 
@@ -123,11 +128,11 @@ const SetupProfileView = () => {
     const newFiles = [...files];
     const newPreviews = [...imagePreviews];
     const newIds = [...imageIds];
-    
+
     newFiles.splice(index, 1);
     newPreviews.splice(index, 1);
     newIds.splice(index, 1);
-    
+
     setFiles(newFiles);
     setImagePreviews(newPreviews);
     setImageIds(newIds);
@@ -155,14 +160,14 @@ const SetupProfileView = () => {
     );
 
     const formData = {
-      displayName: form.firstName.value,
+      displayName: user.name || form.displayName.value,
       birthMonth: birthMonth,
       birthYear: birthYear,
       age: calculatedAge, // Store calculated age for backward compatibility
       height: heightString,
       bodyType: form.bodyType.value,
       county: county,
-      bio: form.textArea.value,
+      bio: form.bio.value,
       dealbreakers: form.dealBreaks.value,
       startDate: form.startDate.value || null,
       endDate: form.endDate.value || null,
@@ -175,7 +180,7 @@ const SetupProfileView = () => {
     const validationErrors = validateForm(formData, files);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      toast.warn("Please fix all errors before submitting");
+      toast.warn("Required fields are missing!");
       return;
     }
 
@@ -237,13 +242,16 @@ const SetupProfileView = () => {
 
   // Ensure files and previews arrays stay synchronized
   useEffect(() => {
-    if (files.length !== imagePreviews.length || files.length !== imageIds.length) {
-      console.warn('⚠️ Arrays are out of sync:', {
+    if (
+      files.length !== imagePreviews.length ||
+      files.length !== imageIds.length
+    ) {
+      console.warn("⚠️ Arrays are out of sync:", {
         filesLength: files.length,
         previewsLength: imagePreviews.length,
         idsLength: imageIds.length,
-        files: files.map(f => f.name),
-        previews: imagePreviews.length
+        files: files.map((f) => f.name),
+        previews: imagePreviews.length,
       });
     }
   }, [files, imagePreviews, imageIds]);
@@ -296,15 +304,14 @@ const SetupProfileView = () => {
 
               <input
                 type="text"
-                name="firstName"
-                placeholder="Enter Display Name"
-                className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
-                  errors.firstName ? "border-red-500" : "border-gray-500"
-                } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
+                name="displayName"
+                disabled={user.name}
+                placeholder={`${user.name || "Enter your name"}`}
+                className={`h-11 rounded-lg border bg-transparent px-3 text-sm font-medium text-white outline-none placeholder:text-gray-400 focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
 
-              {errors.firstName && (
-                <p className="text-sm text-red-500">{errors.firstName}</p>
+              {errors.displayName && (
+                <p className="text-sm text-red-500">{errors.displayName}</p>
               )}
             </div>
 
@@ -370,14 +377,14 @@ const SetupProfileView = () => {
               </label>
               <textarea
                 rows="5"
-                name="textArea"
+                name="bio"
                 placeholder="Write your message here..."
                 className={`max-h-[265px] min-h-[265px] w-full border bg-transparent px-3 pt-1 text-white placeholder:text-gray-400 ${
-                  errors.textArea ? "border-red-500" : "border-gray-500"
+                  errors.bio ? "border-red-500" : "border-gray-500"
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
-              {errors.textArea && (
-                <p className="text-sm text-red-500">{errors.textArea}</p>
+              {errors.bio && (
+                <p className="text-sm text-red-500">{errors.bio}</p>
               )}
             </div>
           </div>
@@ -485,15 +492,15 @@ const SetupProfileView = () => {
                         : "Need more images"}
                     </span>
                   </div>
-                  
+
                   {/* Dynamic Upload Message */}
                   <div className="mt-2 text-center">
                     <span className="font-raleway text-xs text-gray-600">
-                      {files.length === 0 
-                        ? "You can upload up to 13 images" 
-                        : files.length === 13 
-                        ? "Maximum images reached" 
-                        : `You can upload ${13 - files.length} more image${13 - files.length > 1 ? 's' : ''}`}
+                      {files.length === 0
+                        ? "You can upload up to 13 images"
+                        : files.length === 13
+                          ? "Maximum images reached"
+                          : `You can upload ${13 - files.length} more image${13 - files.length > 1 ? "s" : ""}`}
                     </span>
                   </div>
                 </div>
@@ -513,7 +520,10 @@ const SetupProfileView = () => {
                   <div className="mt-4 w-full">
                     <div className="mb-4 grid grid-cols-3 gap-3">
                       {imagePreviews.map((preview, idx) => (
-                        <div key={imageIds[idx] || idx} className="group relative">
+                        <div
+                          key={imageIds[idx] || idx}
+                          className="group relative"
+                        >
                           <img
                             src={preview}
                             alt={`Preview ${idx + 1}`}
@@ -664,7 +674,7 @@ const SetupProfileView = () => {
                 )}
               </div>
 
-              <div className="my-4 md:my-8">
+              <div className="my-4 flex items-center justify-center">
                 <h2 className="text-center font-raleway text-base font-semibold">
                   and/or
                 </h2>
