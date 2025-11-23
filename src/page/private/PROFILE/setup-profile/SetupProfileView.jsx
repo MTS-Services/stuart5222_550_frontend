@@ -28,6 +28,7 @@ const SetupProfileView = () => {
   const [success, setSuccess] = useState(false);
   const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
+  const [imageIds, setImageIds] = useState([]); // Track unique IDs for each image
   const [birthMonth, setBirthMonth] = useState(null);
   const [birthYear, setBirthYear] = useState(null);
   const [county, setCounty] = useState("");
@@ -47,41 +48,89 @@ const SetupProfileView = () => {
     const totalCurrentImages = files.length;
     const maxNewFiles = 13 - totalCurrentImages;
 
-    if (selectedFiles.length > maxNewFiles) {
-      toast.warn(
-        `You can only upload ${maxNewFiles} more image${maxNewFiles > 1 ? "s" : ""} (you already have ${totalCurrentImages})`,
-      );
-      return;
-    }
-
+    // Filter out non-image files first
     const validFiles = selectedFiles.filter((file) =>
       file.type.startsWith("image/"),
     );
 
     if (validFiles.length !== selectedFiles.length) {
-      toast.warn("Please upload only image files");
+      toast.warn("Some files were skipped - please upload only image files");
+    }
+
+    // If no valid files, return early
+    if (validFiles.length === 0) {
+      e.target.value = "";
       return;
     }
 
-    // Add new files to the existing files array instead of replacing
-    setFiles((prevFiles) => [...prevFiles, ...validFiles]);
+    // If selecting more files than allowed, take only the allowed number
+    let filesToAdd = validFiles;
+    if (validFiles.length > maxNewFiles) {
+      filesToAdd = validFiles.slice(0, maxNewFiles);
+      if (maxNewFiles === 0) {
+        toast.warn("You have already reached the maximum of 13 images");
+      } else {
+        toast.warn(
+          `Only ${maxNewFiles} of ${validFiles.length} image${validFiles.length > 1 ? "s" : ""} added. Maximum 13 images allowed.`,
+        );
+      }
+    }
+
+    // Add new files to the existing files array
+    const updatedFiles = [...files, ...filesToAdd];
+    setFiles(updatedFiles);
 
     // Create previews for new files and add to existing previews
-    const newPreviews = validFiles.map((file) => URL.createObjectURL(file));
-    setImagePreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
+    const newPreviews = filesToAdd.map((file) => URL.createObjectURL(file));
+    const updatedPreviews = [...imagePreviews, ...newPreviews];
+    setImagePreviews(updatedPreviews);
+    
+    // Generate unique IDs for new images
+    const newIds = filesToAdd.map(() => Date.now() + Math.random());
+    const updatedIds = [...imageIds, ...newIds];
+    setImageIds(updatedIds);
+    
+    // Ensure arrays are synchronized
+    if (updatedFiles.length !== updatedPreviews.length || updatedFiles.length !== updatedIds.length) {
+      console.error('Arrays out of sync:', {
+        filesLength: updatedFiles.length,
+        previewsLength: updatedPreviews.length,
+        idsLength: updatedIds.length
+      });
+    }
+    
+    // Show success message for successfully added files
+    // if (filesToAdd.length > 0) {
+    //   toast.success(`${filesToAdd.length} image${filesToAdd.length > 1 ? "s" : ""} uploaded successfully!`);
+    // }
+    
     e.target.value = "";
   };
 
   const removeImage = (index) => {
+    // Validate index bounds
+    if (index < 0 || index >= files.length || index >= imagePreviews.length) {
+      console.error('Invalid index for image removal:', index);
+      return;
+    }
+
     // Revoke the object URL to free memory before removing
     if (imagePreviews[index]) {
       URL.revokeObjectURL(imagePreviews[index]);
     }
 
-    const newFiles = files.filter((_, i) => i !== index);
-    const newPreviews = imagePreviews.filter((_, i) => i !== index);
+    // Create new arrays without the item at the specified index
+    const newFiles = [...files];
+    const newPreviews = [...imagePreviews];
+    const newIds = [...imageIds];
+    
+    newFiles.splice(index, 1);
+    newPreviews.splice(index, 1);
+    newIds.splice(index, 1);
+    
     setFiles(newFiles);
     setImagePreviews(newPreviews);
+    setImageIds(newIds);
   };
 
   const handleClick = () => {
@@ -171,6 +220,7 @@ const SetupProfileView = () => {
       setSuccess(true);
       setImagePreviews([]);
       setFiles([]);
+      setImageIds([]);
     } catch (err) {
       toast.error(err || "❌ Failed to submit profile. Please try again.");
     } finally {
@@ -184,6 +234,19 @@ const SetupProfileView = () => {
       imagePreviews.forEach((preview) => URL.revokeObjectURL(preview));
     };
   }, [imagePreviews]);
+
+  // Ensure files and previews arrays stay synchronized
+  useEffect(() => {
+    if (files.length !== imagePreviews.length || files.length !== imageIds.length) {
+      console.warn('⚠️ Arrays are out of sync:', {
+        filesLength: files.length,
+        previewsLength: imagePreviews.length,
+        idsLength: imageIds.length,
+        files: files.map(f => f.name),
+        previews: imagePreviews.length
+      });
+    }
+  }, [files, imagePreviews, imageIds]);
 
   if (success) {
     return (
@@ -422,6 +485,17 @@ const SetupProfileView = () => {
                         : "Need more images"}
                     </span>
                   </div>
+                  
+                  {/* Dynamic Upload Message */}
+                  <div className="mt-2 text-center">
+                    <span className="font-raleway text-xs text-gray-600">
+                      {files.length === 0 
+                        ? "You can upload up to 13 images" 
+                        : files.length === 13 
+                        ? "Maximum images reached" 
+                        : `You can upload ${13 - files.length} more image${13 - files.length > 1 ? 's' : ''}`}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Hidden File Input */}
@@ -439,7 +513,7 @@ const SetupProfileView = () => {
                   <div className="mt-4 w-full">
                     <div className="mb-4 grid grid-cols-3 gap-3">
                       {imagePreviews.map((preview, idx) => (
-                        <div key={idx} className="group relative">
+                        <div key={imageIds[idx] || idx} className="group relative">
                           <img
                             src={preview}
                             alt={`Preview ${idx + 1}`}
