@@ -29,7 +29,6 @@ const EditProfileView = () => {
   const [files, setFiles] = useState([]); // New files to upload
   const [existingImages, setExistingImages] = useState([]); // Existing images from profile
   const [deletedImageUrls, setDeletedImageUrls] = useState([]); // Track deleted
-
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const openTermsModal = () => setIsTermsModalOpen(true);
   const closeTermsModal = () => setIsTermsModalOpen(false);
@@ -177,6 +176,7 @@ const EditProfileView = () => {
     );
 
     const formData = {
+      email: email,
       displayName: form.firstName.value,
       birthMonth: birthMonth,
       birthYear: birthYear,
@@ -189,7 +189,6 @@ const EditProfileView = () => {
       startDate: form.startDate.value || null,
       endDate: form.endDate.value || null,
       location: form.location.value,
-      email: email,
       phone: form.number.value || null,
       gmail: form.gmail.value || null,
     };
@@ -202,7 +201,7 @@ const EditProfileView = () => {
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      toast.warn("Please fix all errors before submitting");
+      toast.warn("Required fields are missing!");
       return;
     }
 
@@ -412,12 +411,12 @@ const EditProfileView = () => {
                 placeholder="Enter Display Name"
                 defaultValue={profileData?.displayName || ""}
                 className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
-                  errors.firstName ? "border-red-500" : "border-gray-500"
+                  errors.displayName ? "border-red-500" : "border-gray-500"
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
-              {errors.firstName && (
+              {errors.displayName && (
                 <p className="font-raleway text-sm text-red-500">
-                  {errors.firstName}
+                  {errors.displayName}
                 </p>
               )}
             </div>
@@ -502,12 +501,12 @@ const EditProfileView = () => {
                 placeholder="Write your message here..."
                 defaultValue={profileData?.bio || ""}
                 className={`max-h-[265px] min-h-[265px] w-full border bg-transparent px-3 pt-1 text-white placeholder:text-gray-400 ${
-                  errors.textArea ? "border-red-500" : "border-gray-500"
+                  errors.bio ? "border-red-500" : "border-gray-500"
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
-              {errors.textArea && (
+              {errors.bio && (
                 <p className="font-raleway text-sm text-red-500">
-                  {errors.textArea}
+                  {errors.bio}
                 </p>
               )}
             </div>
