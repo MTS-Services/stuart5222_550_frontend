@@ -89,7 +89,7 @@ export const UserVerifiedProfile = createAsyncThunk(
         page,
         limit,
         status,
-        username,
+        username: username,
       });
 
       return res;
