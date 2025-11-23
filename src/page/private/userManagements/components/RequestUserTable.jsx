@@ -270,8 +270,8 @@ export const RequestUserTable = () => {
           {processedList.length > 0 && (
             <div className="mt-8 flex items-center justify-between gap-2 font-raleway text-base font-normal text-gray-600 md:gap-0">
               <p className="font-raleway">
-                Showing {startIndex + 1} to {startIndex + currentData.length} of{" "}
-                {processedList.length} results
+                Showing {startIndex + currentData.length} of{" "}
+                {processedList.length} entries
               </p>
               <div className="flex gap-4 sm:gap-5 md:gap-6 lg:gap-7">
                 <button

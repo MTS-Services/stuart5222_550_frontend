@@ -5,7 +5,7 @@ import { UserVerifiedProfile } from "../../../features/admin/management/usreFetc
 
 const UserEditView = () => {
   const dispatch = useDispatch();
-  const { list, isLoading, error, pagination } = useSelector(
+  const { list, isLoading, error, pagination, stats } = useSelector(
     (state) => state.adminUsers.verified,
   );
 
@@ -20,26 +20,41 @@ const UserEditView = () => {
       UserVerifiedProfile({
         page: page,
         limit: limit,
-        status: "VERIFIED",
-        username: "final",
+        status: "APPROVED",
+        username: searchQuery || undefined,
       }),
     );
   }, [dispatch, page, limit, searchQuery]);
 
+  // Reset to page 1 when search query changes
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery]);
+
   const hasPrevPage = pagination?.currentPage > 1;
   const hasNextPage = pagination?.currentPage < pagination?.totalPages;
 
-  // Real-time search: typing triggers filtering immediately
+  // Real-time search with debounce
   const handleInputChange = (value) => {
-    console.log();
     setSearchInput(value);
-    setSearchQuery(value);
+  };
+
+  // Set search query (triggers API call)
+  const handleSearch = () => {
+    setSearchQuery(searchInput);
   };
 
   // Clear search
   const handleClearSearch = () => {
     setSearchInput("");
     setSearchQuery("");
+  };
+
+  // Handle Enter key for search
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   return (
@@ -56,19 +71,14 @@ const UserEditView = () => {
             placeholder="Search user name"
             value={searchInput}
             onChange={(e) => handleInputChange(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") setSearchQuery(searchInput);
-            }}
+            onKeyDown={handleKeyDown}
             className="dark:bg-border-200 h-12 w-full rounded-full border border-[#F07400] p-4 shadow outline-none focus:border-[#F07400] focus:ring-1 focus:ring-[#eb9d54] dark:border-white dark:text-gray-800"
           />
 
           <button
             type="button"
             className="absolute right-3 top-3.5"
-            onClick={() => {
-              if (searchQuery) handleClearSearch();
-              else setSearchQuery(searchInput);
-            }}
+            onClick={searchQuery ? handleClearSearch : handleSearch}
           >
             {searchQuery ? (
               <svg
@@ -103,30 +113,31 @@ const UserEditView = () => {
       {/* Pagination */}
       <div className="mt-4 flex items-center justify-between">
         <div>
-          Showing {list.length} of {pagination?.totalCount} entries
+          Showing {list.length} of{" "}
+          {pagination?.totalItems || stats?.approved || 0} entries
         </div>
 
         <div className="flex items-center gap-4">
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={!hasPrevPage}
-            className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
+            disabled={!hasPrevPage || isLoading}
+            className="rounded-xl border px-4 py-1.5 font-raleway md:px-5 md:py-2"
           >
             Prev
           </button>
 
           <span className="text-sm text-gray-700">
-            Page {pagination?.currentPage} of {pagination?.totalPages}
+            Page {pagination?.currentPage || 1} of {pagination?.totalPages || 1}
           </span>
 
           <button
             onClick={() =>
               setPage((p) =>
-                hasNextPage ? Math.min(pagination.totalPages, p + 1) : p,
+                hasNextPage ? Math.min(pagination?.totalPages || 1, p + 1) : p,
               )
             }
-            disabled={!hasNextPage}
-            className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
+            disabled={!hasNextPage || isLoading}
+            className="rounded-xl border px-4 py-1.5 font-raleway md:px-5 md:py-2"
           >
             Next
           </button>

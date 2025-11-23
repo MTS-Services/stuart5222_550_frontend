@@ -20,11 +20,9 @@ import { endpoints } from "../../../../config/api/httpEndpoint";
 import CustomModal from "../../../../components/common/CustomModal";
 
 const SetupProfileView = () => {
-  const { email } = useParams();
   const dispatch = useDispatch();
-
+  const { email } = useParams();
   const { user } = useSelector((state) => state.auth);
-  console.log("user:", user);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [success, setSuccess] = useState(false);
