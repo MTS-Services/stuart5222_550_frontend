@@ -9,18 +9,19 @@ import { formatDate } from "../../../utils/formatDate";
 
 const AllUsersView = () => {
   const dispatch = useDispatch();
+
   const [status, setStatus] = useState("ALL");
   const [search, setSearch] = useState("");
   const { allUsers, isLoading, error, pagination } = useSelector(
-    (state) => state.userList,
+    (state) => state.adminUser,
   );
 
   const [page, setPage] = useState(1);
   const limit = 10;
 
   useEffect(() => {
-    dispatch(allUserList({ page, limit, status: status }));
-  }, [dispatch, page, status]);
+    dispatch(varified({ page, limit, status: status, username: search }));
+  }, [dispatch, page, status, search]);
 
   const getStatusColor = (status) => {
     switch (status) {
