@@ -1,15 +1,37 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { UserEditTable } from "./components/UserEditTable";
-import { adminUserVerifiedProfile } from "../../../features/admin/management/usreFetch";
+import { UserVerifiedProfile } from "../../../features/admin/management/usreFetch";
 
 const UserEditView = () => {
+  const dispatch = useDispatch();
+  const { list, isLoading, error, pagination } = useSelector(
+    (state) => state.adminUsers.verified,
+  );
+
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const dispatch = useDispatch();
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
+  // Fetch verified profiles on page, limit, or searchQuery change
+  useEffect(() => {
+    dispatch(
+      UserVerifiedProfile({
+        page: page,
+        limit: limit,
+        status: "VERIFIED",
+        username: "final",
+      }),
+    );
+  }, [dispatch, page, limit, searchQuery]);
+
+  const hasPrevPage = pagination?.currentPage > 1;
+  const hasNextPage = pagination?.currentPage < pagination?.totalPages;
 
   // Real-time search: typing triggers filtering immediately
   const handleInputChange = (value) => {
+    console.log();
     setSearchInput(value);
     setSearchQuery(value);
   };
@@ -20,17 +42,11 @@ const UserEditView = () => {
     setSearchQuery("");
   };
 
-  useEffect(() => {
-    dispatch(
-      adminUserVerifiedProfile({ page: 1, limit: 50, status: "APPROVED" }),
-    );
-  }, [dispatch]);
-
   return (
     <div className="font-raleway text-black md:p-8">
       <div className="mb-6 flex items-center justify-between">
         <h2 className="font-raleway text-2xl font-semibold uppercase text-[#002244]">
-          All Profile list {}
+          All Profile list
         </h2>
 
         {/* Search Field */}
@@ -82,7 +98,40 @@ const UserEditView = () => {
       </div>
 
       {/* Table */}
-      <UserEditTable searchQuery={searchQuery} />
+      <UserEditTable list={list} isLoading={isLoading} error={error} />
+
+      {/* Pagination */}
+      <div className="mt-4 flex items-center justify-between">
+        <div>
+          Showing {list.length} of {pagination?.totalCount} entries
+        </div>
+
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={!hasPrevPage}
+            className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
+          >
+            Prev
+          </button>
+
+          <span className="text-sm text-gray-700">
+            Page {pagination?.currentPage} of {pagination?.totalPages}
+          </span>
+
+          <button
+            onClick={() =>
+              setPage((p) =>
+                hasNextPage ? Math.min(pagination.totalPages, p + 1) : p,
+              )
+            }
+            disabled={!hasNextPage}
+            className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

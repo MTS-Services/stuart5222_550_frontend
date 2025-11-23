@@ -1,47 +1,7 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { AllTableResponsiveStyle } from "../../../../components/AllTableResponsiveStyle/AllTableResponsiveStyle";
 import { formatDate } from "../../../../utils/formatDate";
 
-export const UserEditTable = ({ searchQuery }) => {
-  const { approved_list, isLoading, error } = useSelector(
-    (state) => state.adminUsers,
-  );
-
-  // ✅ Pagination setup
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 50;
-
-  // ✅ Filter users by searchQuery
-  const filteredUsers = approved_list.filter(
-    (user) =>
-      user.user.name.toLowerCase().includes(searchQuery?.toLowerCase() || "") ||
-      user.user.email.toLowerCase().includes(searchQuery?.toLowerCase() || ""),
-  );
-
-  // ✅ Calculate pagination values
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentData = filteredUsers.slice(
-    startIndex,
-    startIndex + itemsPerPage,
-  );
-
-  // ✅ Reset page if search query changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery]);
-
-  // ✅ Pagination handlers
-  const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-  };
-
+export const UserEditTable = ({ list, isLoading, error }) => {
   return (
     <div className="font-raleway">
       <div className="relative overflow-x-auto md:overflow-x-visible">
@@ -54,7 +14,7 @@ export const UserEditTable = ({ searchQuery }) => {
           </div>
         ) : error ? (
           <p className="py-10 text-center text-red-500">{error}</p>
-        ) : currentData.length === 0 ? (
+        ) : list.length === 0 ? (
           <p className="py-10 text-center text-gray-500">No data found.</p>
         ) : (
           <table className="min-w-full table-fixed text-left text-xs sm:text-sm md:text-base">
@@ -80,8 +40,9 @@ export const UserEditTable = ({ searchQuery }) => {
                 </th>
               </tr>
             </thead>
+
             <tbody className="text-base font-normal text-black">
-              {currentData.map((row, index) => (
+              {list.map((row, index) => (
                 <tr
                   key={index}
                   className={index % 2 === 0 ? "bg-yellow-50" : "bg-white"}
@@ -114,34 +75,6 @@ export const UserEditTable = ({ searchQuery }) => {
           </table>
         )}
       </div>
-
-      <AllTableResponsiveStyle />
-
-      {/* 📄 Pagination */}
-      {filteredUsers.length > 0 && (
-        <div className="mt-8 flex items-center justify-between gap-2 font-poppins text-sm font-normal text-gray-600 md:gap-0 md:text-base">
-          <p className="font-raleway">
-            Showing {approved_list.length} to {approved_list.length} of{" "}
-            {approved_list.length} results
-          </p>
-          <div className="flex gap-4 sm:gap-5 md:gap-6 lg:gap-7">
-            <button
-              className="rounded-xl border border-gray-600 px-4 py-1.5 font-raleway disabled:cursor-not-allowed disabled:opacity-50 md:px-5 md:py-2"
-              onClick={handlePrevious}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </button>
-            <button
-              className="rounded-xl border border-gray-600 px-4 py-1.5 font-raleway disabled:cursor-not-allowed disabled:opacity-50 md:px-5 md:py-2"
-              onClick={handleNext}
-              disabled={currentPage === totalPages || totalPages === 0}
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

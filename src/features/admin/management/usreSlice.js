@@ -6,7 +6,7 @@ import {
   adminApprove,
   adminUserList,
   adminUserDraftProfile,
-  adminUserVerifiedProfile,
+  UserVerifiedProfile,
   adminUserDetailsProfiles,
   adminUserApprovedProfile,
   adminUserRejectedProfile,
@@ -21,6 +21,13 @@ const initialState = {
     error: null,
   },
   approved_list: [],
+  verified: {
+    list: [],
+    stats: {},
+    pagination: {},
+    isLoading: false,
+    error: null,
+  },
   drafts_list: [],
   userProfiles: [],
   isApproved: false,
@@ -76,7 +83,7 @@ const adminUserManagementSlice = createSlice({
       })
 
       //======================================================
-      // ===== User APPROVED Request in HOMEPAGE =====
+      // ===== User APPROVED REQUEST IN HOMEPAGE =====
       // ====================================================
       .addCase(adminApprove.pending, (state) => {
         state.isApproved = true;
@@ -205,20 +212,22 @@ const adminUserManagementSlice = createSlice({
       })
 
       // ======================================================
-      // ===== User Profile Request in HOMEPAGE =====
+      // ===== ✅ User Verified Profile =====
       // ======================================================
-      .addCase(adminUserVerifiedProfile.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
+      .addCase(UserVerifiedProfile.pending, (state) => {
+        state.verified.isLoading = true;
+        state.verified.error = null;
       })
-      .addCase(adminUserVerifiedProfile.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.approved_list = action.payload.profiles;
-        state.error = null;
+      .addCase(UserVerifiedProfile.fulfilled, (state, action) => {
+        state.verified.isLoading = false;
+        state.verified.list = action.payload.profiles;
+        state.verified.stats = action.payload.stats;
+        state.verified.pagination = action.payload.pagination;
+        state.verified.error = null;
       })
-      .addCase(adminUserVerifiedProfile.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload;
+      .addCase(UserVerifiedProfile.rejected, (state, action) => {
+        state.verified.isLoading = false;
+        state.verified.error = action.payload;
       })
 
       // ===================================

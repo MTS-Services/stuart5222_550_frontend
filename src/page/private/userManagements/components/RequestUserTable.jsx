@@ -135,14 +135,14 @@ export const RequestUserTable = () => {
                   <th className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
                     Email
                   </th>
-                  <th className="w-1/5 whitespace-nowrap px-7 py-3 font-raleway">
+                  <th className="w-1/5 whitespace-nowrap px-7 py-3 text-center font-raleway">
                     Date
                   </th>
                   <th className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
                     Status
                   </th>
 
-                  <th className="w-1/5 whitespace-nowrap px-5 py-3 text-center">
+                  <th className="w-1/5 whitespace-nowrap px-5 py-3 text-center font-raleway">
                     Action
                   </th>
                 </tr>
@@ -161,7 +161,7 @@ export const RequestUserTable = () => {
                       <td className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
                         {row.email}
                       </td>
-                      <td className="w-1/5 whitespace-nowrap px-7 py-3 font-raleway">
+                      <td className="w-1/5 whitespace-nowrap px-7 py-3 text-center font-raleway">
                         {formatDate(row.createdAt) || "—"}
                       </td>
                       <td className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
@@ -169,7 +169,7 @@ export const RequestUserTable = () => {
                       </td>
 
                       {row.status === "DRAFT" ? (
-                        <td className="flex items-center justify-center gap-3 whitespace-nowrap px-7 py-2.5">
+                        <td className="flex items-center justify-end gap-3 whitespace-nowrap px-7 py-2.5">
                           <Link to={`/admin/user-management/${row.id}`}>
                             <button className="whitespace-nowrap rounded-xl bg-[#F07400] px-4 py-2.5 font-raleway text-xs text-white hover:bg-[#af5500]">
                               See Details

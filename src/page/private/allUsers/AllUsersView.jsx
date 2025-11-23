@@ -14,6 +14,7 @@ const AllUsersView = () => {
   const { allUsers, isLoading, error, pagination } = useSelector(
     (state) => state.userList,
   );
+
   const [page, setPage] = useState(1);
   const limit = 10;
 
@@ -116,26 +117,31 @@ const AllUsersView = () => {
       </div>
 
       {/* Pagination */}
-      <div className="mt-4 flex items-center gap-3">
-        <button
-          onClick={() => setPage((p) => p - 1)}
-          disabled={!pagination?.hasPrevPage}
-          className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
-        >
-          Prev
-        </button>
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <div>
+          Showing {allUsers.length} of {pagination?.totalCount} entries
+        </div>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setPage((p) => p - 1)}
+            disabled={!pagination?.hasPrevPage}
+            className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
+          >
+            Prev
+          </button>
 
-        <span className="text-sm text-gray-700">
-          Page {pagination?.currentPage} of {pagination?.totalPages}
-        </span>
+          <span className="text-sm text-gray-700">
+            Page {pagination?.currentPage} of {pagination?.totalPages}
+          </span>
 
-        <button
-          onClick={() => setPage((p) => p + 1)}
-          disabled={!pagination?.hasNextPage}
-          className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
-        >
-          Next
-        </button>
+          <button
+            onClick={() => setPage((p) => p + 1)}
+            disabled={!pagination?.hasNextPage}
+            className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

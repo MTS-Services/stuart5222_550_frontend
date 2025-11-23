@@ -81,14 +81,17 @@ export const adminUserDetailsProfiles = createAsyncThunk(
 );
 
 // ========== GET APPROVED LIST AFTER SUBSCRIPTION ==========
-export const adminUserVerifiedProfile = createAsyncThunk(
-  "admin/adminUserVerifiedProfile",
-  async ({ page, limit, status }, { rejectWithValue }) => {
+export const UserVerifiedProfile = createAsyncThunk(
+  "admin/UserVerifiedProfile",
+  async ({ page, limit, status, username }, { rejectWithValue }) => {
     try {
       const res = await GET(endpoints.admin.VARIFIED_LIST, {
-        params: { page, limit, status },
+        page,
+        limit,
+        status,
+        username,
       });
-      console.log("Verified Profile:", res);
+
       return res;
     } catch (err) {
       return rejectWithValue(
