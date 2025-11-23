@@ -28,7 +28,7 @@ const SetupProfileView = () => {
   const [success, setSuccess] = useState(false);
   const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
-  const [imageIds, setImageIds] = useState([]); // Track unique IDs for each image
+  const [imageSlots, setImageSlots] = useState([]); // Array of objects: {file, preview, id, isEmpty}
   const [birthMonth, setBirthMonth] = useState(null);
   const [birthYear, setBirthYear] = useState(null);
   const [county, setCounty] = useState("");
@@ -45,13 +45,17 @@ const SetupProfileView = () => {
   // ============================================
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    const totalCurrentImages = files.length;
-    const maxNewFiles = 13 - totalCurrentImages;
+    const filledSlots = imageSlots.filter(slot => !slot.isEmpty).length;
+    const maxNewFiles = 13 - filledSlots;
 
-    // Filter out non-image files first
-    const validFiles = selectedFiles.filter((file) =>
-      file.type.startsWith("image/"),
-    );
+    // Filter out non-image files first and add HEIF support
+    const validFiles = selectedFiles.filter((file) => {
+      return file.type.startsWith("image/") || 
+             file.type === "image/heif" || 
+             file.type === "image/heic" ||
+             file.name.toLowerCase().endsWith('.heif') ||
+             file.name.toLowerCase().endsWith('.heic');
+    });
 
     if (validFiles.length !== selectedFiles.length) {
       toast.warn("Some files were skipped - please upload only image files");
@@ -76,64 +80,74 @@ const SetupProfileView = () => {
       }
     }
 
-    // Add new files to the existing files array
-    const updatedFiles = [...files, ...filesToAdd];
-    setFiles(updatedFiles);
+    const updatedSlots = [...imageSlots];
+    
+    filesToAdd.forEach((file) => {
+      // Find first empty slot or add new slot
+      let emptySlotIndex = updatedSlots.findIndex(slot => slot.isEmpty);
+      
+      const newSlot = {
+        file: file,
+        preview: URL.createObjectURL(file),
+        id: Date.now() + Math.random(),
+        isEmpty: false
+      };
+      
+      if (emptySlotIndex !== -1) {
+        // Fill empty slot
+        if (updatedSlots[emptySlotIndex].preview) {
+          URL.revokeObjectURL(updatedSlots[emptySlotIndex].preview);
+        }
+        updatedSlots[emptySlotIndex] = newSlot;
+      } else {
+        // Add new slot
+        updatedSlots.push(newSlot);
+      }
+    });
 
-    // Create previews for new files and add to existing previews
-    const newPreviews = filesToAdd.map((file) => URL.createObjectURL(file));
-    const updatedPreviews = [...imagePreviews, ...newPreviews];
-    setImagePreviews(updatedPreviews);
-
-    // Generate unique IDs for new images
-    const newIds = filesToAdd.map(() => Date.now() + Math.random());
-    const updatedIds = [...imageIds, ...newIds];
-    setImageIds(updatedIds);
-
-    // Ensure arrays are synchronized
-    if (
-      updatedFiles.length !== updatedPreviews.length ||
-      updatedFiles.length !== updatedIds.length
-    ) {
-      console.error("Arrays out of sync:", {
-        filesLength: updatedFiles.length,
-        previewsLength: updatedPreviews.length,
-        idsLength: updatedIds.length,
-      });
-    }
-
-    // Show success message for successfully added files
-    // if (filesToAdd.length > 0) {
-    //   toast.success(`${filesToAdd.length} image${filesToAdd.length > 1 ? "s" : ""} uploaded successfully!`);
-    // }
-
+    setImageSlots(updatedSlots);
+    
+    // Update legacy arrays for backward compatibility
+    const activeSlots = updatedSlots.filter(slot => !slot.isEmpty);
+    setFiles(activeSlots.map(slot => slot.file));
+    setImagePreviews(activeSlots.map(slot => slot.preview));
+    
     e.target.value = "";
   };
 
   const removeImage = (index) => {
     // Validate index bounds
-    if (index < 0 || index >= files.length || index >= imagePreviews.length) {
+    if (index < 0 || index >= imageSlots.length) {
       console.error("Invalid index for image removal:", index);
       return;
     }
 
-    // Revoke the object URL to free memory before removing
-    if (imagePreviews[index]) {
-      URL.revokeObjectURL(imagePreviews[index]);
+    const updatedSlots = [...imageSlots];
+    
+    // Revoke the object URL to free memory
+    if (updatedSlots[index].preview) {
+      URL.revokeObjectURL(updatedSlots[index].preview);
     }
-
-    // Create new arrays without the item at the specified index
-    const newFiles = [...files];
-    const newPreviews = [...imagePreviews];
-    const newIds = [...imageIds];
-
-    newFiles.splice(index, 1);
-    newPreviews.splice(index, 1);
-    newIds.splice(index, 1);
-
-    setFiles(newFiles);
-    setImagePreviews(newPreviews);
-    setImageIds(newIds);
+    
+    if (index < 3) {
+      // For first 3 positions (Face, Full Body, Toothy Grin): Keep slot but mark as empty
+      updatedSlots[index] = {
+        file: null,
+        preview: null,
+        id: null,
+        isEmpty: true
+      };
+    } else {
+      // For Extra positions: Remove the slot completely
+      updatedSlots.splice(index, 1);
+    }
+    
+    setImageSlots(updatedSlots);
+    
+    // Update legacy arrays for backward compatibility
+    const activeSlots = updatedSlots.filter(slot => !slot.isEmpty);
+    setFiles(activeSlots.map(slot => slot.file));
+    setImagePreviews(activeSlots.map(slot => slot.preview));
   };
 
   const handleClick = () => {
@@ -223,7 +237,7 @@ const SetupProfileView = () => {
       setSuccess(true);
       setImagePreviews([]);
       setFiles([]);
-      setImageIds([]);
+      setImageSlots([]);
     } catch (err) {
       toast.error(err || "❌ Failed to submit profile. Please try again.");
     } finally {
@@ -231,28 +245,43 @@ const SetupProfileView = () => {
     }
   };
 
+  // Initialize empty slots for better UX
+  useEffect(() => {
+    if (imageSlots.length === 0) {
+      const initialSlots = Array(3).fill(null).map(() => ({
+        file: null,
+        preview: null,
+        id: null,
+        isEmpty: true
+      }));
+      setImageSlots(initialSlots);
+    }
+  }, []);
+
   // Clean up preview URLs
   useEffect(() => {
     return () => {
-      imagePreviews.forEach((preview) => URL.revokeObjectURL(preview));
+      imageSlots.forEach((slot) => {
+        if (slot.preview) {
+          URL.revokeObjectURL(slot.preview);
+        }
+      });
     };
-  }, [imagePreviews]);
+  }, [imageSlots]);
 
-  // Ensure files and previews arrays stay synchronized
+  // Ensure imageSlots and legacy arrays stay synchronized
   useEffect(() => {
-    if (
-      files.length !== imagePreviews.length ||
-      files.length !== imageIds.length
-    ) {
-      console.warn("⚠️ Arrays are out of sync:", {
+    const activeSlots = imageSlots.filter(slot => !slot.isEmpty);
+    if (files.length !== imagePreviews.length || files.length !== activeSlots.length) {
+      console.warn('⚠️ Arrays are out of sync:', {
         filesLength: files.length,
         previewsLength: imagePreviews.length,
-        idsLength: imageIds.length,
-        files: files.map((f) => f.name),
-        previews: imagePreviews.length,
+        activeSlotsLength: activeSlots.length,
+        files: files.map(f => f.name),
+        previews: imagePreviews.length
       });
     }
-  }, [files, imagePreviews, imageIds]);
+  }, [files, imagePreviews, imageSlots]);
 
   if (success) {
     return (
@@ -514,37 +543,51 @@ const SetupProfileView = () => {
                 />
 
                 {/* Image Previews */}
-                {imagePreviews.length > 0 && (
+                {imageSlots.length > 0 && (
                   <div className="mt-4 w-full">
                     <div className="mb-4 grid grid-cols-3 gap-3">
-                      {imagePreviews.map((preview, idx) => (
-                        <div
-                          key={imageIds[idx] || idx}
-                          className="group relative"
-                        >
-                          <img
-                            src={preview}
-                            alt={`Preview ${idx + 1}`}
-                            className="h-24 w-full rounded-lg border-2 border-gray-200 object-cover"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => removeImage(idx)}
-                            className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition group-hover:opacity-100"
-                          >
-                            <RiDeleteBinLine className="h-4 w-4" />
-                          </button>
+                      {imageSlots.map((slot, idx) => (
+                        <div key={slot.id || `empty-${idx}`} className="group relative">
+                          {!slot.isEmpty ? (
+                            <>
+                              <img
+                                src={slot.preview}
+                                alt={`Preview ${idx + 1}`}
+                                className="h-24 w-full rounded-lg border-2 border-gray-200 object-cover"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => removeImage(idx)}
+                                className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition group-hover:opacity-100"
+                              >
+                                <RiDeleteBinLine className="h-4 w-4" />
+                              </button>
 
-                          {/* 🔖 Image Type Label */}
-                          <div className="absolute bottom-1 left-1 rounded bg-black bg-opacity-60 px-2 py-[2px] text-[10px] text-white">
-                            {idx === 0
-                              ? "Face"
-                              : idx === 1
-                                ? "Full Body"
-                                : idx === 2
-                                  ? "Toothy Grin"
-                                  : `Extra ${idx - 2}`}
-                          </div>
+                              {/* 🔖 Image Type Label */}
+                              <div className="absolute bottom-1 left-1 rounded bg-black bg-opacity-60 px-2 py-[2px] text-[10px] text-white">
+                                {idx === 0
+                                  ? "Face"
+                                  : idx === 1
+                                    ? "Full Body"
+                                    : idx === 2
+                                      ? "Toothy Grin"
+                                      : `Extra ${idx - 2}`}
+                              </div>
+                            </>
+                          ) : (
+                            <div className="h-24 w-full rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center">
+                              <FaCamera className="h-6 w-6 text-gray-400 mb-1" />
+                              <span className="text-xs text-gray-500">
+                                {idx === 0
+                                  ? "Face"
+                                  : idx === 1
+                                    ? "Full Body"
+                                    : idx === 2
+                                      ? "Toothy Grin"
+                                      : `Extra ${idx - 2}`}
+                              </span>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>

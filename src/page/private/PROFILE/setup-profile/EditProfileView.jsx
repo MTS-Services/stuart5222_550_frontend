@@ -29,6 +29,7 @@ const EditProfileView = () => {
   const [files, setFiles] = useState([]); // New files to upload
   const [existingImages, setExistingImages] = useState([]); // Existing images from profile
   const [deletedImageUrls, setDeletedImageUrls] = useState([]); // Track deleted
+  const [imageSlots, setImageSlots] = useState([]); // Array of objects: {file, preview, id, isEmpty, isExisting, originalUrl}
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const openTermsModal = () => setIsTermsModalOpen(true);
   const closeTermsModal = () => setIsTermsModalOpen(false);
@@ -55,103 +56,137 @@ const EditProfileView = () => {
   // ============================================
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    const totalCurrentImages = existingImages.length + files.length;
-    const maxNewFiles = 13 - totalCurrentImages;
+    const filledSlots = imageSlots.filter(slot => !slot.isEmpty).length;
+    const maxNewFiles = 13 - filledSlots;
 
     if (selectedFiles.length > maxNewFiles) {
       toast.warn(
-        `You can only upload ${maxNewFiles} more image${maxNewFiles > 1 ? "s" : ""} (you already have ${totalCurrentImages})`,
+        `You can only upload ${maxNewFiles} more image${maxNewFiles > 1 ? "s" : ""} (you already have ${filledSlots})`,
       );
       return;
     }
 
-    const validFiles = selectedFiles.filter((file) =>
-      file.type.startsWith("image/"),
-    );
+    const validFiles = selectedFiles.filter((file) => {
+      return file.type.startsWith("image/") || 
+             file.type === "image/heif" || 
+             file.type === "image/heic" ||
+             file.name.toLowerCase().endsWith('.heif') ||
+             file.name.toLowerCase().endsWith('.heic');
+    });
 
     if (validFiles.length !== selectedFiles.length) {
       toast.warn("Please upload only image files");
       return;
     }
 
-    // Add new files to the existing files array
-    setFiles((prevFiles) => [...prevFiles, ...validFiles]);
+    const updatedSlots = [...imageSlots];
+    
+    validFiles.forEach((file) => {
+      // Find first empty slot or add new slot
+      let emptySlotIndex = updatedSlots.findIndex(slot => slot.isEmpty);
+      
+      const newSlot = {
+        file: file,
+        preview: URL.createObjectURL(file),
+        id: Date.now() + Math.random(),
+        isEmpty: false,
+        isExisting: false,
+        originalUrl: null
+      };
+      
+      if (emptySlotIndex !== -1) {
+        // Fill empty slot
+        if (updatedSlots[emptySlotIndex].preview) {
+          URL.revokeObjectURL(updatedSlots[emptySlotIndex].preview);
+        }
+        updatedSlots[emptySlotIndex] = newSlot;
+      } else {
+        // Add new slot
+        updatedSlots.push(newSlot);
+      }
+    });
 
-    // Create previews for new files
-    const newPreviews = validFiles.map((file) => ({
-      url: URL.createObjectURL(file),
-      isNew: true,
-      file: file,
-    }));
-
-    // Update all image previews (existing + new)
-    updateImagePreviews(existingImages, [...files, ...validFiles]);
+    setImageSlots(updatedSlots);
+    
+    // Update legacy arrays for backward compatibility
+    const newFiles = updatedSlots.filter(slot => !slot.isEmpty && !slot.isExisting).map(slot => slot.file);
+    const existingImgs = updatedSlots.filter(slot => !slot.isEmpty && slot.isExisting).map(slot => ({ url: slot.originalUrl }));
+    setFiles(newFiles);
+    setExistingImages(existingImgs);
+    
     e.target.value = "";
   };
 
-  const updateImagePreviews = (existing, newFiles) => {
-    const existingPreviews = existing.map((img, index) => ({
-      url: img.url,
-      isNew: false,
-      index: index,
-      originalUrl: img.url,
-    }));
-
-    const newPreviews = newFiles.map((file, index) => ({
-      url: URL.createObjectURL(file),
-      isNew: true,
-      index: index,
-      file: file,
-    }));
-
-    setImagePreviews([...existingPreviews, ...newPreviews]);
-  };
-
-  const removeExistingImage = async (imageUrl, imageIndex) => {
-    try {
-      // Call API to delete the image
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/profile/${email}/image/${imageIndex}`,
-        {
-          method: "DELETE",
-        },
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to delete image");
-      }
-
-      // Update local state
-      const updatedExisting = existingImages.filter(
-        (_, index) => index !== imageIndex,
-      );
-      setExistingImages(updatedExisting);
-      updateImagePreviews(updatedExisting, files);
-      toast.success("Image deleted successfully");
-    } catch (error) {
-      console.error("Error deleting image:", error);
-      toast.error(error.message || "Failed to delete image");
+  const removeImage = async (index) => {
+    // Validate index bounds
+    if (index < 0 || index >= imageSlots.length) {
+      console.error('Invalid index for image removal:', index);
+      return;
     }
-  };
 
-  const removeNewImage = (fileIndex) => {
-    const updatedFiles = files.filter((_, index) => index !== fileIndex);
-    setFiles(updatedFiles);
-    updateImagePreviews(existingImages, updatedFiles);
-  };
-
-  const removeImage = (index, isExisting = false) => {
-    if (isExisting) {
-      const imageUrl = existingImages[index]?.url;
-      if (imageUrl) {
-        removeExistingImage(imageUrl, index);
+    const slot = imageSlots[index];
+    const updatedSlots = [...imageSlots];
+    
+    if (slot.isExisting) {
+      // For existing images, find the current index in the actual existing images array
+      const existingImagesArray = imageSlots.filter(s => !s.isEmpty && s.isExisting);
+      const currentExistingIndex = existingImagesArray.findIndex(s => s.originalUrl === slot.originalUrl);
+      
+      if (currentExistingIndex === -1) {
+        console.error('Could not find existing image in array');
+        toast.error('Unable to delete image - image not found');
+        return;
       }
+      
+      try {
+        // Use the current position of this existing image in the backend array
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/profile/${email}/image/${currentExistingIndex}`,
+          {
+            method: "DELETE",
+          },
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to delete image");
+        }
+        
+        toast.success("Image deleted successfully");
+      } catch (error) {
+        console.error("Error deleting image:", error);
+        toast.error(error.message || "Failed to delete image");
+        return;
+      }
+    }
+    
+    // Revoke the object URL to free memory
+    if (slot.preview && !slot.isExisting) {
+      URL.revokeObjectURL(slot.preview);
+    }
+    
+    if (index < 3) {
+      // For first 3 positions (Face, Full Body, Toothy Grin): Keep slot but mark as empty
+      updatedSlots[index] = {
+        file: null,
+        preview: null,
+        id: null,
+        isEmpty: true,
+        isExisting: false,
+        originalUrl: null
+      };
     } else {
-      // Calculate the index in the new files array
-      const newFileIndex = index - existingImages.length;
-      removeNewImage(newFileIndex);
+      // For Extra positions: Remove the slot completely
+      updatedSlots.splice(index, 1);
     }
+    
+    setImageSlots(updatedSlots);
+    
+    // Update legacy arrays for backward compatibility
+    const newFiles = updatedSlots.filter(slot => !slot.isEmpty && !slot.isExisting).map(slot => slot.file);
+    const existingImgs = updatedSlots.filter(slot => !slot.isEmpty && slot.isExisting).map(slot => ({ url: slot.originalUrl }));
+    setFiles(newFiles);
+    setExistingImages(existingImgs);
   };
 
   const handleClick = () => {
@@ -310,16 +345,48 @@ const EditProfileView = () => {
             }
           }
 
-          // Initialize existing images
+          // Initialize existing images with slots
           if (result.payload?.images?.length > 0) {
             const images = result.payload.images.map((img) => ({
               url: img.url,
             }));
+            
+            // Create slots from existing images
+            const slots = images.map((img, index) => ({
+              file: null,
+              preview: img.url,
+              id: `existing-${index}`,
+              isEmpty: false,
+              isExisting: true,
+              originalUrl: img.url
+            }));
+            
+            // Add empty slots to reach at least 3 slots
+            while (slots.length < 3) {
+              slots.push({
+                file: null,
+                preview: null,
+                id: null,
+                isEmpty: true,
+                isExisting: false,
+                originalUrl: null
+              });
+            }
+            
+            setImageSlots(slots);
             setExistingImages(images);
-            updateImagePreviews(images, []);
           } else {
+            // Initialize with 3 empty slots
+            const emptySlots = Array(3).fill(null).map((_, index) => ({
+              file: null,
+              preview: null,
+              id: null,
+              isEmpty: true,
+              isExisting: false,
+              originalUrl: null
+            }));
+            setImageSlots(emptySlots);
             setExistingImages([]);
-            setImagePreviews([]);
           }
         } else {
           console.error("Fetch failed:", result);
@@ -633,7 +700,7 @@ const EditProfileView = () => {
                 />
 
                 {/* Image Previews */}
-                {imagePreviews.length > 0 && (
+                {imageSlots.length > 0 && (
                   <div className="mt-4 w-full">
                     <div className="mb-2 text-center text-sm text-gray-400">
                       Existing: {existingImages.length} | New uploads:{" "}
@@ -641,57 +708,61 @@ const EditProfileView = () => {
                       {existingImages.length + files.length}
                     </div>
                     <div className="mb-4 grid grid-cols-3 gap-3">
-                      {imagePreviews.map((imageData, idx) => (
+                      {imageSlots.map((slot, idx) => (
                         <div
-                          key={`${imageData.isNew ? "new" : "existing"}-${idx}`}
+                          key={slot.id || `empty-${idx}`}
                           className="group relative"
                         >
-                          <img
-                            src={imageData.url}
-                            alt={`Preview ${idx + 1}`}
-                            className="h-24 w-full rounded-lg border-2 border-gray-200 object-cover"
-                          />
+                          {!slot.isEmpty ? (
+                            <>
+                              <img
+                                src={slot.preview}
+                                alt={`Preview ${idx + 1}`}
+                                className="h-24 w-full rounded-lg border-2 border-gray-200 object-cover"
+                              />
 
-                          {/* Delete Button - now available for all images */}
-                          <button
-                            type="button"
-                            onClick={() => {
-                              if (imageData.isNew) {
-                                // For new images, calculate the correct index in the files array
-                                const newImageIndex =
-                                  idx - existingImages.length;
-                                removeNewImage(newImageIndex);
-                              } else {
-                                // For existing images, use the imageData.index
-                                removeExistingImage(
-                                  imageData.originalUrl,
-                                  imageData.index,
-                                );
-                              }
-                            }}
-                            className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition hover:bg-red-600 group-hover:opacity-100"
-                            title={`Delete ${imageData.isNew ? "new" : "existing"} image`}
-                          >
-                            <RiDeleteBinLine className="h-4 w-4" />
-                          </button>
+                              {/* Delete Button - now available for all images */}
+                              <button
+                                type="button"
+                                onClick={() => removeImage(idx)}
+                                className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition hover:bg-red-600 group-hover:opacity-100"
+                                title={`Delete ${slot.isExisting ? "existing" : "new"} image`}
+                              >
+                                <RiDeleteBinLine className="h-4 w-4" />
+                              </button>
 
-                          {/* 🔖 Image Type Label */}
-                          <div
-                            className={`absolute bottom-1 left-1 rounded px-2 py-[2px] text-[10px] text-white ${
-                              imageData.isNew
-                                ? "bg-green-600 bg-opacity-80"
-                                : "bg-blue-600 bg-opacity-80"
-                            }`}
-                          >
-                            {imageData.isNew ? "New" : "Existing"} -{" "}
-                            {idx === 0
-                              ? "Face"
-                              : idx === 1
-                                ? "Full Body"
-                                : idx === 2
-                                  ? "Toothy Grin"
-                                  : `Extra ${idx - 2}`}
-                          </div>
+                              {/* 🔖 Image Type Label */}
+                              <div
+                                className={`absolute bottom-1 left-1 rounded px-2 py-[2px] text-[10px] text-white ${
+                                  slot.isExisting
+                                    ? "bg-blue-600 bg-opacity-80"
+                                    : "bg-green-600 bg-opacity-80"
+                                }`}
+                              >
+                                {slot.isExisting ? "Existing" : "New"} -{" "}
+                                {idx === 0
+                                  ? "Face"
+                                  : idx === 1
+                                    ? "Full Body"
+                                    : idx === 2
+                                      ? "Toothy Grin"
+                                      : `Extra ${idx - 2}`}
+                              </div>
+                            </>
+                          ) : (
+                            <div className="h-24 w-full rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center">
+                              <FaCamera className="h-6 w-6 text-gray-400 mb-1" />
+                              <span className="text-xs text-gray-500">
+                                {idx === 0
+                                  ? "Face"
+                                  : idx === 1
+                                    ? "Full Body"
+                                    : idx === 2
+                                      ? "Toothy Grin"
+                                      : `Extra ${idx - 2}`}
+                              </span>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
