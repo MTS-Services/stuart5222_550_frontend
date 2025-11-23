@@ -173,18 +173,6 @@ const EmailTemplateBuilder = ({
       },
     },
     {
-      type: "image",
-      icon: PhotoIcon,
-      label: "Image",
-      defaultProps: {
-        src: "",
-        alt: "Image",
-        width: "100%",
-        alignment: "center",
-        padding: "20px",
-      },
-    },
-    {
       type: "divider",
       icon: SwatchIcon,
       label: "Divider",
