@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { UserEditTable } from "./components/UserEditTable";
 import { UserVerifiedProfile } from "../../../features/admin/management/usreFetch";
 
-const UserEditView = () => {
+const UserProfilesView = () => {
   const dispatch = useDispatch();
   const { list, isLoading, error, pagination, stats } = useSelector(
     (state) => state.adminUsers.verified,
@@ -11,6 +11,7 @@ const UserEditView = () => {
 
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+
   const [page, setPage] = useState(1);
   const limit = 10;
 
@@ -21,7 +22,7 @@ const UserEditView = () => {
         page: page,
         limit: limit,
         status: "APPROVED",
-        username: searchQuery || undefined,
+        username: "Nayem islam",
       }),
     );
   }, [dispatch, page, limit, searchQuery]);
@@ -147,4 +148,4 @@ const UserEditView = () => {
   );
 };
 
-export default UserEditView;
+export default UserProfilesView;

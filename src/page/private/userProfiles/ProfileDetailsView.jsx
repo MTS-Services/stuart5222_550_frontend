@@ -12,7 +12,7 @@ import { getUserQRcode } from "../../../features/admin/home/dashboardFetch";
 import { FaRegCalendar } from "react-icons/fa";
 import { GrLocation } from "react-icons/gr";
 
-const EditDetailsView = () => {
+const ProfileDetailsView = () => {
   const dispatch = useDispatch();
   const { userId } = useParams();
   const { qrCodeList, isQrLoading } = useSelector((state) => state.dashboard);
@@ -187,51 +187,8 @@ const EditDetailsView = () => {
       </div>
 
       {/* Feedback Section */}
-      {/* <div className="rounded-lg border border-gray-200 bg-white p-4">
-        <h3 className="mb-3 font-raleway text-xl font-medium">
-          Reject with Feedback
-        </h3>
-        <textarea
-          value={rejectionReason}
-          onChange={(e) => setRejectionReason(e.target.value)}
-          placeholder="Write a reason for rejection..."
-          className="min-h-[120px] w-full rounded border border-gray-300 bg-[#E6EEF6] p-3 focus:outline-none focus:ring-2 focus:ring-orange-300"
-        />
-        <div className="mt-4 space-x-4">
-          <button
-            onClick={handleApprove}
-            disabled={loading.approve}
-            className={`w-64 flex-1 rounded py-2.5 font-raleway font-medium ${
-              loading.approve
-                ? "cursor-not-allowed bg-green-400"
-                : "bg-green-600 text-white hover:bg-green-700"
-            }`}
-          >
-            {loading.approve ? "Approving..." : "Approve"}
-          </button>
-
-          <button
-            onClick={handleReject}
-            disabled={loading.reject}
-            className={`w-64 flex-1 rounded py-2.5 font-raleway font-medium ${
-              loading.reject
-                ? "cursor-not-allowed bg-orange-400"
-                : "bg-orange-500 text-white hover:bg-orange-600"
-            }`}
-          >
-            {loading.reject ? "Rejecting..." : "Reject"}
-          </button>
-
-          <button
-            onClick={handleCencel}
-            className={`w-64 flex-1 rounded bg-red-500 py-2.5 font-raleway font-medium text-white hover:bg-orange-600`}
-          >
-            Cancel
-          </button>
-        </div>
-      </div> */}
     </div>
   );
 };
 
-export default EditDetailsView;
+export default ProfileDetailsView;

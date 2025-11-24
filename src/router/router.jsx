@@ -49,30 +49,31 @@ const EmailTemplatesPage = lazy(
 const AllUsersView = lazy(
   () => import("../page/private/allUsers/AllUsersView.jsx"),
 );
-const UserManageView = lazy(
-  () => import("../page/private/userManagements/UserManageView.jsx"),
-);
-const UserEditView = lazy(
-  () => import("../page/private/userEdit/UserEditView.jsx"),
+const NotificationView = lazy(
+  () => import("../page/private/notification/Notification.jsx"),
 );
 const SettingsView = lazy(
   () => import("../page/private/settings/SettingsView.jsx"),
 );
-const NotificationView = lazy(
-  () => import("../page/private/notification/Notification.jsx"),
-);
-const EditDetailsView = lazy(
-  () => import("../page/private/userEdit/EditDetailsView.jsx"),
+
+const UserManageView = lazy(
+  () => import("../page/private/userManagements/UserManageView.jsx"),
 );
 const UserDetailsView = lazy(
   () => import("../page/private/userManagements/UserDetailsView.jsx"),
+);
+
+const UserProfilesView = lazy(
+  () => import("../page/private/userProfiles/UserProfilesView.jsx"),
+);
+const ProfileDetailsView = lazy(
+  () => import("../page/private/userProfiles/ProfileDetailsView.jsx"),
 );
 
 // 🙋 User Pages
 const UserHomeView = lazy(
   () => import("../page/private/PROFILE/UserHomeView.jsx"),
 );
-
 const SetupProfileView = lazy(
   () => import("../page/private/PROFILE/setup-profile/SetupProfileView.jsx"),
 );
@@ -110,14 +111,14 @@ const router = createBrowserRouter(
           <Route path="all-users/add" element={<AddUserView />} />
           <Route path="user-management" element={<UserManageView />} />
           <Route path="user-management/:userId" element={<UserDetailsView />} />
-          <Route path="user-edit" element={<UserEditView />} />
-          <Route path="user-edit/:userId" element={<EditDetailsView />} />
+          <Route path="user-profile" element={<UserProfilesView />} />
+          <Route path="user-profile/:userId" element={<ProfileDetailsView />} />
           <Route path="settings" element={<SettingsView />} />
           <Route path="notifications" element={<NotificationView />} />
           <Route path="email-templates" element={<EmailTemplatesPage />} />
           <Route
             path="user-edit/details/:userId"
-            element={<EditDetailsView />}
+            element={<ProfileDetailsView />}
           />
         </Route>
       </Route>

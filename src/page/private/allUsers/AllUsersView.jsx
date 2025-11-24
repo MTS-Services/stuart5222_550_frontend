@@ -11,22 +11,21 @@ const AllUsersView = () => {
   const dispatch = useDispatch();
 
   const [status, setStatus] = useState("ALL");
-  const [search, setSearch] = useState("");
+  const [username, setUsername] = useState("");
+  console.log(username);
   const [page, setPage] = useState(1);
   const limit = 10;
 
-  const { allUsers, isLoading, error, pagination, stats } = useSelector(
+  const { allUsers, isLoading, error, pagination } = useSelector(
     (state) => state.userList,
   );
-
-  const totalUsers = stats?.overview?.totalUsers || 0;
 
   const hasPrevPage = pagination?.page > 1;
   const hasNextPage = pagination?.page < pagination?.totalPages;
 
   useEffect(() => {
-    dispatch(allUserList({ page, limit, status: status, username: search }));
-  }, [dispatch, page, status, search]);
+    dispatch(allUserList({ page, limit, status: status, username }));
+  }, [dispatch, page, status, username]);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -64,9 +63,9 @@ const AllUsersView = () => {
             <input
               type="text"
               placeholder="Search user name"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="dark:bg-border-200 h-12 rounded-full border border-[#f1eae3] p-4 shadow outline-none focus:border-[#F07400] focus:ring-1 focus:ring-[#eb9d54] dark:border-white dark:text-gray-800"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="dark:bg-border-200 h-12 w-full rounded-full border border-[#f1eae3] p-4 shadow outline-none focus:border-[#F07400] focus:ring-1 focus:ring-[#eb9d54] dark:border-white dark:text-gray-800"
             />
             <span className="absolute right-4 top-3.5 text-gray-400">
               <FaSearch size={20} />

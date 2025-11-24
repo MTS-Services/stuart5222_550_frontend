@@ -63,7 +63,7 @@ export const UserEditTable = ({ list, isLoading, error }) => {
                     {row.bodyType || "—"}
                   </td>
                   <td className="flex items-center justify-center gap-3 whitespace-nowrap px-7 py-2.5">
-                    <Link to={`/admin/user-edit/${row.id}`}>
+                    <Link to={`/admin/user-profile/${row.id}`}>
                       <button className="whitespace-nowrap rounded-xl bg-[#F07400] px-4 py-2.5 font-raleway text-xs text-white transition hover:bg-[#d16200]">
                         See Details
                       </button>

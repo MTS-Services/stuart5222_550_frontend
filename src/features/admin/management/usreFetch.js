@@ -84,12 +84,17 @@ export const adminUserDetailsProfiles = createAsyncThunk(
 export const UserVerifiedProfile = createAsyncThunk(
   "admin/UserVerifiedProfile",
   async ({ page, limit, status, username }, { rejectWithValue }) => {
+    console.log("page:", page);
+    console.log("limit:", limit);
+    console.log("status:", status);
+    console.log("username:", username);
+
     try {
       const res = await GET(endpoints.admin.VARIFIED_LIST, {
         page,
         limit,
         status,
-        username: username,
+        username,
       });
 
       return res;

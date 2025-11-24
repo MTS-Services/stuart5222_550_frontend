@@ -29,7 +29,7 @@ const navLinks = [
   {
     name: "Profile List",
     icon: <FaUser size={17} />,
-    path: "/admin/user-edit",
+    path: "/admin/user-profile",
   },
   {
     name: "Templates",
