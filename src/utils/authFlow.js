@@ -15,15 +15,12 @@ export const handlePostLoginRedirect = (
   defaultRoute = "/",
 ) => {
   try {
-    console.log("🚀 handlePostLoginRedirect called with:", { loginResult });
-
     // First, try to get user from login result
     let user = loginResult?.user;
 
     // If not in result, try to get from cookie (should be set by now)
     if (!user) {
       user = AUTH_COOKIE.getUser();
-      console.log("📝 Retrieved user from cookie:", user);
     }
 
     if (!user) {
@@ -34,19 +31,15 @@ export const handlePostLoginRedirect = (
 
     // Role-based redirect logic
     const { role } = user;
-    console.log("🔐 User role detected:", role);
 
     switch (role) {
       case "admin":
-        console.log("➡️ Redirecting admin to /admin");
         navigate("/admin");
         break;
       case "user":
-        console.log("➡️ Redirecting user to /user");
         navigate("/user");
         break;
       default:
-        console.log(`➡️ Unknown role: ${role}, redirecting to ${defaultRoute}`);
         navigate(defaultRoute);
     }
   } catch (error) {

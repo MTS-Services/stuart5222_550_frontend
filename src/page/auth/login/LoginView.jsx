@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -7,7 +7,6 @@ import {
 } from "../../../features/auth/authFetch";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { AUTH_COOKIE } from "../../../utils/authCookie";
 import { handlePostLoginRedirect } from "../../../utils/authFlow";
 
 const LoginView = () => {

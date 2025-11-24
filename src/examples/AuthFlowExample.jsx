@@ -20,17 +20,12 @@ const AuthFlowExample = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      console.log("🚀 Starting login process...");
-
       // Try user login first, then admin if it fails
       let loginResult;
       try {
         loginResult = await dispatch(userLoginUser(credentials)).unwrap();
-        console.log("✅ User login successful");
       } catch (userError) {
-        console.log("🔄 User login failed, trying admin...");
         loginResult = await dispatch(adminLoginUser(credentials)).unwrap();
-        console.log("✅ Admin login successful");
       }
 
       // Use helper to handle role-based redirect
@@ -74,13 +69,11 @@ const AuthFlowExample = () => {
     };
 
     setDebugInfo(authState);
-    console.log("🔍 Current Auth State:", authState);
   };
 
   return (
     <div className="mx-auto max-w-2xl rounded-lg bg-white p-6 shadow-lg">
       <h2 className="mb-6 text-2xl font-bold">Authentication Flow Example</h2>
-
       {!isAuthenticated ? (
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Login</h3>
