@@ -42,13 +42,16 @@ const ProfileInfoView = ({ profileData, images }) => {
     if (isExpanding) return; // Prevent multiple clicks during animation
 
     setIsExpanding(true);
+    
+    // Ensure images is always an array
+    const imageArray = Array.isArray(images) ? images : [];
 
     if (!showAllPhotos) {
       // Show more photos with smooth reveal
       setShowAllPhotos(true);
       setTimeout(() => {
-        if (images?.length > 3) {
-          setVisiblePhotos(Math.min(images.length, visiblePhotos + 3));
+        if (imageArray.length > 3) {
+          setVisiblePhotos(Math.min(imageArray.length, visiblePhotos + 3));
         }
         setIsExpanding(false);
       }, 150);
@@ -69,9 +72,11 @@ const ProfileInfoView = ({ profileData, images }) => {
   };
 
   // Get displayed images based on current state
-  const displayedImages = images?.slice(0, visiblePhotos) || [];
-  const hasMorePhotos = images?.length > 3;
-  const canLoadMore = visiblePhotos < images?.length;
+  // Ensure images is always an array
+  const imageArray = Array.isArray(images) ? images : [];
+  const displayedImages = imageArray.slice(0, visiblePhotos);
+  const hasMorePhotos = imageArray.length > 3;
+  const canLoadMore = visiblePhotos < imageArray.length;
 
   if (!profileData && images) {
     return (
@@ -100,7 +105,7 @@ const ProfileInfoView = ({ profileData, images }) => {
               <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-orange-400">
                 <img
                   className="h-full w-full object-cover"
-                  src={images[0]?.url || "/img/page/public/img1.png"}
+                  src={imageArray[0]?.url || "/img/page/public/img1.png"}
                   alt={displayName || "User"}
                 />
               </div>
