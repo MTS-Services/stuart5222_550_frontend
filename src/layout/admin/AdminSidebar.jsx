@@ -12,6 +12,7 @@ import { FaGear } from "react-icons/fa6";
 import { FiMenu, FiX, FiMail } from "react-icons/fi";
 import { useSelector } from "react-redux";
 import { STORAGE } from "../../config/storage/auth/authStorage";
+import { AUTH_COOKIE } from "../../utils/authCookie";
 
 /* ---------------- NAV LINKS DATA ---------------- */
 const navLinks = [
@@ -65,7 +66,7 @@ const AdminSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
-    STORAGE.clearAll();
+    AUTH_COOKIE.remove();
     window.location.href = "/auth/login";
   };
 
@@ -85,7 +86,7 @@ const AdminSidebar = () => {
           />
         </a>
         <div className="flex items-center gap-4">
-          <div>
+          {/* <div>
             <Link
               to="/admin/notifications"
               className="relative text-gray-600 transition-colors hover:text-orange-500"
@@ -97,7 +98,7 @@ const AdminSidebar = () => {
                 </span>
               )}
             </Link>
-          </div>
+          </div> */}
           <div>
             <button
               onClick={() => setIsOpen(!isOpen)}
