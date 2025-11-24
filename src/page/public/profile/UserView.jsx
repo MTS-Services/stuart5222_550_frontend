@@ -18,7 +18,50 @@ const UserView = () => {
     (state) => state.profile,
   );
 
-  const images = userProfile?.images || [];
+  // Prioritize structured images (face, fullbody, toothyGrin, extras) over imageUrls
+  const structuredImages = userProfile?.images || {};
+  const fallbackImages = userProfile?.imageUrls || [];
+  
+  // Create ordered array: face -> fullbody -> toothyGrin -> extras
+  const orderedImages = [];
+  
+  // Add face image first
+  if (structuredImages.face) {
+    orderedImages.push(typeof structuredImages.face === 'string' 
+      ? { url: structuredImages.face } 
+      : structuredImages.face
+    );
+  }
+  
+  // Add fullbody image second
+  if (structuredImages.fullbody) {
+    orderedImages.push(typeof structuredImages.fullbody === 'string' 
+      ? { url: structuredImages.fullbody } 
+      : structuredImages.fullbody
+    );
+  }
+  
+  // Add toothyGrin image third
+  if (structuredImages.toothyGrin) {
+    orderedImages.push(typeof structuredImages.toothyGrin === 'string' 
+      ? { url: structuredImages.toothyGrin } 
+      : structuredImages.toothyGrin
+    );
+  }
+  
+  // Add extras images
+  if (structuredImages.extras && Array.isArray(structuredImages.extras)) {
+    structuredImages.extras.forEach(img => {
+      if (img) {
+        orderedImages.push(typeof img === 'string' ? { url: img } : img);
+      }
+    });
+  }
+  
+  // If no structured images available, fall back to imageUrls array
+  const images = orderedImages.length > 0 
+    ? orderedImages 
+    : fallbackImages.map(img => typeof img === 'string' ? { url: img } : img);
 
   useEffect(() => {
     if (email) {
