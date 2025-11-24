@@ -41,31 +41,33 @@ const AdminDashboard = () => {
         <WaitListTable list={users} isLoading={isLoading} />
 
         {/* Pagination */}
-        <div className="mt-4 flex items-center gap-3">
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={!hasPrevPage}
-            className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
-          >
-            Prev
-          </button>
+        {pagination?.totalPages > 1 && (
+          <div className="mt-4 flex items-center gap-3">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={!hasPrevPage}
+              className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
+            >
+              Prev
+            </button>
 
-          <span className="text-sm text-gray-700">
-            Page {pagination?.page} of {pagination?.totalPages}
-          </span>
+            <span className="text-sm text-gray-700">
+              Page {pagination?.page} of {pagination?.totalPages}
+            </span>
 
-          <button
-            onClick={() =>
-              setPage((p) =>
-                hasNextPage ? Math.min(pagination.totalPages, p + 1) : p,
-              )
-            }
-            disabled={!hasNextPage}
-            className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
-          >
-            Next
-          </button>
-        </div>
+            <button
+              onClick={() =>
+                setPage((p) =>
+                  hasNextPage ? Math.min(pagination.totalPages, p + 1) : p,
+                )
+              }
+              disabled={!hasNextPage}
+              className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
