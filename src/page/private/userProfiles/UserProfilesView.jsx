@@ -22,7 +22,7 @@ const UserProfilesView = () => {
         page: page,
         limit: limit,
         status: "APPROVED",
-        username: "Nayem islam",
+        username: searchQuery,
       }),
     );
   }, [dispatch, page, limit, searchQuery]);
