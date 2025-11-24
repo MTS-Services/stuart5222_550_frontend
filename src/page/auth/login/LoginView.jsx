@@ -35,7 +35,6 @@ const LoginView = () => {
         try {
           loginResult = await dispatch(adminLoginUser(formData)).unwrap();
         } catch (adminError) {
-          console.error("❌ Both login attempts failed");
           throw adminError; // Throw the admin error if both fail
         }
       }
@@ -44,7 +43,6 @@ const LoginView = () => {
       handlePostLoginRedirect(navigate, loginResult, "/");
       toast.success("Login successful!");
     } catch (err) {
-      console.error("❌ Login failed:", err);
       toast.error(err?.message || "Invalid email or password");
     }
   };
@@ -92,7 +90,7 @@ const LoginView = () => {
                   name="email"
                   type="email"
                   required
-                  value={formData.email}
+                  value={formData.email.toLocaleLowerCase()}
                   onChange={handleChange}
                   className="block w-full rounded-xl border border-gray-300 bg-gray-50 py-3 pl-10 pr-3 transition-all duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#000044]"
                   placeholder="Enter your email"

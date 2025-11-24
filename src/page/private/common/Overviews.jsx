@@ -80,9 +80,9 @@ const Overviews = () => {
             {/* Reload Button */}
             <button
               onClick={handleReload}
-              className="rounded-full bg-slate-200 p-2 hover:bg-slate-400"
+              className="rounded-full bg-white p-2"
             >
-              <FaRedoAlt className="text-slate-700" />
+              <FaRedoAlt className="text-slate-400" />
             </button>
           </div>
         </div>

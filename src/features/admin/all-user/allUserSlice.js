@@ -3,12 +3,8 @@ import { allUserList } from "./allUserFetch";
 
 const initialState = {
   allUsers: [],
-  pagination: {
-    page: 1,
-    limit: 10,
-    totalPages: 1,
-    total: 0,
-  },
+  pagination: {},
+  stats: {},
   isLoading: false,
   error: null,
 };
@@ -32,8 +28,9 @@ const allUserSlice = createSlice({
       })
       .addCase(allUserList.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.allUsers = action.payload.profiles;
-        state.pagination = action.payload.pagination; // <-- ADD THIS
+        state.allUsers = action.payload.users;
+        state.pagination = action.payload.pagination;
+        state.stats = action.payload.stats;
         state.error = null;
       })
       .addCase(allUserList.rejected, (state, action) => {

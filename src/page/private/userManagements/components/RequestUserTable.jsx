@@ -164,9 +164,16 @@ export const RequestUserTable = () => {
                       <td className="w-1/5 whitespace-nowrap px-7 py-3 text-center font-raleway">
                         {formatDate(row.createdAt) || "—"}
                       </td>
-                      <td className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
-                        {row.status}
-                      </td>
+
+                      {row.status === "DRAFT" ? (
+                        <td className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway font-bold text-yellow-500">
+                          {row.status}
+                        </td>
+                      ) : (
+                        <td className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway font-bold text-red-500">
+                          {row.status}
+                        </td>
+                      )}
 
                       {row.status === "DRAFT" ? (
                         <td className="flex items-center justify-end gap-3 whitespace-nowrap px-7 py-2.5">
@@ -263,8 +270,6 @@ export const RequestUserTable = () => {
               </div>
             </div>
           )}
-
-          <AllTableResponsiveStyle />
 
           {/* 📄 Pagination */}
           {processedList.length > 0 && (

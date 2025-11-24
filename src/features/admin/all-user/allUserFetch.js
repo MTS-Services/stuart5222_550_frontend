@@ -7,11 +7,13 @@ export const allUserList = createAsyncThunk(
   "admin/allUserList",
   async ({ page, limit, status }, { rejectWithValue }) => {
     try {
-      const res = await GET(endpoints.admin.GET_USER_LIST, {
+      const res = await GET(endpoints.admin.GET_ALL_USERS, {
         page,
         limit,
         status,
       });
+
+      console.log("user list:", res);
 
       return res;
     } catch (err) {
