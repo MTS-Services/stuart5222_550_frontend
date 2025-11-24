@@ -59,13 +59,6 @@ const EditProfileView = () => {
     const filledSlots = imageSlots.filter(slot => !slot.isEmpty).length;
     const maxNewFiles = 13 - filledSlots;
 
-    if (selectedFiles.length > maxNewFiles) {
-      toast.warn(
-        `You can only upload ${maxNewFiles} more image${maxNewFiles > 1 ? "s" : ""} (you already have ${filledSlots})`,
-      );
-      return;
-    }
-
     const validFiles = selectedFiles.filter((file) => {
       return file.type.startsWith("image/") || 
              file.type === "image/heif" || 
@@ -75,15 +68,53 @@ const EditProfileView = () => {
     });
 
     if (validFiles.length !== selectedFiles.length) {
-      toast.warn("Please upload only image files");
+      const invalidCount = selectedFiles.length - validFiles.length;
+      toast.error(`❌ ${invalidCount} invalid file${invalidCount > 1 ? 's' : ''} skipped. Only image files are allowed (JPEG, PNG, GIF, WebP, HEIF, HEIC).`);
+    }
+
+    // Check file sizes (max 10MB per file)
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    const oversizedFiles = validFiles.filter(file => file.size > maxSize);
+    if (oversizedFiles.length > 0) {
+      const oversizedNames = oversizedFiles.map(f => `${f.name} (${(f.size / 1024 / 1024).toFixed(2)}MB)`).join(', ');
+      toast.error(`❌ Files too large: ${oversizedNames}. Maximum 10MB per file allowed.`);
+      e.target.value = "";
+      return;
+    }
+
+    const finalFiles = validFiles.filter(file => file.size <= maxSize);
+
+    if (finalFiles.length > maxNewFiles) {
+      toast.warn(
+        `⚠️ You can only upload ${maxNewFiles} more image${maxNewFiles > 1 ? "s" : ""} (you already have ${filledSlots})`,
+      );
       return;
     }
 
     const updatedSlots = [...imageSlots];
     
-    validFiles.forEach((file) => {
+    finalFiles.forEach((file) => {
       // Find first empty slot or add new slot
       let emptySlotIndex = updatedSlots.findIndex(slot => slot.isEmpty);
+      
+      let imageType, extraKey;
+      if (emptySlotIndex !== -1) {
+        // Filling existing empty slot - determine type based on position
+        if (emptySlotIndex === 0) {
+          imageType = 'face';
+        } else if (emptySlotIndex === 1) {
+          imageType = 'fullbody';
+        } else if (emptySlotIndex === 2) {
+          imageType = 'toothyGrin';
+        } else {
+          imageType = 'extra';
+          extraKey = `${emptySlotIndex - 2}`;
+        }
+      } else {
+        // Adding new slot - it will be an extra
+        imageType = 'extra';
+        extraKey = `${updatedSlots.length - 2}`;
+      }
       
       const newSlot = {
         file: file,
@@ -91,7 +122,9 @@ const EditProfileView = () => {
         id: Date.now() + Math.random(),
         isEmpty: false,
         isExisting: false,
-        originalUrl: null
+        originalUrl: null,
+        imageType: imageType,
+        extraKey: extraKey
       };
       
       if (emptySlotIndex !== -1) {
@@ -113,6 +146,23 @@ const EditProfileView = () => {
     const existingImgs = updatedSlots.filter(slot => !slot.isEmpty && slot.isExisting).map(slot => ({ url: slot.originalUrl }));
     setFiles(newFiles);
     setExistingImages(existingImgs);
+    
+    // Check requirements after upload and show status
+    const activeSlots = updatedSlots.filter(slot => !slot.isEmpty);
+    const hasface = activeSlots.some(slot => slot.imageType === 'face');
+    const hasFullBody = activeSlots.some(slot => slot.imageType === 'fullbody');
+    const hasToothyGrin = activeSlots.some(slot => slot.imageType === 'toothyGrin');
+    
+    const missing = [];
+    if (!hasface) missing.push('Face');
+    if (!hasFullBody) missing.push('Full Body');
+    if (!hasToothyGrin) missing.push('Toothy Grin');
+    
+    if (missing.length > 0) {
+      toast.info(`Still need: ${missing.join(', ')} image${missing.length > 1 ? 's' : ''}`);
+    } else {
+      toast.success("✅ All required images uploaded (Face, Full Body, Toothy Grin)");
+    }
     
     e.target.value = "";
   };
@@ -167,13 +217,15 @@ const EditProfileView = () => {
     
     if (index < 3) {
       // For first 3 positions (Face, Full Body, Toothy Grin): Keep slot but mark as empty
+      const imageType = index === 0 ? 'face' : index === 1 ? 'fullbody' : 'toothyGrin';
       updatedSlots[index] = {
         file: null,
         preview: null,
         id: null,
         isEmpty: true,
         isExisting: false,
-        originalUrl: null
+        originalUrl: null,
+        imageType: imageType
       };
     } else {
       // For Extra positions: Remove the slot completely
@@ -187,6 +239,19 @@ const EditProfileView = () => {
     const existingImgs = updatedSlots.filter(slot => !slot.isEmpty && slot.isExisting).map(slot => ({ url: slot.originalUrl }));
     setFiles(newFiles);
     setExistingImages(existingImgs);
+    
+    // Check requirements after removal (silently - no warning message during editing)
+    const activeSlots = updatedSlots.filter(slot => !slot.isEmpty);
+    const hasface = activeSlots.some(slot => slot.imageType === 'face');
+    const hasFullBody = activeSlots.some(slot => slot.imageType === 'fullbody');
+    const hasToothyGrin = activeSlots.some(slot => slot.imageType === 'toothyGrin');
+    
+    const missing = [];
+    if (!hasface) missing.push('Face');
+    if (!hasFullBody) missing.push('Full Body');
+    if (!hasToothyGrin) missing.push('Toothy Grin');
+    
+    // Don't show warning during editing - only validate at submission time
   };
 
   const handleClick = () => {
@@ -240,6 +305,23 @@ const EditProfileView = () => {
       return;
     }
 
+    // Check if all required image types are present
+    const activeSlots = imageSlots.filter(slot => !slot.isEmpty);
+    const hasface = activeSlots.some(slot => slot.imageType === 'face');
+    const hasFullBody = activeSlots.some(slot => slot.imageType === 'fullbody');
+    const hasToothyGrin = activeSlots.some(slot => slot.imageType === 'toothyGrin');
+    
+    if (!hasface || !hasFullBody || !hasToothyGrin) {
+      const missing = [];
+      if (!hasface) missing.push('Face');
+      if (!hasFullBody) missing.push('Full Body');
+      if (!hasToothyGrin) missing.push('Toothy Grin');
+      
+      setErrors({ images: `Required images missing: ${missing.join(', ')}` });
+      toast.warn(`Please upload all required images: ${missing.join(', ')}`);
+      return;
+    }
+
     // Calculate total image count (existing + new)
     const totalImageCount = existingImages.length + files.length;
 
@@ -258,7 +340,7 @@ const EditProfileView = () => {
     setSubmitLoading(true);
 
     try {
-      // 📤 Build FormData with image array
+      // 📤 Build FormData with structured image fields
       const submitData = new FormData();
       // Append all text fields
       Object.entries(formData).forEach(([key, value]) => {
@@ -267,8 +349,25 @@ const EditProfileView = () => {
         }
       });
 
-      files.forEach((file) => {
-        submitData.append("image", file);
+      // Append image files using structured format
+      const activeSlots = imageSlots.filter(slot => !slot.isEmpty);
+      activeSlots.forEach((slot, index) => {
+        if (slot.file && !slot.isExisting) {
+          // Only append new files, not existing images
+          if (index === 0) {
+            // Face image
+            submitData.append("face", slot.file);
+          } else if (index === 1) {
+            // Full body image
+            submitData.append("fullbody", slot.file);
+          } else if (index === 2) {
+            // Toothy grin image
+            submitData.append("toothyGrin", slot.file);
+          } else {
+            // Extra images
+            submitData.append("extras", slot.file);
+          }
+        }
       });
 
       await dispatch(submitEditProfile(submitData)).unwrap();
@@ -345,48 +444,118 @@ const EditProfileView = () => {
             }
           }
 
-          // Initialize existing images with slots
-          if (result.payload?.images?.length > 0) {
-            const images = result.payload.images.map((img) => ({
-              url: img.url,
-            }));
+          // Initialize existing images from structured JSON format
+          if (result.payload?.imagesJson) {
+            const imagesJson = result.payload.imagesJson;
+            const slots = [];
             
-            // Create slots from existing images
-            const slots = images.map((img, index) => ({
-              file: null,
-              preview: img.url,
-              id: `existing-${index}`,
-              isEmpty: false,
-              isExisting: true,
-              originalUrl: img.url
-            }));
+            // Create slots for Face, Full Body, Toothy Grin (first 3 positions)
+            const structuredImages = [
+              { type: 'face', url: imagesJson.face },
+              { type: 'fullbody', url: imagesJson.fullbody },  
+              { type: 'toothyGrin', url: imagesJson.toothyGrin }
+            ];
             
-            // Add empty slots to reach at least 3 slots
-            while (slots.length < 3) {
-              slots.push({
+            structuredImages.forEach((imgData, index) => {
+              if (imgData.url) {
+                slots.push({
+                  file: null,
+                  preview: imgData.url,
+                  id: `existing-${imgData.type}`,
+                  isEmpty: false,
+                  isExisting: true,
+                  originalUrl: imgData.url,
+                  imageType: imgData.type
+                });
+              } else {
+                slots.push({
+                  file: null,
+                  preview: null,
+                  id: null,
+                  isEmpty: true,
+                  isExisting: false,
+                  originalUrl: null,
+                  imageType: imgData.type
+                });
+              }
+            });
+            
+            // Add extra images if any
+            if (imagesJson.extras && Object.keys(imagesJson.extras).length > 0) {
+              Object.entries(imagesJson.extras).forEach(([key, url]) => {
+                if (url) {
+                  slots.push({
+                    file: null,
+                    preview: url,
+                    id: `existing-extra-${key}`,
+                    isEmpty: false,
+                    isExisting: true,
+                    originalUrl: url,
+                    imageType: 'extra',
+                    extraKey: key
+                  });
+                }
+              });
+            }
+            
+            setImageSlots(slots);
+            
+            // Set existing images for backward compatibility
+            const existingImagesArray = [];
+            if (imagesJson.face) existingImagesArray.push({ url: imagesJson.face });
+            if (imagesJson.fullbody) existingImagesArray.push({ url: imagesJson.fullbody });
+            if (imagesJson.toothyGrin) existingImagesArray.push({ url: imagesJson.toothyGrin });
+            if (imagesJson.extras) {
+              Object.values(imagesJson.extras).forEach(url => {
+                if (url) existingImagesArray.push({ url });
+              });
+            }
+            setExistingImages(existingImagesArray);
+            
+          } else {
+            // Fallback to legacy images array format if imagesJson is not available
+            if (result.payload?.images?.length > 0) {
+              const images = result.payload.images.map((img) => ({
+                url: img.url,
+              }));
+              
+              // Create slots from existing images (legacy format)
+              const slots = images.map((img, index) => ({
+                file: null,
+                preview: img.url,
+                id: `existing-${index}`,
+                isEmpty: false,
+                isExisting: true,
+                originalUrl: img.url
+              }));
+              
+              // Add empty slots to reach at least 3 slots
+              while (slots.length < 3) {
+                slots.push({
+                  file: null,
+                  preview: null,
+                  id: null,
+                  isEmpty: true,
+                  isExisting: false,
+                  originalUrl: null
+                });
+              }
+              
+              setImageSlots(slots);
+              setExistingImages(images);
+            } else {
+              // Initialize with 3 empty slots
+              const emptySlots = Array(3).fill(null).map((_, index) => ({
                 file: null,
                 preview: null,
                 id: null,
                 isEmpty: true,
                 isExisting: false,
                 originalUrl: null
-              });
+              }));
+              setImageSlots(emptySlots);
+              setExistingImages([]);
             }
-            
-            setImageSlots(slots);
-            setExistingImages(images);
-          } else {
-            // Initialize with 3 empty slots
-            const emptySlots = Array(3).fill(null).map((_, index) => ({
-              file: null,
-              preview: null,
-              id: null,
-              isEmpty: true,
-              isExisting: false,
-              originalUrl: null
-            }));
-            setImageSlots(emptySlots);
-            setExistingImages([]);
           }
         } else {
           console.error("Fetch failed:", result);
@@ -740,26 +909,28 @@ const EditProfileView = () => {
                                 }`}
                               >
                                 {slot.isExisting ? "Existing" : "New"} -{" "}
-                                {idx === 0
-                                  ? "Face"
-                                  : idx === 1
-                                    ? "Full Body"
-                                    : idx === 2
-                                      ? "Toothy Grin"
-                                      : `Extra ${idx - 2}`}
+                                {slot.imageType === 'face' ? "Face" :
+                                 slot.imageType === 'fullbody' ? "Full Body" :
+                                 slot.imageType === 'toothyGrin' ? "Toothy Grin" :
+                                 slot.imageType === 'extra' ? `Extra ${slot.extraKey || idx - 2}` :
+                                 idx === 0 ? "Face" :
+                                 idx === 1 ? "Full Body" :
+                                 idx === 2 ? "Toothy Grin" :
+                                 `Extra ${idx - 2}`}
                               </div>
                             </>
                           ) : (
                             <div className="h-24 w-full rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center">
                               <FaCamera className="h-6 w-6 text-gray-400 mb-1" />
                               <span className="text-xs text-gray-500">
-                                {idx === 0
-                                  ? "Face"
-                                  : idx === 1
-                                    ? "Full Body"
-                                    : idx === 2
-                                      ? "Toothy Grin"
-                                      : `Extra ${idx - 2}`}
+                                {slot.imageType === 'face' ? "Face" :
+                                 slot.imageType === 'fullbody' ? "Full Body" :
+                                 slot.imageType === 'toothyGrin' ? "Toothy Grin" :
+                                 slot.imageType === 'extra' ? `Extra ${slot.extraKey || idx - 2}` :
+                                 idx === 0 ? "Face" :
+                                 idx === 1 ? "Full Body" :
+                                 idx === 2 ? "Toothy Grin" :
+                                 `Extra ${idx - 2}`}
                               </span>
                             </div>
                           )}
