@@ -40,7 +40,7 @@ export const AllCard = ({ loading, dashboardData, filter }) => {
       value: dashboardData?.verifiedProfiles || "0",
       icon: <FaCheckCircle className="h-5 w-5 text-gray-800" />,
       color: "bg-green-50",
-      link: "/admin/user-edit",
+      link: "/admin/user-profile",
     },
     {
       id: 5,
