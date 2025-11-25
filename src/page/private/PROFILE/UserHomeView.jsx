@@ -6,7 +6,8 @@ import ProfileInfoView from "./components/ProfileInfoView";
 import { updateUser } from "../../../features/auth/authSlice";
 import { GET } from "../../../config/api/httpMethods";
 import { endpoints } from "../../../config/api/httpEndpoint";
-import { FaUser } from "react-icons/fa";
+import { FaPowerOff, FaUser } from "react-icons/fa";
+import { AUTH_COOKIE } from "../../../utils/authCookie";
 
 const UserHomeView = () => {
   const dispatch = useDispatch();
@@ -18,48 +19,54 @@ const UserHomeView = () => {
   // Prioritize structured images (face, fullbody, toothyGrin, extras) over imageUrls
   const structuredImages = userProfile?.images || {};
   const fallbackImages = userProfile?.imageUrls || [];
-  
+
   // Create ordered array: face -> fullbody -> toothyGrin -> extras
   const orderedImages = [];
-  
+
   // Add face image first
   if (structuredImages.face) {
-    orderedImages.push(typeof structuredImages.face === 'string' 
-      ? { url: structuredImages.face } 
-      : structuredImages.face
+    orderedImages.push(
+      typeof structuredImages.face === "string"
+        ? { url: structuredImages.face }
+        : structuredImages.face,
     );
   }
-  
+
   // Add fullbody image second
   if (structuredImages.fullbody) {
-    orderedImages.push(typeof structuredImages.fullbody === 'string' 
-      ? { url: structuredImages.fullbody } 
-      : structuredImages.fullbody
+    orderedImages.push(
+      typeof structuredImages.fullbody === "string"
+        ? { url: structuredImages.fullbody }
+        : structuredImages.fullbody,
     );
   }
-  
+
   // Add toothyGrin image third
   if (structuredImages.toothyGrin) {
-    orderedImages.push(typeof structuredImages.toothyGrin === 'string' 
-      ? { url: structuredImages.toothyGrin } 
-      : structuredImages.toothyGrin
+    orderedImages.push(
+      typeof structuredImages.toothyGrin === "string"
+        ? { url: structuredImages.toothyGrin }
+        : structuredImages.toothyGrin,
     );
   }
-  
+
   // Add extras images
   if (structuredImages.extras && Array.isArray(structuredImages.extras)) {
-    structuredImages.extras.forEach(img => {
+    structuredImages.extras.forEach((img) => {
       if (img) {
-        orderedImages.push(typeof img === 'string' ? { url: img } : img);
+        orderedImages.push(typeof img === "string" ? { url: img } : img);
       }
     });
   }
-  
+
   // If no structured images available, fall back to imageUrls array
-  const images = orderedImages.length > 0 
-    ? orderedImages 
-    : fallbackImages.map(img => typeof img === 'string' ? { url: img } : img);
-    
+  const images =
+    orderedImages.length > 0
+      ? orderedImages
+      : fallbackImages.map((img) =>
+          typeof img === "string" ? { url: img } : img,
+        );
+
   const email = user?.email;
 
   useEffect(() => {
@@ -81,6 +88,11 @@ const UserHomeView = () => {
     fetchUserData();
   }, [dispatch, email]);
 
+  const handleLogout = () => {
+    AUTH_COOKIE.remove();
+    window.location.href = "/auth/login";
+  };
+
   return (
     <div className="flex flex-col items-center justify-center bg-[#3B3B3D] px-4 text-white">
       {isVerified ? (
@@ -93,7 +105,7 @@ const UserHomeView = () => {
             {/* Status Card */}
             <div className="rounded-2xl border border-orange-500/30 bg-slate-800/10 p-8 shadow">
               {/* User Email Badge */}
-              <div className="mb-6 flex justify-center">
+              <div className="mb-6 flex items-center justify-center gap-4">
                 <div className="inline-flex items-center gap-2 rounded-full border border-slate-600 bg-slate-700/50 px-4 py-2">
                   <svg
                     className="h-4 w-4 text-orange-400"
@@ -106,6 +118,14 @@ const UserHomeView = () => {
                   <span className="text-sm font-medium text-slate-200">
                     {user?.email}
                   </span>
+                </div>
+                <div>
+                  <button
+                    onClick={handleLogout}
+                    className="rounded-full border border-red-500 p-2 text-sm font-medium text-slate-200 hover:text-orange-400"
+                  >
+                    <FaPowerOff />
+                  </button>
                 </div>
               </div>
 
