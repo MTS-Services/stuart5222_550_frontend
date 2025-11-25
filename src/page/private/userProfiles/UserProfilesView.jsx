@@ -122,7 +122,7 @@ const UserProfilesView = () => {
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={!hasPrevPage || isLoading}
-            className="rounded-xl border px-4 py-1.5 font-raleway md:px-5 md:py-2"
+            className={`rounded-xl border px-4 py-1.5 font-raleway md:px-5 md:py-2 ${!hasPrevPage || isLoading ? "cursor-not-allowed border-gray-300 text-gray-400" : "border-[#F07400] text-[#F07400] hover:bg-[#F07400] hover:text-white"}`}
           >
             Prev
           </button>
@@ -138,7 +138,7 @@ const UserProfilesView = () => {
               )
             }
             disabled={!hasNextPage || isLoading}
-            className="rounded-xl border px-4 py-1.5 font-raleway md:px-5 md:py-2"
+            className={`rounded-xl border px-4 py-1.5 font-raleway md:px-5 md:py-2 ${!hasPrevPage || isLoading ? "cursor-not-allowed border-gray-300 text-gray-400" : "border-[#F07400] text-[#F07400] hover:bg-[#F07400] hover:text-white"}`}
           >
             Next
           </button>

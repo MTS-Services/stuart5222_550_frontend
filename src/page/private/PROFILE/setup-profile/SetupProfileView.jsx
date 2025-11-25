@@ -45,34 +45,42 @@ const SetupProfileView = () => {
   // ============================================
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    const filledSlots = imageSlots.filter(slot => !slot.isEmpty).length;
+    const filledSlots = imageSlots.filter((slot) => !slot.isEmpty).length;
     const maxNewFiles = 13 - filledSlots;
 
     // Filter out non-image files first and add HEIF support
     const validFiles = selectedFiles.filter((file) => {
-      return file.type.startsWith("image/") || 
-             file.type === "image/heif" || 
-             file.type === "image/heic" ||
-             file.name.toLowerCase().endsWith('.heif') ||
-             file.name.toLowerCase().endsWith('.heic');
+      return (
+        file.type.startsWith("image/") ||
+        file.type === "image/heif" ||
+        file.type === "image/heic" ||
+        file.name.toLowerCase().endsWith(".heif") ||
+        file.name.toLowerCase().endsWith(".heic")
+      );
     });
 
     if (validFiles.length !== selectedFiles.length) {
       const invalidCount = selectedFiles.length - validFiles.length;
-      toast.error(`❌ ${invalidCount} invalid file${invalidCount > 1 ? 's' : ''} skipped. Only image files are allowed (JPEG, PNG, GIF, WebP, HEIF, HEIC).`);
+      toast.error(
+        `❌ ${invalidCount} invalid file${invalidCount > 1 ? "s" : ""} skipped. Only image files are allowed (JPEG, PNG, GIF, WebP, HEIF, HEIC).`,
+      );
     }
 
     // Check file sizes (max 10MB per file)
     const maxSize = 10 * 1024 * 1024; // 10MB
-    const oversizedFiles = validFiles.filter(file => file.size > maxSize);
+    const oversizedFiles = validFiles.filter((file) => file.size > maxSize);
     if (oversizedFiles.length > 0) {
-      const oversizedNames = oversizedFiles.map(f => `${f.name} (${(f.size / 1024 / 1024).toFixed(2)}MB)`).join(', ');
-      toast.error(`❌ Files too large: ${oversizedNames}. Maximum 10MB per file allowed.`);
+      const oversizedNames = oversizedFiles
+        .map((f) => `${f.name} (${(f.size / 1024 / 1024).toFixed(2)}MB)`)
+        .join(", ");
+      toast.error(
+        `❌ Files too large: ${oversizedNames}. Maximum 10MB per file allowed.`,
+      );
       e.target.value = "";
       return;
     }
 
-    const finalFiles = validFiles.filter(file => file.size <= maxSize);
+    const finalFiles = validFiles.filter((file) => file.size <= maxSize);
 
     // If no valid files, return early
     if (finalFiles.length === 0) {
@@ -94,39 +102,39 @@ const SetupProfileView = () => {
     }
 
     const updatedSlots = [...imageSlots];
-    
+
     filesToAdd.forEach((file) => {
       // Find first empty slot or add new slot
-      let emptySlotIndex = updatedSlots.findIndex(slot => slot.isEmpty);
-      
+      let emptySlotIndex = updatedSlots.findIndex((slot) => slot.isEmpty);
+
       let imageType, extraKey;
       if (emptySlotIndex !== -1) {
         // Filling existing empty slot - determine type based on position
         if (emptySlotIndex === 0) {
-          imageType = 'face';
+          imageType = "face";
         } else if (emptySlotIndex === 1) {
-          imageType = 'fullbody';
+          imageType = "fullbody";
         } else if (emptySlotIndex === 2) {
-          imageType = 'toothyGrin';
+          imageType = "toothyGrin";
         } else {
-          imageType = 'extra';
+          imageType = "extra";
           extraKey = `${emptySlotIndex - 2}`;
         }
       } else {
         // Adding new slot - it will be an extra
-        imageType = 'extra';
+        imageType = "extra";
         extraKey = `${updatedSlots.length - 2}`;
       }
-      
+
       const newSlot = {
         file: file,
         preview: URL.createObjectURL(file),
         id: Date.now() + Math.random(),
         isEmpty: false,
         imageType: imageType,
-        extraKey: extraKey
+        extraKey: extraKey,
       };
-      
+
       if (emptySlotIndex !== -1) {
         // Fill empty slot
         if (updatedSlots[emptySlotIndex].preview) {
@@ -140,28 +148,36 @@ const SetupProfileView = () => {
     });
 
     setImageSlots(updatedSlots);
-    
+
     // Update legacy arrays for backward compatibility
-    const activeSlots = updatedSlots.filter(slot => !slot.isEmpty);
-    setFiles(activeSlots.map(slot => slot.file));
-    setImagePreviews(activeSlots.map(slot => slot.preview));
-    
+    const activeSlots = updatedSlots.filter((slot) => !slot.isEmpty);
+    setFiles(activeSlots.map((slot) => slot.file));
+    setImagePreviews(activeSlots.map((slot) => slot.preview));
+
     // Check requirements after upload and show status
-    const hasface = activeSlots.some(slot => slot.imageType === 'face');
-    const hasFullBody = activeSlots.some(slot => slot.imageType === 'fullbody');
-    const hasToothyGrin = activeSlots.some(slot => slot.imageType === 'toothyGrin');
-    
+    const hasface = activeSlots.some((slot) => slot.imageType === "face");
+    const hasFullBody = activeSlots.some(
+      (slot) => slot.imageType === "fullbody",
+    );
+    const hasToothyGrin = activeSlots.some(
+      (slot) => slot.imageType === "toothyGrin",
+    );
+
     const missing = [];
-    if (!hasface) missing.push('Face');
-    if (!hasFullBody) missing.push('Full Body');
-    if (!hasToothyGrin) missing.push('Toothy Grin');
-    
+    if (!hasface) missing.push("Face");
+    if (!hasFullBody) missing.push("Full Body");
+    if (!hasToothyGrin) missing.push("Toothy Grin");
+
     if (missing.length > 0) {
-      toast.info(`Still need: ${missing.join(', ')} image${missing.length > 1 ? 's' : ''}`);
+      toast.info(
+        `Still need: ${missing.join(", ")} image${missing.length > 1 ? "s" : ""}`,
+      );
     } else {
-      toast.success("✅ All required images uploaded (Face, Full Body, Toothy Grin)");
+      toast.success(
+        "✅ All required images uploaded (Face, Full Body, Toothy Grin)",
+      );
     }
-    
+
     e.target.value = "";
   };
 
@@ -173,46 +189,53 @@ const SetupProfileView = () => {
     }
 
     const updatedSlots = [...imageSlots];
-    
+
     // Revoke the object URL to free memory
     if (updatedSlots[index].preview) {
       URL.revokeObjectURL(updatedSlots[index].preview);
     }
-    
+
     if (index < 3) {
       // For first 3 positions (Face, Full Body, Toothy Grin): Keep slot but mark as empty
-      const imageType = index === 0 ? 'face' : index === 1 ? 'fullbody' : 'toothyGrin';
+      const imageType =
+        index === 0 ? "face" : index === 1 ? "fullbody" : "toothyGrin";
       updatedSlots[index] = {
         file: null,
         preview: null,
         id: null,
         isEmpty: true,
-        imageType: imageType
+        imageType: imageType,
       };
     } else {
       // For Extra positions: Remove the slot completely
       updatedSlots.splice(index, 1);
     }
-    
+
     setImageSlots(updatedSlots);
-    
+
     // Update legacy arrays for backward compatibility
-    const activeSlots = updatedSlots.filter(slot => !slot.isEmpty);
-    setFiles(activeSlots.map(slot => slot.file));
-    setImagePreviews(activeSlots.map(slot => slot.preview));
-    
+    const activeSlots = updatedSlots.filter((slot) => !slot.isEmpty);
+    setFiles(activeSlots.map((slot) => slot.file));
+    setImagePreviews(activeSlots.map((slot) => slot.preview));
+
     // Check requirements after removal and show status
-    const hasface = activeSlots.some(slot => slot.imageType === 'face');
-    const hasFullBody = activeSlots.some(slot => slot.imageType === 'fullbody');
-    const hasToothyGrin = activeSlots.some(slot => slot.imageType === 'toothyGrin');
-    
+    const hasface = activeSlots.some((slot) => slot.imageType === "face");
+    const hasFullBody = activeSlots.some(
+      (slot) => slot.imageType === "fullbody",
+    );
+    const hasToothyGrin = activeSlots.some(
+      (slot) => slot.imageType === "toothyGrin",
+    );
+
     const missing = [];
-    if (!hasface) missing.push('Face');
-    if (!hasFullBody) missing.push('Full Body');
-    if (!hasToothyGrin) missing.push('Toothy Grin');
-    
+    if (!hasface) missing.push("Face");
+    if (!hasFullBody) missing.push("Full Body");
+    if (!hasToothyGrin) missing.push("Toothy Grin");
+
     if (missing.length > 0) {
-      toast.warn(`Missing required: ${missing.join(', ')} image${missing.length > 1 ? 's' : ''}`);
+      toast.warn(
+        `Missing required: ${missing.join(", ")} image${missing.length > 1 ? "s" : ""}`,
+      );
     }
   };
 
@@ -258,27 +281,30 @@ const SetupProfileView = () => {
     const validationErrors = validateForm(formData, files);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      toast.warn("Required fields are missing!");
       return;
     }
 
     // Check if all required image types are present
-    const activeSlots = imageSlots.filter(slot => !slot.isEmpty);
-    const hasface = activeSlots.some(slot => slot.imageType === 'face');
-    const hasFullBody = activeSlots.some(slot => slot.imageType === 'fullbody');
-    const hasToothyGrin = activeSlots.some(slot => slot.imageType === 'toothyGrin');
-    
+    const activeSlots = imageSlots.filter((slot) => !slot.isEmpty);
+    const hasface = activeSlots.some((slot) => slot.imageType === "face");
+    const hasFullBody = activeSlots.some(
+      (slot) => slot.imageType === "fullbody",
+    );
+    const hasToothyGrin = activeSlots.some(
+      (slot) => slot.imageType === "toothyGrin",
+    );
+
     if (!hasface || !hasFullBody || !hasToothyGrin) {
       const missing = [];
-      if (!hasface) missing.push('Face');
-      if (!hasFullBody) missing.push('Full Body');
-      if (!hasToothyGrin) missing.push('Toothy Grin');
-      
-      setErrors({ images: `Required images missing: ${missing.join(', ')}` });
-      toast.warn(`Please upload all required images: ${missing.join(', ')}`);
+      if (!hasface) missing.push("Face");
+      if (!hasFullBody) missing.push("Full Body");
+      if (!hasToothyGrin) missing.push("Toothy Grin");
+
+      setErrors({ images: `Required images missing: ${missing.join(", ")}` });
+      toast.warn(`Please upload all required images: ${missing.join(", ")}`);
       return;
     }
-    
+
     if (activeSlots.length < 3) {
       setErrors({ images: "Minimum 3 images required" });
       toast.warn("Please upload at least 3 images before submitting");
@@ -300,7 +326,7 @@ const SetupProfileView = () => {
       });
 
       // Append image files using structured format
-      const activeSlots = imageSlots.filter(slot => !slot.isEmpty);
+      const activeSlots = imageSlots.filter((slot) => !slot.isEmpty);
       activeSlots.forEach((slot, index) => {
         if (slot.file) {
           if (index === 0) {
@@ -346,13 +372,16 @@ const SetupProfileView = () => {
   // Initialize empty slots for better UX
   useEffect(() => {
     if (imageSlots.length === 0) {
-      const initialSlots = Array(3).fill(null).map((_, index) => ({
-        file: null,
-        preview: null,
-        id: null,
-        isEmpty: true,
-        imageType: index === 0 ? 'face' : index === 1 ? 'fullbody' : 'toothyGrin'
-      }));
+      const initialSlots = Array(3)
+        .fill(null)
+        .map((_, index) => ({
+          file: null,
+          preview: null,
+          id: null,
+          isEmpty: true,
+          imageType:
+            index === 0 ? "face" : index === 1 ? "fullbody" : "toothyGrin",
+        }));
       setImageSlots(initialSlots);
     }
   }, []);
@@ -370,14 +399,17 @@ const SetupProfileView = () => {
 
   // Ensure imageSlots and legacy arrays stay synchronized
   useEffect(() => {
-    const activeSlots = imageSlots.filter(slot => !slot.isEmpty);
-    if (files.length !== imagePreviews.length || files.length !== activeSlots.length) {
-      console.warn('⚠️ Arrays are out of sync:', {
+    const activeSlots = imageSlots.filter((slot) => !slot.isEmpty);
+    if (
+      files.length !== imagePreviews.length ||
+      files.length !== activeSlots.length
+    ) {
+      console.warn("⚠️ Arrays are out of sync:", {
         filesLength: files.length,
         previewsLength: imagePreviews.length,
         activeSlotsLength: activeSlots.length,
-        files: files.map(f => f.name),
-        previews: imagePreviews.length
+        files: files.map((f) => f.name),
+        previews: imagePreviews.length,
       });
     }
   }, [files, imagePreviews, imageSlots]);
@@ -646,7 +678,10 @@ const SetupProfileView = () => {
                   <div className="mt-4 w-full">
                     <div className="mb-4 grid grid-cols-3 gap-3">
                       {imageSlots.map((slot, idx) => (
-                        <div key={slot.id || `empty-${idx}`} className="group relative">
+                        <div
+                          key={slot.id || `empty-${idx}`}
+                          className="group relative"
+                        >
                           {!slot.isEmpty ? (
                             <>
                               <img
@@ -664,28 +699,42 @@ const SetupProfileView = () => {
 
                               {/* 🔖 Image Type Label */}
                               <div className="absolute bottom-1 left-1 rounded bg-black bg-opacity-60 px-2 py-[2px] text-[10px] text-white">
-                                {slot.imageType === 'face' ? "Face" :
-                                 slot.imageType === 'fullbody' ? "Full Body" :
-                                 slot.imageType === 'toothyGrin' ? "Toothy Grin" :
-                                 slot.imageType === 'extra' ? `Extra ${slot.extraKey || idx - 2}` :
-                                 idx === 0 ? "Face" :
-                                 idx === 1 ? "Full Body" :
-                                 idx === 2 ? "Toothy Grin" :
-                                 `Extra ${idx - 2}`}
+                                {slot.imageType === "face"
+                                  ? "Face"
+                                  : slot.imageType === "fullbody"
+                                    ? "Full Body"
+                                    : slot.imageType === "toothyGrin"
+                                      ? "Toothy Grin"
+                                      : slot.imageType === "extra"
+                                        ? `Extra ${slot.extraKey || idx - 2}`
+                                        : idx === 0
+                                          ? "Face"
+                                          : idx === 1
+                                            ? "Full Body"
+                                            : idx === 2
+                                              ? "Toothy Grin"
+                                              : `Extra ${idx - 2}`}
                               </div>
                             </>
                           ) : (
-                            <div className="h-24 w-full rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 flex flex-col items-center justify-center">
-                              <FaCamera className="h-6 w-6 text-gray-400 mb-1" />
+                            <div className="flex h-24 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
+                              <FaCamera className="mb-1 h-6 w-6 text-gray-400" />
                               <span className="text-xs text-gray-500">
-                                {slot.imageType === 'face' ? "Face" :
-                                 slot.imageType === 'fullbody' ? "Full Body" :
-                                 slot.imageType === 'toothyGrin' ? "Toothy Grin" :
-                                 slot.imageType === 'extra' ? `Extra ${slot.extraKey || idx - 2}` :
-                                 idx === 0 ? "Face" :
-                                 idx === 1 ? "Full Body" :
-                                 idx === 2 ? "Toothy Grin" :
-                                 `Extra ${idx - 2}`}
+                                {slot.imageType === "face"
+                                  ? "Face"
+                                  : slot.imageType === "fullbody"
+                                    ? "Full Body"
+                                    : slot.imageType === "toothyGrin"
+                                      ? "Toothy Grin"
+                                      : slot.imageType === "extra"
+                                        ? `Extra ${slot.extraKey || idx - 2}`
+                                        : idx === 0
+                                          ? "Face"
+                                          : idx === 1
+                                            ? "Full Body"
+                                            : idx === 2
+                                              ? "Toothy Grin"
+                                              : `Extra ${idx - 2}`}
                               </span>
                             </div>
                           )}
