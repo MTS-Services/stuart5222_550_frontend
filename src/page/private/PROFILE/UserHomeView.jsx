@@ -119,14 +119,6 @@ const UserHomeView = () => {
                     {user?.email}
                   </span>
                 </div>
-                <div>
-                  <button
-                    onClick={handleLogout}
-                    className="rounded-full border border-red-500 p-2 text-sm font-medium text-slate-200 hover:text-orange-400"
-                  >
-                    <FaPowerOff />
-                  </button>
-                </div>
               </div>
 
               {/* Status Indicator */}
@@ -222,6 +214,15 @@ const UserHomeView = () => {
                   </div>
                 )}
               </div>
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 rounded-xl border border-orange-500/30 bg-slate-800/10 px-3 py-2 text-sm text-orange-400 shadow hover:bg-slate-700/20 hover:text-orange-300"
+              >
+                <FaPowerOff /> Logout
+              </button>
             </div>
 
             {/* Progress Steps */}
