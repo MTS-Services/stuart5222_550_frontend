@@ -174,7 +174,7 @@ const SetupProfileView = () => {
       );
     } else {
       toast.success(
-        "✅ All required images uploaded (Face, Full Body, Toothy Grin)",
+        "All required images uploaded (Face, Full Body, Toothy Grin)",
       );
     }
 
@@ -279,8 +279,44 @@ const SetupProfileView = () => {
 
     // ✅ Validate with files
     const validationErrors = validateForm(formData, files);
+
+    const errorPriority = [
+      "birthYear",
+      "height",
+      "bodyType",
+      "county",
+      "bio",
+      "images",
+    ];
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+
+      // Find first matching error from priority list
+      const firstKey = errorPriority.find((key) => validationErrors[key]);
+
+      // Fallback: if error exists but not in priority, use the first key in validationErrors
+      const finalKey = firstKey || Object.keys(validationErrors)[0];
+      const message = validationErrors[finalKey];
+
+      switch (finalKey) {
+        case "images":
+          toast.warn(message);
+          break;
+
+        case "birthYear":
+        case "height":
+        case "bodyType":
+        case "county":
+        case "bio":
+          toast.error(message);
+          break;
+
+        default:
+          toast.error(message);
+          break;
+      }
+
       return;
     }
 
@@ -363,7 +399,7 @@ const SetupProfileView = () => {
       setFiles([]);
       setImageSlots([]);
     } catch (err) {
-      toast.error(err || "❌ Failed to submit profile. Please try again.");
+      toast.error(err || "Failed to submit profile. Please try again.");
     } finally {
       setSubmitLoading(false);
     }
@@ -404,7 +440,7 @@ const SetupProfileView = () => {
       files.length !== imagePreviews.length ||
       files.length !== activeSlots.length
     ) {
-      console.warn("⚠️ Arrays are out of sync:", {
+      console.warn("Arrays are out of sync:", {
         filesLength: files.length,
         previewsLength: imagePreviews.length,
         activeSlotsLength: activeSlots.length,

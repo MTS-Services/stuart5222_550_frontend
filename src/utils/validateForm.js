@@ -24,26 +24,21 @@ export const validateForm = (formData, files = []) => {
 
   // Height validation - check if height was properly formatted from feet/inches
   if (!formData.height?.trim()) {
-    newErrors.height = toast.error("Height is required (both feet and inches)");
+    newErrors.height = "Height is required (both feet and inches)";
   } else {
     // Validate height format (e.g., "5'10")
     const heightPattern = /^\d+'(\d{1,2})"?$/;
     if (!heightPattern.test(formData.height)) {
-      newErrors.height = toast.error("Please enter valid feet and inches");
+      newErrors.height = "Please enter valid feet and inches";
     }
   }
 
-  if (!formData.bodyType?.trim())
-    newErrors.bodyType = toast.error("Body type is required");
-  if (!formData.county?.trim())
-    newErrors.county = toast.error("County is required");
-  if (!formData.bio?.trim())
-    newErrors.bio = toast.error("Tell us about yourself");
+  if (!formData.bodyType?.trim()) newErrors.bodyType = "Body type is required";
+  if (!formData.county?.trim()) newErrors.county = "County is required";
+  if (!formData.bio?.trim()) newErrors.bio = "Tell us about yourself";
 
   if (!formData.email?.trim() && !formData.phone?.trim()) {
-    newErrors.contact = toast.error(
-      "Please provide either email or phone number",
-    );
+    newErrors.contact = "Please provide either email or phone number";
   }
 
   if (
