@@ -352,6 +352,20 @@ const SetupProfileView = () => {
     setErrors({});
     setSubmitLoading(true);
 
+    // 🔍 FRONTEND LOG: Before form submission
+    console.log('============================================');
+    console.log('📤 FRONTEND: Setup Profile Form Submission');
+    console.log('============================================');
+    console.log('Form Data:', formData);
+    console.log('Active Image Slots:', activeSlots.length);
+    console.log('Image Slots Details:', activeSlots.map((slot, idx) => ({
+      index: idx,
+      imageType: slot.imageType,
+      fileName: slot.file?.name,
+      fileSize: slot.file ? `${(slot.file.size / 1024 / 1024).toFixed(2)}MB` : 'N/A'
+    })));
+    console.log('============================================');
+
     try {
       // Build FormData with structured image fields
       const submitData = new FormData();
@@ -383,7 +397,14 @@ const SetupProfileView = () => {
         }
       });
 
-      await dispatch(submitProfile(submitData)).unwrap();
+      const result = await dispatch(submitProfile(submitData)).unwrap();
+
+      // 🔍 FRONTEND LOG: After successful submission
+      console.log('============================================');
+      console.log('✅ FRONTEND: Profile Submitted Successfully');
+      console.log('============================================');
+      console.log('Server Response:', result);
+      console.log('============================================');
 
       // Fetch updated user data to refresh user status
       try {
