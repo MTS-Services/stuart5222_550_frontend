@@ -28,7 +28,7 @@ const SetupProfileView = () => {
   const [success, setSuccess] = useState(false);
   const [files, setFiles] = useState([]);
   const [errors, setErrors] = useState({});
-  const [imageSlots, setImageSlots] = useState([]); // Array of objects: {file, preview, id, isEmpty}
+  const [imageSlots, setImageSlots] = useState([]);
   const [birthMonth, setBirthMonth] = useState(null);
   const [birthYear, setBirthYear] = useState(null);
   const [county, setCounty] = useState("");
@@ -62,19 +62,20 @@ const SetupProfileView = () => {
     if (validFiles.length !== selectedFiles.length) {
       const invalidCount = selectedFiles.length - validFiles.length;
       toast.error(
-        `❌ ${invalidCount} invalid file${invalidCount > 1 ? "s" : ""} skipped. Only image files are allowed (JPEG, PNG, GIF, WebP, HEIF, HEIC).`,
+        `${invalidCount} invalid file${invalidCount > 1 ? "s" : ""} skipped. Only image files are allowed (JPEG, PNG, GIF, WebP, HEIF, HEIC).`,
       );
     }
 
-    // Check file sizes (max 10MB per file)
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    // Check file sizes (max 90MB per file)
+    const maxSize = 90 * 1024 * 1024; // 90MB
+
     const oversizedFiles = validFiles.filter((file) => file.size > maxSize);
     if (oversizedFiles.length > 0) {
       const oversizedNames = oversizedFiles
         .map((f) => `${f.name} (${(f.size / 1024 / 1024).toFixed(2)}MB)`)
         .join(", ");
       toast.error(
-        `❌ Files too large: ${oversizedNames}. Maximum 10MB per file allowed.`,
+        `Files too large: ${oversizedNames}. Maximum 90MB per file allowed.`,
       );
       e.target.value = "";
       return;
@@ -93,10 +94,10 @@ const SetupProfileView = () => {
     if (finalFiles.length > maxNewFiles) {
       filesToAdd = finalFiles.slice(0, maxNewFiles);
       if (maxNewFiles === 0) {
-        toast.warn("❌ You have already reached the maximum of 13 images");
+        toast.warn("You have already reached the maximum of 13 images");
       } else {
         toast.warn(
-          `⚠️ Only ${maxNewFiles} of ${finalFiles.length} image${finalFiles.length > 1 ? "s" : ""} added. Maximum 13 images allowed.`,
+          `Only ${maxNewFiles} of ${finalFiles.length} image${finalFiles.length > 1 ? "s" : ""} added. Maximum 13 images allowed.`,
         );
       }
     }
@@ -159,6 +160,7 @@ const SetupProfileView = () => {
     const hasFullBody = activeSlots.some(
       (slot) => slot.imageType === "fullbody",
     );
+
     const hasToothyGrin = activeSlots.some(
       (slot) => slot.imageType === "toothyGrin",
     );
@@ -167,7 +169,6 @@ const SetupProfileView = () => {
     if (!hasface) missing.push("Face");
     if (!hasFullBody) missing.push("Full Body");
     if (!hasToothyGrin) missing.push("Toothy Grin");
-
     if (missing.length > 0) {
       toast.info(
         `Still need: ${missing.join(", ")} image${missing.length > 1 ? "s" : ""}`,
@@ -281,6 +282,7 @@ const SetupProfileView = () => {
     const validationErrors = validateForm(formData, files);
 
     const errorPriority = [
+      "birthMonth",
       "birthYear",
       "height",
       "bodyType",
@@ -303,7 +305,7 @@ const SetupProfileView = () => {
         case "images":
           toast.warn(message);
           break;
-
+        case "birthMonth":
         case "birthYear":
         case "height":
         case "bodyType":
@@ -540,9 +542,9 @@ const SetupProfileView = () => {
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
               />
 
-              {errors.bodyType && (
+              {errors.bodyType ? (
                 <p className="text-sm text-red-500">{errors.bodyType}</p>
-              )}
+              ) : null}
             </div>
 
             {/* Location Input Component */}
