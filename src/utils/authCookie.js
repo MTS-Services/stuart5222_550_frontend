@@ -1,6 +1,5 @@
 import Cookies from "js-cookie";
-
-const oneMinute = new Date(new Date().getTime() + 1 * 60 * 1000);
+const oneMinute = new Date(new Date().getTime() + 1 * 60 * 10000);
 
 export const AUTH_COOKIE = {
   // -----------------
@@ -8,7 +7,7 @@ export const AUTH_COOKIE = {
   // -----------------
   setUser: (user) => {
     Cookies.set("__app_user", JSON.stringify(user), {
-      expires: oneMinute, // 1 minute
+      expires: oneMinute, // 10 minutes
       secure: true,
       sameSite: "strict",
     });
@@ -24,11 +23,12 @@ export const AUTH_COOKIE = {
   // -----------------
   setToken: (token) => {
     Cookies.set("__app_token", token, {
-      expires: oneMinute, // 1 minute
+      expires: oneMinute, // 10 minutes
       secure: true,
       sameSite: "strict",
     });
   },
+
   getToken: () => Cookies.get("__app_token"),
   removeToken: () => Cookies.remove("__app_token"),
 

@@ -22,13 +22,16 @@ const AdminLayout = () => {
 
   const user = AUTH_COOKIE.getUser();
   const userToken = AUTH_COOKIE.getToken();
-  console.log("user:", user);
-  useEffect(() => {
-    if (!user || !userToken) return;
 
-    const timer = setTimeout(() => {
-      window.location.reload();
-    }, 60000);
+  useEffect(() => {
+    if (!user || !userToken) return; // skip timer if not logged in
+
+    const timer = setTimeout(
+      () => {
+        window.location.reload();
+      },
+      10 * 60 * 1000,
+    ); // 10 minutes
 
     return () => clearTimeout(timer);
   }, [user, userToken]);
