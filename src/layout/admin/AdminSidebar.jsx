@@ -59,7 +59,7 @@ const SidebarLink = ({ link, active, onClick }) => (
 );
 
 const AdminSidebar = () => {
-  const { unreadCount } = useSelector((state) => state.notifications);
+  // const { unreadCount } = useSelector((state) => state.notifications);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -116,7 +116,7 @@ const AdminSidebar = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 z-50 h-screen w-64 transform bg-[#FFFCFA] text-gray-950 transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed left-0 top-0 z-50 h-screen w-64 transform bg-[#faf7f4] text-gray-950 transition-transform duration-300 lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
