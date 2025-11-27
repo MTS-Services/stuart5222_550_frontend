@@ -6,7 +6,7 @@ export const AUTH_COOKIE = {
   // -----------------
   setUser: (user) => {
     Cookies.set("__app_user", JSON.stringify(user), {
-      expires: 10 / 1440, // 10 minute
+      expires: 1 / 1440, // 1 minute
       secure: true,
       sameSite: "strict",
     });
