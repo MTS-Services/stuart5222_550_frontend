@@ -1,0 +1,17 @@
+version: "1.0"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=production
+    ports:
+      - 3000:3000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "https://backend.scanmemaybe.com/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: always
