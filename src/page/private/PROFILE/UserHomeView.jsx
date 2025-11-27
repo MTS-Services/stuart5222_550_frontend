@@ -104,7 +104,7 @@ const UserHomeView = () => {
       case "ACTIVE":
         return "Profile Setup";
       case "PAID_SETUP":
-        return "Profile Edit";
+        return "Edit Profile";
       case "PROFILE_PENDING":
         return "Pending Approval";
       default:
@@ -169,10 +169,10 @@ const UserHomeView = () => {
 
               {/* Main Message */}
               <div className="mb-8 text-center">
-                <h2 className="mb-3 text-xl font-bold text-white">
+                <h2 className="mb-3 text-lg font-bold text-white">
                   Profile Verification Required
                 </h2>
-                <p className="leading-relaxed text-slate-400">
+                <p className="text-sm leading-relaxed text-slate-400">
                   Your profile status is currently{" "}
                   <span className="font-semibold text-orange-400">
                     {getStatusName(user?.status)}
