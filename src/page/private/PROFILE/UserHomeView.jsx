@@ -113,13 +113,13 @@ const UserHomeView = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-[#3B3B3D] px-4 text-white">
+    <div className="flex flex-col items-center justify-center border bg-[#3B3B3D] px-4 py-4 text-white">
       {isVerified ? (
         <>
           <ProfileInfoView profileData={userProfile} images={images} />
         </>
       ) : (
-        <div className="flex min-h-screen items-center justify-center">
+        <div className="flex min-h-screen items-center justify-center py-10">
           <div className="w-full max-w-md">
             {/* Status Card */}
             <div className="rounded-2xl border border-orange-500/30 bg-slate-800/10 p-8 shadow">
