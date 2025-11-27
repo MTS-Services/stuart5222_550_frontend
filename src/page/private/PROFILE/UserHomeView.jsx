@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchUserProfile } from "../../../features/public/profile/profileFetch";
+import {
+  fetchUserProfile,
+  rejectedProfile,
+} from "../../../features/public/profile/profileFetch";
 import ProfileInfoView from "./components/ProfileInfoView";
 import { updateUser } from "../../../features/auth/authSlice";
 import { GET } from "../../../config/api/httpMethods";
@@ -14,7 +17,7 @@ const UserHomeView = () => {
 
   const { userProfile } = useSelector((state) => state.profile);
   const { user } = useSelector((state) => state.auth);
-
+  const rejectionReason = user?.profile?.rejectionReason;
   const isVerified = user?.status === "VERIFIED";
   // Prioritize structured images (face, fullbody, toothyGrin, extras) over imageUrls
   const structuredImages = userProfile?.images || {};
@@ -68,11 +71,14 @@ const UserHomeView = () => {
         );
 
   const email = user?.email;
+  const userId = user?.id;
 
   useEffect(() => {
     if (email) {
       dispatch(fetchUserProfile({ userMail: email }));
     }
+
+    dispatch(rejectedProfile({ id: userId }));
 
     // Fetch latest user data to ensure status is current
     const fetchUserData = async () => {
@@ -86,11 +92,24 @@ const UserHomeView = () => {
       }
     };
     fetchUserData();
-  }, [dispatch, email]);
+  }, [dispatch, email, userId]);
 
   const handleLogout = () => {
     AUTH_COOKIE.remove();
     window.location.href = "/auth/login";
+  };
+
+  const getStatusName = (status) => {
+    switch (status) {
+      case "ACTIVE":
+        return "Profile Setup";
+      case "PAID_SETUP":
+        return "Profile Edit";
+      case "PROFILE_PENDING":
+        return "Pending Approval";
+      default:
+        return "Unknown Status";
+    }
   };
 
   return (
@@ -135,7 +154,7 @@ const UserHomeView = () => {
                 <span className="text-sm font-medium text-slate-400">
                   Status:{" "}
                   <span className="font-semibold text-slate-300">
-                    {user?.status}
+                    {getStatusName(user?.status)}
                   </span>
                 </span>
               </div>
@@ -148,7 +167,7 @@ const UserHomeView = () => {
                 <p className="leading-relaxed text-slate-400">
                   Your profile status is currently{" "}
                   <span className="font-semibold text-orange-400">
-                    {user?.status}
+                    {getStatusName(user?.status)}
                   </span>
                   .
                   <br />
@@ -171,25 +190,32 @@ const UserHomeView = () => {
 
                 {/* PAID_SETUP Status */}
                 {user?.status === "PAID_SETUP" && (
-                  <Link
-                    to={`/user/edit-profile/${user?.email}`}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-400"
-                  >
-                    <svg
-                      className="h-5 w-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                  <div className="space-y-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4">
+                    <h4 className="text-xl">You are rejected!</h4>
+                    <hr className="border-gray-500" />
+                    <h4 className="text-lg font-semibold">Reason:</h4>
+                    <p className="">{rejectionReason}</p>
+
+                    <Link
+                      to={`/user/edit-profile/${user?.email}`}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-400"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
-                    Edit Your Profile
-                  </Link>
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
+                      </svg>
+                      Edit Your Profile
+                    </Link>
+                  </div>
                 )}
 
                 {/* Pending Approval */}

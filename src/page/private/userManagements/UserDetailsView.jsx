@@ -22,8 +22,7 @@ const UserDetailsView = () => {
   );
 
   const user = userProfiles?.find((u) => u.id === Number(userId));
-
-  const [rejectionReason, setRejectionReason] = useState("");
+  const [rejectionRe, setRejectionRe] = useState("");
   const [loading, setLoading] = useState({ approve: false, reject: false });
 
   if (isLoading) return <div className="p-6 text-center">Loading...</div>;
@@ -45,6 +44,7 @@ const UserDetailsView = () => {
     location,
     startDate,
     endDate,
+    rejectionReason,
   } = user;
 
   // ✅ Approve
@@ -53,7 +53,6 @@ const UserDetailsView = () => {
     try {
       await dispatch(adminUserApprovedProfile({ id: user.id })).unwrap();
       toast.success("User approved!");
-      // Redirect to user management after successful approval
       setTimeout(() => {
         navigate("/admin/user-management");
       }, 1000);
@@ -66,7 +65,7 @@ const UserDetailsView = () => {
 
   // ❌ Reject
   const handleReject = async () => {
-    if (!rejectionReason.trim()) {
+    if (!rejectionRe.trim()) {
       toast.error("Please enter a rejection reason");
       return;
     }
@@ -76,12 +75,11 @@ const UserDetailsView = () => {
       await dispatch(
         adminUserRejectedProfile({
           id: user.id,
-          reason: rejectionReason.trim(),
+          reason: rejectionRe.trim(),
         }),
       ).unwrap();
       toast.success("User rejected!");
-      setRejectionReason(""); // clear after success
-      // Redirect to user management after successful rejection
+      setRejectionRe("");
       setTimeout(() => {
         navigate("/admin/user-management");
       }, 1000);
@@ -172,6 +170,7 @@ const UserDetailsView = () => {
               am traveling and will be in:
             </span>
           </div>
+
           <div className="mt-4 flex flex-col gap-4">
             <div className="flex items-center gap-3">
               <GrLocation size={20} />
@@ -212,51 +211,63 @@ const UserDetailsView = () => {
         </div>
       </div>
 
+      {rejectionReason ? (
+        <section className="rounded-lg border border-gray-200 bg-red-400 p-4">
+          <h3 className="mb-3 font-raleway text-xl font-semibold text-white">
+            Previous Rejection Reason
+          </h3>
+          <p className="min-h-[120px] w-full rounded border border-gray-100 bg-white p-3 focus:outline-none">
+            {rejectionReason || "No previous rejection reason."}
+          </p>
+        </section>
+      ) : null}
       {/* Action Section – NO MODAL */}
       {user.status !== "REJECTED" && (
-        <section className="rounded-lg border border-gray-200 bg-white p-4">
-          <h3 className="mb-3 font-raleway text-xl font-medium">
-            Reject with Feedback
-          </h3>
-          <textarea
-            value={rejectionReason}
-            onChange={(e) => setRejectionReason(e.target.value)}
-            placeholder="Write a reason for rejection..."
-            className="min-h-[120px] w-full rounded border border-gray-300 bg-[#E6EEF6] p-3 focus:outline-none focus:ring-2 focus:ring-orange-300"
-          />
-          <div className="mt-4 space-x-4">
-            <button
-              onClick={handleApprove}
-              disabled={loading.approve}
-              className={`w-64 flex-1 rounded py-2.5 font-raleway font-medium ${
-                loading.approve
-                  ? "cursor-not-allowed bg-green-400"
-                  : "bg-green-600 text-white hover:bg-green-700"
-              }`}
-            >
-              {loading.approve ? "Approving..." : "Approve"}
-            </button>
+        <>
+          <section className="rounded-lg border border-gray-200 bg-white p-4">
+            <h3 className="mb-3 font-raleway text-xl font-medium">
+              Reject with Feedback
+            </h3>
+            <textarea
+              value={rejectionRe}
+              onChange={(e) => setRejectionRe(e.target.value)}
+              placeholder="Write a reason for rejection..."
+              className="min-h-[120px] w-full rounded border border-gray-300 bg-[#E6EEF6] p-3 focus:outline-none focus:ring-2 focus:ring-orange-300"
+            />
+            <div className="mt-4 space-x-4">
+              <button
+                onClick={handleApprove}
+                disabled={loading.approve}
+                className={`w-64 flex-1 rounded py-2.5 font-raleway font-medium ${
+                  loading.approve
+                    ? "cursor-not-allowed bg-green-400"
+                    : "bg-green-600 text-white hover:bg-green-700"
+                }`}
+              >
+                {loading.approve ? "Approving..." : "Approve"}
+              </button>
 
-            <button
-              onClick={handleReject}
-              disabled={loading.reject}
-              className={`w-64 flex-1 rounded py-2.5 font-raleway font-medium ${
-                loading.reject
-                  ? "cursor-not-allowed bg-orange-400"
-                  : "bg-orange-500 text-white hover:bg-orange-600"
-              }`}
-            >
-              {loading.reject ? "Rejecting..." : "Reject"}
-            </button>
+              <button
+                onClick={handleReject}
+                disabled={loading.reject}
+                className={`w-64 flex-1 rounded py-2.5 font-raleway font-medium ${
+                  loading.reject
+                    ? "cursor-not-allowed bg-orange-400"
+                    : "bg-orange-500 text-white hover:bg-orange-600"
+                }`}
+              >
+                {loading.reject ? "Rejecting..." : "Reject"}
+              </button>
 
-            <button
-              onClick={handleCencel}
-              className={`w-64 flex-1 rounded bg-red-500 py-2.5 font-raleway font-medium text-white hover:bg-orange-600`}
-            >
-              Cancel
-            </button>
-          </div>
-        </section>
+              <button
+                onClick={handleCencel}
+                className={`w-64 flex-1 rounded bg-red-500 py-2.5 font-raleway font-medium text-white hover:bg-orange-600`}
+              >
+                Cancel
+              </button>
+            </div>
+          </section>
+        </>
       )}
     </div>
   );

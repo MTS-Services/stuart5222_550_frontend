@@ -18,6 +18,23 @@ export const fetchUserProfile = createAsyncThunk(
   },
 );
 
+export const rejectedProfile = createAsyncThunk(
+  "user/rejectedProfile",
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const res = await GET(
+        `${endpoints.admin.GET_USER_REJECTED_PROFILE}/${id}`,
+      );
+      return res;
+    } catch (err) {
+      console.error("❌ Failed to fetch rejected profile:", err);
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch rejected profile",
+      );
+    }
+  },
+);
+
 export const submitProfile = createAsyncThunk(
   "user/setProfile",
   async (submitData, { rejectWithValue }) => {

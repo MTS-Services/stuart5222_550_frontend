@@ -28,7 +28,7 @@ export const endpoints = {
 
     GET_USER_DETAILS: `/admin/profiles`,
     GET_USER_VERIFIED_PROFILE: `/admin/profiles/verified`,
-
+    GET_USER_REJECTED_PROFILE: `/admin/profiles`,
     REJECT_USER: `/admin/users/reject`,
 
     GET_ADMIN_PROFILE: "/admin/profile",
