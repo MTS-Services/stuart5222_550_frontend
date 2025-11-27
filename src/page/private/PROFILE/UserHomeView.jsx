@@ -113,7 +113,7 @@ const UserHomeView = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center border bg-[#3B3B3D] px-4 py-4 text-white">
+    <div className="flex flex-col items-center justify-center bg-[#3B3B3D] px-4 py-4 text-white">
       {isVerified ? (
         <>
           <ProfileInfoView profileData={userProfile} images={images} />
@@ -122,6 +122,14 @@ const UserHomeView = () => {
         <div className="flex min-h-screen items-center justify-center py-10">
           <div className="w-full max-w-md">
             {/* Status Card */}
+            {user.status === "PAID_SETUP" && rejectionReason && (
+              <div className="mb-4 space-y-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4">
+                <h4 className="text-xl">You are rejected!</h4>
+                <hr className="border-gray-500" />
+                <h4 className="text-lg font-semibold">Reason:</h4>
+                <p className="">{rejectionReason}</p>
+              </div>
+            )}
             <div className="rounded-2xl border border-orange-500/30 bg-slate-800/10 p-8 shadow">
               {/* User Email Badge */}
               <div className="mb-6 flex items-center justify-center gap-4">
@@ -190,32 +198,25 @@ const UserHomeView = () => {
 
                 {/* PAID_SETUP Status */}
                 {user?.status === "PAID_SETUP" && (
-                  <div className="space-y-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4">
-                    <h4 className="text-xl">You are rejected!</h4>
-                    <hr className="border-gray-500" />
-                    <h4 className="text-lg font-semibold">Reason:</h4>
-                    <p className="">{rejectionReason}</p>
-
-                    <Link
-                      to={`/user/edit-profile/${user?.email}`}
-                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-400"
+                  <Link
+                    to={`/user/edit-profile/${user?.email}`}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-400"
+                  >
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      <svg
-                        className="h-5 w-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                        />
-                      </svg>
-                      Edit Your Profile
-                    </Link>
-                  </div>
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      />
+                    </svg>
+                    Edit Your Profile
+                  </Link>
                 )}
 
                 {/* Pending Approval */}
