@@ -26,12 +26,9 @@ const AdminLayout = () => {
   useEffect(() => {
     if (!user || !userToken) return; // skip timer if not logged in
 
-    const timer = setTimeout(
-      () => {
-        window.location.reload();
-      },
-      10 * 60 * 1000,
-    ); // 10 minutes
+    const timer = setTimeout(() => {
+      window.location.reload();
+    }, 600000); // 10 minutes
 
     return () => clearTimeout(timer);
   }, [user, userToken]);

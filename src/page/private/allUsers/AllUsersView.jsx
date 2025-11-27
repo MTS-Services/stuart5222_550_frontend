@@ -12,7 +12,7 @@ const AllUsersView = () => {
 
   const [status, setStatus] = useState("ALL");
   const [username, setUsername] = useState("");
-  console.log(username);
+
   const [page, setPage] = useState(1);
   const limit = 10;
 
