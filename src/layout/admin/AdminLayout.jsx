@@ -28,7 +28,7 @@ const AdminLayout = () => {
 
     const timer = setTimeout(() => {
       window.location.reload();
-    }, 600000); // 10 minutes
+    }, 300000); // 5 minutes
 
     return () => clearTimeout(timer);
   }, [user, userToken]);

@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import QRCard from "../../../components/common/QRCard";
+import CardExport from "../../../components/common/CardExport";
 
 import {
   shouldShowTravelMode,
@@ -11,17 +11,18 @@ import {
 import { getUserQRcode } from "../../../features/admin/home/dashboardFetch";
 import { FaRegCalendar } from "react-icons/fa";
 import { GrLocation } from "react-icons/gr";
+import { FaQrcode } from "react-icons/fa6";
+
+import Modal from "../../../components/ui/Modal";
 
 const ProfileDetailsView = () => {
   const dispatch = useDispatch();
   const { userId } = useParams();
-  const { qrCodeList, isQrLoading } = useSelector((state) => state.dashboard);
+  const [openModal, setOpenModal] = useState(false);
   const { list, isLoading, error } = useSelector(
     (state) => state.adminUsers.verified,
   );
-
   const user = list.find((u) => u.id === Number(userId));
-
   const user_email = user?.email;
 
   useEffect(() => {
@@ -80,28 +81,37 @@ const ProfileDetailsView = () => {
           </div>
 
           <div className="flex items-center gap-4 space-y-1 text-[#404040]">
+            {/* QR Codes Section */}
             <div>
-              {/* QR Codes Section */}
-              {isQrLoading ? (
+              {/* {isQrLoading ? (
                 <div className="flex h-[140px] w-[150px] items-center justify-center rounded-lg border border-gray-300 text-gray-500">
                   Loading...
                 </div>
               ) : qrCodeList && qrCodeList.length > 0 ? (
-                qrCodeList.map((card) => (
-                  <QRCard
-                    key={card.id}
-                    qrCode={card.qrCode}
-                    userInfo={card.profile}
-                    scanCount={card.scanCount}
-                    maxScans={card.maxScans}
-                  />
-                ))
+                <div className="flex flex-col gap-2">
+                  {qrCodeList.map((card) => (
+                    <button
+                      key={card.id}
+                      onClick={() => setSelectedCard(card)}
+                      className="rounded-lg border px-2 py-3 transition-transform duration-200 hover:scale-105 focus:outline-none"
+                      aria-label={`View ${card.profile?.displayName || card.profile?.name} QR card`}
+                    >
+                      Click
+                    </button>
+                  ))}
+                </div>
               ) : (
                 <div className="flex h-[140px] w-[150px] items-center justify-center rounded-lg border border-gray-300 text-gray-500">
                   No QR Cards
                 </div>
-              )}
+              )} */}
             </div>
+            <button
+              onClick={() => setOpenModal(true)}
+              className="flex h-28 flex-col items-center justify-center gap-2 rounded-lg border bg-white px-2 py-3 font-semibold transition-transform duration-200 hover:scale-105 focus:outline-none"
+            >
+              <FaQrcode size={25} /> <span>Get QR Codes</span>
+            </button>
 
             <div>
               <p className="font-raleway">Age: {age}</p>
@@ -111,6 +121,18 @@ const ProfileDetailsView = () => {
             </div>
           </div>
         </div>
+
+        {/* QR Card Modal */}
+        <Modal
+          size="lx"
+          isOpen={openModal}
+          onClose={() => setOpenModal(false)}
+          title="Preview & Export QR Card"
+        >
+          <div className="flex h-[650px] justify-center overflow-auto bg-slate-100">
+            <CardExport user={user} />
+          </div>
+        </Modal>
 
         <div className="mt-4">
           <h2 className="my-4 font-raleway text-2xl font-semibold text-black">

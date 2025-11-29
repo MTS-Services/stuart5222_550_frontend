@@ -19,7 +19,6 @@ const QRCard = ({ qrCode, userInfo }) => {
       link.download = `QR-${qrCode.slice(0, 8)}.png`;
       link.href = dataUrl;
       link.click();
-
       // Generate and download PDF
       await generatePDF();
     } catch (error) {
@@ -106,8 +105,10 @@ const QRCard = ({ qrCode, userInfo }) => {
     pdf.setFont("Raleway", "bold"); // Raleway style - bold weight
     pdf.setFontSize(13);
     pdf.setTextColor(210, 105, 30); // Orange color matching sparkly logo
+
     const logoText = "SCAN ME MAYBE";
     const logoWidth = pdf.getTextWidth(logoText);
+
     pdf.text(
       logoText,
       card1X + (cardWidth - logoWidth) / 2,

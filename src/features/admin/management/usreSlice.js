@@ -219,7 +219,6 @@ const adminUserManagementSlice = createSlice({
         state.verified.error = null;
       })
       .addCase(UserVerifiedProfile.fulfilled, (state, action) => {
-        console.log("UserVerifiedProfile Action", action.payload);
         state.verified.isLoading = false;
         state.verified.list = action.payload.profiles;
         state.verified.stats = action.payload.stats;

@@ -131,8 +131,8 @@ const UserDetailsView = () => {
           </div>
 
           <div className="flex items-center gap-4 space-y-1">
-            <div className="flex h-[140px] w-[150px] items-center justify-center rounded-lg border border-red-100 text-gray-500">
-              No QR Available
+            <div className="flex h-[130px] w-[150px] items-center justify-center rounded-lg border border-red-50 bg-white font-medium text-gray-500">
+              No QR Available!
             </div>
             <div>
               <p className="font-raleway">Age: {age}</p>
@@ -212,11 +212,11 @@ const UserDetailsView = () => {
       </div>
 
       {rejectionReason ? (
-        <section className="rounded-lg border border-gray-200 bg-red-400 p-4">
-          <h3 className="mb-3 font-raleway text-xl font-semibold text-white">
+        <section className="rounded-lg border border-gray-200 bg-white p-8">
+          <h3 className="mb-3 font-raleway text-2xl font-semibold text-black">
             Previous Rejection Reason
           </h3>
-          <p className="min-h-[120px] w-full rounded border border-gray-100 bg-white p-3 focus:outline-none">
+          <p className="min-h-[120px] w-full rounded border border-gray-100 bg-red-50 p-6 font-raleway font-medium text-red-600">
             {rejectionReason || "No previous rejection reason."}
           </p>
         </section>
@@ -224,7 +224,7 @@ const UserDetailsView = () => {
       {/* Action Section – NO MODAL */}
       {user.status !== "REJECTED" && (
         <>
-          <section className="rounded-lg border border-gray-200 bg-white p-4">
+          <section className="rounded-lg border border-gray-200 bg-white p-8">
             <h3 className="mb-3 font-raleway text-xl font-medium">
               Reject with Feedback
             </h3>
