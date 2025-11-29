@@ -12,7 +12,6 @@ import { getUserQRcode } from "../../../features/admin/home/dashboardFetch";
 import { FaRegCalendar } from "react-icons/fa";
 import { GrLocation } from "react-icons/gr";
 import { FaQrcode } from "react-icons/fa6";
-
 import Modal from "../../../components/ui/Modal";
 
 const ProfileDetailsView = () => {

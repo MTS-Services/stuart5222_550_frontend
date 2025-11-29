@@ -29,13 +29,10 @@ const LoginView = () => {
       let loginResult;
       try {
         loginResult = await dispatch(userLoginUser(formData)).unwrap();
-      } catch (userError) {
+      } catch (error) {
+        console.log("User login error:", error);
         // If user login fails, try admin login
-        try {
-          loginResult = await dispatch(adminLoginUser(formData)).unwrap();
-        } catch (adminError) {
-          throw adminError; // Throw the admin error if both fail
-        }
+        loginResult = await dispatch(adminLoginUser(formData)).unwrap();
       }
 
       // Use the auth flow helper to handle redirect based on role

@@ -10,6 +10,7 @@ import {
 } from "../../features/admin/notifications/notificationsFetch";
 import { fetchAdminSettingsProfile } from "../../features/admin/home/dashboardFetch";
 import { AUTH_COOKIE } from "../../utils/authCookie";
+import { toast } from "react-toastify";
 
 /* ---------------- MAIN LAYOUT ---------------- */
 const AdminLayout = () => {
@@ -28,6 +29,7 @@ const AdminLayout = () => {
 
     const timer = setTimeout(() => {
       window.location.reload();
+      AUTH_COOKIE.remove();
     }, 300000); // 5 minutes
 
     return () => clearTimeout(timer);

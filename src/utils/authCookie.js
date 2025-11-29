@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
-const oneMinute = new Date(new Date().getTime() + 1 * 60 * 5000); // 5 minutes
+import { toast } from "react-toastify";
+const oneMinute = new Date(new Date().getTime() + 5 * 60 * 1000); // 5 minutes
 
 export const AUTH_COOKIE = {
   // -----------------
@@ -33,6 +34,7 @@ export const AUTH_COOKIE = {
   removeToken: () => Cookies.remove("__app_token"),
 
   remove: () => {
+    toast.warning("You have been logged out due to inactivity.");
     Cookies.remove("__app_token");
     Cookies.remove("__app_user");
   },
