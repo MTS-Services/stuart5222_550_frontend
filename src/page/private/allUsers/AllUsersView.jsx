@@ -46,6 +46,27 @@ const AllUsersView = () => {
     }
   };
 
+  const getStatusChange = (status) => {
+    switch (status) {
+      case "ALL":
+        return "ALL";
+      case "WAITLIST":
+        return "WAITLIST";
+      case "ACTIVE":
+        return "ACTIVE";
+      case "REJECTED":
+        return "REJECTED";
+      case "PAID_SETUP":
+        return "PAID SETUP";
+      case "PROFILE_PENDING":
+        return "PENDING";
+      case "VERIFIED":
+        return "VERIFIED";
+      default:
+        return "ALL";
+    }
+  };
+
   if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
 
   return (
@@ -120,7 +141,7 @@ const AllUsersView = () => {
                   <td
                     className={`p-3 text-center text-sm ${getStatusColor(u.status)}`}
                   >
-                    {u.status}
+                    {getStatusChange(u.status)}
                   </td>
                 </tr>
               ))

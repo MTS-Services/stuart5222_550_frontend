@@ -105,12 +105,15 @@ const ProfileDetailsView = () => {
                 </div>
               )} */}
             </div>
-            <button
-              onClick={() => setOpenModal(true)}
-              className="flex h-28 flex-col items-center justify-center gap-2 rounded-lg border bg-white px-2 py-3 font-semibold transition-transform duration-200 hover:scale-105 focus:outline-none"
-            >
-              <FaQrcode size={25} /> <span>Get QR Codes</span>
-            </button>
+            <div className="flex flex-col items-center justify-center gap-2">
+              <FaQrcode size={80} className="rounded border p-1" />
+              <button
+                onClick={() => setOpenModal(true)}
+                className="rounded-lg border bg-orange-500 px-2 py-1 font-semibold text-white transition-transform duration-200 hover:scale-105 focus:outline-none"
+              >
+                <span>Download QR</span>
+              </button>
+            </div>
 
             <div>
               <p className="font-raleway">Age: {age}</p>

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AUTH_COOKIE } from "../../utils/authCookie";
 import { useSelector, useDispatch } from "react-redux";
-import { FaPowerOff, FaRegBell, FaRegUser } from "react-icons/fa";
+import { FaPowerOff, FaRegUser } from "react-icons/fa";
 import { fetchAdminSettingsProfile } from "../../features/admin/home/dashboardFetch";
 
 const AdminNavbar = () => {

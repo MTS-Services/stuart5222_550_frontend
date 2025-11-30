@@ -24,13 +24,19 @@ const AdminLayout = () => {
   const user = AUTH_COOKIE.getUser();
   const userToken = AUTH_COOKIE.getToken();
 
+  /* ---------------- SESSION EXPIRY HANDLER ---------------- */
   useEffect(() => {
-    if (!user || !userToken) return; // skip timer if not logged in
+    if (!user || !userToken) return; // skip if not logged in
 
     const timer = setTimeout(() => {
-      window.location.reload();
-      AUTH_COOKIE.remove();
-    }, 300000); // 5 minutes
+      // Set a message so we can display it AFTER reload
+      localStorage.setItem(
+        "logoutMessage",
+        "Session expired. Please log in again.",
+      );
+      AUTH_COOKIE.remove(); // Remove cookies (logout)
+      window.location.reload(); // Refresh AFTER clearing cookies
+    }, 60000); // 1 minute
 
     return () => clearTimeout(timer);
   }, [user, userToken]);

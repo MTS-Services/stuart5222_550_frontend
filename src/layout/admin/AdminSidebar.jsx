@@ -10,7 +10,6 @@ import {
 } from "react-icons/fa";
 import { FaGear } from "react-icons/fa6";
 import { FiMenu, FiX, FiMail } from "react-icons/fi";
-import { useSelector } from "react-redux";
 import { STORAGE } from "../../config/storage/auth/authStorage";
 import { AUTH_COOKIE } from "../../utils/authCookie";
 

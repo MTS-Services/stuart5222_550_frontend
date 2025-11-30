@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { RequestUserTable } from "./components/RequestUserTable";
-import { adminUserDraftProfile } from "../../../features/admin/management/usreFetch";
 import Overviews from "../common/Overviews";
 import { TableDropDown } from "./components/TableDropDown";
+import { RequestUserTable } from "./components/RequestUserTable";
+import { adminUserDraftProfile } from "../../../features/admin/management/usreFetch";
 
 const UserManageView = () => {
   const dispatch = useDispatch();
