@@ -27,6 +27,14 @@ export default defineConfig(({ mode }) => {
       },
     },
 
+    // server: {
+    //   port: 5173, // your dev port
+    //   strictPort: true,
+    //   // allow all hosts (Ngrok and others)
+    //   host: true,
+    //   allowedHosts: ["transitionary-lavera-subtransversely.ngrok-free.dev"],
+    // },
+
     build: {
       outDir: "dist",
     },

@@ -28,15 +28,18 @@ const AdminLayout = () => {
   useEffect(() => {
     if (!user || !userToken) return; // skip if not logged in
 
-    const timer = setTimeout(() => {
-      // Set a message so we can display it AFTER reload
-      localStorage.setItem(
-        "logoutMessage",
-        "Session expired. Please log in again.",
-      );
-      AUTH_COOKIE.remove(); // Remove cookies (logout)
-      window.location.reload(); // Refresh AFTER clearing cookies
-    }, 300000); // 5 minutes
+    const timer = setTimeout(
+      () => {
+        // Set a message so we can display it AFTER reload
+        localStorage.setItem(
+          "logoutMessage",
+          "Session expired. Please log in again.",
+        );
+        AUTH_COOKIE.remove(); // Remove cookies (logout)
+        window.location.reload(); // Refresh AFTER clearing cookies
+      },
+      5 * 60 * 1000,
+    ); // 5 minutes
 
     return () => clearTimeout(timer);
   }, [user, userToken]);

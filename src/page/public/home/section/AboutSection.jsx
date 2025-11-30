@@ -52,10 +52,10 @@ function AboutSection() {
       <div className="inline-flex flex-col items-center justify-start gap-8 text-center sm:py-6">
         {/* 🔥 Title and Description (unchanged) */}
         <div className="flex flex-col items-start justify-start gap-4 self-stretch">
-          <h2 className="self-stretch text-center font-raleway text-2xl font-bold capitalize text-orange-500">
+          <h2 className="mt-6 self-stretch text-center font-raleway text-2xl font-bold capitalize text-orange-500">
             What is Scan Me Maybe?{" "}
           </h2>{" "}
-          <p className="max-w-[600px] self-stretch text-justify font-raleway text-base font-normal leading-normal text-white">
+          <p className="font-raleway text-base font-normal leading-normal text-white">
             A spontaneous approach to dating that combines the authenticity of
             real-world meetings with the convenience of digital profiles. Get
             your story out there, one card at a time.{" "}

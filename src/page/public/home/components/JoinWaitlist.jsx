@@ -36,7 +36,7 @@ export const JoinWaitlist = () => {
       ) : (
         <form
           onSubmit={handleSubmit}
-          className="mt-8 flex w-full flex-col items-start justify-start gap-6"
+          className="mt-0 flex w-full flex-col items-start justify-start gap-6"
         >
           <input
             type="text"
@@ -56,7 +56,7 @@ export const JoinWaitlist = () => {
             className="h-11 w-full rounded-lg bg-white p-2.5 text-base font-semibold text-neutral-700 outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
           />
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && <p className="text-sm text-red-400">{error}</p>}
 
           <div className="w-full">
             <button
@@ -64,7 +64,7 @@ export const JoinWaitlist = () => {
               disabled={loading}
               className="w-full rounded-lg bg-orange-500 p-2.5 text-base font-semibold text-white transition hover:bg-orange-600 disabled:opacity-50"
             >
-              {loading ? "Submitting..." : "Join the waitlist"}
+              {loading ? "Joining..." : "Join the waitlist"}
             </button>
           </div>
         </form>

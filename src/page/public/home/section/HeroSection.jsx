@@ -5,11 +5,11 @@ const HeroSection = () => {
     window.location.href = "/auth/login";
   };
   return (
-    <div className="mx-auto max-w-[600px] py-10 md:py-6">
+    <div className="mx-auto max-w-[600px]">
       <div className="flex items-center justify-center">
         <div className="text-center">
           {/* Image */}
-          <div className="flex justify-center pt-[20px]">
+          <div className="flex justify-center">
             <img
               src="/img/assets/logo.png"
               alt="preview"
@@ -61,7 +61,7 @@ const HeroSection = () => {
             </p>
           </div>
           <div className="">
-            <h2 className="mt-7 text-center font-raleway text-[24px] font-bold">
+            <h2 className="my-7 text-center font-raleway text-[24px] font-bold">
               It’s not a scam, it’s a Scan
             </h2>
             <div className="rounded-lg bg-[#434343] px-4 py-[74px] sm:py-8">
