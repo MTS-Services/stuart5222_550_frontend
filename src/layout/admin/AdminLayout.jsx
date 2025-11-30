@@ -36,7 +36,7 @@ const AdminLayout = () => {
       );
       AUTH_COOKIE.remove(); // Remove cookies (logout)
       window.location.reload(); // Refresh AFTER clearing cookies
-    }, 60000); // 1 minute
+    }, 300000); // 5 minutes
 
     return () => clearTimeout(timer);
   }, [user, userToken]);
