@@ -23,7 +23,7 @@ const LetsConnectView = () => {
     }
   };
 
-  const name = userProfile?.displayName || "Cheryann Smith";
+  const name = userProfile?.username || "Cheryann Smith";
   const email = userProfile?.email || "cheryann@gmail.com";
   const phone = userProfile?.phone || "+1 (555) 010-0001";
 

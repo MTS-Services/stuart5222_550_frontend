@@ -71,8 +71,7 @@ const AllUsersView = () => {
 
   return (
     <div className="p-4 md:p-8 lg:p-12">
-      <Overviews />
-      <div className="my-8 flex flex-col-reverse items-center justify-between gap-6 md:flex-row">
+      <div className="mb-8 flex flex-col-reverse items-center justify-between gap-6 md:flex-row">
         {/* Left Side – Search, Filter, Add */}
         <h2 className="font-raleway text-2xl font-semibold uppercase text-[#002244] md:text-right">
           All Users

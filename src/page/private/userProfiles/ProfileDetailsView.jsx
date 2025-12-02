@@ -35,7 +35,13 @@ const ProfileDetailsView = () => {
   if (error)
     return <div className="mx-auto justify-center">Error: {error}</div>;
   if (!user)
-    return <div className="pt-10 text-center">User Edit not found!</div>;
+    return (
+      <div className="rounded-md border-2 border-dashed border-gray-300 py-20">
+        <p colSpan="5" className="text-center">
+          No user profiles found.
+        </p>
+      </div>
+    );
 
   const {
     user: userInfo,

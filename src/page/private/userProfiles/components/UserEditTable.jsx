@@ -15,7 +15,11 @@ export const UserEditTable = ({ list, isLoading, error }) => {
         ) : error ? (
           <p className="py-10 text-center text-red-500">{error}</p>
         ) : list.length === 0 ? (
-          <p className="py-10 text-center text-gray-500">No data found.</p>
+          <div className="rounded-md border-2 border-dashed border-gray-300 py-20">
+            <p colSpan="5" className="text-center">
+              No user profiles found.
+            </p>
+          </div>
         ) : (
           <table className="min-w-full table-fixed text-left text-xs sm:text-sm md:text-base">
             <thead className="bg-white text-lg font-normal text-black">

@@ -52,7 +52,7 @@ const WelcomeScanView = () => {
       <div className="mx-auto flex max-w-[600px] items-center justify-center">
         <div className="w-full">
           {/* Paragraph */}
-          <p className="mx-auto py-2.5 text-center font-raleway text-xs font-normal leading-4 md:py-5 md:text-base">
+          <p className="mx-auto py-2.5 text-center font-raleway text-sm font-normal leading-4 md:py-5 md:text-base">
             If you’re reading this, it means I – or one of my wonderful friends
             – saw something in you. Maybe it was your smile, your energy, or the
             way you carried yourself. You weren’t obviously partnered, and if
@@ -82,31 +82,22 @@ const WelcomeScanView = () => {
                 <div className="flex gap-4">
                   <div className="w-full">
                     <p className="font-raleway text-sm font-medium text-green-500">
-                      ✅ QR Code Scanned Successfully
+                      ✅ QR Scanned Successfully!
                     </p>
                     {data.message && (
                       <p className="font-raleway text-xs font-medium text-red-500">
                         {data.message}
                       </p>
                     )}
-                    {/* {data.scansRemaining !== undefined && (
-                      <p className="font-raleway text-sm font-semibold text-blue-400 mt-2">
-                        📊 Card Scans Remaining: {data.scansRemaining} out of {data.maxScans}
-                      </p>
-                    )} */}
-                    {/* {data.totalScans !== undefined && (
-                      <p className="font-raleway text-xs text-gray-300 mt-1">
-                        Total scans used: {data.totalScans}/{data.maxScans}
-                      </p>
-                    )} */}
+
                     {data.ipScansUsed !== undefined && data.yourIpAddress && (
                       <p className="mt-1 font-raleway text-xs text-orange-400">
                         Your IP ({data.yourIpAddress}): {data.ipScansUsed}/5
-                        scans used
+                        scans used.
                         {data.ipScansRemaining !== null && (
                           <span>
                             {" "}
-                            • {data.ipScansRemaining} remaining for your IP
+                            ({data.ipScansRemaining}) remaining for your IP
                           </span>
                         )}
                       </p>
@@ -241,8 +232,8 @@ const WelcomeScanView = () => {
                   case? We have an interesting chat. Best case? Who knows……
                 </p>
               </div>
+              <hr className="border-1 mb-4 border-gray-600" />
               <p className="text-center text-xs text-gray-300">
-                <hr className="border-1 mb-4 border-gray-600" />
                 Last updated: November 8, 2025
                 <br />© 2025 Scan Me Maybe, LLC. All Rights Reserved.
               </p>

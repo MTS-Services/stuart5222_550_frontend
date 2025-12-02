@@ -10,7 +10,6 @@ import {
 } from "react-icons/fa";
 import { FaGear } from "react-icons/fa6";
 import { FiMenu, FiX, FiMail } from "react-icons/fi";
-import { STORAGE } from "../../config/storage/auth/authStorage";
 import { AUTH_COOKIE } from "../../utils/authCookie";
 
 /* ---------------- NAV LINKS DATA ---------------- */
@@ -22,14 +21,14 @@ const navLinks = [
     path: "/admin/user-management",
   },
   {
-    name: "All Users",
-    icon: <FaUsers size={20} />,
-    path: "/admin/all-users",
-  },
-  {
     name: "Profile List",
     icon: <FaUser size={17} />,
     path: "/admin/user-profile",
+  },
+  {
+    name: "All Users",
+    icon: <FaUsers size={20} />,
+    path: "/admin/all-users",
   },
   {
     name: "Templates",

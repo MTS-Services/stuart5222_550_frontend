@@ -1,4 +1,4 @@
-import { use, useEffect } from "react";
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import AdminNavbar from "./AdminNavbar";
 import AdminSidebar from "./AdminSidebar";
@@ -10,7 +10,6 @@ import {
 } from "../../features/admin/notifications/notificationsFetch";
 import { fetchAdminSettingsProfile } from "../../features/admin/home/dashboardFetch";
 import { AUTH_COOKIE } from "../../utils/authCookie";
-import { toast } from "react-toastify";
 
 /* ---------------- MAIN LAYOUT ---------------- */
 const AdminLayout = () => {
@@ -45,7 +44,7 @@ const AdminLayout = () => {
   }, [user, userToken]);
 
   return (
-    <div className="flex h-screen bg-gray-50 font-raleway">
+    <div className="font flex h-screen bg-gray-50 font-raleway">
       {/* Sidebar */}
       <div className="hidden w-64 lg:block">
         <AdminSidebar />

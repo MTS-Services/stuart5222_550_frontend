@@ -215,12 +215,12 @@ export const RequestUserTable = () => {
                     </tr>
                   ))
                 ) : (
-                  <tr>
+                  <tr className="rounded-md border-2 border-dashed border-gray-300">
                     <td
-                      colSpan={6}
-                      className="py-6 text-center font-raleway italic text-gray-500"
+                      colSpan="6"
+                      className="py-20 text-center font-semibold text-gray-500"
                     >
-                      No users found.
+                      No user list found!
                     </td>
                   </tr>
                 )}

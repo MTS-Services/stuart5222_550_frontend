@@ -13,7 +13,6 @@ export default function CardExport({ user }) {
   });
 
   const qrURL = `http://scanmemaybe.com/welcome-scan/${qrCodeValue}`;
-  const fontStyle = "Pacifico, 'Brush Script MT', cursive";
 
   const handleExportPDF = async () => {
     if (!cardRef.current) return;
@@ -53,28 +52,14 @@ export default function CardExport({ user }) {
         {/* LEFT CARD */}
         <div className="mr-8 flex h-[450px] w-[300px] flex-col items-center justify-start rounded-lg bg-[#3b3b3b] p-8 shadow-md">
           {/* Icon placeholder — replace with your SVG/image */}
-          <div className="mb-0 text-[80px] text-[#dcd7cf]">
-            <img src="/img/page/home/stuart.png" alt="pwa" className="w-32" />
+          <div className="mb-16 text-[80px] text-[#dcd7cf]">
+            <img src="/new-logo.png" alt="pwa" className="w-[140px]" />
           </div>
 
-          <hr className="my-6 w-full border-t border-gray-500" />
-
           <div className="w-full">
-            <p className="mb-1 text-left font-semibold text-[#dcd7cf]">
-              Example Payment Info:
+            <p className="text-center font-raleway text-[18px] font-medium text-[#d6946d]">
+              Person to person dating, but with a safer approach.
             </p>
-
-            <div className="text-left text-[12px] text-[#dcd7cf]">
-              <p>
-                <strong>Name:</strong> {user.displayName}
-              </p>
-              <p>
-                <strong>Phone:</strong> {user.phone}
-              </p>
-              <p>
-                <strong>Email:</strong> {user.email}
-              </p>
-            </div>
           </div>
         </div>
 
@@ -97,11 +82,11 @@ export default function CardExport({ user }) {
           </div>
 
           {/* Signature */}
-          <div className="flex rotate-[-15deg] items-center justify-center gap-4 text-center text-[36px] text-[#dcd7cf]">
-            <p className="" style={{ fontFamily: fontStyle }}>
-              {user.displayName}
+          <div className="flex rotate-[-10deg] items-center justify-center gap-4 text-center text-[36px] text-[#dcd7cf]">
+            <p className="" style={{ fontFamily: "marketPro" }}>
+              {user.username}
             </p>
-            <img src="/wink.png" className="h-4" alt="" />
+            <img src="/wink.png" className="h-6" alt="wink" />
           </div>
           {/* <h2 className="text-4xl text-white">☺</h2> */}
         </div>

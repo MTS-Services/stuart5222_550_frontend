@@ -21,47 +21,53 @@ const UserView = () => {
   // Prioritize structured images (face, fullbody, toothyGrin, extras) over imageUrls
   const structuredImages = userProfile?.images || {};
   const fallbackImages = userProfile?.imageUrls || [];
-  
+
   // Create ordered array: face -> fullbody -> toothyGrin -> extras
   const orderedImages = [];
-  
+
   // Add face image first
   if (structuredImages.face) {
-    orderedImages.push(typeof structuredImages.face === 'string' 
-      ? { url: structuredImages.face } 
-      : structuredImages.face
+    orderedImages.push(
+      typeof structuredImages.face === "string"
+        ? { url: structuredImages.face }
+        : structuredImages.face,
     );
   }
-  
+
   // Add fullbody image second
   if (structuredImages.fullbody) {
-    orderedImages.push(typeof structuredImages.fullbody === 'string' 
-      ? { url: structuredImages.fullbody } 
-      : structuredImages.fullbody
+    orderedImages.push(
+      typeof structuredImages.fullbody === "string"
+        ? { url: structuredImages.fullbody }
+        : structuredImages.fullbody,
     );
   }
-  
+
   // Add toothyGrin image third
   if (structuredImages.toothyGrin) {
-    orderedImages.push(typeof structuredImages.toothyGrin === 'string' 
-      ? { url: structuredImages.toothyGrin } 
-      : structuredImages.toothyGrin
+    orderedImages.push(
+      typeof structuredImages.toothyGrin === "string"
+        ? { url: structuredImages.toothyGrin }
+        : structuredImages.toothyGrin,
     );
   }
-  
+
   // Add extras images
   if (structuredImages.extras && Array.isArray(structuredImages.extras)) {
-    structuredImages.extras.forEach(img => {
+    structuredImages.extras.forEach((img) => {
       if (img) {
-        orderedImages.push(typeof img === 'string' ? { url: img } : img);
+        orderedImages.push(typeof img === "string" ? { url: img } : img);
       }
     });
   }
-  
+
   // If no structured images available, fall back to imageUrls array
-  const images = orderedImages.length > 0 
-    ? orderedImages 
-    : fallbackImages.map(img => typeof img === 'string' ? { url: img } : img);
+  const images =
+    orderedImages.length > 0
+      ? orderedImages
+      : fallbackImages.map((img) =>
+          typeof img === "string" ? { url: img } : img,
+        );
 
   useEffect(() => {
     if (email) {
@@ -122,7 +128,7 @@ const UserView = () => {
           />
         </div>
         <h1 className="mb-8 text-center font-raleway text-3xl font-bold">
-          {userProfile.displayName || "Anonymous User"}
+          {userProfile.username || "Anonymous User"}
         </h1>
 
         {/* Travel Mode Section - Only show if travel data is valid and not expired */}
@@ -204,7 +210,7 @@ const UserView = () => {
               </h2>
               <div className="my-4 rounded-lg bg-[#505050] p-6">
                 <p className="font-raleway text-xl font-normal">
-                  Name : {userProfile.displayName || "Not provided"}
+                  Name : {userProfile.username || "Not provided"}
                 </p>
                 <p className="my-5 font-raleway text-xl font-normal">
                   Age : {userProfile.age || "Not provided"}
@@ -227,7 +233,7 @@ const UserView = () => {
 
             <h2 className="mt-10 font-raleway text-xl font-medium">Bio</h2>
             <div className="my-4 rounded-lg bg-[#FFFFFF14]">
-              <p className="p-4 font-raleway text-xs font-medium md:text-base">
+              <p className="p-4 font-raleway text-sm font-medium md:text-base">
                 {userProfile.bio || "No bio available"}
               </p>
             </div>
