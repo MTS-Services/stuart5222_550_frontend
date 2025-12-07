@@ -1,4 +1,4 @@
-import api from './axiosInstance';
+import api, { FILE_UPLOAD_TIMEOUT } from './axiosInstance';
 
 export const GET = async (url, params) => {
   const { data: responseData } = await api.get(url, { params });
@@ -12,6 +12,8 @@ export const POST = async (url, payload) => {
     headers: {
       'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
     },
+    // Use extended timeout for file uploads (FormData), default for others
+    timeout: isFormData ? FILE_UPLOAD_TIMEOUT : undefined,
   });
 
   return responseData;
@@ -24,6 +26,8 @@ export const UPDATE = async (url, payload) => {
     headers: {
       'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
     },
+    // Use extended timeout for file uploads (FormData), default for others
+    timeout: isFormData ? FILE_UPLOAD_TIMEOUT : undefined,
   });
 
   return responseData;

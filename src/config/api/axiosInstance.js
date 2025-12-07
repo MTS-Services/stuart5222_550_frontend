@@ -4,8 +4,11 @@ import { AUTH_COOKIE } from "../../utils/authCookie";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  timeout: 10000, // ⏱ optional safety timeout
+  timeout: 30000, // ⏱ default timeout 30 seconds
 });
+
+// Extended timeout for file uploads (20 minutes)
+export const FILE_UPLOAD_TIMEOUT = 1200000;
 
 // =============== Request Interceptor ===============
 api.interceptors.request.use(
