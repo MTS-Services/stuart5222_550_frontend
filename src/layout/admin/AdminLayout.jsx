@@ -37,8 +37,8 @@ const AdminLayout = () => {
         AUTH_COOKIE.remove(); // Remove cookies (logout)
         window.location.reload(); // Refresh AFTER clearing cookies
       },
-      50 * 60 * 1000,
-    ); // 50 minutes
+      5 * 60 * 1000,
+    ); // 5 minutes
 
     return () => clearTimeout(timer);
   }, [user, userToken]);
