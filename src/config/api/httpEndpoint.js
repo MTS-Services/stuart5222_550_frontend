@@ -1,5 +1,3 @@
-import { GET } from "./httpMethods";
-
 export const endpoints = {
   auth: {
     ADMIN_LOGIN: "/auth/admin/login",

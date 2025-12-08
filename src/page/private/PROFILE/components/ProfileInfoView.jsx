@@ -42,7 +42,7 @@ const ProfileInfoView = ({ profileData, images }) => {
     if (isExpanding) return; // Prevent multiple clicks during animation
 
     setIsExpanding(true);
-    
+
     // Ensure images is always an array
     const imageArray = Array.isArray(images) ? images : [];
 
@@ -173,7 +173,7 @@ const ProfileInfoView = ({ profileData, images }) => {
 
         <div className="rounded-xl border border-gray-400/50">
           <img
-            src={displayedImages[0]?.url || "/img/page/home/remove_preview.png"}
+            src={displayedImages[0]?.url || "/fallback.png"}
             alt="Profile photo"
             className="h-full w-full bg-cover object-cover"
           />
@@ -187,7 +187,7 @@ const ProfileInfoView = ({ profileData, images }) => {
               className="group relative overflow-hidden rounded-xl border border-gray-400/50 transition-all duration-300 hover:border-orange-500/50"
             >
               <img
-                src={image?.url || "/img/page/home/remove_preview.png"}
+                src={image?.url || "/fallback.png"}
                 alt={`Photo ${index + 2}`}
                 className="h-full w-full bg-cover object-cover"
               />
@@ -217,7 +217,7 @@ const ProfileInfoView = ({ profileData, images }) => {
                 }}
               >
                 <img
-                  src={image?.url || "/img/page/home/remove_preview.png"}
+                  src={image?.url || "/fallback.png"}
                   alt={`Additional photo ${index + 4}`}
                   className="h-full w-full bg-cover object-cover"
                 />

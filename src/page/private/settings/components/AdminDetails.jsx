@@ -81,7 +81,6 @@ const AdminDetails = () => {
     try {
       // ✅ POST to scan_me route (backend ready)
       // const response = await postData('submit_user', data);
-      // console.log('Server Response:', response);
 
       // Simulate API call success
       console.log("Data to be submitted:", data);

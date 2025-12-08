@@ -4,15 +4,12 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
-// import { Elements } from "@stripe/react-stripe-js";
-// import { loadStripe } from "@stripe/stripe-js";
 
 // Guards
 import PublicGuard from "./guards/new/PublicGuard.jsx";
 import RoleGuard from "./guards/new/RoleGuard.jsx";
 
 // Layouts
-// const AuthLayout = lazy(() => import("../layout/auth/AuthLayout.jsx"));
 const AdminLayout = lazy(() => import("../layout/admin/AdminLayout.jsx"));
 const MainLayout = lazy(() => import("../layout/main/MainLayout.jsx"));
 const ErrorBoundary = lazy(() => import("../components/ErrorBoundary.jsx"));

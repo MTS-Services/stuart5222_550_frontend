@@ -117,7 +117,7 @@ const ProfileDetailsView = () => {
                 onClick={() => setOpenModal(true)}
                 className="rounded-lg border bg-orange-500 px-2 py-1 font-semibold text-white transition-transform duration-200 hover:scale-105 focus:outline-none"
               >
-                <span>Download QR</span>
+                <span>Preview QR Card</span>
               </button>
             </div>
 
