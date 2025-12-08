@@ -16,24 +16,24 @@ export default defineConfig(({ mode }) => {
       },
     },
 
-    // server: {
-    //   proxy: {
-    //     "/api": {
-    //       target: env.VITE_API_BASE_URL,
-    //       changeOrigin: true,
-    //       rewrite: (path) => path.replace(/^\/api/, ""),
-    //       secure: true,
-    //     },
-    //   },
-    // },
-
     server: {
-      port: 5173, // your dev port
-      strictPort: true,
-      // allow all hosts (Ngrok and others)
-      host: true,
-      allowedHosts: ["transitionary-lavera-subtransversely.ngrok-free.dev"],
+      proxy: {
+        "/api": {
+          target: env.VITE_API_BASE_URL,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ""),
+          secure: true,
+        },
+      },
     },
+
+    // server: {
+    //   port: 5173, // your dev port
+    //   strictPort: true,
+    //   // allow all hosts (Ngrok and others)
+    //   host: true,
+    //   allowedHosts: ["transitionary-lavera-subtransversely.ngrok-free.dev"],
+    // },
 
     build: {
       outDir: "dist",
