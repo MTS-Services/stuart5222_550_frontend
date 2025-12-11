@@ -6,8 +6,6 @@ import { shouldShowTravelMode } from "../../../../utils/travelMode";
 
 const ProfileInfoView = ({ profileData, images }) => {
   const [showAllPhotos, setShowAllPhotos] = useState(false);
-  const [isExpanding, setIsExpanding] = useState(false);
-  const [visiblePhotos, setVisiblePhotos] = useState(3);
   const photosContainerRef = useRef(null);
 
   const {
@@ -39,44 +37,14 @@ const ProfileInfoView = ({ profileData, images }) => {
   };
 
   const handleLoadMore = () => {
-    if (isExpanding) return; // Prevent multiple clicks during animation
-
-    setIsExpanding(true);
-
-    // Ensure images is always an array
-    const imageArray = Array.isArray(images) ? images : [];
-
-    if (!showAllPhotos) {
-      // Show more photos with smooth reveal
-      setShowAllPhotos(true);
-      setTimeout(() => {
-        if (imageArray.length > 3) {
-          setVisiblePhotos(Math.min(imageArray.length, visiblePhotos + 3));
-        }
-        setIsExpanding(false);
-      }, 150);
-    } else {
-      // Collapse photos
-      setVisiblePhotos(3);
-      setShowAllPhotos(false);
-      setIsExpanding(false);
-
-      // Smooth scroll back to photos section
-      if (photosContainerRef.current) {
-        photosContainerRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }
-    }
+    setShowAllPhotos(!showAllPhotos);
   };
 
   // Get displayed images based on current state
   // Ensure images is always an array
   const imageArray = Array.isArray(images) ? images : [];
-  const displayedImages = imageArray.slice(0, visiblePhotos);
+  const displayedImages = showAllPhotos ? imageArray : imageArray.slice(0, 3);
   const hasMorePhotos = imageArray.length > 3;
-  const canLoadMore = visiblePhotos < imageArray.length;
 
   if (!profileData && images) {
     return (
@@ -196,25 +164,12 @@ const ProfileInfoView = ({ profileData, images }) => {
         </div>
 
         {/* Additional photos (revealed on load more) */}
-        {showAllPhotos && displayedImages.length > 3 && (
-          <div
-            className={`grid gap-4 overflow-hidden transition-all duration-500 ease-in-out ${
-              isExpanding ? "max-h-0 opacity-0" : "max-h-[2000px] opacity-100"
-            } ${displayedImages.length > 6 ? "grid-cols-3" : "grid-cols-2"}`}
-            style={{
-              transform: isExpanding ? "translateY(-20px)" : "translateY(0)",
-            }}
-          >
+        {displayedImages.length > 3 && (
+          <div className="grid grid-cols-2 gap-4">
             {displayedImages.slice(3).map((image, index) => (
               <div
                 key={`additional-${index}`}
                 className="group relative overflow-hidden rounded-xl border border-gray-400/50 transition-all duration-300 hover:border-orange-500/50"
-                style={{
-                  animationDelay: `${index * 100}ms`,
-                  animation: !isExpanding
-                    ? "slideInUp 0.6s ease-out forwards"
-                    : "none",
-                }}
               >
                 <img
                   src={image?.url || "/fallback.png"}
@@ -230,14 +185,9 @@ const ProfileInfoView = ({ profileData, images }) => {
         {hasMorePhotos && (
           <button
             onClick={handleLoadMore}
-            disabled={isExpanding}
-            className="text-right underline"
+            className="text-right font-raleway text-base font-semibold text-white underline hover:text-orange-500"
           >
-            {!showAllPhotos
-              ? `See ${Math.min(3, (images?.length || 0) - 3)} more photos`
-              : canLoadMore
-                ? `Load ${Math.min(3, (images?.length || 0) - visiblePhotos)} more`
-                : "Show less photos"}
+            {!showAllPhotos ? "See more" : "Show less"}
           </button>
         )}
       </div>
