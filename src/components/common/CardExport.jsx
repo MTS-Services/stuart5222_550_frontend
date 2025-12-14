@@ -37,6 +37,8 @@ export default function CardExport({ user }) {
     <div className="space-y-6 p-6">
       {/* Export Button */}
       <div className="text-center">
+        {/* Instruction Text */}
+        <p>{user.qrCards.lenght}</p>
         <button
           onClick={handleExportPDF}
           className="mx-auto flex items-center gap-2 rounded-md bg-[#e9781b] px-6 py-3 text-base font-semibold text-white shadow transition hover:bg-[#021635]"

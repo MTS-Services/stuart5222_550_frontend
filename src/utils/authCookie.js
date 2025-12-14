@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-const minutes = new Date(new Date().getTime() + 5 * 60 * 1000); // 5 minutes
+const minutes = new Date(new Date().getTime() + 5 * 60 * 1000); // 50 minutes
 
 export const AUTH_COOKIE = {
   // -----------------

@@ -13,10 +13,12 @@ import { FaRegCalendar } from "react-icons/fa";
 import { GrLocation } from "react-icons/gr";
 import { FaQrcode } from "react-icons/fa6";
 import Modal from "../../../components/ui/Modal";
+import CardDetails from "../../../components/common/CardDetails";
 
 const ProfileDetailsView = () => {
   const dispatch = useDispatch();
   const { userId } = useParams();
+  const [isOpen, setIsOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const { list, isLoading, error } = useSelector(
     (state) => state.adminUsers.verified,
@@ -56,6 +58,14 @@ const ProfileDetailsView = () => {
     endDate,
   } = user;
 
+  const handleCardDetailsQR = () => {
+    setIsOpen(true);
+  };
+
+  const handleCardPreviewQR = () => {
+    setOpenModal(true);
+  };
+
   return (
     <div className="space-y-10 p-10 font-raleway text-black">
       {/* User Info Section */}
@@ -87,39 +97,21 @@ const ProfileDetailsView = () => {
 
           <div className="flex items-center gap-4 space-y-1 text-[#404040]">
             {/* QR Codes Section */}
-            <div>
-              {/* {isQrLoading ? (
-                <div className="flex h-[140px] w-[150px] items-center justify-center rounded-lg border border-gray-300 text-gray-500">
-                  Loading...
-                </div>
-              ) : qrCodeList && qrCodeList.length > 0 ? (
-                <div className="flex flex-col gap-2">
-                  {qrCodeList.map((card) => (
-                    <button
-                      key={card.id}
-                      onClick={() => setSelectedCard(card)}
-                      className="rounded-lg border px-2 py-3 transition-transform duration-200 hover:scale-105 focus:outline-none"
-                      aria-label={`View ${card.profile?.displayName || card.profile?.name} QR card`}
-                    >
-                      Click
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex h-[140px] w-[150px] items-center justify-center rounded-lg border border-gray-300 text-gray-500">
-                  No QR Cards
-                </div>
-              )} */}
-            </div>
             <div className="flex flex-col items-center justify-center gap-2">
-              <FaQrcode size={80} className="rounded border p-1" />
               <button
-                onClick={() => setOpenModal(true)}
+                onClick={handleCardDetailsQR}
                 className="rounded-lg border bg-orange-500 px-2 py-1 font-semibold text-white transition-transform duration-200 hover:scale-105 focus:outline-none"
               >
-                <span>Preview QR Card</span>
+                <span>Details QR</span>
+              </button>
+              <button
+                onClick={handleCardPreviewQR}
+                className="rounded-lg border bg-orange-500 px-2 py-1 font-semibold text-white transition-transform duration-200 hover:scale-105 focus:outline-none"
+              >
+                <span>Preview QR</span>
               </button>
             </div>
+            <FaQrcode size={100} className="rounded border p-1" />
 
             <div>
               <p className="font-raleway">Age: {age}</p>
@@ -139,6 +131,17 @@ const ProfileDetailsView = () => {
         >
           <div className="flex h-[650px] justify-center overflow-auto bg-slate-100">
             <CardExport user={user} />
+          </div>
+        </Modal>
+
+        <Modal
+          size="lx"
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          title="Details QR & Statistics "
+        >
+          <div className="flex h-[650px] justify-center overflow-auto bg-slate-100">
+            <CardDetails user={user} />
           </div>
         </Modal>
 

@@ -10,7 +10,6 @@ const RoleGuard = ({ allowedRoles }) => {
   } = useSelector((state) => state.auth);
 
   if (loading) return null; // or a spinner skeleton
-
   if (!isAuthenticated) return <Navigate to="/" replace />;
 
   // Try to get user from Redux first, then fallback to cookie
