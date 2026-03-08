@@ -1,13 +1,13 @@
 import Cookies from "js-cookie";
-const minutes = new Date(new Date().getTime() + 5 * 60 * 1000); // 50 minutes
+const minutes = new Date(new Date().getTime() + 30 * 60 * 1000); // 30 minute
 
 export const AUTH_COOKIE = {
   // -----------------
-  // User Methods
+  // ✅ User Methods
   // -----------------
   setUser: (user) => {
     Cookies.set("__app_user", JSON.stringify(user), {
-      expires: minutes, // 5 minutes
+      expires: minutes,
       secure: true,
       sameSite: "strict",
     });
@@ -19,11 +19,11 @@ export const AUTH_COOKIE = {
   removeUser: () => Cookies.remove("__app_user"),
 
   // -----------------
-  // Token Methods
+  // ✅ Token Methods
   // -----------------
   setToken: (token) => {
     Cookies.set("__app_token", token, {
-      expires: minutes, // 5 minutes
+      expires: minutes,
       secure: true,
       sameSite: "strict",
     });

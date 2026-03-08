@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -16,6 +16,14 @@ const LoginView = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // Check for session expiration on component mount
+  useEffect(() => {
+    const sessionExpired = sessionStorage.getItem("sessionExpired");
+    if (sessionExpired === "true") {
+      toast.warning("Session expired. Please log in again.");
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,6 +46,7 @@ const LoginView = () => {
       // Use the auth flow helper to handle redirect based on role
       handlePostLoginRedirect(navigate, loginResult, "/");
       toast.success("Login successful!");
+      sessionStorage.removeItem("sessionExpired");
     } catch (err) {
       toast.error(err?.message || "Invalid email or password");
     }

@@ -35,9 +35,23 @@ api.interceptors.response.use(
   (error) => {
     const status = error.response?.status;
 
+    if (!error.response) {
+      console.error("🌐 Network error");
+      return Promise.reject(error);
+    }
+
     if (status === 401) {
-      console.warn("🚫 Unauthorized — redirecting to login...");
-      // example: window.location.href = '/login';
+      console.warn("🚫 Session expired");
+      // Remove token immediately
+      AUTH_COOKIE.removeToken();
+      localStorage.setItem("expired", true); // Trigger logout across tabs
+      // Only redirect if not already on login page
+      if (!window.location.pathname.includes("/auth/login")) {
+        // Store session expired flag in sessionStorage
+        sessionStorage.setItem("sessionExpired", "true");
+        // Redirect to login page
+        window.location.href = "/auth/login";
+      }
     }
 
     if (status >= 500) {

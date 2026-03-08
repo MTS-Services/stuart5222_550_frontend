@@ -9,7 +9,6 @@ import {
   getUnreadNotificationsCount,
 } from "../../features/admin/notifications/notificationsFetch";
 import { fetchAdminSettingsProfile } from "../../features/admin/home/dashboardFetch";
-import { AUTH_COOKIE } from "../../utils/authCookie";
 
 /* ---------------- MAIN LAYOUT ---------------- */
 const AdminLayout = () => {
@@ -19,29 +18,6 @@ const AdminLayout = () => {
     dispatch(fetchAdminSettingsProfile());
     dispatch(getUnreadNotificationsCount());
   }, [dispatch]);
-
-  const user = AUTH_COOKIE.getUser();
-  const userToken = AUTH_COOKIE.getToken();
-
-  /* ---------------- SESSION EXPIRY HANDLER ---------------- */
-  useEffect(() => {
-    if (!user || !userToken) return; // skip if not logged in
-
-    const timer = setTimeout(
-      () => {
-        // Set a message so we can display it AFTER reload
-        localStorage.setItem(
-          "logoutMessage",
-          "Session expired. Please log in again.",
-        );
-        AUTH_COOKIE.remove(); // Remove cookies (logout)
-        window.location.reload(); // Refresh AFTER clearing cookies
-      },
-      5 * 60 * 1000,
-    ); // 5 minutes
-
-    return () => clearTimeout(timer);
-  }, [user, userToken]);
 
   return (
     <div className="font flex h-screen bg-gray-50 font-raleway">
