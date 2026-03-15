@@ -12,6 +12,8 @@ import {
   RectangleStackIcon,
   CheckIcon,
   XMarkIcon,
+  SparklesIcon,
+  EyeSlashIcon,
 } from "@heroicons/react/24/outline";
 
 const EmailTemplateBuilder = ({
@@ -31,6 +33,13 @@ const EmailTemplateBuilder = ({
     fontFamily: "Arial, sans-serif",
   });
   const [showCodeView, setShowCodeView] = useState(false);
+  const [watermarkSettings, setWatermarkSettings] = useState({
+    enabled: false,
+    opacity: 0.15,
+    logoUrl: "/img/assets/card.png",
+    offsetY: 0,
+    size: 300,
+  });
   const [variables, setVariables] = useState([
     {
       key: "currentYear",
@@ -118,10 +127,31 @@ const EmailTemplateBuilder = ({
   // Component types available in the builder
   const componentTypes = [
     {
+      type: "logo",
+      icon: SparklesIcon,
+      label: "Logo",
+      defaultProps: {
+        src: "/img/assets/logo.png",
+        alt: "Scan Me Maybe",
+        width: "160px",
+        height: "",
+        maxWidth: "100%",
+        objectFit: "contain",
+        alignment: "center",
+        padding: "30px 20px",
+        backgroundColor: "transparent",
+      },
+    },
+    {
       type: "header",
       icon: RectangleStackIcon,
       label: "Header",
       defaultProps: {
+        showLogo: true,
+        logoSrc: "/img/assets/logo.png",
+        logoWidth: "120px",
+        logoHeight: "",
+        logoPosition: "top",
         title: "Scan Me Maybe",
         subtitle: "Welcome to our platform",
         backgroundColor: "#667eea",
@@ -187,6 +217,10 @@ const EmailTemplateBuilder = ({
       icon: RectangleStackIcon,
       label: "Footer",
       defaultProps: {
+        showLogo: false,
+        logoSrc: "/img/assets/logo.png",
+        logoWidth: "80px",
+        logoHeight: "auto",
         content: "© {{currentYear}} {{appName}}. All rights reserved.",
         fontSize: "12px",
         textColor: "#666666",
@@ -214,6 +248,12 @@ const EmailTemplateBuilder = ({
           template.fontFamily ||
           "Arial, sans-serif",
       });
+
+      if (template.watermarkSettings) {
+        setWatermarkSettings(template.watermarkSettings);
+      } else if (template.settings?.watermarkSettings) {
+        setWatermarkSettings(template.settings.watermarkSettings);
+      }
 
       if (template.components) {
         setComponents(template.components);
@@ -412,9 +452,21 @@ const EmailTemplateBuilder = ({
       </style>
     `;
 
+    const watermarkEnabled = watermarkSettings.enabled;
+    const watermarkImgUrl = watermarkSettings.logoUrl;
+    const watermarkOpacity = watermarkSettings.opacity;
+    const watermarkSize = watermarkSettings.size;
+    const watermarkOffsetY = watermarkSettings.offsetY;
+
     const bodyComponents = components
       .map((component) => {
         switch (component.type) {
+          case "logo":
+            return `
+            <div style="text-align: ${component.props.alignment}; padding: ${component.props.padding}; background-color: ${component.props.backgroundColor};">
+              <img src="${component.props.src}" alt="${component.props.alt}" style="width: ${component.props.width}; height: ${component.props.height || "auto"}; max-width: ${component.props.maxWidth || "100%"}; object-fit: ${component.props.objectFit || "contain"}; display: inline-block; vertical-align: middle;" />
+            </div>
+          `;
           case "header":
             const headerTitle = isPreview
               ? replaceVariablesWithSamples(
@@ -424,10 +476,16 @@ const EmailTemplateBuilder = ({
             const headerSubtitle = isPreview
               ? replaceVariablesWithSamples(component.props.subtitle || "")
               : component.props.subtitle || "";
+            const headerLogoHtml = component.props.showLogo && component.props.logoSrc
+              ? `<img src="${component.props.logoSrc}" alt="Logo" style="width: ${component.props.logoWidth || "120px"}; height: ${component.props.logoHeight || "auto"}; display: inline-block; margin-${component.props.logoPosition === "bottom" ? "top" : "bottom"}: 15px;" />`
+              : "";
+            const headerTextHtml = `<h1 style="margin: 0; font-size: 32px; color: ${component.props.textColor};">${headerTitle}</h1>
+              ${headerSubtitle ? `<p style="margin: 10px 0 0 0; color: ${component.props.textColor};">${isPreview ? headerSubtitle : headerSubtitle.replace(/\{\{/g, "&#123;&#123;").replace(/\}\}/g, "&#125;&#125;")}</p>` : ""}`;
+            const isLogoBottom = component.props.logoPosition === "bottom";
             return `
             <div class="header" style="background-color: ${component.props.backgroundColor}; color: ${component.props.textColor}; text-align: ${component.props.alignment}; padding: ${component.props.padding};">
-              <h1 style="margin: 0; font-size: 32px; color: ${component.props.textColor};">${headerTitle}</h1>
-              ${headerSubtitle ? `<p style="margin: 10px 0 0 0; color: ${component.props.textColor};">${isPreview ? headerSubtitle : headerSubtitle.replace(/\{\{/g, "&#123;&#123;").replace(/\}\}/g, "&#125;&#125;")}</p>` : ""}
+              ${isLogoBottom ? headerTextHtml : headerLogoHtml}
+              ${isLogoBottom ? headerLogoHtml : headerTextHtml}
             </div>
           `;
           case "text":
@@ -479,8 +537,12 @@ const EmailTemplateBuilder = ({
               : footerContent
                   .replace(/\{\{/g, "&#123;&#123;")
                   .replace(/\}\}/g, "&#125;&#125;");
+            const footerLogoHtml = component.props.showLogo && component.props.logoSrc
+              ? `<img src="${component.props.logoSrc}" alt="Logo" style="width: ${component.props.logoWidth || "80px"}; height: ${component.props.logoHeight || "auto"}; display: inline-block; margin-bottom: 10px;" /><br/>`
+              : "";
             return `
             <div class="footer" style="background-color: ${component.props.backgroundColor}; color: ${component.props.textColor}; text-align: ${component.props.alignment}; padding: ${component.props.padding}; font-size: ${component.props.fontSize};">
+              ${footerLogoHtml}
               ${footerLines
                 .split("\n")
                 .map(
@@ -508,8 +570,22 @@ const EmailTemplateBuilder = ({
         <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: ${templateSettings.backgroundColor}; margin: 0; padding: 0;">
           <tr>
             <td align="center" style="padding: 0;">
-              <div class="email-container" style="max-width: ${templateSettings.containerWidth}px; margin: 0 auto; background-color: #ffffff; font-size: 0; display: block;">
+              <div class="email-container" style="max-width: ${templateSettings.containerWidth}px; margin: 0 auto; background-color: #ffffff; font-size: 0; display: block; position: relative; overflow: visible;">
                 ${bodyComponents}
+                ${watermarkEnabled ? `<!--[if gte mso 9]>
+                <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="position:absolute;width:${templateSettings.containerWidth}px;height:600px;top:${watermarkOffsetY}px;left:0;">
+                  <v:fill type="frame" src="${watermarkImgUrl}" />
+                </v:rect>
+                <![endif]-->
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9998;">
+                  <table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="height: 100%;">
+                    <tr>
+                      <td align="center" valign="middle" style="padding-top: ${watermarkOffsetY}px;">
+                        <img src="${watermarkImgUrl}" alt="" width="${watermarkSize}" style="opacity: ${watermarkOpacity}; width: ${watermarkSize}px; max-width: 80%; height: auto; display: block;" />
+                      </td>
+                    </tr>
+                  </table>
+                </div>` : ''}
               </div>
             </td>
           </tr>
@@ -528,7 +604,7 @@ const EmailTemplateBuilder = ({
         .join("\n\n"),
       html_template: generateHTML(),
       components: components,
-      settings: templateSettings,
+      settings: { ...templateSettings, watermarkSettings: watermarkSettings },
       variables: variables,
     };
 
@@ -548,7 +624,7 @@ const EmailTemplateBuilder = ({
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Left Sidebar - Components */}
-      <div className="flex min-h-0 w-80 flex-col border-l border-r border-gray-300 bg-white">
+      <div className="flex min-h-0 w-80 flex-col overflow-y-auto border-l border-r border-gray-300 bg-white">
         <div className="border-gray-200 p-4">
           <h3 className="text-xl font-semibold text-gray-800">
             Template Builder
@@ -630,6 +706,121 @@ const EmailTemplateBuilder = ({
           </div>
         </div>
 
+        {/* Watermark Settings */}
+        <div className="flex-shrink-0 border-b border-gray-200 p-4">
+          <div className="mb-3 flex items-center justify-between">
+            <h4 className="font-medium text-gray-700">Watermark</h4>
+            <button
+              onClick={() =>
+                setWatermarkSettings({
+                  ...watermarkSettings,
+                  enabled: !watermarkSettings.enabled,
+                })
+              }
+              className={`flex items-center rounded-md px-3 py-1 text-xs font-medium transition-colors ${
+                watermarkSettings.enabled
+                  ? "bg-green-100 text-green-700 hover:bg-green-200"
+                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+              }`}
+            >
+              {watermarkSettings.enabled ? (
+                <>
+                  <EyeIcon className="mr-1 h-3.5 w-3.5" />
+                  On
+                </>
+              ) : (
+                <>
+                  <EyeSlashIcon className="mr-1 h-3.5 w-3.5" />
+                  Off
+                </>
+              )}
+            </button>
+          </div>
+          {watermarkSettings.enabled && (
+            <div className="space-y-3">
+              <div>
+                <label className="mb-1 flex items-center justify-between text-sm text-gray-600">
+                  <span>Opacity</span>
+                  <span className="font-mono text-xs text-gray-400">
+                    {watermarkSettings.opacity}
+                  </span>
+                </label>
+                <input
+                  type="range"
+                  min="0.03"
+                  max="0.5"
+                  step="0.01"
+                  value={watermarkSettings.opacity}
+                  onChange={(e) =>
+                    setWatermarkSettings({
+                      ...watermarkSettings,
+                      opacity: parseFloat(e.target.value),
+                    })
+                  }
+                  className="w-full accent-orange-600"
+                />
+                <div className="mt-1 flex justify-between text-[10px] text-gray-400">
+                  <span>Subtle (0.03)</span>
+                  <span>Strong (0.5)</span>
+                </div>
+              </div>
+              <div>
+                <label className="mb-1 flex items-center justify-between text-sm text-gray-600">
+                  <span>Size</span>
+                  <span className="font-mono text-xs text-gray-400">
+                    {watermarkSettings.size}px
+                  </span>
+                </label>
+                <input
+                  type="range"
+                  min="50"
+                  max="600"
+                  step="10"
+                  value={watermarkSettings.size}
+                  onChange={(e) =>
+                    setWatermarkSettings({
+                      ...watermarkSettings,
+                      size: parseInt(e.target.value),
+                    })
+                  }
+                  className="w-full accent-orange-600"
+                />
+                <div className="mt-1 flex justify-between text-[10px] text-gray-400">
+                  <span>Small (50px)</span>
+                  <span>Large (600px)</span>
+                </div>
+              </div>
+              <div>
+                <label className="mb-1 flex items-center justify-between text-sm text-gray-600">
+                  <span>Vertical Position</span>
+                  <span className="font-mono text-xs text-gray-400">
+                    {watermarkSettings.offsetY}px
+                  </span>
+                </label>
+                <input
+                  type="range"
+                  min="-400"
+                  max="400"
+                  step="10"
+                  value={watermarkSettings.offsetY}
+                  onChange={(e) =>
+                    setWatermarkSettings({
+                      ...watermarkSettings,
+                      offsetY: parseInt(e.target.value),
+                    })
+                  }
+                  className="w-full accent-orange-600"
+                />
+                <div className="mt-1 flex justify-between text-[10px] text-gray-400">
+                  <span>Up (-400px)</span>
+                  <span>Center (0)</span>
+                  <span>Down (+400px)</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
         {/* Variables Button */}
         <div className="flex-shrink-0">
           <div className="border-b border-gray-200 p-3">
@@ -698,14 +889,37 @@ const EmailTemplateBuilder = ({
               />
             </div>
           ) : (
-            <div className="flex min-h-full justify-center py-8">
+            <div className="flex min-h-full items-start justify-center py-8">
               <div
-                className="overflow-hidden rounded-lg bg-white shadow-lg"
+                className="relative rounded-lg bg-white shadow-lg"
                 style={{
                   maxWidth: `${templateSettings.containerWidth}px`,
                   width: "100%",
                 }}
               >
+                {/* Watermark overlay in canvas preview */}
+                {watermarkSettings.enabled && (
+                  <div
+                    className="pointer-events-none absolute inset-0"
+                    style={{ zIndex: 9998 }}
+                  >
+                    <img
+                      src={watermarkSettings.logoUrl}
+                      alt=""
+                      style={{
+                        position: "absolute",
+                        top: `calc(50% + ${watermarkSettings.offsetY}px)`,
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        opacity: watermarkSettings.opacity,
+                        width: watermarkSettings.size + "px",
+                        maxWidth: "80%",
+                        height: "auto",
+                      }}
+                    />
+                  </div>
+                )}
+                <div style={{ position: "relative", zIndex: 1 }}>
                 <DragDropContext onDragEnd={onDragEnd}>
                   <Droppable droppableId="email-components">
                     {(provided) => (
@@ -790,6 +1004,7 @@ const EmailTemplateBuilder = ({
                     )}
                   </Droppable>
                 </DragDropContext>
+                </div>
               </div>
             </div>
           )}
@@ -951,18 +1166,45 @@ const ComponentRenderer = ({ component, variables = [] }) => {
   };
 
   switch (type) {
-    case "header":
+    case "logo":
       return (
         <div
           style={{
-            backgroundColor: props.backgroundColor,
-            color: props.textColor,
             textAlign: props.alignment,
             padding: props.padding,
-            fontSize: "14px",
-            lineHeight: "1.4",
+            backgroundColor: props.backgroundColor,
           }}
         >
+          <img
+            src={props.src}
+            alt={props.alt}
+            style={{
+              width: props.width,
+              height: props.height || "auto",
+              maxWidth: props.maxWidth || "100%",
+              objectFit: props.objectFit || "contain",
+              display: "inline-block",
+              verticalAlign: "middle",
+            }}
+          />
+        </div>
+      );
+    case "header": {
+      const isBottom = props.logoPosition === "bottom";
+      const logoEl = props.showLogo && props.logoSrc ? (
+        <img
+          src={props.logoSrc}
+          alt="Logo"
+          style={{
+            width: props.logoWidth || "120px",
+            height: props.logoHeight || "auto",
+            display: "inline-block",
+            ...(isBottom ? { marginTop: "15px" } : { marginBottom: "15px" }),
+          }}
+        />
+      ) : null;
+      const textEl = (
+        <>
           <h1
             style={{
               margin: "0 0 10px 0",
@@ -984,8 +1226,24 @@ const ComponentRenderer = ({ component, variables = [] }) => {
               {replaceVariablesWithSamples(props.subtitle)}
             </p>
           )}
+        </>
+      );
+      return (
+        <div
+          style={{
+            backgroundColor: props.backgroundColor,
+            color: props.textColor,
+            textAlign: props.alignment,
+            padding: props.padding,
+            fontSize: "14px",
+            lineHeight: "1.4",
+          }}
+        >
+          {isBottom ? textEl : logoEl}
+          {isBottom ? logoEl : textEl}
         </div>
       );
+    }
     case "text":
     case "paragraph":
       return (
@@ -1081,11 +1339,35 @@ const ComponentRenderer = ({ component, variables = [] }) => {
             fontSize: props.fontSize,
           }}
         >
-          {replaceVariablesWithSamples(props.content)}
+          {props.showLogo && props.logoSrc && (
+            <img
+              src={props.logoSrc}
+              alt="Logo"
+              style={{
+                width: props.logoWidth || "80px",
+                height: props.logoHeight || "auto",
+                display: "inline-block",
+                marginBottom: "10px",
+              }}
+            />
+          )}
+          <div>{replaceVariablesWithSamples(props.content)}</div>
         </div>
       );
     default:
       return <div>Unknown component type</div>;
+  }
+};
+
+// Helper to parse CSS padding shorthand into top/right/bottom/left parts
+const parsePadding = (paddingStr = "") => {
+  const parts = String(paddingStr).trim().split(/\s+/).filter(Boolean);
+  switch (parts.length) {
+    case 1: return { top: parts[0], right: parts[0], bottom: parts[0], left: parts[0] };
+    case 2: return { top: parts[0], right: parts[1], bottom: parts[0], left: parts[1] };
+    case 3: return { top: parts[0], right: parts[1], bottom: parts[2], left: parts[1] };
+    case 4: return { top: parts[0], right: parts[1], bottom: parts[2], left: parts[3] };
+    default: return { top: "20px", right: "20px", bottom: "20px", left: "20px" };
   }
 };
 
@@ -1101,13 +1383,34 @@ const ComponentProperties = ({ component, onUpdate }) => {
     <>
       <div className="mb-4">
         <label className="mb-1 block text-sm text-gray-600">Padding</label>
-        <input
-          type="text"
-          value={props.padding || "20px"}
-          onChange={(e) => handleChange("padding", e.target.value)}
-          className="w-full rounded-md border border-gray-300 p-2 text-sm"
-          placeholder="20px"
-        />
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="mb-1 block text-xs text-gray-400">Top</label>
+            <input
+              type="text"
+              value={parsePadding(props.padding).top}
+              onChange={(e) => {
+                const p = parsePadding(props.padding);
+                handleChange("padding", `${e.target.value} ${p.right} ${p.bottom} ${p.left}`);
+              }}
+              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              placeholder="20px"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-xs text-gray-400">Bottom</label>
+            <input
+              type="text"
+              value={parsePadding(props.padding).bottom}
+              onChange={(e) => {
+                const p = parsePadding(props.padding);
+                handleChange("padding", `${p.top} ${p.right} ${e.target.value} ${p.left}`);
+              }}
+              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              placeholder="20px"
+            />
+          </div>
+        </div>
       </div>
       <div className="mb-4">
         <label className="mb-1 block text-sm text-gray-600">Alignment</label>
@@ -1136,9 +1439,159 @@ const ComponentProperties = ({ component, onUpdate }) => {
   );
 
   switch (type) {
+    case "logo":
+      return (
+        <div>
+          <div className="mb-4">
+            <label className="mb-1 block text-sm text-gray-600">
+              Logo Preview
+            </label>
+            <div className="flex items-center justify-center rounded-md border border-gray-200 bg-gray-50 p-4">
+              <img
+                src={props.src || "/img/assets/logo.png"}
+                alt={props.alt}
+                style={{
+                  width: props.width,
+                  height: props.height || "auto",
+                  maxWidth: props.maxWidth || "100%",
+                  objectFit: props.objectFit || "contain",
+                }}
+              />
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="mb-1 block text-sm text-gray-600">Width</label>
+            <input
+              type="text"
+              value={props.width ?? "160px"}
+              onChange={(e) => handleChange("width", e.target.value)}
+              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              placeholder="160px, 50%, auto"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="mb-1 block text-sm text-gray-600">Height</label>
+            <input
+              type="text"
+              value={props.height ?? ""}
+              onChange={(e) => handleChange("height", e.target.value)}
+              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              placeholder="auto, 80px, 100px"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="mb-1 block text-sm text-gray-600">
+              Max Width
+            </label>
+            <input
+              type="text"
+              value={props.maxWidth || "100%"}
+              onChange={(e) => handleChange("maxWidth", e.target.value)}
+              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              placeholder="100%, 300px"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="mb-1 block text-sm text-gray-600">
+              Object Fit
+            </label>
+            <select
+              value={props.objectFit || "contain"}
+              onChange={(e) => handleChange("objectFit", e.target.value)}
+              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+            >
+              <option value="contain">Contain</option>
+              <option value="cover">Cover</option>
+              <option value="fill">Fill</option>
+              <option value="none">None</option>
+              <option value="scale-down">Scale Down</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="mb-1 block text-sm text-gray-600">Alt Text</label>
+            <input
+              type="text"
+              value={props.alt || ""}
+              onChange={(e) => handleChange("alt", e.target.value)}
+              className="w-full rounded-md border border-gray-300 p-2 text-sm"
+              placeholder="Logo alt text"
+            />
+          </div>
+          {commonProps}
+        </div>
+      );
     case "header":
       return (
         <div>
+          {/* Header Logo Settings */}
+          <div className="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-3">
+            <div className="mb-2 flex items-center justify-between">
+              <label className="text-sm font-medium text-gray-700">
+                Header Logo
+              </label>
+              <button
+                onClick={() => handleChange("showLogo", !props.showLogo)}
+                className={`rounded px-2 py-1 text-xs font-medium ${
+                  props.showLogo
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-200 text-gray-500"
+                }`}
+              >
+                {props.showLogo ? "On" : "Off"}
+              </button>
+            </div>
+            {props.showLogo && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-center rounded border border-gray-200 bg-white p-2">
+                  <img
+                    src={props.logoSrc || "/img/assets/logo.png"}
+                    alt="Logo"
+                    style={{
+                      width: props.logoWidth || "120px",
+                      height: props.logoHeight || "auto",
+                    }}
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs text-gray-500">
+                    Logo Width
+                  </label>
+                  <input
+                    type="text"
+                    value={props.logoWidth ?? "120px"}
+                    onChange={(e) => handleChange("logoWidth", e.target.value)}
+                    className="w-full rounded border border-gray-300 p-1.5 text-sm"
+                    placeholder="120px"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs text-gray-500">
+                    Logo Height
+                  </label>
+                  <input
+                    type="text"
+                    value={props.logoHeight ?? ""}
+                    onChange={(e) => handleChange("logoHeight", e.target.value)}
+                    className="w-full rounded border border-gray-300 p-1.5 text-sm"
+                    placeholder="auto, 60px, 80px"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs text-gray-500">
+                    Logo Position
+                  </label>
+                  <select
+                    value={props.logoPosition || "top"}
+                    onChange={(e) => handleChange("logoPosition", e.target.value)}
+                    className="w-full rounded border border-gray-300 p-1.5 text-sm"
+                  >
+                    <option value="top">Above Title</option>
+                    <option value="bottom">Below Title</option>
+                  </select>
+                </div>
+              </div>
+            )}
+          </div>
           <div className="mb-4">
             <label className="mb-1 block text-sm text-gray-600">Title</label>
             <input
@@ -1308,7 +1761,7 @@ const ComponentProperties = ({ component, onUpdate }) => {
             </label>
             <input
               type="text"
-              value={props.borderRadius || "8px"}
+              value={props.borderRadius ?? ""}
               onChange={(e) => handleChange("borderRadius", e.target.value)}
               className="w-full rounded-md border border-gray-300 p-2 text-sm"
             />
@@ -1319,7 +1772,7 @@ const ComponentProperties = ({ component, onUpdate }) => {
             </label>
             <input
               type="text"
-              value={props.padding || "15px 30px"}
+              value={props.padding ?? ""}
               onChange={(e) => handleChange("padding", e.target.value)}
               className="w-full rounded-md border border-gray-300 p-2 text-sm"
               placeholder="15px 30px"
@@ -1382,7 +1835,7 @@ const ComponentProperties = ({ component, onUpdate }) => {
             <label className="mb-1 block text-sm text-gray-600">Width</label>
             <input
               type="text"
-              value={props.width || "100%"}
+              value={props.width ?? ""}
               onChange={(e) => handleChange("width", e.target.value)}
               className="w-full rounded-md border border-gray-300 p-2 text-sm"
             />
@@ -1398,7 +1851,7 @@ const ComponentProperties = ({ component, onUpdate }) => {
             <label className="mb-1 block text-sm text-gray-600">Height</label>
             <input
               type="text"
-              value={props.height || "2px"}
+              value={props.height ?? ""}
               onChange={(e) => handleChange("height", e.target.value)}
               className="w-full rounded-md border border-gray-300 p-2 text-sm"
             />
@@ -1416,7 +1869,7 @@ const ComponentProperties = ({ component, onUpdate }) => {
             <label className="mb-1 block text-sm text-gray-600">Margin</label>
             <input
               type="text"
-              value={props.margin || "20px 0"}
+              value={props.margin ?? ""}
               onChange={(e) => handleChange("margin", e.target.value)}
               className="w-full rounded-md border border-gray-300 p-2 text-sm"
             />
@@ -1427,6 +1880,62 @@ const ComponentProperties = ({ component, onUpdate }) => {
     case "footer":
       return (
         <div>
+          {/* Footer Logo Settings */}
+          <div className="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-3">
+            <div className="mb-2 flex items-center justify-between">
+              <label className="text-sm font-medium text-gray-700">
+                Footer Logo
+              </label>
+              <button
+                onClick={() => handleChange("showLogo", !props.showLogo)}
+                className={`rounded px-2 py-1 text-xs font-medium ${
+                  props.showLogo
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-200 text-gray-500"
+                }`}
+              >
+                {props.showLogo ? "On" : "Off"}
+              </button>
+            </div>
+            {props.showLogo && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-center rounded border border-gray-200 bg-white p-2">
+                  <img
+                    src={props.logoSrc || "/img/assets/logo.png"}
+                    alt="Logo"
+                    style={{
+                      width: props.logoWidth || "80px",
+                      height: props.logoHeight || "auto",
+                    }}
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs text-gray-500">
+                    Logo Width
+                  </label>
+                  <input
+                    type="text"
+                    value={props.logoWidth || "80px"}
+                    onChange={(e) => handleChange("logoWidth", e.target.value)}
+                    className="w-full rounded border border-gray-300 p-1.5 text-sm"
+                    placeholder="80px"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs text-gray-500">
+                    Logo Height
+                  </label>
+                  <input
+                    type="text"
+                    value={props.logoHeight || "auto"}
+                    onChange={(e) => handleChange("logoHeight", e.target.value)}
+                    className="w-full rounded border border-gray-300 p-1.5 text-sm"
+                    placeholder="auto"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
           <div className="mb-4">
             <label className="mb-1 block text-sm text-gray-600">Content</label>
             <textarea
@@ -1442,7 +1951,7 @@ const ComponentProperties = ({ component, onUpdate }) => {
             </label>
             <input
               type="text"
-              value={props.fontSize || "12px"}
+              value={props.fontSize ?? ""}
               onChange={(e) => handleChange("fontSize", e.target.value)}
               className="w-full rounded-md border border-gray-300 p-2 text-sm"
             />
