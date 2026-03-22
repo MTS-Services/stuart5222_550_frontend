@@ -249,10 +249,13 @@ const EmailTemplateBuilder = ({
           "Arial, sans-serif",
       });
 
-      if (template.watermarkSettings) {
-        setWatermarkSettings(template.watermarkSettings);
-      } else if (template.settings?.watermarkSettings) {
-        setWatermarkSettings(template.settings.watermarkSettings);
+      // Force watermark to always be disabled when loading templates
+      if (template.watermarkSettings || template.settings?.watermarkSettings) {
+        const loadedWatermark = template.watermarkSettings || template.settings?.watermarkSettings;
+        setWatermarkSettings({
+          ...loadedWatermark,
+          enabled: false // Always disable watermark
+        });
       }
 
       if (template.components) {
@@ -452,7 +455,8 @@ const EmailTemplateBuilder = ({
       </style>
     `;
 
-    const watermarkEnabled = watermarkSettings.enabled;
+    // Force watermark to always be disabled
+    const watermarkEnabled = false; // watermarkSettings.enabled;
     const watermarkImgUrl = watermarkSettings.logoUrl;
     const watermarkOpacity = watermarkSettings.opacity;
     const watermarkSize = watermarkSettings.size;
@@ -604,7 +608,10 @@ const EmailTemplateBuilder = ({
         .join("\n\n"),
       html_template: generateHTML(),
       components: components,
-      settings: { ...templateSettings, watermarkSettings: watermarkSettings },
+      settings: { 
+        ...templateSettings, 
+        watermarkSettings: { ...watermarkSettings, enabled: false } // Always save as disabled
+      },
       variables: variables,
     };
 
@@ -706,7 +713,8 @@ const EmailTemplateBuilder = ({
           </div>
         </div>
 
-        {/* Watermark Settings */}
+        {/* Watermark Settings - DISABLED */}
+        {/* 
         <div className="flex-shrink-0 border-b border-gray-200 p-4">
           <div className="mb-3 flex items-center justify-between">
             <h4 className="font-medium text-gray-700">Watermark</h4>
@@ -820,6 +828,7 @@ const EmailTemplateBuilder = ({
             </div>
           )}
         </div>
+        */}
 
         {/* Variables Button */}
         <div className="flex-shrink-0">
@@ -897,7 +906,8 @@ const EmailTemplateBuilder = ({
                   width: "100%",
                 }}
               >
-                {/* Watermark overlay in canvas preview */}
+                {/* Watermark overlay in canvas preview - DISABLED */}
+                {/* 
                 {watermarkSettings.enabled && (
                   <div
                     className="pointer-events-none absolute inset-0"
@@ -919,6 +929,7 @@ const EmailTemplateBuilder = ({
                     />
                   </div>
                 )}
+                */}
                 <div style={{ position: "relative", zIndex: 1 }}>
                 <DragDropContext onDragEnd={onDragEnd}>
                   <Droppable droppableId="email-components">
