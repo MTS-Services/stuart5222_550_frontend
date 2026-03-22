@@ -15,8 +15,7 @@ const UserProfilesView = () => {
   const [page, setPage] = useState(1);
   const limit = 10;
 
-  // Fetch verified profiles on page, limit, or searchQuery change
-  useEffect(() => {
+  const fetchProfiles = () => {
     dispatch(
       UserVerifiedProfile({
         page: page,
@@ -25,6 +24,11 @@ const UserProfilesView = () => {
         username: searchQuery,
       }),
     );
+  };
+
+  // Fetch verified profiles on page, limit, or searchQuery change
+  useEffect(() => {
+    fetchProfiles();
   }, [dispatch, page, limit, searchQuery]);
 
   // Reset to page 1 when search query changes

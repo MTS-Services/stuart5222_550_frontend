@@ -19,6 +19,7 @@ const UserHomeView = () => {
   const { user } = useSelector((state) => state.auth);
   const rejectionReason = user?.profile?.rejectionReason;
   const isVerified = user?.status === "VERIFIED";
+  const isProfileDeactivated = user?.profile?.isActive === false;
   // Prioritize structured images (face, fullbody, toothyGrin, extras) over imageUrls
   const structuredImages = userProfile?.images || {};
   const fallbackImages = userProfile?.imageUrls || [];
@@ -114,7 +115,82 @@ const UserHomeView = () => {
 
   return (
     <div className="flex flex-col items-center justify-center bg-[#3B3B3D] px-4 py-4 text-white">
-      {isVerified ? (
+      {isVerified && isProfileDeactivated ? (
+        <div className="flex min-h-screen items-center justify-center py-10">
+          <div className="w-full max-w-md">
+            <div className="rounded-2xl border border-red-500/30 bg-slate-800/10 p-8 shadow">
+              {/* User Email Badge */}
+              <div className="mb-6 flex items-center justify-center gap-4">
+                <div className="inline-flex items-center gap-2 rounded-full border border-slate-600 bg-slate-700/50 px-4 py-2">
+                  <svg
+                    className="h-4 w-4 text-red-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                  </svg>
+                  <span className="text-sm font-medium text-slate-200">
+                    {user?.email}
+                  </span>
+                </div>
+              </div>
+
+              {/* Deactivated Icon */}
+              <div className="mb-6 flex justify-center">
+                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-red-500/20">
+                  <svg
+                    className="h-10 w-10 text-red-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
+                    />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Deactivated Message */}
+              <div className="mb-8 text-center">
+                <h2 className="mb-3 text-xl font-bold text-red-400">
+                  Account Deactivated
+                </h2>
+                <p className="text-sm leading-relaxed text-slate-400">
+                  Your account has been deactivated by an administrator. Your
+                  profile is not publicly visible and QR card scanning is
+                  disabled.
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-slate-500">
+                  If you believe this is a mistake, please contact support for
+                  assistance.
+                </p>
+              </div>
+
+              {/* Status Badge */}
+              <div className="flex items-center justify-center gap-3 rounded-xl border border-red-500/30 bg-red-500/10 p-4">
+                <div className="h-3 w-3 rounded-full bg-red-500"></div>
+                <span className="font-medium text-red-400">
+                  Profile Status: Deactivated
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 rounded-xl border border-orange-500/30 bg-slate-800/10 px-3 py-2 text-sm text-orange-400 shadow hover:bg-slate-700/20 hover:text-orange-300"
+              >
+                <FaPowerOff /> Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : isVerified ? (
         <>
           <ProfileInfoView profileData={userProfile} images={images} />
         </>

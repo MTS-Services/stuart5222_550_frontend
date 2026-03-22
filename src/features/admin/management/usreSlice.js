@@ -10,6 +10,7 @@ import {
   adminUserDetailsProfiles,
   adminUserApprovedProfile,
   adminUserRejectedProfile,
+  toggleProfileActive,
 } from "./usreFetch";
 
 const initialState = {
@@ -228,6 +229,32 @@ const adminUserManagementSlice = createSlice({
       .addCase(UserVerifiedProfile.rejected, (state, action) => {
         state.verified.isLoading = false;
         state.verified.error = action.payload;
+      })
+
+      // ======================================================
+      // ===== Toggle Profile Active/Deactive =====
+      // ======================================================
+      .addCase(toggleProfileActive.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(toggleProfileActive.fulfilled, (state, action) => {
+        const { profileId, isActive } = action.meta.arg;
+        // Update the profile in the verified list
+        if (state.verified.list) {
+          state.verified.list = state.verified.list.map((profile) =>
+            profile.id === profileId ? { ...profile, isActive } : profile,
+          );
+        }
+        toast.success(
+          isActive
+            ? "Profile activated successfully!"
+            : "Profile deactivated successfully!",
+        );
+        state.error = null;
+      })
+      .addCase(toggleProfileActive.rejected, (state, action) => {
+        state.error = action.payload;
+        toast.error(action.payload || "Failed to toggle profile status");
       })
 
       // ===================================
