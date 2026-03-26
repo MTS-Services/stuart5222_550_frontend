@@ -1,5 +1,11 @@
 import Cookies from "js-cookie";
-const minutes = new Date(new Date().getTime() + 30 * 60 * 1000); // 30 minute
+const SESSION_MINUTES = 30;
+// Calculated per-call so each login gets a fresh 30-min window
+const getExpiry = () => new Date(new Date().getTime() + SESSION_MINUTES * 60 * 1000);
+// secure:true silently blocks cookies on HTTP (localhost). Only use on HTTPS.
+const isSecure = window.location.protocol === "https:";
+
+export const SESSION_MS = SESSION_MINUTES * 60 * 1000;
 
 export const AUTH_COOKIE = {
   // -----------------
@@ -7,8 +13,8 @@ export const AUTH_COOKIE = {
   // -----------------
   setUser: (user) => {
     Cookies.set("__app_user", JSON.stringify(user), {
-      expires: minutes,
-      secure: true,
+      expires: getExpiry(),
+      secure: isSecure,
       sameSite: "strict",
     });
   },
@@ -23,8 +29,8 @@ export const AUTH_COOKIE = {
   // -----------------
   setToken: (token) => {
     Cookies.set("__app_token", token, {
-      expires: minutes,
-      secure: true,
+      expires: getExpiry(),
+      secure: isSecure,
       sameSite: "strict",
     });
   },

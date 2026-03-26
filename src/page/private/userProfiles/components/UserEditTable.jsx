@@ -73,7 +73,7 @@ export const UserEditTable = ({ list, isLoading, error }) => {
                     {formatDate(row.createdAt) || "—"}
                   </td>
                   <td className="whitespace-nowrap px-5 py-3 font-raleway">
-                    {row.user.name || "—"}
+                    {row.displayName || row.user.name || "—"}
                   </td>
                   <td className="whitespace-nowrap px-5 py-3 text-center font-raleway">
                     {row.age || "—"} <span>years</span>

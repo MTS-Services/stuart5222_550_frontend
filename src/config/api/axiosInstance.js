@@ -42,8 +42,8 @@ api.interceptors.response.use(
 
     if (status === 401) {
       console.warn("🚫 Session expired");
-      // Remove token immediately
-      AUTH_COOKIE.removeToken();
+      // Remove both token AND user cookies so Redux re-initializes as logged out
+      AUTH_COOKIE.remove();
       localStorage.setItem("expired", true); // Trigger logout across tabs
       // Only redirect if not already on login page
       if (!window.location.pathname.includes("/auth/login")) {

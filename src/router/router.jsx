@@ -117,6 +117,10 @@ const router = createBrowserRouter(
             path="user-edit/details/:userId"
             element={<ProfileDetailsView />}
           />
+          <Route
+            path="edit-profile/:email"
+            element={<EditProfileView />}
+          />
         </Route>
       </Route>
 

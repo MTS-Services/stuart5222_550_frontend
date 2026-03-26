@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   adminUserApprovedProfile,
   adminUserRejectedProfile,
+  adminUserDraftProfile,
 } from "../../../features/admin/management/usreFetch";
 import {
   shouldShowTravelMode,
@@ -16,10 +17,17 @@ import { FaRegCalendar } from "react-icons/fa";
 const UserDetailsView = () => {
   const navigate = useNavigate();
   const { userId } = useParams();
+  const routerLocation = useLocation();
   const dispatch = useDispatch();
   const { userProfiles, isLoading, error } = useSelector(
     (state) => state.adminUsers,
   );
+
+  // Always re-fetch on mount to ensure we have latest data from DB
+  useEffect(() => {
+    dispatch(adminUserDraftProfile({ page: 1, limit: 200 }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const user = userProfiles?.find((u) => u.id === Number(userId));
   const [rejectionRe, setRejectionRe] = useState("");
@@ -39,6 +47,9 @@ const UserDetailsView = () => {
     height,
     bio,
     image,
+    images: structuredImages,
+    changedFields,
+    displayName,
     bodyType,
     dealbreakers,
     location,
@@ -46,6 +57,40 @@ const UserDetailsView = () => {
     endDate,
     rejectionReason,
   } = user;
+
+  // Build labeled image list from structured data so labels are always correct
+  const getImageLabel = (index) => {
+    if (!structuredImages) return `Image ${index + 1}`;
+    if (index === 0) return "Face";
+    if (index === 1) return "Full Body";
+    if (index === 2) return "Toothy Grin";
+    return `Extra ${index - 2}`;
+  };
+
+  // Build ordered image list: face → fullbody → toothyGrin → extras (from structuredImages)
+  // Falls back to flat image[] array if structuredImages not available
+  const getExtrasFromStructured = (extras) => {
+    if (!extras) return [];
+    if (Array.isArray(extras)) return extras.map((url, i) => ({ url, label: `Extra ${i + 1}`, required: false }));
+    // Stored as object with numeric keys: { "1": url, "2": url, ... }
+    return Object.entries(extras)
+      .sort(([a], [b]) => Number(a) - Number(b))
+      .map(([, url], i) => ({ url, label: `Extra ${i + 1}`, required: false }));
+  };
+
+  const orderedImages = structuredImages
+    ? [
+        { url: structuredImages.face, label: 'Face', required: true },
+        { url: structuredImages.fullbody, label: 'Full Body', required: true },
+        { url: structuredImages.toothyGrin, label: 'Toothy Grin', required: true },
+        ...getExtrasFromStructured(structuredImages.extras),
+      ].filter(item => item.url)
+    : (image || []).map((url, i) => ({ url, label: getImageLabel(i), required: i < 3 }));
+
+  // Check if a field was changed by the user (for highlighting)
+  const isFieldChanged = (fieldName) => {
+    return Array.isArray(changedFields) && changedFields.includes(fieldName);
+  };
 
   // ✅ Approve
   const handleApprove = async () => {
@@ -96,6 +141,16 @@ const UserDetailsView = () => {
 
   return (
     <div className="space-y-8 p-10 font-raleway text-black">
+      {/* Changed Fields Banner */}
+      {Array.isArray(changedFields) && changedFields.length > 0 && (
+        <div className="rounded-lg border border-yellow-300 bg-yellow-50 p-4">
+          <p className="font-raleway font-semibold text-yellow-800">
+            ⚠ User has edited their profile. Changed fields:{' '}
+            <span className="font-bold">{changedFields.join(', ')}</span>
+          </p>
+        </div>
+      )}
+
       {/* User Info */}
       <div className="">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
@@ -103,7 +158,7 @@ const UserDetailsView = () => {
             <div className="h-[80px] w-[80px]">
               <img
                 src={image?.[0] || "/img/placeholder.jpg"}
-                alt={userInfo.name || "User"}
+                alt={displayName || userInfo.name || "User"}
                 className="h-full w-full rounded-full border object-cover"
                 onError={(e) => (e.target.src = "/img/placeholder.jpg")}
               />
@@ -111,7 +166,7 @@ const UserDetailsView = () => {
 
             <div>
               <h3 className="font-raleway text-base font-medium text-[#252525]">
-                {userInfo.name}
+                {displayName || userInfo.name}
               </h3>
               <p className="my-1.5 font-lato text-sm text-[#242424]">
                 {userInfo.email}
@@ -131,20 +186,40 @@ const UserDetailsView = () => {
           </div>
 
           <div className="flex items-center gap-4 space-y-1">
+            <Link
+              to={`/admin/edit-profile/${userInfo.email}`}
+              state={{ returnTo: `/admin/user-management/${userId}` }}
+              className="rounded-lg border bg-orange-500 px-3 py-2 text-center font-semibold text-white transition-transform duration-200 hover:scale-105 hover:bg-orange-600 focus:outline-none"
+            >
+              Edit Profile
+            </Link>
             <div className="flex h-[130px] w-[150px] items-center justify-center rounded-lg border border-red-50 bg-white font-medium text-gray-500">
               No QR Available!
             </div>
             <div>
-              <p className="font-raleway">Age: {age}</p>
-              <p className="font-raleway">Height: {height}</p>
-              <p className="font-raleway">Body type: {bodyType}</p>
-              <p className="font-raleway">Dealbreakers: {dealbreakers}</p>
+              <p className={`font-raleway ${isFieldChanged('age') ? 'rounded bg-yellow-100 px-1 font-bold' : ''}`}>
+                Age: {age} {isFieldChanged('age') && <span className="ml-1 text-xs text-yellow-600">●</span>}
+              </p>
+              <p className={`font-raleway ${isFieldChanged('height') ? 'rounded bg-yellow-100 px-1 font-bold' : ''}`}>
+                Height: {height} {isFieldChanged('height') && <span className="ml-1 text-xs text-yellow-600">●</span>}
+              </p>
+              <p className={`font-raleway ${isFieldChanged('bodyType') ? 'rounded bg-yellow-100 px-1 font-bold' : ''}`}>
+                Body type: {bodyType} {isFieldChanged('bodyType') && <span className="ml-1 text-xs text-yellow-600">●</span>}
+              </p>
+              <p className={`font-raleway ${isFieldChanged('dealbreakers') ? 'rounded bg-yellow-100 px-1 font-bold' : ''}`}>
+                Dealbreakers: {dealbreakers} {isFieldChanged('dealbreakers') && <span className="ml-1 text-xs text-yellow-600">●</span>}
+              </p>
             </div>
           </div>
         </div>
 
         <div className="mt-6">
-          <h2 className="my-4 font-raleway text-2xl font-semibold">Bio</h2>
+          <h2 className="my-4 font-raleway text-2xl font-semibold">
+            Bio
+            {isFieldChanged('bio') && (
+              <span className="ml-2 rounded-full bg-yellow-400 px-2 py-0.5 text-xs font-bold text-black">UPDATED</span>
+            )}
+          </h2>
           {bio ? (
             Array.isArray(bio) ? (
               bio.map((p, i) => (
@@ -196,13 +271,23 @@ const UserDetailsView = () => {
 
       {/* Images */}
       <div>
-        <h3 className="mb-5 font-raleway text-2xl font-semibold">Images</h3>
+        <h3 className="mb-5 font-raleway text-2xl font-semibold">
+          Images
+          {isFieldChanged('image') && (
+            <span className="ml-2 rounded-full bg-yellow-400 px-2 py-0.5 text-xs font-bold text-black">UPDATED</span>
+          )}
+        </h3>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {image?.map((img, idx) => (
-            <div key={idx} className="">
+          {orderedImages.map((item, idx) => (
+            <div key={idx} className="overflow-hidden rounded-lg">
+              <div className="mb-1">
+                <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold text-white ${item.required ? 'bg-orange-500' : 'bg-gray-500'}`}>
+                  {item.label}
+                </span>
+              </div>
               <img
-                src={img}
-                alt={`Img ${idx + 1}`}
+                src={item.url}
+                alt={item.label}
                 className="h-96 w-96 rounded-lg border border-gray-300 object-cover"
                 onError={(e) => (e.target.src = "/img/placeholder.jpg")}
               />

@@ -16,13 +16,16 @@ import {
   submitEditProfile,
   fetchUserProfile,
 } from "../../../../features/public/profile/profileFetch";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { updateUser } from "../../../../features/auth/authSlice";
 import { GET } from "../../../../config/api/httpMethods";
 import { endpoints } from "../../../../config/api/httpEndpoint";
 import CustomModal from "../../../../components/common/CustomModal";
 
 const EditProfileView = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin');
   const [submitLoading, setSubmitLoading] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [success, setSuccess] = useState(false);
@@ -38,6 +41,7 @@ const EditProfileView = () => {
   const [errors, setErrors] = useState({});
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [displayName, setDisplayName] = useState("");
   const [birthMonth, setBirthMonth] = useState(null);
   const [birthYear, setBirthYear] = useState(null);
   const [county, setCounty] = useState("");
@@ -311,7 +315,8 @@ const EditProfileView = () => {
 
     const formData = {
       email: email,
-      displayName: form.firstName.value,
+      displayName: displayName,
+      username: form.username.value || null,
       birthMonth: birthMonth,
       birthYear: birthYear,
       age: calculatedAge, // Store calculated age for backward compatibility
@@ -387,6 +392,11 @@ const EditProfileView = () => {
         }
       });
 
+      // Flag admin edits so backend skips re-pending
+      if (isAdmin) {
+        submitData.append("adminEdit", "true");
+      }
+
       // Append image files using structured format
       const activeSlots = imageSlots.filter((slot) => !slot.isEmpty);
       activeSlots.forEach((slot, index) => {
@@ -456,6 +466,7 @@ const EditProfileView = () => {
 
         if (result.type === "user/fetchProfile/fulfilled") {
           setProfileData(result.payload);
+          setDisplayName(result.payload.displayName || "");
 
           // Initialize birth month/year from age or existing birth data
           if (result.payload.birthMonth && result.payload.birthYear) {
@@ -624,10 +635,10 @@ const EditProfileView = () => {
         <div className="text-center">
           <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-orange-500 border-t-transparent"></div>
           <h2 className="mb-4 font-raleway text-xl font-bold">
-            Loading your profile...
+            Loading profile...
           </h2>
           <p className="font-raleway text-gray-400">
-            Please wait while we fetch your data
+            Please wait while we fetch the data
           </p>
         </div>
       </div>
@@ -638,16 +649,23 @@ const EditProfileView = () => {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#3B3B3D] px-[10px] py-10 font-raleway text-white sm:py-4 md:py-6 lg:py-8">
         <h2 className="mb-4 font-raleway text-xl font-bold md:text-[32px]">
-          Your Profile Updated Successfully!
+          Profile Updated Successfully!
         </h2>
         <p className="font-raleway text-gray-400">
-          Your profile changes have been saved and submitted for review.
+          Profile changes have been saved{isAdmin ? '.' : ' and submitted for review.'}
         </p>
         <button
-          onClick={() => window.location.replace("/user")}
+          onClick={() => {
+            if (isAdmin) {
+              const returnTo = location.state?.returnTo;
+              returnTo ? navigate(returnTo, { state: { refresh: true } }) : navigate(-1);
+            } else {
+              window.location.replace("/user");
+            }
+          }}
           className="mt-6 rounded-md bg-orange-500 px-4 py-2 text-white hover:bg-orange-600"
         >
-          Go to Home
+          {isAdmin ? 'Go Back' : 'Go to Home'}
         </button>
       </div>
     );
@@ -657,9 +675,9 @@ const EditProfileView = () => {
     <div className="min-h-screen bg-[#3B3B3D] px-[10px] font-raleway text-white sm:py-4 md:py-6 lg:py-8">
       <form onSubmit={handleSubmit} key={profileData ? "loaded" : "loading"}>
         <div className="mx-auto max-w-[600px]">
-          <Link to="/user" className="mb-4 flex items-center gap-2 text-white">
+          <button type="button" onClick={() => navigate(-1)} className="mb-4 flex items-center gap-2 text-white">
             <MdArrowBack /> Back
-          </Link>
+          </button>
           {/* Header */}
           <div className="flex justify-center py-[40px]">
             <img
@@ -671,7 +689,7 @@ const EditProfileView = () => {
 
           <div className="mb-6 text-center">
             <h2 className="font-raleway text-xl font-bold md:text-[32px]">
-              Update Your Profile
+              {isAdmin ? 'Update Profile' : 'Update Your Profile'}
             </h2>
             {profileData && (
               <p className="mt-2 text-sm text-gray-400">
@@ -690,7 +708,8 @@ const EditProfileView = () => {
                 type="text"
                 name="firstName"
                 placeholder="Enter Display Name"
-                defaultValue={profileData?.displayName || ""}
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
                 className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${
                   errors.displayName ? "border-red-500" : "border-gray-500"
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}
@@ -1057,28 +1076,32 @@ const EditProfileView = () => {
             </div>
           </div>
 
-          {/* Safety Notice */}
-          <div className="my-8 rounded-lg bg-[#FFFFFF33] p-5">
-            <div className="relative mx-auto mb-5 flex h-10 w-10 justify-center overflow-hidden rounded bg-orange-500 p-1 text-center">
-              <MdOutlinePrivacyTip className="h-full w-full font-raleway text-white" />
-            </div>
-            <p className="text-center font-raleway text-base font-normal leading-6">
-              Your safety is what inspired us. You don't know anything about the
-              person you or your friend have given the card to. Please be smart
-              about what information you share.
-            </p>
-          </div>
+          {!isAdmin && (
+            <>
+              {/* Safety Notice */}
+              <div className="my-8 rounded-lg bg-[#FFFFFF33] p-5">
+                <div className="relative mx-auto mb-5 flex h-10 w-10 justify-center overflow-hidden rounded bg-orange-500 p-1 text-center">
+                  <MdOutlinePrivacyTip className="h-full w-full font-raleway text-white" />
+                </div>
+                <p className="text-center font-raleway text-base font-normal leading-6">
+                  Your safety is what inspired us. You don't know anything about the
+                  person you or your friend have given the card to. Please be smart
+                  about what information you share.
+                </p>
+              </div>
 
-          <div className="my-10 flex items-center gap-4 rounded-lg bg-[#FFFFFF33] px-3 py-8">
-            <RiDeleteBinLine className="h-14 w-14 text-orange-500" />
-            <p className="font-raleway text-base font-normal">
-              Your cards will be sent to you after your profile has been
-              approved for not violating decency standards.
-            </p>
-          </div>
+              <div className="my-10 flex items-center gap-4 rounded-lg bg-[#FFFFFF33] px-3 py-8">
+                <RiDeleteBinLine className="h-14 w-14 text-orange-500" />
+                <p className="font-raleway text-base font-normal">
+                  Your cards will be sent to you after your profile has been
+                  approved for not violating decency standards.
+                </p>
+              </div>
+            </>
+          )}
 
           {/* Contact Information */}
-          <div className="rounded-lg bg-[#434343] px-4 py-8">
+          <div className={`rounded-lg bg-[#434343] px-4 py-8 ${isAdmin ? 'mt-10' : ''}`}>
             <div className="mb-6">
               <h2 className="mb-6 font-raleway text-xl font-bold leading-6">
                 Person to person dating, but with a safer approach.
@@ -1098,13 +1121,13 @@ const EditProfileView = () => {
             <div className="">
               <div className="flex flex-col gap-2 self-stretch">
                 <label className="font-raleway text-base font-semibold text-white">
-                  Name
+                  User Name
                 </label>
                 <input
                   type="text"
-                  name="name"
-                  placeholder="Enter your display name"
-                  defaultValue={profileData?.displayName || ""}
+                  name="username"
+                  placeholder="Enter your user name"
+                  defaultValue={profileData?.username || ""}
                   className="h-11 rounded-lg bg-white px-3 text-sm font-medium text-gray-700 outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
                 />
               </div>
@@ -1155,31 +1178,33 @@ const EditProfileView = () => {
             disabled={submitLoading}
             className="mt-10 w-full rounded-lg bg-orange-500 px-6 py-3 text-lg font-semibold text-white transition hover:bg-orange-600"
           >
-            {submitLoading ? "Submitting..." : "Submit Profile for Review"}
+            {submitLoading ? "Submitting..." : isAdmin ? "Update Profile" : "Submit Profile for Review"}
           </button>
         </div>
       </form>
 
-      <div className="mx-auto mb-6 mt-10 max-w-[600px]">
-        <p className="text-center font-raleway text-sm text-gray-400">
-          By submitting your profile, you agree to our{" "}
-          <button
-            onClick={openModal}
-            className="font-raleway text-orange-500 hover:underline"
-          >
-            Terms of Service{" "}
-          </button>{" "}
-          and{" "}
-          <button
-            onClick={openModal}
-            className="font-raleway text-orange-500 hover:underline"
-          >
-            {" "}
-            Privacy Policy
-          </button>
-          .
-        </p>
-      </div>
+      {!isAdmin && (
+        <div className="mx-auto mb-6 mt-10 max-w-[600px]">
+          <p className="text-center font-raleway text-sm text-gray-400">
+            By submitting your profile, you agree to our{" "}
+            <button
+              onClick={openModal}
+              className="font-raleway text-orange-500 hover:underline"
+            >
+              Terms of Service{" "}
+            </button>{" "}
+            and{" "}
+            <button
+              onClick={openModal}
+              className="font-raleway text-orange-500 hover:underline"
+            >
+              {" "}
+              Privacy Policy
+            </button>
+            .
+          </p>
+        </div>
+      )}
 
       <CustomModal
         isOpen={isModalOpen}
