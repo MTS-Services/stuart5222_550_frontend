@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import CardExport from "../../../components/common/CardExport";
 
@@ -9,6 +9,7 @@ import {
 } from "../../../utils/travelMode";
 
 import { getUserQRcode } from "../../../features/admin/home/dashboardFetch";
+import { UserVerifiedProfile } from "../../../features/admin/management/usreFetch";
 import { FaRegCalendar } from "react-icons/fa";
 import { GrLocation } from "react-icons/gr";
 import { FaQrcode } from "react-icons/fa6";
@@ -18,6 +19,7 @@ import CardDetails from "../../../components/common/CardDetails";
 const ProfileDetailsView = () => {
   const dispatch = useDispatch();
   const { userId } = useParams();
+  const routerLocation = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const { list, isLoading, error } = useSelector(
@@ -25,6 +27,12 @@ const ProfileDetailsView = () => {
   );
   const user = list.find((u) => u.id === Number(userId));
   const user_email = user?.email;
+
+  // Always re-fetch on mount to ensure we have latest data from DB
+  useEffect(() => {
+    dispatch(UserVerifiedProfile({ page: 1, limit: 200 }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (user_email) {
@@ -51,12 +59,49 @@ const ProfileDetailsView = () => {
     height,
     bio,
     image,
+    images: structuredImages,
+    changedFields,
+    displayName,
     bodyType,
     dealbreakers,
     location,
     startDate,
     endDate,
   } = user;
+
+  // Build labeled image list: face, fullbody, toothyGrin first, then extras
+  const getImageLabel = (index) => {
+    if (!structuredImages) return `Image ${index + 1}`;
+    if (index === 0) return "Face";
+    if (index === 1) return "Full Body";
+    if (index === 2) return "Toothy Grin";
+    return `Extra ${index - 2}`;
+  };
+
+  // Build ordered image list: face → fullbody → toothyGrin → extras (from structuredImages)
+  // Falls back to flat image[] array if structuredImages not available
+  const getExtrasFromStructured = (extras) => {
+    if (!extras) return [];
+    if (Array.isArray(extras)) return extras.map((url, i) => ({ url, label: `Extra ${i + 1}`, required: false }));
+    // Stored as object with numeric keys: { "1": url, "2": url, ... }
+    return Object.entries(extras)
+      .sort(([a], [b]) => Number(a) - Number(b))
+      .map(([, url], i) => ({ url, label: `Extra ${i + 1}`, required: false }));
+  };
+
+  const orderedImages = structuredImages
+    ? [
+        { url: structuredImages.face, label: 'Face', required: true },
+        { url: structuredImages.fullbody, label: 'Full Body', required: true },
+        { url: structuredImages.toothyGrin, label: 'Toothy Grin', required: true },
+        ...getExtrasFromStructured(structuredImages.extras),
+      ].filter(item => item.url)
+    : (image || []).map((url, i) => ({ url, label: getImageLabel(i), required: i < 3 }));
+
+  // Check if a field was changed by the user (for highlighting)
+  const isFieldChanged = (fieldName) => {
+    return Array.isArray(changedFields) && changedFields.includes(fieldName);
+  };
 
   const handleCardDetailsQR = () => {
     setIsOpen(true);
@@ -68,6 +113,16 @@ const ProfileDetailsView = () => {
 
   return (
     <div className="space-y-10 p-10 font-raleway text-black">
+      {/* Changed Fields Banner */}
+      {Array.isArray(changedFields) && changedFields.length > 0 && (
+        <div className="rounded-lg border border-yellow-300 bg-yellow-50 p-4">
+          <p className="font-raleway font-semibold text-yellow-800">
+            ⚠ User has edited their profile. Changed fields:{' '}
+            <span className="font-bold">{changedFields.join(', ')}</span>
+          </p>
+        </div>
+      )}
+
       {/* User Info Section */}
       <div className="">
         <div className="flex items-center justify-between">
@@ -76,13 +131,13 @@ const ProfileDetailsView = () => {
               <img
                 className="h-full w-full rounded-full border border-gray-300 object-cover"
                 src={image[0]}
-                alt={userInfo.name || "User"}
+                alt={displayName || userInfo.name || "User"}
               />
             </div>
 
             <div className="flex flex-col">
               <h3 className="text-base font-medium text-[#252525]">
-                {userInfo.name}
+                {displayName || userInfo.name}
               </h3>
               <p className="my-1.5 text-sm text-[#242424]">{userInfo.email}</p>
               <p className="text-xs text-[#464646]">{userInfo.phone}</p>
@@ -100,24 +155,39 @@ const ProfileDetailsView = () => {
             <div className="flex flex-col items-center justify-center gap-2">
               <button
                 onClick={handleCardDetailsQR}
-                className="rounded-lg border bg-orange-500 px-2 py-1 font-semibold text-white transition-transform duration-200 hover:scale-105 focus:outline-none"
+                className="w-full rounded-lg border bg-orange-500 px-4 py-2 font-semibold text-white transition-transform duration-200 hover:scale-105 focus:outline-none"
               >
                 <span>Details QR</span>
               </button>
               <button
                 onClick={handleCardPreviewQR}
-                className="rounded-lg border bg-orange-500 px-2 py-1 font-semibold text-white transition-transform duration-200 hover:scale-105 focus:outline-none"
+                className="w-full rounded-lg border bg-orange-500 px-4 py-2 font-semibold text-white transition-transform duration-200 hover:scale-105 focus:outline-none"
               >
                 <span>Preview QR</span>
               </button>
+              <Link
+                to={`/admin/edit-profile/${user_email}`}
+                state={{ returnTo: `/admin/user-profile/${userId}` }}
+                className="w-full rounded-lg border bg-orange-500 px-4 py-2 text-center font-semibold text-white transition-transform duration-200 hover:scale-105 focus:outline-none"
+              >
+                Edit Profile
+              </Link>
             </div>
             <FaQrcode size={100} className="rounded border p-1" />
 
             <div>
-              <p className="font-raleway">Age: {age}</p>
-              <p className="font-raleway">Height: {height}</p>
-              <p className="font-raleway">Body type: {bodyType}</p>
-              <p className="font-raleway">Dealbreakers: {dealbreakers}</p>
+              <p className={`font-raleway ${isFieldChanged('age') ? 'rounded bg-yellow-100 px-1 font-bold' : ''}`}>
+                Age: {age} {isFieldChanged('age') && <span className="ml-1 text-xs text-yellow-600">●</span>}
+              </p>
+              <p className={`font-raleway ${isFieldChanged('height') ? 'rounded bg-yellow-100 px-1 font-bold' : ''}`}>
+                Height: {height} {isFieldChanged('height') && <span className="ml-1 text-xs text-yellow-600">●</span>}
+              </p>
+              <p className={`font-raleway ${isFieldChanged('bodyType') ? 'rounded bg-yellow-100 px-1 font-bold' : ''}`}>
+                Body type: {bodyType} {isFieldChanged('bodyType') && <span className="ml-1 text-xs text-yellow-600">●</span>}
+              </p>
+              <p className={`font-raleway ${isFieldChanged('dealbreakers') ? 'rounded bg-yellow-100 px-1 font-bold' : ''}`}>
+                Dealbreakers: {dealbreakers} {isFieldChanged('dealbreakers') && <span className="ml-1 text-xs text-yellow-600">●</span>}
+              </p>
             </div>
           </div>
         </div>
@@ -148,6 +218,9 @@ const ProfileDetailsView = () => {
         <div className="mt-4">
           <h2 className="my-4 font-raleway text-2xl font-semibold text-black">
             Bio
+            {isFieldChanged('bio') && (
+              <span className="ml-2 rounded-full bg-yellow-400 px-2 py-0.5 text-xs font-bold text-black">UPDATED</span>
+            )}
           </h2>
           {bio ? (
             Array.isArray(bio) ? (
@@ -205,13 +278,23 @@ const ProfileDetailsView = () => {
 
       {/* Image Gallery */}
       <div className="pt-4">
-        <h3 className="mb-5 font-raleway text-2xl font-bold">Images</h3>
+        <h3 className="mb-5 font-raleway text-2xl font-bold">
+          Images
+          {isFieldChanged('image') && (
+            <span className="ml-2 rounded-full bg-yellow-400 px-2 py-0.5 text-xs font-bold text-black">UPDATED</span>
+          )}
+        </h3>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
-          {image.map((img, index) => (
+          {orderedImages.map((item, index) => (
             <div key={index} className="overflow-hidden rounded-lg">
+              <div className="mb-1">
+                <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold text-white ${item.required ? 'bg-orange-500' : 'bg-gray-500'}`}>
+                  {item.label}
+                </span>
+              </div>
               <img
-                src={img}
-                alt={`Image ${index + 1}`}
+                src={item.url}
+                alt={item.label}
                 className="h-96 w-96 rounded-lg border border-gray-300 bg-yellow-200 object-cover"
               />
             </div>

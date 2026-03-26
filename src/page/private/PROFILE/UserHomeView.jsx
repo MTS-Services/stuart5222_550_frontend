@@ -75,11 +75,15 @@ const UserHomeView = () => {
   const userId = user?.id;
 
   useEffect(() => {
-    if (email) {
+    // Only fetch profile data when user is VERIFIED — non-verified users have no profile record yet
+    if (email && isVerified) {
       dispatch(fetchUserProfile({ userMail: email }));
     }
 
-    dispatch(rejectedProfile({ id: userId }));
+    // Only fetch rejection reason when user is in PAID_SETUP (rejected state)
+    if (userId && user?.status === "PAID_SETUP") {
+      dispatch(rejectedProfile({ id: userId }));
+    }
 
     // Fetch latest user data to ensure status is current
     const fetchUserData = async () => {
@@ -93,7 +97,7 @@ const UserHomeView = () => {
       }
     };
     fetchUserData();
-  }, [dispatch, email, userId]);
+  }, [dispatch, email, userId, isVerified, user?.status]);
 
   const handleLogout = () => {
     AUTH_COOKIE.remove();
@@ -192,7 +196,7 @@ const UserHomeView = () => {
         </div>
       ) : isVerified ? (
         <>
-          <ProfileInfoView profileData={userProfile} images={images} />
+          <ProfileInfoView profileData={userProfile} images={images} editUrl={`/user/edit-profile/${user?.email}`} />
         </>
       ) : (
         <div className="flex min-h-screen items-center justify-center py-10">

@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { FaPowerOff, FaRegCalendar } from "react-icons/fa";
+import { FiEdit } from "react-icons/fi";
 import { GrLocation } from "react-icons/gr";
+import { Link } from "react-router-dom";
 import { AUTH_COOKIE } from "../../../../utils/authCookie";
 import { shouldShowTravelMode } from "../../../../utils/travelMode";
 
-const ProfileInfoView = ({ profileData, images }) => {
+const ProfileInfoView = ({ profileData, images, editUrl }) => {
   const [showAllPhotos, setShowAllPhotos] = useState(false);
   const photosContainerRef = useRef(null);
 
@@ -90,14 +92,27 @@ const ProfileInfoView = ({ profileData, images }) => {
             </div>
           </div>
 
-          {/* Logout Button */}
-          <button
-            onClick={handleLogout}
-            className="group flex items-center justify-center rounded-full border border-gray-700/50 bg-gray-800/70 p-3 text-gray-300 backdrop-blur-sm transition-all duration-300 hover:border-red-500/30 hover:bg-red-500/20 hover:text-red-400"
-            aria-label="Logout"
-          >
-            <FaPowerOff className="text-lg group-hover:animate-pulse" />
-          </button>
+          <div className="flex items-center gap-3">
+            {/* Edit Profile Button */}
+            {editUrl && (
+              <Link
+                to={editUrl}
+                className="flex items-center gap-2 rounded-full border border-orange-500/50 bg-orange-500/20 px-4 py-2 text-sm font-medium text-orange-400 backdrop-blur-sm transition-all duration-300 hover:bg-orange-500 hover:text-white"
+              >
+                <FiEdit className="text-base" />
+                Edit Profile
+              </Link>
+            )}
+
+            {/* Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="group flex items-center justify-center rounded-full border border-gray-700/50 bg-gray-800/70 p-3 text-gray-300 backdrop-blur-sm transition-all duration-300 hover:border-red-500/30 hover:bg-red-500/20 hover:text-red-400"
+              aria-label="Logout"
+            >
+              <FaPowerOff className="text-lg group-hover:animate-pulse" />
+            </button>
+          </div>
         </div>
       </div>
 

@@ -41,6 +41,7 @@ const CardDetails = ({ user }) => {
   const [sortField, setSortField] = useState("createdAt");
   const [sortDirection, setSortDirection] = useState("desc");
   const [expandedRow, setExpandedRow] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const cardData = qrCodeList?.[0] || null;
 
