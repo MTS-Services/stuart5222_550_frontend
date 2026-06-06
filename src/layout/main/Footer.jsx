@@ -172,7 +172,10 @@ const Footer = () => {
                 <p className="mb-2 leading-relaxed text-white">Scan Me Maybe LLC does not conduct criminal background checks, financial screening, behavioral screening, identity verification, or lifestyle investigations unless explicitly stated otherwise.</p>
                 <p className="mb-2 leading-relaxed text-white">Users are solely responsible for exercising their own judgment, caution, instincts, and personal safety when interacting with others through the platform — both online and offline. All meetings, conversations, communications, interactions, and relationships initiated through Scan Me Maybe occur entirely at the user's own risk.</p>
                 <p className="mb-2 leading-relaxed text-white">We strongly encourage meeting in public places, protecting personal information, using secondary communication methods such as Google Voice, telling a friend where you're going, and remembering that chemistry and common sense should ideally coexist.</p>
-                <p className="leading-relaxed text-white">Trust your instincts. And maybe choose a public coffee shop over an abandoned parking lot at 2am.</p>
+                <p className="mb-2 leading-relaxed text-white">Trust your instincts. And maybe choose a public coffee shop over an abandoned parking lot at 2am.</p>
+                <p className="mb-2 leading-relaxed text-white">Scan Me Maybe LLC reserves the right - but not the obligation - to review, approve, reject, suspend, remove, pause, or terminate profiles, accounts, QR access, or participation at any time and for any reason deemed necessary to protect the platform, users, beta process, or overall community experience.</p>
+                <p className="mb-2 leading-relaxed text-white">We are building a platform for real-world connection.</p>
+                <p className="leading-relaxed text-white">We are not issuing human warranties.</p>
               </div>
 
               {/* Section 12 */}
