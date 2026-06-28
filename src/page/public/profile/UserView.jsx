@@ -7,7 +7,10 @@ import { fetchUserProfile } from "../../../features/public/profile/profileFetch"
 import {
   shouldShowTravelMode,
   formatTravelDate,
+  getPrimaryArea,
 } from "../../../utils/travelMode";
+import { buildOrderedImagesFromProfile } from "../../../utils/profileImages";
+import BioText from "../../../components/common/BioText";
 
 const UserView = () => {
   const dispatch = useDispatch();
@@ -18,56 +21,8 @@ const UserView = () => {
     (state) => state.profile,
   );
 
-  // Prioritize structured images (face, fullbody, toothyGrin, extras) over imageUrls
-  const structuredImages = userProfile?.images || {};
-  const fallbackImages = userProfile?.imageUrls || [];
-
-  // Create ordered array: face -> fullbody -> toothyGrin -> extras
-  const orderedImages = [];
-
-  // Add face image first
-  if (structuredImages.face) {
-    orderedImages.push(
-      typeof structuredImages.face === "string"
-        ? { url: structuredImages.face }
-        : structuredImages.face,
-    );
-  }
-
-  // Add fullbody image second
-  if (structuredImages.fullbody) {
-    orderedImages.push(
-      typeof structuredImages.fullbody === "string"
-        ? { url: structuredImages.fullbody }
-        : structuredImages.fullbody,
-    );
-  }
-
-  // Add toothyGrin image third
-  if (structuredImages.toothyGrin) {
-    orderedImages.push(
-      typeof structuredImages.toothyGrin === "string"
-        ? { url: structuredImages.toothyGrin }
-        : structuredImages.toothyGrin,
-    );
-  }
-
-  // Add extras images
-  if (structuredImages.extras && Array.isArray(structuredImages.extras)) {
-    structuredImages.extras.forEach((img) => {
-      if (img) {
-        orderedImages.push(typeof img === "string" ? { url: img } : img);
-      }
-    });
-  }
-
-  // If no structured images available, fall back to imageUrls array
-  const images =
-    orderedImages.length > 0
-      ? orderedImages
-      : fallbackImages.map((img) =>
-          typeof img === "string" ? { url: img } : img,
-        );
+  // Build ordered images from structured JSON (supports object or array extras)
+  const images = buildOrderedImagesFromProfile(userProfile);
 
   useEffect(() => {
     if (email) {
@@ -198,7 +153,7 @@ const UserView = () => {
           </div>
 
           <div className="mx-auto my-2 max-w-[600px]">
-            <Link to={`/user/${userProfile.email}/gallery`}>
+            <Link to={`/user/${encodeURIComponent(userProfile.email)}/gallery`}>
               <p className="flex items-center justify-end font-raleway text-base font-semibold underline hover:text-orange-500">
                 See more photos
               </p>
@@ -222,8 +177,7 @@ const UserView = () => {
                   Body type : {userProfile.bodyType || "Not provided"}
                 </p>
                 <p className="font-raleway text-xl font-normal">
-                  Area :{" "}
-                  {userProfile.area || userProfile.location || "Not provided"}
+                  Area : {getPrimaryArea(userProfile)}
                 </p>
                 <p className="my-5 font-raleway text-xl font-normal">
                   Dealbreakers : {userProfile.dealbreakers || "None specified"}
@@ -233,9 +187,10 @@ const UserView = () => {
 
             <h2 className="mt-10 font-raleway text-xl font-medium">Bio</h2>
             <div className="my-4 rounded-lg bg-[#FFFFFF14]">
-              <p className="p-4 font-raleway text-sm font-medium md:text-base">
-                {userProfile.bio || "No bio available"}
-              </p>
+              <BioText
+                bio={userProfile.bio}
+                className="p-4 font-raleway text-sm font-medium md:text-base"
+              />
             </div>
 
             <p className="my-14 text-center font-raleway font-medium md:px-4 md:text-2xl">
@@ -247,7 +202,7 @@ const UserView = () => {
               It's not a scam, it's a Scan.
             </h2>
 
-            <Link to={`/user/${userProfile.email}/lets-connect`}>
+            <Link to={`/user/${encodeURIComponent(userProfile.email)}/lets-connect`}>
               <button className="my-8 w-full rounded-lg bg-orange-500 p-2.5 text-base font-semibold text-white transition hover:bg-orange-600 md:my-4">
                 Let’s Connect
               </button>

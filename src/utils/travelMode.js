@@ -70,6 +70,32 @@ export const areTravelDatesValid = (startDate, endDate) => {
 /**
  * Format date for display
  */
+/**
+ * Primary/home location — never use travel location as fallback.
+ */
+export const getPrimaryArea = (profile) =>
+  profile?.county || profile?.area || "Not provided";
+
+/**
+ * Normalize travel fields for API submission.
+ */
+export const normalizeTravelFields = (startDate, endDate, location) => {
+  const normalizedLocation = location?.trim() || null;
+  const normalizedStart = startDate || null;
+  const normalizedEnd = endDate || null;
+
+  const hasAny = normalizedStart || normalizedEnd || normalizedLocation;
+  const hasAll = normalizedStart && normalizedEnd && normalizedLocation;
+
+  return {
+    startDate: hasAll ? normalizedStart : null,
+    endDate: hasAll ? normalizedEnd : null,
+    location: hasAll ? normalizedLocation : null,
+    hasAnyTravel: hasAny,
+    hasAllTravel: hasAll,
+  };
+};
+
 export const formatTravelDate = (dateString) => {
   if (!dateString) return "";
 

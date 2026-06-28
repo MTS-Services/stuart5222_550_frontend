@@ -13,6 +13,10 @@ import { MdOutlinePrivacyTip, MdArrowBack } from "react-icons/md";
 import AgeInput from "../../../../components/common/AgeInput";
 import HeightInput from "../../../../components/common/HeightInput";
 import LocationInput from "../../../../components/common/LocationInput";
+import {
+  areTravelDatesValid,
+  normalizeTravelFields,
+} from "../../../../utils/travelMode";
 import CustomModal from "../../../../components/common/CustomModal";
 
 // Utils & Features
@@ -23,6 +27,7 @@ import { GET } from "../../../../config/api/httpMethods";
 import { endpoints } from "../../../../config/api/httpEndpoint";
 import { submitProfile } from "../../../../features/public/profile/profileFetch";
 import { updateUser } from "../../../../features/auth/authSlice";
+import PhotoReorderGrid from "../../../../components/common/PhotoReorderGrid";
 
 // Configuration Constants
 const MAX_IMAGES = 13;
@@ -122,15 +127,6 @@ const getImageTypeLabel = (imageType, idx, extraKey) => {
   }
 };
 
-const EmptySlot = ({ slot, idx }) => (
-  <div className="flex h-24 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
-    <FaCamera className="mb-1 h-6 w-6 text-gray-400" />
-    <span className="text-xs text-gray-500">
-      {getImageTypeLabel(slot.imageType, idx, slot.extraKey)}
-    </span>
-  </div>
-);
-
 // Upload Progress Component
 const UploadProgress = ({ files }) => {
   const progress = (files.length / MAX_IMAGES) * 100;
@@ -177,35 +173,23 @@ const UploadProgress = ({ files }) => {
 };
 
 // Image Previews Component
-const ImagePreviews = ({ imageSlots, files, onImageRemove, errors }) => (
+const ImagePreviews = ({
+  imageSlots,
+  files,
+  onImageRemove,
+  onSlotsChange,
+  draggedSlotIndex,
+  onDragIndexChange,
+}) => (
   <div className="mt-4 w-full">
-    <div className="mb-4 grid grid-cols-3 gap-3">
-      {imageSlots.map((slot, idx) => (
-        <div key={slot.id || `empty-${idx}`} className="group relative">
-          {!slot.isEmpty ? (
-            <>
-              <img
-                src={slot.preview}
-                alt={`Preview ${idx + 1}`}
-                className="h-24 w-full rounded-lg border-2 border-gray-200 object-cover"
-              />
-              <button
-                type="button"
-                onClick={() => onImageRemove(idx)}
-                className="absolute right-1 top-1 rounded-full bg-red-500 p-1 text-white opacity-0 transition group-hover:opacity-100"
-              >
-                <RiDeleteBinLine className="h-4 w-4" />
-              </button>
-              <div className="absolute bottom-1 left-1 rounded bg-black bg-opacity-60 px-2 py-[2px] text-[10px] text-white">
-                {getImageTypeLabel(slot.imageType, idx, slot.extraKey)}
-              </div>
-            </>
-          ) : (
-            <EmptySlot slot={slot} idx={idx} />
-          )}
-        </div>
-      ))}
-    </div>
+    <PhotoReorderGrid
+      imageSlots={imageSlots}
+      onSlotsChange={onSlotsChange}
+      onRemove={onImageRemove}
+      draggedSlotIndex={draggedSlotIndex}
+      onDragIndexChange={onDragIndexChange}
+      getLabel={(slot, idx) => getImageTypeLabel(slot.imageType, idx, slot.extraKey)}
+    />
 
     {/* Upload Status */}
     <div
@@ -247,6 +231,9 @@ const UploadInstructions = () => (
     <p className="font-raleway text-xs text-gray-500">
       • Click and drag to select multiple files
     </p>
+    <p className="font-raleway text-xs text-gray-500">
+      • Drag photos in the grid to reorder them
+    </p>
   </div>
 );
 
@@ -258,8 +245,11 @@ const ImageUploadSection = ({
   onFileInputClick,
   onFileChange,
   onImageRemove,
+  onSlotsChange,
   fileInputRef,
   isIOS,
+  draggedSlotIndex,
+  onDragIndexChange,
 }) => (
   <div className="flex items-center justify-center">
     <div className="w-full space-y-4">
@@ -302,7 +292,9 @@ const ImageUploadSection = ({
             imageSlots={imageSlots}
             files={files}
             onImageRemove={onImageRemove}
-            errors={errors}
+            onSlotsChange={onSlotsChange}
+            draggedSlotIndex={draggedSlotIndex}
+            onDragIndexChange={onDragIndexChange}
           />
         )}
 
@@ -447,7 +439,7 @@ const TermsModalContent = () => (
         <p className="text-center text-xs text-gray-300">
           <hr className="border-1 mb-4 border-gray-600" />
           Last updated: November 8, 2025
-          <br />© 2025 Scan Me Maybe, LLC. All Rights Reserved.
+          <br />© 2026 Scan Me Maybe, LLC. All Rights Reserved.
         </p>
       </div>
     </div>
@@ -471,6 +463,7 @@ const SetupProfileView = () => {
   const [success, setSuccess] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errors, setErrors] = useState({});
+  const [draggedSlotIndex, setDraggedSlotIndex] = useState(null);
 
   // Custom hooks
   const { formData, updateFormField } = useFormState();
@@ -655,6 +648,14 @@ const SetupProfileView = () => {
     [imageSlots, updateLegacyArrays, validateImageRequirements],
   );
 
+  const handleSlotsReorder = useCallback(
+    (reordered) => {
+      setImageSlots(reordered);
+      updateLegacyArrays(reordered);
+    },
+    [updateLegacyArrays],
+  );
+
   const buildFormData = useCallback(
     (form) => {
       const { birthMonth, birthYear, county, heightFeet, heightInches } =
@@ -664,6 +665,12 @@ const SetupProfileView = () => {
       const calculatedAge = calculateAge(
         parseInt(birthMonth),
         parseInt(birthYear),
+      );
+
+      const travel = normalizeTravelFields(
+        form.startDate.value,
+        form.endDate.value,
+        form.location.value,
       );
 
       return {
@@ -677,11 +684,13 @@ const SetupProfileView = () => {
         county,
         bio: form.bio.value,
         dealbreakers: form.dealBreaks.value,
-        startDate: form.startDate.value || null,
-        endDate: form.endDate.value || null,
-        location: form.location.value,
+        startDate: travel.startDate,
+        endDate: travel.endDate,
+        location: travel.location,
         username: form.username.value || null,
         phone: form.number.value || null,
+        _travelHasAny: travel.hasAnyTravel,
+        _travelHasAll: travel.hasAllTravel,
       };
     },
     [formData, email, user.name],
@@ -719,7 +728,22 @@ const SetupProfileView = () => {
 
       const profileData = buildFormData(form);
 
-      const validationErrors = validateForm(profileData, files);
+      if (profileData._travelHasAny && !profileData._travelHasAll) {
+        toast.warn("Travel mode requires start date, end date, and location.");
+        return;
+      }
+
+      if (
+        profileData._travelHasAll &&
+        !areTravelDatesValid(profileData.startDate, profileData.endDate)
+      ) {
+        toast.warn("Travel dates are invalid. End date must be today or later.");
+        return;
+      }
+
+      const { _travelHasAny, _travelHasAll, ...cleanProfileData } = profileData;
+
+      const validationErrors = validateForm(cleanProfileData, files);
       if (Object.keys(validationErrors).length > 0) {
         setErrors(validationErrors);
         handleValidationErrors(validationErrors);
@@ -734,7 +758,7 @@ const SetupProfileView = () => {
       try {
         const submitData = new FormData();
 
-        Object.entries(profileData).forEach(([key, value]) => {
+        Object.entries(cleanProfileData).forEach(([key, value]) => {
           if (value !== null && value !== undefined) {
             submitData.append(key, value);
           }
@@ -1057,8 +1081,11 @@ const SetupProfileView = () => {
             onFileInputClick={handleFileInputClick}
             onFileChange={handleFileChange}
             onImageRemove={removeImage}
+            onSlotsChange={handleSlotsReorder}
             fileInputRef={fileInputRef}
             isIOS={isIOS}
+            draggedSlotIndex={draggedSlotIndex}
+            onDragIndexChange={setDraggedSlotIndex}
           />
 
           {/* Safety Notice */}

@@ -10,7 +10,10 @@ import {
 import {
   shouldShowTravelMode,
   formatTravelDate,
+  getPrimaryArea,
 } from "../../../utils/travelMode";
+import BioText from "../../../components/common/BioText";
+import { buildOrderedImagesFromProfile } from "../../../utils/profileImages";
 import { GrLocation } from "react-icons/gr";
 import { FaRegCalendar } from "react-icons/fa";
 
@@ -23,11 +26,17 @@ const UserDetailsView = () => {
     (state) => state.adminUsers,
   );
 
-  // Always re-fetch on mount to ensure we have latest data from DB
+  // Re-fetch on mount and when returning from edit profile
   useEffect(() => {
     dispatch(adminUserDraftProfile({ page: 1, limit: 200 }));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (routerLocation.state?.refresh) {
+      dispatch(adminUserDraftProfile({ page: 1, limit: 200 }));
+    }
+  }, [routerLocation.state?.refresh, dispatch]);
 
   const user = userProfiles?.find((u) => u.id === Number(userId));
   const [rejectionRe, setRejectionRe] = useState("");
@@ -52,40 +61,19 @@ const UserDetailsView = () => {
     displayName,
     bodyType,
     dealbreakers,
+    county,
     location,
     startDate,
     endDate,
     rejectionReason,
   } = user;
 
-  // Build labeled image list from structured data so labels are always correct
-  const getImageLabel = (index) => {
-    if (!structuredImages) return `Image ${index + 1}`;
-    if (index === 0) return "Face";
-    if (index === 1) return "Full Body";
-    if (index === 2) return "Toothy Grin";
-    return `Extra ${index - 2}`;
-  };
-
-  // Build ordered image list: face → fullbody → toothyGrin → extras (from structuredImages)
-  // Falls back to flat image[] array if structuredImages not available
-  const getExtrasFromStructured = (extras) => {
-    if (!extras) return [];
-    if (Array.isArray(extras)) return extras.map((url, i) => ({ url, label: `Extra ${i + 1}`, required: false }));
-    // Stored as object with numeric keys: { "1": url, "2": url, ... }
-    return Object.entries(extras)
-      .sort(([a], [b]) => Number(a) - Number(b))
-      .map(([, url], i) => ({ url, label: `Extra ${i + 1}`, required: false }));
-  };
-
-  const orderedImages = structuredImages
-    ? [
-        { url: structuredImages.face, label: 'Face', required: true },
-        { url: structuredImages.fullbody, label: 'Full Body', required: true },
-        { url: structuredImages.toothyGrin, label: 'Toothy Grin', required: true },
-        ...getExtrasFromStructured(structuredImages.extras),
-      ].filter(item => item.url)
-    : (image || []).map((url, i) => ({ url, label: getImageLabel(i), required: i < 3 }));
+  // Build ordered image list with structured JSON + imageUrls fallback
+  const orderedImages = buildOrderedImagesFromProfile(user).map((img, index) => ({
+    url: typeof img === "string" ? img : img.url,
+    label: index === 0 ? "Face" : index === 1 ? "Full Body" : index === 2 ? "Toothy Grin" : `Extra ${index - 2}`,
+    required: index < 3,
+  }));
 
   // Check if a field was changed by the user (for highlighting)
   const isFieldChanged = (fieldName) => {
@@ -157,7 +145,7 @@ const UserDetailsView = () => {
           <div className="flex items-center gap-4">
             <div className="h-[80px] w-[80px]">
               <img
-                src={image?.[0] || "/img/placeholder.jpg"}
+                src={orderedImages[0]?.url || image?.[0] || "/img/placeholder.jpg"}
                 alt={displayName || userInfo.name || "User"}
                 className="h-full w-full rounded-full border object-cover"
                 onError={(e) => (e.target.src = "/img/placeholder.jpg")}
@@ -206,6 +194,9 @@ const UserDetailsView = () => {
               <p className={`font-raleway ${isFieldChanged('bodyType') ? 'rounded bg-yellow-100 px-1 font-bold' : ''}`}>
                 Body type: {bodyType} {isFieldChanged('bodyType') && <span className="ml-1 text-xs text-yellow-600">●</span>}
               </p>
+              <p className={`font-raleway ${isFieldChanged('county') ? 'rounded bg-yellow-100 px-1 font-bold' : ''}`}>
+                Primary area: {getPrimaryArea(user)} {isFieldChanged('county') && <span className="ml-1 text-xs text-yellow-600">●</span>}
+              </p>
               <p className={`font-raleway ${isFieldChanged('dealbreakers') ? 'rounded bg-yellow-100 px-1 font-bold' : ''}`}>
                 Dealbreakers: {dealbreakers} {isFieldChanged('dealbreakers') && <span className="ml-1 text-xs text-yellow-600">●</span>}
               </p>
@@ -220,19 +211,7 @@ const UserDetailsView = () => {
               <span className="ml-2 rounded-full bg-yellow-400 px-2 py-0.5 text-xs font-bold text-black">UPDATED</span>
             )}
           </h2>
-          {bio ? (
-            Array.isArray(bio) ? (
-              bio.map((p, i) => (
-                <p key={i} className="my-2 font-raleway text-base">
-                  {p}
-                </p>
-              ))
-            ) : (
-              <p className="font-raleway text-base">{bio}</p>
-            )
-          ) : (
-            <p>No bio available</p>
-          )}
+          <BioText bio={bio} className="font-raleway text-base" />
         </div>
       </div>
 

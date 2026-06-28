@@ -11,6 +11,10 @@ import { validateForm } from "../../../utils/validateForm";
 import { calculateAge } from "../../../utils/ageUtils";
 
 import LocationInput from "../../../components/common/LocationInput";
+import {
+  areTravelDatesValid,
+  normalizeTravelFields,
+} from "../../../utils/travelMode";
 import { FaCamera } from "react-icons/fa";
 import AgeInput from "./components/AgeInput";
 import HeightInput from "./components/HeightInput";
@@ -81,6 +85,12 @@ const AddUserView = () => {
       parseInt(birthYear),
     );
 
+    const travel = normalizeTravelFields(
+      form.startDate.value,
+      form.endDate.value,
+      form.location.value,
+    );
+
     const formData = {
       displayName: form.firstName.value,
       birthMonth: birthMonth,
@@ -91,12 +101,25 @@ const AddUserView = () => {
       county: county,
       bio: form.textArea.value,
       dealbreakers: form.dealBreaks.value,
-      startDate: form.startDate.value || null,
-      endDate: form.endDate.value || null,
-      location: form.location.value,
+      startDate: travel.startDate,
+      endDate: travel.endDate,
+      location: travel.location,
       email: user_email,
       phone: form.number.value || null,
     };
+
+    if (travel.hasAnyTravel && !travel.hasAllTravel) {
+      toast.warn("Travel mode requires start date, end date, and location.");
+      return;
+    }
+
+    if (
+      travel.hasAllTravel &&
+      !areTravelDatesValid(formData.startDate, formData.endDate)
+    ) {
+      toast.warn("Travel dates are invalid. End date must be today or later.");
+      return;
+    }
 
     // ✅ Validate with files
     const validationErrors = validateForm(formData, files);

@@ -65,7 +65,10 @@ export const endpoints = {
     SETTINGS: "/user/settings",
     USER_PROFILE: "/user/profile",
     QR_CODE: (qr_code) => `/qr-cards/scan/${qr_code}`,
-    FETCH_PROFILE: (userMail) => `/profile/${userMail}`,
+    FETCH_PROFILE: (userMail) =>
+      `/profile/${encodeURIComponent(userMail)}`,
+    REORDER_PROFILE_IMAGES: (userMail) =>
+      `/profile/${encodeURIComponent(userMail)}/images/reorder`,
   },
   subscription: {
     GET_ALL: "/subscriptions",

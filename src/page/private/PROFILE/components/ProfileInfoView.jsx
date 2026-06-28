@@ -4,7 +4,8 @@ import { FiEdit } from "react-icons/fi";
 import { GrLocation } from "react-icons/gr";
 import { Link } from "react-router-dom";
 import { AUTH_COOKIE } from "../../../../utils/authCookie";
-import { shouldShowTravelMode } from "../../../../utils/travelMode";
+import { shouldShowTravelMode, getPrimaryArea } from "../../../../utils/travelMode";
+import BioText from "../../../../components/common/BioText";
 
 const ProfileInfoView = ({ profileData, images, editUrl }) => {
   const [showAllPhotos, setShowAllPhotos] = useState(false);
@@ -22,6 +23,7 @@ const ProfileInfoView = ({ profileData, images, editUrl }) => {
     startDate,
     endDate,
     area,
+    county,
   } = profileData || {};
 
   // Format date for better readability
@@ -225,7 +227,7 @@ const ProfileInfoView = ({ profileData, images, editUrl }) => {
             Body type : {bodyType || "Not provided"}
           </p>
           <p className="font-raleway text-xl font-normal">
-            Area : {area || location || "Not provided"}
+            Area : {getPrimaryArea(profileData)}
           </p>
           <p className="my-5 font-raleway text-xl font-normal">
             Dealbreakers : {dealbreakers || "None specified"}
@@ -234,9 +236,10 @@ const ProfileInfoView = ({ profileData, images, editUrl }) => {
       </div>
       <h2 className="mt-10 font-raleway text-xl font-medium">Bio</h2>
       <div className="my-4 rounded-lg bg-[#FFFFFF14]">
-        <p className="p-4 font-raleway text-xs font-medium md:text-base">
-          {bio || "No bio available"}
-        </p>
+        <BioText
+          bio={bio}
+          className="p-4 font-raleway text-xs font-medium md:text-base"
+        />
       </div>
     </div>
   );

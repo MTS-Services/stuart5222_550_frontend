@@ -1,9 +1,17 @@
 import React, { lazy } from "react";
 import {
   Route,
+  Navigate,
+  useParams,
   createBrowserRouter,
   createRoutesFromElements,
 } from "react-router-dom";
+
+/** Legacy QR codes pointed at /scan/:id — forward to welcome-scan flow. */
+const ScanLegacyRedirect = () => {
+  const { id } = useParams();
+  return <Navigate to={`/welcome-scan/${id}`} replace />;
+};
 
 // Guards
 import PublicGuard from "./guards/new/PublicGuard.jsx";
@@ -86,6 +94,8 @@ const router = createBrowserRouter(
         <Route element={<MainLayout />} errorElement={<ErrorBoundary />}>
           {/* Public pages */}
           <Route index element={<HomeView />} />
+          {/* Legacy QR links used /scan/:id — redirect to current welcome flow */}
+          <Route path="scan/:id" element={<ScanLegacyRedirect />} />
           <Route path="welcome-scan/:id" element={<WelcomeScanView />} />
           <Route path="user/:email/profile" element={<UserView />} />
           <Route path="user/:email/gallery" element={<GalleryView />} />

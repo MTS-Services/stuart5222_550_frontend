@@ -149,7 +149,7 @@ const WelcomeScanView = () => {
                   </h2>
                   <div className="mx-auto mt-[20px] flex w-[70%] items-center gap-4 font-raleway font-semibold md:w-full">
                     <div className="w-full">
-                      <Link to={`/user/${mail}/profile`}>
+                      <Link to={`/user/${encodeURIComponent(mail)}/profile`}>
                         <button className="w-full rounded-lg bg-orange-500 p-2.5 text-base text-white transition hover:bg-orange-600">
                           Let’s go
                         </button>
@@ -235,7 +235,7 @@ const WelcomeScanView = () => {
               <hr className="border-1 mb-4 border-gray-600" />
               <p className="text-center text-xs text-gray-300">
                 Last updated: November 8, 2025
-                <br />© 2025 Scan Me Maybe, LLC. All Rights Reserved.
+                <br />© 2026 Scan Me Maybe, LLC. All Rights Reserved.
               </p>
             </div>
           </div>
