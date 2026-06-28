@@ -122,6 +122,12 @@ export const buildImagesJsonFromSlots = (slots) => {
   return json;
 };
 
+/** Flat URL array in display order (for reorder API compatibility). */
+export const buildImageOrderFromSlots = (slots) =>
+  slots
+    .filter((slot) => !slot.isEmpty && slot.originalUrl)
+    .map((slot) => slot.originalUrl);
+
 /** True if slots contain at least one existing URL or new file to send. */
 export const slotsHaveImageData = (slots) =>
   slots.some((slot) => !slot.isEmpty && (slot.originalUrl || slot.file));

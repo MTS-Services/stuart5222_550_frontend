@@ -24,6 +24,7 @@ import {
 } from "../../../../utils/travelMode";
 import {
   buildImagesJsonFromSlots,
+  buildImageOrderFromSlots,
   buildImageSlotsFromProfile,
   getImageTypeLabel,
   imagesJsonHasUrls,
@@ -456,7 +457,10 @@ const EditProfileView = () => {
         (slot) => slot.isExisting && slot.originalUrl,
       );
       if (allExistingPhotos && imagesJsonHasUrls(reorderJson)) {
-        await reorderProfileImages(email, { images: reorderJson });
+        await reorderProfileImages(email, {
+          images: reorderJson,
+          imageOrder: buildImageOrderFromSlots(imageSlots),
+        });
       }
 
       // Fetch updated user data to refresh user status
