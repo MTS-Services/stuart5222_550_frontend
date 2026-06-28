@@ -38,6 +38,16 @@ const UserDetailsView = () => {
     }
   }, [routerLocation.state?.refresh, dispatch]);
 
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === "visible") {
+        dispatch(adminUserDraftProfile({ page: 1, limit: 200 }));
+      }
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, [dispatch]);
+
   const user = userProfiles?.find((u) => u.id === Number(userId));
   const [rejectionRe, setRejectionRe] = useState("");
   const [loading, setLoading] = useState({ approve: false, reject: false });

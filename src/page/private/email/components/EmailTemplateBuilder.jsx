@@ -15,6 +15,7 @@ import {
   SparklesIcon,
   EyeSlashIcon,
 } from "@heroicons/react/24/outline";
+import { getCurrentYear } from "../../../../utils/formatDate";
 
 const EmailTemplateBuilder = ({
   template = null,
@@ -44,7 +45,7 @@ const EmailTemplateBuilder = ({
     {
       key: "currentYear",
       label: "Current Year",
-      defaultValue: "2025",
+      defaultValue: String(getCurrentYear()),
       description: "Current year (auto-generated)",
     },
     {

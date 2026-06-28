@@ -35,6 +35,7 @@ import { updateUser } from "../../../../features/auth/authSlice";
 import { GET } from "../../../../config/api/httpMethods";
 import { endpoints } from "../../../../config/api/httpEndpoint";
 import CustomModal from "../../../../components/common/CustomModal";
+import { getCurrentYear, TERMS_LAST_UPDATED } from "../../../../utils/formatDate";
 
 const EditProfileView = () => {
   const navigate = useNavigate();
@@ -455,11 +456,7 @@ const EditProfileView = () => {
         (slot) => slot.isExisting && slot.originalUrl,
       );
       if (allExistingPhotos && imagesJsonHasUrls(reorderJson)) {
-        try {
-          await reorderProfileImages(email, { images: reorderJson });
-        } catch (reorderErr) {
-          console.warn("Photo reorder backup save failed:", reorderErr);
-        }
+        await reorderProfileImages(email, { images: reorderJson });
       }
 
       // Fetch updated user data to refresh user status
@@ -1144,8 +1141,8 @@ const EditProfileView = () => {
               </div>
               <p className="text-center text-xs text-gray-300">
                 <hr className="border-1 mb-4 border-gray-600" />
-                Last updated: November 8, 2025
-                <br />© 2026 Scan Me Maybe, LLC. All Rights Reserved.
+                Last updated: {TERMS_LAST_UPDATED}
+                <br />© {getCurrentYear()} Scan Me Maybe, LLC. All Rights Reserved.
               </p>
             </div>
           </div>

@@ -37,11 +37,22 @@ const ProfileDetailsView = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Re-fetch when returning from edit profile or when tab regains focus
   useEffect(() => {
     if (routerLocation.state?.refresh) {
       dispatch(UserVerifiedProfile({ page: 1, limit: 200 }));
     }
   }, [routerLocation.state?.refresh, dispatch]);
+
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === "visible") {
+        dispatch(UserVerifiedProfile({ page: 1, limit: 200 }));
+      }
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, [dispatch]);
 
   useEffect(() => {
     if (user_email) {

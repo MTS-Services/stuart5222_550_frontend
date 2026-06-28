@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { qrCodeRequest } from "../../../features/public/QR-code/qrCodeFetch";
 import CustomModal from "../../../components/common/CustomModal";
+import { getCurrentYear, TERMS_LAST_UPDATED } from "../../../utils/formatDate";
 
 const WelcomeScanView = () => {
   const navigate = useNavigate();
@@ -234,8 +235,8 @@ const WelcomeScanView = () => {
               </div>
               <hr className="border-1 mb-4 border-gray-600" />
               <p className="text-center text-xs text-gray-300">
-                Last updated: November 8, 2025
-                <br />© 2026 Scan Me Maybe, LLC. All Rights Reserved.
+                Last updated: {TERMS_LAST_UPDATED}
+                <br />© {getCurrentYear()} Scan Me Maybe, LLC. All Rights Reserved.
               </p>
             </div>
           </div>

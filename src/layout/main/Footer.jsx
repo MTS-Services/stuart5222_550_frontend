@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import CustomModal from "../../components/common/CustomModal";
+import { getCurrentYear, TERMS_LAST_UPDATED } from "../../utils/formatDate";
 
 const Footer = () => {
+  const currentYear = getCurrentYear();
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
 
   const openTermsModal = () => setIsTermsModalOpen(true);
@@ -29,7 +31,7 @@ const Footer = () => {
         {/* Copyright & Legal */}
         <div className="space-y-4">
           <p className="mt-4 font-raleway font-normal leading-6 text-neutral-200">
-            © 2025{" "}
+            © {currentYear}{" "}
             <span className="font-raleway text-orange-400">
               SCAN ME MAYBE -
             </span>
@@ -66,7 +68,7 @@ const Footer = () => {
             <h3 className="mb-1 text-lg font-bold text-orange-400">
               Scan Me Maybe – Terms &amp; Conditions
             </h3>
-            <p className="mb-1 text-xs text-gray-400">Controlled Beta Version – May 2026 &nbsp;|&nbsp; Version 1.0 Beta</p>
+            <p className="mb-1 text-xs text-gray-400">Controlled Beta Version – {TERMS_LAST_UPDATED} &nbsp;|&nbsp; Version 1.0 Beta</p>
 
             <p className="mb-4 leading-relaxed text-white">
               Welcome to Scan Me Maybe. This platform exists to help create thoughtful introductions through QR-powered curiosity, controlled sharing, and the occasional leap of courage. By using Scan Me Maybe, you agree to these Terms &amp; Conditions and to behaving like a reasonably decent human being while you're here.
@@ -237,8 +239,8 @@ const Footer = () => {
 
               <p className="text-center text-xs text-gray-300">
                 <hr className="border-1 mb-4 border-gray-600" />
-                Last updated: May 2026 &nbsp;|&nbsp; Version 1.0 Beta
-                <br />© 2026 Scan Me Maybe, LLC. All Rights Reserved.
+                Last updated: {TERMS_LAST_UPDATED} &nbsp;|&nbsp; Version 1.0 Beta
+                <br />© {currentYear} Scan Me Maybe, LLC. All Rights Reserved.
               </p>
 
             </div>

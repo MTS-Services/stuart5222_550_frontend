@@ -18,6 +18,7 @@ import {
   normalizeTravelFields,
 } from "../../../../utils/travelMode";
 import CustomModal from "../../../../components/common/CustomModal";
+import { getCurrentYear, TERMS_LAST_UPDATED } from "../../../../utils/formatDate";
 
 // Utils & Features
 import { calculateAge } from "../../../../utils/ageUtils";
@@ -438,8 +439,8 @@ const TermsModalContent = () => (
 
         <p className="text-center text-xs text-gray-300">
           <hr className="border-1 mb-4 border-gray-600" />
-          Last updated: November 8, 2025
-          <br />© 2026 Scan Me Maybe, LLC. All Rights Reserved.
+          Last updated: {TERMS_LAST_UPDATED}
+          <br />© {getCurrentYear()} Scan Me Maybe, LLC. All Rights Reserved.
         </p>
       </div>
     </div>

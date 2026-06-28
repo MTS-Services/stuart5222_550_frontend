@@ -1,3 +1,8 @@
+export const getCurrentYear = () => new Date().getFullYear();
+
+/** Terms & Conditions last-updated label (month + current year). */
+export const TERMS_LAST_UPDATED = `June ${getCurrentYear()}`;
+
 export const formatDate = (dateString) => {
   if (!dateString) return "Just now";
 
