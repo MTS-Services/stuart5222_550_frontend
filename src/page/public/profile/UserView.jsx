@@ -177,7 +177,7 @@ const UserView = () => {
                   Body type : {userProfile.bodyType || "Not provided"}
                 </p>
                 <p className="font-raleway text-xl font-normal">
-                  Area : {getPrimaryArea(userProfile)}
+                  Location : {getPrimaryArea(userProfile)}
                 </p>
                 <p className="my-5 font-raleway text-xl font-normal">
                   Dealbreakers : {userProfile.dealbreakers || "None specified"}

@@ -227,7 +227,7 @@ const ProfileInfoView = ({ profileData, images, editUrl }) => {
             Body type : {bodyType || "Not provided"}
           </p>
           <p className="font-raleway text-xl font-normal">
-            Area : {getPrimaryArea(profileData)}
+            Location : {getPrimaryArea(profileData)}
           </p>
           <p className="my-5 font-raleway text-xl font-normal">
             Dealbreakers : {dealbreakers || "None specified"}
