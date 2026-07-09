@@ -76,12 +76,31 @@ const UserDetailsView = () => {
     startDate,
     endDate,
     rejectionReason,
+    rejectionHistory,
+    reviewedAt,
   } = user;
+
+  const rejectionEntries = Array.isArray(rejectionHistory) && rejectionHistory.length > 0
+    ? [...rejectionHistory].reverse()
+    : rejectionReason
+      ? [{ reason: rejectionReason, reviewedAt }]
+      : [];
+
+  const formatRejectionDateTime = (dateString) => {
+    if (!dateString) return "Date unknown";
+    return new Date(dateString).toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  };
 
   // Build ordered image list with structured JSON + imageUrls fallback
   const orderedImages = buildOrderedImagesFromProfile(user).map((img, index) => ({
     url: typeof img === "string" ? img : img.url,
-    label: index === 0 ? "Face" : index === 1 ? "Full Body" : index === 2 ? "Toothy Grin" : `Extra ${index - 2}`,
+    label: `Photo ${index + 1}`,
     required: index < 3,
   }));
 
@@ -285,14 +304,26 @@ const UserDetailsView = () => {
         </div>
       </div>
 
-      {rejectionReason ? (
+      {rejectionEntries.length > 0 ? (
         <section className="rounded-lg border border-gray-200 bg-white p-8">
           <h3 className="mb-3 font-raleway text-2xl font-semibold text-black">
             Previous Rejection Reason
           </h3>
-          <p className="min-h-[120px] w-full rounded border border-gray-100 bg-red-50 p-6 font-raleway font-medium text-red-600">
-            {rejectionReason || "No previous rejection reason."}
-          </p>
+          <div className="space-y-4">
+            {rejectionEntries.map((entry, index) => (
+              <div
+                key={`${entry.reviewedAt}-${index}`}
+                className="rounded border border-gray-100 bg-red-50 p-6"
+              >
+                <p className="mb-2 font-raleway text-sm font-medium text-gray-600">
+                  {formatRejectionDateTime(entry.reviewedAt)}
+                </p>
+                <p className="font-raleway font-medium text-red-600">
+                  {entry.reason || "No reason provided."}
+                </p>
+              </div>
+            ))}
+          </div>
         </section>
       ) : null}
       {/* Action Section – NO MODAL */}

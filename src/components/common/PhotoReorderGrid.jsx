@@ -1,13 +1,13 @@
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FaCamera } from "react-icons/fa";
 import { GripVertical, ChevronLeft, ChevronRight } from "lucide-react";
-import { getImageTypeLabel, movePhotoSlot, reassignSlotTypes } from "../../utils/profileImages";
+import { getPhotoSlotLabel, movePhotoSlot, reassignSlotTypes } from "../../utils/profileImages";
 
 const PhotoReorderGrid = ({
   imageSlots,
   onSlotsChange,
   onRemove,
-  getLabel = getImageTypeLabel,
+  getLabel = getPhotoSlotLabel,
   showDelete = true,
   draggedSlotIndex,
   onDragIndexChange,
@@ -52,8 +52,7 @@ const PhotoReorderGrid = ({
   return (
     <div className="w-full">
       <p className="mb-3 text-center font-raleway text-xs text-gray-500">
-        Use the grip icon to drag, or the arrows to move photos. Position 1 = Face,
-        2 = Full Body, 3 = Toothy Grin.
+        Use the grip icon to drag, or the arrows to move photos.
       </p>
       <div className="mb-4 grid grid-cols-3 gap-3">
         {imageSlots.map((slot, idx) => (

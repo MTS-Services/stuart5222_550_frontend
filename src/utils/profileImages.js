@@ -132,6 +132,8 @@ export const buildImageOrderFromSlots = (slots) =>
 export const slotsHaveImageData = (slots) =>
   slots.some((slot) => !slot.isEmpty && (slot.originalUrl || slot.file));
 
+export const getPhotoSlotLabel = (_slot, idx) => `Photo ${idx + 1}`;
+
 export const getImageTypeLabel = (slot, idx) => {
   const type = slot.imageType;
   if (type === "face") return "Face";
