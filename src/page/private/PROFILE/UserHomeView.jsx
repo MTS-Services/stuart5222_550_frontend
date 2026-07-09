@@ -13,12 +13,26 @@ import { FaPowerOff, FaUser } from "react-icons/fa";
 import { AUTH_COOKIE } from "../../../utils/authCookie";
 import { buildOrderedImagesFromProfile } from "../../../utils/profileImages";
 
+const formatRejectionDateTime = (dateString) => {
+  if (!dateString) return "";
+  return new Date(dateString).toLocaleString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+};
+
 const UserHomeView = () => {
   const dispatch = useDispatch();
 
   const { userProfile } = useSelector((state) => state.profile);
   const { user } = useSelector((state) => state.auth);
   const rejectionReason = user?.profile?.rejectionReason;
+  const rejectionHistory = Array.isArray(user?.profile?.rejectionHistory)
+    ? user.profile.rejectionHistory
+    : [];
   const isVerified = user?.status === "VERIFIED";
   const isProfileDeactivated = user?.profile?.isActive === false;
   const images = buildOrderedImagesFromProfile(userProfile);
@@ -70,7 +84,7 @@ const UserHomeView = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center bg-[#3B3B3D] px-4 py-4 text-white">
+    <div className="flex min-h-screen w-full flex-col items-center justify-start bg-[#3B3B3D] px-4 py-4 text-white">
       {isVerified && isProfileDeactivated ? (
         <div className="flex min-h-screen items-center justify-center py-10">
           <div className="w-full max-w-md">
@@ -151,15 +165,26 @@ const UserHomeView = () => {
           <ProfileInfoView profileData={userProfile} images={images} editUrl={`/user/edit-profile/${user?.email}`} />
         </>
       ) : (
-        <div className="flex min-h-screen items-center justify-center py-10">
+        <div className="flex min-h-screen w-full items-start justify-center py-10">
           <div className="w-full max-w-md">
             {/* Status Card */}
-            {user.status === "PAID_SETUP" && rejectionReason && (
+            {user.status === "PAID_SETUP" && (rejectionHistory.length > 0 || rejectionReason) && (
               <div className="mb-4 space-y-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4">
                 <h4 className="text-xl">You are rejected!</h4>
                 <hr className="border-gray-500" />
-                <h4 className="text-lg font-semibold">Reason:</h4>
-                <p className="">{rejectionReason}</p>
+                <h4 className="text-lg font-semibold">Previous rejection feedback:</h4>
+                <div className="space-y-3">
+                  {rejectionHistory.length > 0 ? (
+                    [...rejectionHistory].reverse().map((entry, index) => (
+                      <div key={`${entry.reviewedAt}-${index}`} className="rounded-lg bg-red-500/10 p-3">
+                        <p className="text-xs text-red-300">{formatRejectionDateTime(entry.reviewedAt)}</p>
+                        <p className="mt-1">{entry.reason}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p>{rejectionReason}</p>
+                  )}
+                </div>
               </div>
             )}
             <div className="rounded-2xl border border-orange-500/30 bg-slate-800/10 p-8 shadow">

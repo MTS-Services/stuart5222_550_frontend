@@ -109,10 +109,12 @@ const ProfileInfoView = ({ profileData, images, editUrl }) => {
             {/* Logout Button */}
             <button
               onClick={handleLogout}
-              className="group flex items-center justify-center rounded-full border border-gray-700/50 bg-gray-800/70 p-3 text-gray-300 backdrop-blur-sm transition-all duration-300 hover:border-red-500/30 hover:bg-red-500/20 hover:text-red-400"
+              title="Logout"
+              className="group flex items-center gap-2 rounded-full border border-gray-700/50 bg-gray-800/70 px-4 py-2 text-sm font-medium text-gray-300 backdrop-blur-sm transition-all duration-300 hover:border-red-500/30 hover:bg-red-500/20 hover:text-red-400"
               aria-label="Logout"
             >
-              <FaPowerOff className="text-lg group-hover:animate-pulse" />
+              <FaPowerOff className="text-base group-hover:animate-pulse" />
+              Logout
             </button>
           </div>
         </div>

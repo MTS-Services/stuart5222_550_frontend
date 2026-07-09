@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Upload } from "lucide-react";
 import { toast } from "react-toastify";
 import { FaCamera } from "react-icons/fa";
@@ -55,32 +55,17 @@ const useImageManagement = () => {
 
   const validateImageRequirements = useCallback((slots) => {
     const activeSlots = slots.filter((slot) => !slot.isEmpty);
-    const typeChecks = REQUIRED_IMAGE_TYPES.map((type) => ({
-      type,
-      exists: activeSlots.some((slot) => slot.imageType === type),
-    }));
 
-    const missing = typeChecks
-      .filter((check) => !check.exists)
-      .map((check) =>
-        check.type === "fullbody"
-          ? "Full Body"
-          : check.type === "toothyGrin"
-            ? "Toothy Grin"
-            : check.type.charAt(0).toUpperCase() + check.type.slice(1),
-      );
-
-    if (missing.length > 0) {
+    if (activeSlots.length < MIN_REQUIRED_IMAGES) {
+      const needed = MIN_REQUIRED_IMAGES - activeSlots.length;
       toast.info(
-        `Still need: ${missing.join(", ")} image${missing.length > 1 ? "s" : ""}`,
+        `Please upload ${needed} more photo${needed > 1 ? "s" : ""} (minimum ${MIN_REQUIRED_IMAGES} required)`,
       );
-    } else {
-      toast.success(
-        "All required images uploaded (Face, Full Body, Toothy Grin)",
-      );
+      return false;
     }
 
-    return missing.length === 0;
+    toast.success(`${activeSlots.length} photo${activeSlots.length > 1 ? "s" : ""} uploaded`);
+    return true;
   }, []);
 
   return {
@@ -110,23 +95,6 @@ const useFormState = () => {
 };
 
 // Helper Functions
-const getImageTypeLabel = (imageType, idx, extraKey) => {
-  switch (imageType) {
-    case "face":
-      return "Face";
-    case "fullbody":
-      return "Full Body";
-    case "toothyGrin":
-      return "Toothy Grin";
-    case "extra":
-      return `Extra ${extraKey || idx - 2}`;
-    default:
-      if (idx === 0) return "Face";
-      if (idx === 1) return "Full Body";
-      if (idx === 2) return "Toothy Grin";
-      return `Extra ${idx - 2}`;
-  }
-};
 
 // Upload Progress Component
 const UploadProgress = ({ files }) => {
@@ -189,7 +157,6 @@ const ImagePreviews = ({
       onRemove={onImageRemove}
       draggedSlotIndex={draggedSlotIndex}
       onDragIndexChange={onDragIndexChange}
-      getLabel={(slot, idx) => getImageTypeLabel(slot.imageType, idx, slot.extraKey)}
     />
 
     {/* Upload Status */}
@@ -450,8 +417,16 @@ const TermsModalContent = () => (
 // Main Component
 const SetupProfileView = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { email } = useParams();
   const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (user?.status === "PROFILE_PENDING") {
+      toast.info("Your profile is pending approval.");
+      navigate("/user", { replace: true });
+    }
+  }, [user?.status, navigate]);
 
   // Detect iOS for specific handling
   const isIOS = useMemo(
@@ -699,24 +674,12 @@ const SetupProfileView = () => {
 
   const validateSubmission = useCallback(() => {
     const activeSlots = imageSlots.filter((slot) => !slot.isEmpty);
-    const hasRequiredTypes = REQUIRED_IMAGE_TYPES.every((type) =>
-      activeSlots.some((slot) => slot.imageType === type),
-    );
 
-    if (!hasRequiredTypes || activeSlots.length < MIN_REQUIRED_IMAGES) {
-      const missing = REQUIRED_IMAGE_TYPES.filter(
-        (type) => !activeSlots.some((slot) => slot.imageType === type),
-      ).map((type) =>
-        type === "fullbody"
-          ? "Full Body"
-          : type === "toothyGrin"
-            ? "Toothy Grin"
-            : type.charAt(0).toUpperCase() + type.slice(1),
-      );
-
-      const errorMsg = `Required images missing: ${missing.join(", ")}`;
+    if (activeSlots.length < MIN_REQUIRED_IMAGES) {
+      const needed = MIN_REQUIRED_IMAGES - activeSlots.length;
+      const errorMsg = `Minimum ${MIN_REQUIRED_IMAGES} photos required. You need ${needed} more.`;
       setErrors({ images: errorMsg });
-      toast.warn(`Please upload all required images: ${missing.join(", ")}`);
+      toast.warn(errorMsg);
       return false;
     }
     return true;
@@ -885,7 +848,7 @@ const SetupProfileView = () => {
         <p className="text-gray-400">
           Your profile has been submitted for review.
         </p>
-        <Link to="/user" className="border px-4 py-2 text-white">
+        <Link to="/user" replace className="border px-4 py-2 text-white">
           Go to profile
         </Link>
       </div>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { BiErrorCircle } from "react-icons/bi";
 import { GiCheckMark } from "react-icons/gi";
 import { Upload } from "lucide-react";
@@ -24,9 +24,8 @@ import {
 } from "../../../../utils/travelMode";
 import {
   buildImagesJsonFromSlots,
-  buildImageOrderFromSlots,
   buildImageSlotsFromProfile,
-  getImageTypeLabel,
+  getPhotoSlotLabel,
   imagesJsonHasUrls,
   slotsHaveImageData,
 } from "../../../../utils/profileImages";
@@ -73,6 +72,14 @@ const EditProfileView = () => {
   const closeModal = () => setIsModalOpen(false);
 
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (!isAdmin && user?.status === "PROFILE_PENDING") {
+      toast.info("Your profile is pending approval.");
+      navigate("/user", { replace: true });
+    }
+  }, [isAdmin, user?.status, navigate]);
   // ============================================
   // 📸 Improved Image Management
   // ============================================
@@ -184,27 +191,14 @@ const EditProfileView = () => {
 
     // Check requirements after upload and show status
     const activeSlots = updatedSlots.filter((slot) => !slot.isEmpty);
-    const hasface = activeSlots.some((slot) => slot.imageType === "face");
-    const hasFullBody = activeSlots.some(
-      (slot) => slot.imageType === "fullbody",
-    );
-    const hasToothyGrin = activeSlots.some(
-      (slot) => slot.imageType === "toothyGrin",
-    );
 
-    const missing = [];
-    if (!hasface) missing.push("Face");
-    if (!hasFullBody) missing.push("Full Body");
-    if (!hasToothyGrin) missing.push("Toothy Grin");
-
-    if (missing.length > 0) {
+    if (activeSlots.length < 3) {
+      const needed = 3 - activeSlots.length;
       toast.info(
-        `Still need: ${missing.join(", ")} image${missing.length > 1 ? "s" : ""}`,
+        `Please upload ${needed} more photo${needed > 1 ? "s" : ""} (minimum 3 required)`,
       );
     } else {
-      toast.success(
-        "All required images uploaded (Face, Full Body, Toothy Grin)",
-      );
+      toast.success(`${activeSlots.length} photo${activeSlots.length > 1 ? "s" : ""} uploaded`);
     }
 
     e.target.value = "";
@@ -278,23 +272,6 @@ const EditProfileView = () => {
       .map((slot) => ({ url: slot.originalUrl }));
     setFiles(newFiles);
     setExistingImages(existingImgs);
-
-    // Check requirements after removal (silently - no warning message during editing)
-    const activeSlots = updatedSlots.filter((slot) => !slot.isEmpty);
-    const hasface = activeSlots.some((slot) => slot.imageType === "face");
-    const hasFullBody = activeSlots.some(
-      (slot) => slot.imageType === "fullbody",
-    );
-    const hasToothyGrin = activeSlots.some(
-      (slot) => slot.imageType === "toothyGrin",
-    );
-
-    const missing = [];
-    if (!hasface) missing.push("Face");
-    if (!hasFullBody) missing.push("Full Body");
-    if (!hasToothyGrin) missing.push("Toothy Grin");
-
-    // Don't show warning during editing - only validate at submission time
   };
 
   const handleSlotsReorder = (reordered) => {
@@ -459,7 +436,6 @@ const EditProfileView = () => {
       if (allExistingPhotos && imagesJsonHasUrls(reorderJson)) {
         await reorderProfileImages(email, {
           images: reorderJson,
-          imageOrder: buildImageOrderFromSlots(imageSlots),
         });
       }
 
@@ -526,7 +502,7 @@ const EditProfileView = () => {
           }
 
           // Initialize county and bio
-          setCounty(result.payload.county || "");
+          setCounty(result.payload.county || result.payload.area || "");
           setBio(result.payload.bio || "");
 
           // Initialize height from existing data
@@ -887,7 +863,7 @@ const EditProfileView = () => {
                       draggedSlotIndex={draggedSlotIndex}
                       onDragIndexChange={setDraggedSlotIndex}
                       getLabel={(slot, idx) =>
-                        `${slot.isExisting ? "Existing" : "New"} - ${getImageTypeLabel(slot, idx)}`
+                        `${slot.isExisting ? "Existing" : "New"} - ${getPhotoSlotLabel(slot, idx)}`
                       }
                     />
 
