@@ -2,10 +2,16 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { requestWaitlist } from "../../../../features/public/user/userFetch";
 import { STORAGE } from "../../../../config/storage/auth/authStorage";
+import { combineLegalName } from "../../../../utils/legalName";
 
 export const JoinWaitlist = () => {
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState({ name: "", email: "" });
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
+  const [formError, setFormError] = useState("");
   const { loading, error } = useSelector((state) => state.user);
 
   const waitlistStatus = STORAGE.getWaitlist();
@@ -13,12 +19,22 @@ export const JoinWaitlist = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.firstName.trim() || !formData.lastName.trim()) {
+      setFormError("Legal first and last name are required (private, admin only).");
+      return;
+    }
     try {
-      await dispatch(requestWaitlist(formData)).unwrap();
+      await dispatch(
+        requestWaitlist({
+          name: combineLegalName(formData.firstName, formData.lastName),
+          email: formData.email,
+        }),
+      ).unwrap();
     } catch (err) {
       console.error("❌ Request submission failed:", err);
     }
@@ -38,12 +54,28 @@ export const JoinWaitlist = () => {
           onSubmit={handleSubmit}
           className="mt-0 flex w-full flex-col items-start justify-start gap-6"
         >
+          <p className="text-sm text-white/80">
+            Your legal name is private (admin only). You will choose a public
+            display name later when you set up your profile.
+          </p>
+
           <input
             type="text"
-            name="name"
-            placeholder="Name"
-            value={formData.name}
+            name="firstName"
+            placeholder="Legal first name"
+            value={formData.firstName}
             onChange={handleChange}
+            required
+            className="h-11 w-full rounded-lg bg-white p-2.5 text-base font-semibold text-neutral-700 outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
+          />
+
+          <input
+            type="text"
+            name="lastName"
+            placeholder="Legal last name"
+            value={formData.lastName}
+            onChange={handleChange}
+            required
             className="h-11 w-full rounded-lg bg-white p-2.5 text-base font-semibold text-neutral-700 outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
           />
 
@@ -53,10 +85,13 @@ export const JoinWaitlist = () => {
             placeholder="E-mail"
             value={formData.email}
             onChange={handleChange}
+            required
             className="h-11 w-full rounded-lg bg-white p-2.5 text-base font-semibold text-neutral-700 outline outline-1 outline-gray-300 focus:outline-orange-500 focus:ring-2 focus:ring-orange-400"
           />
 
-          {error && <p className="text-sm text-red-400">{error}</p>}
+          {(formError || error) && (
+            <p className="text-sm text-red-400">{formError || error}</p>
+          )}
 
           <div className="w-full">
             <button

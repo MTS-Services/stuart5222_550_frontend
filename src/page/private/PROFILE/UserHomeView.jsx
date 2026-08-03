@@ -75,9 +75,9 @@ const UserHomeView = () => {
       case "ACTIVE":
         return "Profile Setup";
       case "PAID_SETUP":
-        return "Edit Profile";
+        return "Needs Edits";
       case "PROFILE_PENDING":
-        return "Pending Approval";
+        return "Awaiting Approval";
       default:
         return "Unknown Status";
     }

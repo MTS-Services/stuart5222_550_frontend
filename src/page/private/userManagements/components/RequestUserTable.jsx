@@ -99,8 +99,10 @@ export const RequestUserTable = () => {
   const processedList =
     userProfiles?.map((user) => ({
       id: user.id,
+      userId: user.user?.id,
       createdAt: user.createdAt,
-      name: user.displayName || user.user?.name || "—",
+      name: user.displayName || "—",
+      legalName: user.user?.name || "—",
       email: user.user?.email || "—",
       status: user.status || "DRAFT",
     })) || [];
@@ -130,7 +132,7 @@ export const RequestUserTable = () => {
               <thead className="bg-white text-lg font-normal text-black">
                 <tr>
                   <th className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
-                    Name
+                    Display Name
                   </th>
                   <th className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
                     Email
@@ -156,7 +158,21 @@ export const RequestUserTable = () => {
                       className={index % 2 === 0 ? "bg-yellow-50" : "bg-white"}
                     >
                       <td className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
-                        {row.name}
+                        {row.userId ? (
+                          <Link
+                            to={`/admin/all-users/${row.userId}`}
+                            className="hover:text-orange-600 hover:underline"
+                          >
+                            {row.name}
+                          </Link>
+                        ) : (
+                          row.name
+                        )}
+                        {row.legalName && row.legalName !== "—" && (
+                          <p className="text-xs text-gray-500">
+                            Legal: {row.legalName}
+                          </p>
+                        )}
                       </td>
                       <td className="w-1/5 whitespace-nowrap px-5 py-3 font-raleway">
                         {row.email}

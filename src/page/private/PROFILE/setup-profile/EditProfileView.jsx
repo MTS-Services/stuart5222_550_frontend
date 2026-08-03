@@ -610,13 +610,17 @@ const EditProfileView = () => {
           {/* Form Fields */}
           <div className="my-10 md:my-20">
             <div className="my-5 flex flex-col gap-2 self-stretch">
-              <label className="mb-4 font-raleway text-xl font-medium text-white">
-                Name <span className="font-raleway text-red-500">*</span>
+              <label className="mb-1 font-raleway text-xl font-medium text-white">
+                Display Name or Nickname{" "}
+                <span className="font-raleway text-red-500">*</span>
               </label>
+              <p className="mb-3 text-sm text-gray-400">
+                Shown publicly on your QR profile — not your legal name.
+              </p>
               <input
                 type="text"
                 name="firstName"
-                placeholder="Enter Display Name"
+                placeholder="Enter display name or nickname"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 className={`h-11 border bg-transparent px-3 text-white placeholder:text-gray-400 ${

@@ -183,8 +183,11 @@ const UserDetailsView = () => {
 
             <div>
               <h3 className="font-raleway text-base font-medium text-[#252525]">
-                {displayName || userInfo.name}
+                {displayName || "No display name"}
               </h3>
+              <p className="my-1 text-xs text-gray-500">
+                Legal name (private): {userInfo.name}
+              </p>
               <p className="my-1.5 font-lato text-sm text-[#242424]">
                 {userInfo.email}
               </p>

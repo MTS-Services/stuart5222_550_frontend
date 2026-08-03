@@ -217,7 +217,7 @@ const ProfileInfoView = ({ profileData, images, editUrl }) => {
         </h2>
         <div className="my-4 rounded-lg bg-[#505050] p-6">
           <p className="font-raleway text-xl font-normal">
-            Name : {displayName || "Not provided"}
+            Display Name : {displayName || "Not provided"}
           </p>
           <p className="my-5 font-raleway text-xl font-normal">
             Age : {age || "Not provided"}

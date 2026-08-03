@@ -200,13 +200,16 @@ const AddUserView = () => {
           {/* Form Fields */}
           <div className="my-10">
             <div className="my-5 flex flex-col gap-2 self-stretch">
-              <label className="mb-4 font-raleway text-xl font-medium">
-                Name <span className="text-red-500">*</span>
+              <label className="mb-1 font-raleway text-xl font-medium">
+                Display Name or Nickname <span className="text-red-500">*</span>
               </label>
+              <p className="mb-3 text-sm text-gray-500">
+                Public name shown on the QR profile — separate from legal name.
+              </p>
               <input
                 type="text"
                 name="firstName"
-                placeholder="Enter Display Name"
+                placeholder="Enter display name or nickname"
                 className={`h-11 border bg-transparent px-3 placeholder:text-gray-400 ${
                   errors.firstName ? "border-red-500" : "border-gray-300"
                 } rounded-lg text-sm font-medium outline-none focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300`}

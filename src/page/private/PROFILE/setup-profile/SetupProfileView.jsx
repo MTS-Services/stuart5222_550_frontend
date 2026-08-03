@@ -651,7 +651,7 @@ const SetupProfileView = () => {
 
       return {
         email,
-        displayName: user.name || form.displayName.value,
+        displayName: form.displayName.value.trim(),
         birthMonth,
         birthYear,
         age: calculatedAge,
@@ -669,7 +669,7 @@ const SetupProfileView = () => {
         _travelHasAll: travel.hasAllTravel,
       };
     },
-    [formData, email, user.name],
+    [formData, email],
   );
 
   const validateSubmission = useCallback(() => {
@@ -880,16 +880,24 @@ const SetupProfileView = () => {
 
           {/* Form Fields */}
           <div className="my-10 md:my-20">
-            {/* Name Field */}
+            {/* Public display name — separate from private legal/account name */}
             <div className="my-5 flex flex-col gap-2 self-stretch">
-              <label className="mb-4 font-raleway text-xl font-medium text-white">
-                Display Name <span className="text-red-500">*</span>
+              <label className="mb-1 font-raleway text-xl font-medium text-white">
+                Display Name or Nickname <span className="text-red-500">*</span>
               </label>
+              <p className="mb-3 text-sm text-gray-400">
+                This is the name shown publicly when someone scans your QR code.
+                Do not use your legal name if you prefer privacy.
+              </p>
+              {user?.name && (
+                <p className="mb-2 text-xs text-gray-500">
+                  Your legal/account name (private, admin only): {user.name}
+                </p>
+              )}
               <input
                 type="text"
                 name="displayName"
-                disabled={user.name}
-                placeholder={user.name || "Enter your name"}
+                placeholder="Enter the name you want shown publicly"
                 className="h-11 rounded-lg border bg-transparent px-3 text-sm font-medium text-white outline-none placeholder:text-gray-400 focus:outline focus:outline-1 focus:outline-orange-300 focus:ring-1 focus:ring-orange-300"
               />
               {errors.displayName && (

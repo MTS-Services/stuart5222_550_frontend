@@ -54,6 +54,9 @@ const EmailTemplatesPage = lazy(
 const AllUsersView = lazy(
   () => import("../page/private/allUsers/AllUsersView.jsx"),
 );
+const AllUserDetailsView = lazy(
+  () => import("../page/private/allUsers/AllUserDetailsView.jsx"),
+);
 const NotificationView = lazy(
   () => import("../page/private/notification/Notification.jsx"),
 );
@@ -116,6 +119,7 @@ const router = createBrowserRouter(
           <Route index element={<AdminView />} />
           <Route path="all-users" element={<AllUsersView />} />
           <Route path="all-users/add" element={<AddUserView />} />
+          <Route path="all-users/:userId" element={<AllUserDetailsView />} />
           <Route path="user-management" element={<UserManageView />} />
           <Route path="user-management/:userId" element={<UserDetailsView />} />
           <Route path="user-profile" element={<UserProfilesView />} />

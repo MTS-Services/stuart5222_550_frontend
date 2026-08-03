@@ -43,7 +43,7 @@ export const UserEditTable = ({ list, isLoading, error }) => {
                   Date
                 </th>
                 <th className="whitespace-nowrap px-5 py-3 font-raleway">
-                  Name
+                  Display Name
                 </th>
                 <th className="whitespace-nowrap px-5 py-3 text-center font-raleway">
                   Age
@@ -73,7 +73,21 @@ export const UserEditTable = ({ list, isLoading, error }) => {
                     {formatDate(row.createdAt) || "—"}
                   </td>
                   <td className="whitespace-nowrap px-5 py-3 font-raleway">
-                    {row.displayName || row.user.name || "—"}
+                    {row.user?.id ? (
+                      <Link
+                        to={`/admin/all-users/${row.user.id}`}
+                        className="hover:text-orange-600 hover:underline"
+                      >
+                        {row.displayName || "—"}
+                      </Link>
+                    ) : (
+                      <div>{row.displayName || "—"}</div>
+                    )}
+                    {row.user?.name && (
+                      <div className="text-xs text-gray-500">
+                        Legal: {row.user.name}
+                      </div>
+                    )}
                   </td>
                   <td className="whitespace-nowrap px-5 py-3 text-center font-raleway">
                     {row.age || "—"} <span>years</span>

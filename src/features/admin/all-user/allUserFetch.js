@@ -22,3 +22,19 @@ export const allUserList = createAsyncThunk(
     }
   },
 );
+
+// ========== GET single user (any status) ==========
+export const fetchAllUserById = createAsyncThunk(
+  "admin/fetchAllUserById",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const res = await GET(`${endpoints.admin.GET_USER_BY_ID}/${userId}`);
+      return res;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to fetch user details",
+      );
+    }
+  },
+);
+

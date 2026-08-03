@@ -3,12 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { allUserList } from "../../../features/admin/all-user/allUserFetch";
 import { TableDropDown } from "./components/TableDropDown";
 import { FaSearch } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import Overviews from "../common/Overviews";
+import { Link, useNavigate } from "react-router-dom";
 import { formatDate } from "../../../utils/formatDate";
+import {
+  formatUserStatusLabel,
+  getUserStatusColor,
+} from "../../../utils/userStatus";
 
 const AllUsersView = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [status, setStatus] = useState("ALL");
   const [username, setUsername] = useState("");
@@ -27,62 +31,19 @@ const AllUsersView = () => {
     dispatch(allUserList({ page, limit, status: status, username }));
   }, [dispatch, page, status, username]);
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "WAITLIST":
-        return "text-yellow-600 font-semibold";
-      case "ACTIVE":
-        return "text-orange-400 font-semibold";
-      case "REJECTED":
-        return "text-red-600 font-semibold";
-      case "PAID_SETUP":
-        return "text-purple-500 font-semibold";
-      case "PROFILE_PENDING":
-        return "text-blue-600 font-semibold";
-      case "VERIFIED":
-        return "text-green-500 font-semibold";
-      default:
-        return "text-gray-600 font-medium";
-    }
-  };
-
-  const getStatusChange = (status) => {
-    switch (status) {
-      case "ALL":
-        return "ALL";
-      case "WAITLIST":
-        return "WAITLIST";
-      case "ACTIVE":
-        return "ACTIVE";
-      case "REJECTED":
-        return "REJECTED";
-      case "PAID_SETUP":
-        return "PAID SETUP";
-      case "PROFILE_PENDING":
-        return "PENDING";
-      case "VERIFIED":
-        return "VERIFIED";
-      default:
-        return "ALL";
-    }
-  };
-
   if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
 
   return (
     <div className="p-4 md:p-8 lg:p-12">
       <div className="mb-8 flex flex-col-reverse items-center justify-between gap-6 md:flex-row">
-        {/* Left Side – Search, Filter, Add */}
         <h2 className="font-raleway text-2xl font-semibold uppercase text-[#002244] md:text-right">
           All Users
         </h2>
-        {/* Right Side – Heading */}
         <div className="flex w-full flex-col items-center gap-4 md:w-auto md:flex-row md:items-center">
-          {/* Search Field */}
           <form className="relative w-full md:w-64">
             <input
               type="text"
-              placeholder="Search user name"
+              placeholder="Search legal name"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="dark:bg-border-200 h-12 w-full rounded-full border border-[#f1eae3] p-4 shadow outline-none focus:border-[#F07400] focus:ring-1 focus:ring-[#eb9d54] dark:border-white dark:text-gray-800"
@@ -92,10 +53,8 @@ const AllUsersView = () => {
             </span>
           </form>
 
-          {/* Filter Dropdown */}
           <TableDropDown value={status} onChange={setStatus} />
 
-          {/* Add Button */}
           <Link
             to="/admin/all-users/add"
             className="whitespace-nowrap rounded-full bg-orange-500 px-6 py-2 text-white shadow-md hover:bg-orange-600"
@@ -105,12 +64,18 @@ const AllUsersView = () => {
         </div>
       </div>
 
+      <p className="mb-4 text-sm text-gray-600">
+        Click any user to view profile, edit, review photos, approve/reject, and
+        manage status.
+      </p>
+
       <div className="overflow-x-auto rounded-lg bg-white shadow">
         <table className="w-full text-left">
           <thead className="border-b bg-gray-100">
             <tr>
               <th className="p-3 text-center">#</th>
-              <th className="p-3">Name</th>
+              <th className="p-3">Legal Name</th>
+              <th className="p-3">Display Name</th>
               <th className="p-3">Email</th>
               <th className="p-3">Date</th>
               <th className="p-3 text-center">Status</th>
@@ -120,27 +85,34 @@ const AllUsersView = () => {
           <tbody>
             {isLoading ? (
               <tr className="h-96">
-                <td colSpan={5} className="p-4 text-center text-gray-700">
+                <td colSpan={6} className="p-4 text-center text-gray-700">
                   ⏳ Loading...
                 </td>
               </tr>
             ) : !allUsers || allUsers.length === 0 ? (
               <tr>
-                <td colSpan={5} className="p-4 text-center text-gray-500">
+                <td colSpan={6} className="p-4 text-center text-gray-500">
                   No users found
                 </td>
               </tr>
             ) : (
               allUsers.map((u, idx) => (
-                <tr key={u.id} className="border-b hover:bg-gray-50">
-                  <td className="p-3 text-center">{idx + 1}</td>
-                  <td className="p-3">{u.name}</td>
+                <tr
+                  key={u.id}
+                  onClick={() => navigate(`/admin/all-users/${u.id}`)}
+                  className="cursor-pointer border-b hover:bg-orange-50"
+                >
+                  <td className="p-3 text-center">{(page - 1) * limit + idx + 1}</td>
+                  <td className="p-3 font-medium text-[#002244]">{u.name}</td>
+                  <td className="p-3 text-gray-700">
+                    {u.profile?.displayName || "—"}
+                  </td>
                   <td className="p-3">{u.email}</td>
                   <td className="p-3">{formatDate(u.createdAt)}</td>
                   <td
-                    className={`p-3 text-center text-sm ${getStatusColor(u.status)}`}
+                    className={`p-3 text-center text-sm ${getUserStatusColor(u.status)}`}
                   >
-                    {getStatusChange(u.status)}
+                    {formatUserStatusLabel(u.status)}
                   </td>
                 </tr>
               ))
@@ -149,7 +121,6 @@ const AllUsersView = () => {
         </table>
       </div>
 
-      {/* Pagination */}
       <div className="mt-4 flex items-center justify-between gap-3">
         <div>
           Showing {allUsers?.length || 0} of {pagination?.totalCount || 0}{" "}

@@ -5,12 +5,16 @@ import {
   adminReject,
 } from "../../../../features/admin/management/usreFetch";
 import { formatDate } from "../../../../utils/formatDate";
+import {
+  formatUserStatusLabel,
+  getUserStatusColor,
+} from "../../../../utils/userStatus";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 export const WaitListTable = ({ list, isLoading }) => {
   const dispatch = useDispatch();
 
-  // 🔹 Track which row is loading
   const [loadingRow, setLoadingRow] = useState({ approve: null, reject: null });
 
   const handleApprove = async (userId) => {
@@ -32,19 +36,6 @@ export const WaitListTable = ({ list, isLoading }) => {
       toast.error(err?.message || "Error rejecting user");
     } finally {
       setLoadingRow((prev) => ({ ...prev, reject: null }));
-    }
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "ACTIVE":
-        return "text-green-600 font-semibold";
-      case "WAITLIST":
-        return "text-yellow-600 font-semibold";
-      case "REJECTED":
-        return "text-red-600 font-semibold";
-      default:
-        return "text-gray-600 font-medium";
     }
   };
 
@@ -75,12 +66,19 @@ export const WaitListTable = ({ list, isLoading }) => {
     return list.map((user) => (
       <tr key={user.id} className="hover:bg-gray-50">
         <td className="border p-2 text-center font-raleway">{user.id}</td>
-        <td className="border p-2 font-raleway">{user.name}</td>
+        <td className="border p-2 font-raleway">
+          <Link
+            to={`/admin/all-users/${user.id}`}
+            className="font-medium text-[#002244] hover:text-orange-600 hover:underline"
+          >
+            {user.name}
+          </Link>
+        </td>
         <td className="border p-2 font-raleway">{user.email}</td>
         <td
-          className={`border p-3 text-center text-sm ${getStatusColor(user.status)}`}
+          className={`border p-3 text-center text-sm ${getUserStatusColor(user.status)}`}
         >
-          {user.status}
+          {formatUserStatusLabel(user.status)}
         </td>
         <td className="border p-2 text-center font-raleway">
           {formatDate(user.createdAt)}
@@ -92,7 +90,7 @@ export const WaitListTable = ({ list, isLoading }) => {
             <>
               <button
                 onClick={() => handleApprove(user.id)}
-                className={`whitespace-nowrap rounded-xl bg-[#F07400] px-4 py-2.5 text-xs text-white hover:bg-red-300`}
+                className="whitespace-nowrap rounded-xl bg-[#F07400] px-4 py-2.5 text-xs text-white hover:bg-red-300"
                 disabled={loadingRow.approve === user.id}
               >
                 {loadingRow.approve === user.id ? (
@@ -130,7 +128,7 @@ export const WaitListTable = ({ list, isLoading }) => {
       <thead>
         <tr className="bg-gray-100">
           <th className="border p-2 text-center font-raleway">ID</th>
-          <th className="border p-2 font-raleway">Name</th>
+          <th className="border p-2 font-raleway">Legal Name</th>
           <th className="border p-2 font-raleway">Email</th>
           <th className="border p-2 text-center font-raleway">Status</th>
           <th className="border p-2 text-center font-raleway">Date</th>
