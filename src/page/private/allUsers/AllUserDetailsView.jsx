@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { fetchAllUserById } from "../../../features/admin/all-user/allUserFetch";
-import { clearSelectedUser } from "../../../features/admin/all-user/allUserSlice";
 import {
   adminApprove,
   adminReject,
@@ -37,6 +36,7 @@ const AllUserDetailsView = () => {
   );
 
   const [rejectionReason, setRejectionReason] = useState("");
+  const [brokenImages, setBrokenImages] = useState({});
   const [loading, setLoading] = useState({
     approveProfile: false,
     rejectProfile: false,
@@ -50,10 +50,8 @@ const AllUserDetailsView = () => {
   };
 
   useEffect(() => {
+    setBrokenImages({});
     loadUser();
-    return () => {
-      dispatch(clearSelectedUser());
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
@@ -64,11 +62,12 @@ const AllUserDetailsView = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routerLocation.state?.refresh]);
 
-  if (detailLoading) {
+  // Initial load only — keep current content visible while refetching (avoids photo flicker)
+  if (detailLoading && !selectedUser) {
     return <div className="p-10 text-center font-raleway">Loading...</div>;
   }
 
-  if (detailError) {
+  if (detailError && !selectedUser) {
     return (
       <div className="p-10 text-center font-raleway text-red-600">
         Error: {detailError}
@@ -87,12 +86,18 @@ const AllUserDetailsView = () => {
   const { firstName, lastName } = splitLegalName(user.name);
 
   const orderedImages = profile
-    ? buildOrderedImagesFromProfile(profile).map((img, index) => ({
-        url: typeof img === "string" ? img : img.url,
-        label: `Photo ${index + 1}`,
-        required: index < 3,
-      }))
+    ? buildOrderedImagesFromProfile(profile)
+        .map((img, index) => ({
+          url: typeof img === "string" ? img : img?.url,
+          label: `Photo ${index + 1}`,
+          required: index < 3,
+        }))
+        .filter((item) => typeof item.url === "string" && item.url.trim())
     : [];
+
+  const markBroken = (key) => {
+    setBrokenImages((prev) => (prev[key] ? prev : { ...prev, [key]: true }));
+  };
 
   const rejectionEntries =
     profile &&
@@ -340,15 +345,16 @@ const AllUserDetailsView = () => {
               <div className="flex items-center gap-4">
                 <img
                   src={
-                    orderedImages[0]?.url ||
-                    profile.image?.[0] ||
-                    "/img/placeholder.jpg"
+                    brokenImages.avatar
+                      ? "/img/placeholder.jpg"
+                      : orderedImages[0]?.url ||
+                        profile.imageUrls?.[0] ||
+                        profile.image?.[0] ||
+                        "/img/placeholder.jpg"
                   }
                   alt={profile.displayName || "User"}
                   className="h-20 w-20 rounded-full border object-cover"
-                  onError={(e) => {
-                    e.target.src = "/img/placeholder.jpg";
-                  }}
+                  onError={() => markBroken("avatar")}
                 />
                 <div>
                   <h3 className="text-lg font-medium">
@@ -411,27 +417,32 @@ const AllUserDetailsView = () => {
               <p className="text-gray-500">No photos uploaded.</p>
             ) : (
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                {orderedImages.map((item, idx) => (
-                  <div key={idx} className="overflow-hidden rounded-lg">
-                    <div className="mb-1">
-                      <span
-                        className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold text-white ${
-                          item.required ? "bg-orange-500" : "bg-gray-500"
-                        }`}
-                      >
-                        {item.label}
-                      </span>
+                {orderedImages.map((item, idx) => {
+                  const imgKey = `photo-${idx}-${item.url}`;
+                  return (
+                    <div key={imgKey} className="overflow-hidden rounded-lg">
+                      <div className="mb-1">
+                        <span
+                          className={`inline-block rounded-full px-2 py-0.5 text-xs font-semibold text-white ${
+                            item.required ? "bg-orange-500" : "bg-gray-500"
+                          }`}
+                        >
+                          {item.label}
+                        </span>
+                      </div>
+                      <img
+                        src={
+                          brokenImages[imgKey]
+                            ? "/img/placeholder.jpg"
+                            : item.url
+                        }
+                        alt={item.label}
+                        className="h-64 w-full rounded-lg border bg-gray-100 object-cover"
+                        onError={() => markBroken(imgKey)}
+                      />
                     </div>
-                    <img
-                      src={item.url}
-                      alt={item.label}
-                      className="h-64 w-full rounded-lg border object-cover"
-                      onError={(e) => {
-                        e.target.src = "/img/placeholder.jpg";
-                      }}
-                    />
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </section>
