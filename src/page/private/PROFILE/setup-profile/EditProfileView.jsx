@@ -22,6 +22,7 @@ import {
   areTravelDatesValid,
   normalizeTravelFields,
 } from "../../../../utils/travelMode";
+import { convertHeicToJpeg, isHeicFile } from "../../../../utils/imageUtils";
 import {
   buildImagesJsonFromSlots,
   buildImageSlotsFromProfile,
@@ -83,16 +84,16 @@ const EditProfileView = () => {
   // ============================================
   // 📸 Improved Image Management
   // ============================================
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const selectedFiles = Array.from(e.target.files);
     const filledSlots = imageSlots.filter((slot) => !slot.isEmpty).length;
     const maxNewFiles = 13 - filledSlots;
+    const inputEl = e.target;
 
     const validFiles = selectedFiles.filter((file) => {
       return (
         file.type.startsWith("image/") ||
-        file.type === "image/heif" ||
-        file.type === "image/heic" ||
+        isHeicFile(file) ||
         file.name.toLowerCase().endsWith(".heif") ||
         file.name.toLowerCase().endsWith(".heic")
       );
@@ -105,8 +106,8 @@ const EditProfileView = () => {
       );
     }
 
-    // Check file sizes (max 10MB per file)
-    const maxSize = 90 * 1024 * 1024; // 10MB
+    // Check file sizes (max 90MB per file)
+    const maxSize = 90 * 1024 * 1024;
     const oversizedFiles = validFiles.filter((file) => file.size > maxSize);
 
     if (oversizedFiles.length > 0) {
@@ -116,7 +117,7 @@ const EditProfileView = () => {
       toast.error(
         `Files too large: ${oversizedNames}. Maximum 90MB per file allowed.`,
       );
-      e.target.value = "";
+      inputEl.value = "";
       return;
     }
 
@@ -129,9 +130,38 @@ const EditProfileView = () => {
       return;
     }
 
+    const hasHeic = finalFiles.some((file) => isHeicFile(file));
+    if (hasHeic) {
+      toast.info("Converting HEIC photos for preview...");
+    }
+
+    let preparedFiles = [];
+    try {
+      preparedFiles = await Promise.all(
+        finalFiles.map(async (file) => {
+          if (!isHeicFile(file)) return file;
+          try {
+            return await convertHeicToJpeg(file);
+          } catch (error) {
+            console.error("HEIC preview conversion failed:", error);
+            toast.error(
+              `Could not convert ${file.name}. Please export as JPG/PNG.`,
+            );
+            return null;
+          }
+        }),
+      );
+      preparedFiles = preparedFiles.filter(Boolean);
+    } catch (error) {
+      console.error("HEIC conversion failed:", error);
+      toast.error("Failed to convert HEIC photos. Please use JPG or PNG.");
+      inputEl.value = "";
+      return;
+    }
+
     const updatedSlots = [...imageSlots];
 
-    finalFiles.forEach((file) => {
+    preparedFiles.forEach((file) => {
       // Find first empty slot or add new slot
       let emptySlotIndex = updatedSlots.findIndex((slot) => slot.isEmpty);
 
@@ -178,6 +208,7 @@ const EditProfileView = () => {
     });
 
     setImageSlots(updatedSlots);
+    inputEl.value = "";
 
     // Update legacy arrays for backward compatibility
     const newFiles = updatedSlots
@@ -845,7 +876,7 @@ const EditProfileView = () => {
                 {/* Hidden File Input */}
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/*,.heic,.heif,image/heic,image/heif"
                   multiple
                   ref={fileInputRef}
                   className="hidden"

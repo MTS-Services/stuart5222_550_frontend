@@ -1,10 +1,53 @@
 /**
  * Image Utility Functions for client-side image processing
  */
+import heic2any from "heic2any";
+
+/**
+ * Returns true if the file looks like HEIC/HEIF (by mime or extension).
+ * Windows often sends an empty mime type for these files.
+ */
+export const isHeicFile = (file) => {
+  if (!file) return false;
+  const mime = (file.type || "").toLowerCase();
+  const name = (file.name || "").toLowerCase();
+  return (
+    mime === "image/heic" ||
+    mime === "image/heif" ||
+    mime.includes("heic") ||
+    mime.includes("heif") ||
+    name.endsWith(".heic") ||
+    name.endsWith(".heif")
+  );
+};
+
+/**
+ * Converts HEIC/HEIF to a JPEG File so browsers can preview and upload reliably.
+ * Returns the original file when conversion is not needed.
+ */
+export const convertHeicToJpeg = async (file) => {
+  if (!file || !isHeicFile(file)) {
+    return file;
+  }
+
+  const result = await heic2any({
+    blob: file,
+    toType: "image/jpeg",
+    quality: 0.9,
+  });
+
+  const blob = Array.isArray(result) ? result[0] : result;
+  const jpegName = (file.name || "photo").replace(/\.(heic|heif)$/i, ".jpg");
+
+  return new File([blob], jpegName, {
+    type: "image/jpeg",
+    lastModified: Date.now(),
+  });
+};
 
 /**
  * Compresses an image file using Canvas API.
- * Automatically converts HEIC/HEIF to JPEG on iOS Safari.
+ * Automatically converts HEIC/HEIF to JPEG first.
  *
  * @param {File} file - The image file to compress
  * @param {number} maxWidth - Maximum width of the output image (default: 1920)
@@ -12,25 +55,34 @@
  * @param {number} quality - JPEG quality from 0 to 1 (default: 0.8)
  * @returns {Promise<File>} - The compressed file
  */
-export const compressImage = (
+export const compressImage = async (
   file,
   maxWidth = 1920,
   maxHeight = 1920,
   quality = 0.8,
 ) => {
+  let inputFile = file;
+
+  try {
+    inputFile = await convertHeicToJpeg(file);
+  } catch (error) {
+    console.error("HEIC conversion failed before compress:", error);
+    throw new Error(
+      `Failed to convert HEIC/HEIF image "${file.name}". Please use JPG or PNG.`,
+    );
+  }
+
   return new Promise((resolve, reject) => {
-    // If it's not an image, return original
     if (
-      !file.type.startsWith("image/") &&
-      !file.type.includes("heic") &&
-      !file.type.includes("heif")
+      !inputFile.type.startsWith("image/") &&
+      !isHeicFile(inputFile)
     ) {
-      resolve(file);
+      resolve(inputFile);
       return;
     }
 
     const reader = new FileReader();
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(inputFile);
 
     reader.onload = (event) => {
       const img = new Image();
@@ -40,7 +92,6 @@ export const compressImage = (
         let width = img.width;
         let height = img.height;
 
-        // Calculate new dimensions while maintaining aspect ratio
         if (width > height) {
           if (width > maxWidth) {
             height = Math.round((height * maxWidth) / width);
@@ -53,19 +104,15 @@ export const compressImage = (
           }
         }
 
-        // Create canvas and draw image
         const canvas = document.createElement("canvas");
         canvas.width = width;
         canvas.height = height;
         const ctx = canvas.getContext("2d");
 
-        // Optional: Improve image quality with smoothing
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = "high";
-
         ctx.drawImage(img, 0, 0, width, height);
 
-        // Convert canvas to blob
         canvas.toBlob(
           (blob) => {
             if (!blob) {
@@ -73,10 +120,9 @@ export const compressImage = (
               return;
             }
 
-            // Create a new File object with compressed image
             const compressedFile = new File(
               [blob],
-              file.name.replace(/\.[^/.]+$/, "") + ".jpg",
+              inputFile.name.replace(/\.[^/.]+$/, "") + ".jpg",
               {
                 type: "image/jpeg",
                 lastModified: Date.now(),
@@ -90,13 +136,13 @@ export const compressImage = (
         );
       };
 
-      img.onerror = (error) => {
-        reject(new Error("Failed to load image: " + error.message));
+      img.onerror = () => {
+        reject(new Error("Failed to load image for compression"));
       };
     };
 
-    reader.onerror = (error) => {
-      reject(new Error("Failed to read file: " + error.message));
+    reader.onerror = () => {
+      reject(new Error("Failed to read file"));
     };
   });
 };

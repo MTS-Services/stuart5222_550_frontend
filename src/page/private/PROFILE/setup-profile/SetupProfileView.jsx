@@ -23,7 +23,7 @@ import { getCurrentYear, TERMS_LAST_UPDATED } from "../../../../utils/formatDate
 // Utils & Features
 import { calculateAge } from "../../../../utils/ageUtils";
 import { validateForm } from "../../../../utils/validateForm";
-import { compressImage } from "../../../../utils/imageUtils";
+import { compressImage, convertHeicToJpeg, isHeicFile } from "../../../../utils/imageUtils";
 import { GET } from "../../../../config/api/httpMethods";
 import { endpoints } from "../../../../config/api/httpEndpoint";
 import { submitProfile } from "../../../../features/public/profile/profileFetch";
@@ -541,12 +541,42 @@ const SetupProfileView = () => {
   );
 
   const handleFileChange = useCallback(
-    (e) => {
+    async (e) => {
       const selectedFiles = Array.from(e.target.files);
+      const inputEl = e.target;
       const filesToAdd = validateFiles(selectedFiles, imageSlots);
 
       if (!filesToAdd) {
-        e.target.value = "";
+        inputEl.value = "";
+        return;
+      }
+
+      const hasHeic = filesToAdd.some((file) => isHeicFile(file));
+      if (hasHeic) {
+        toast.info("Converting HEIC photos for preview...");
+      }
+
+      let preparedFiles = [];
+      try {
+        preparedFiles = await Promise.all(
+          filesToAdd.map(async (file) => {
+            if (!isHeicFile(file)) return file;
+            try {
+              return await convertHeicToJpeg(file);
+            } catch (error) {
+              console.error("HEIC preview conversion failed:", error);
+              toast.error(
+                `Could not convert ${file.name}. Please export as JPG/PNG.`,
+              );
+              return null;
+            }
+          }),
+        );
+        preparedFiles = preparedFiles.filter(Boolean);
+      } catch (error) {
+        console.error("HEIC conversion failed:", error);
+        toast.error("Failed to convert HEIC photos. Please use JPG or PNG.");
+        inputEl.value = "";
         return;
       }
 
@@ -558,7 +588,7 @@ const SetupProfileView = () => {
       };
 
       const updatedSlots = [...imageSlots];
-      filesToAdd.forEach((file) => {
+      preparedFiles.forEach((file) => {
         const emptySlotIndex = updatedSlots.findIndex((slot) => slot.isEmpty);
         const { type: imageType, extraKey } = getImageTypeByIndex(
           emptySlotIndex !== -1 ? emptySlotIndex : updatedSlots.length,
@@ -586,7 +616,7 @@ const SetupProfileView = () => {
       setImageSlots(updatedSlots);
       updateLegacyArrays(updatedSlots);
       validateImageRequirements(updatedSlots);
-      e.target.value = "";
+      inputEl.value = "";
     },
     [imageSlots, validateFiles, updateLegacyArrays, validateImageRequirements],
   );
