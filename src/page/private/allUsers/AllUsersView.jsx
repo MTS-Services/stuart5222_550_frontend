@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { allUserList } from "../../../features/admin/all-user/allUserFetch";
+import { resetUsersError } from "../../../features/admin/all-user/allUserSlice";
 import { TableDropDown } from "./components/TableDropDown";
 import { FaSearch } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,6 +17,7 @@ const AllUsersView = () => {
 
   const [status, setStatus] = useState("ALL");
   const [username, setUsername] = useState("");
+  const [debouncedUsername, setDebouncedUsername] = useState("");
 
   const [page, setPage] = useState(1);
   const limit = 10;
@@ -27,11 +29,47 @@ const AllUsersView = () => {
   const hasPrevPage = pagination?.page > 1;
   const hasNextPage = pagination?.page < pagination?.totalPages;
 
+  // Debounce legal-name search so rapid typing doesn't race API calls
   useEffect(() => {
-    dispatch(allUserList({ page, limit, status: status, username }));
-  }, [dispatch, page, status, username]);
+    const timer = setTimeout(() => {
+      setDebouncedUsername(username.trim());
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [username]);
 
-  if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
+  // Reset to first page when filters change
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedUsername, status]);
+
+  useEffect(() => {
+    dispatch(resetUsersError());
+    const request = dispatch(
+      allUserList({
+        page,
+        limit,
+        status,
+        username: debouncedUsername,
+      }),
+    );
+
+    return () => {
+      // Abort in-flight list request when leaving the page or filters change
+      request.abort();
+    };
+  }, [dispatch, page, status, debouncedUsername]);
+
+  const handleRetry = () => {
+    dispatch(resetUsersError());
+    dispatch(
+      allUserList({
+        page,
+        limit,
+        status,
+        username: debouncedUsername,
+      }),
+    );
+  };
 
   return (
     <div className="p-4 md:p-8 lg:p-12">
@@ -40,7 +78,10 @@ const AllUsersView = () => {
           All Users
         </h2>
         <div className="flex w-full flex-col items-center gap-4 md:w-auto md:flex-row md:items-center">
-          <form className="relative w-full md:w-64">
+          <form
+            className="relative w-full md:w-64"
+            onSubmit={(e) => e.preventDefault()}
+          >
             <input
               type="text"
               placeholder="Search legal name"
@@ -69,6 +110,19 @@ const AllUsersView = () => {
         manage status.
       </p>
 
+      {error && (
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+          <span>Error: {error}</span>
+          <button
+            type="button"
+            onClick={handleRetry}
+            className="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
       <div className="overflow-x-auto rounded-lg bg-white shadow">
         <table className="w-full text-left">
           <thead className="border-b bg-gray-100">
@@ -83,7 +137,7 @@ const AllUsersView = () => {
           </thead>
 
           <tbody>
-            {isLoading ? (
+            {isLoading && (!allUsers || allUsers.length === 0) ? (
               <tr className="h-96">
                 <td colSpan={6} className="p-4 text-center text-gray-700">
                   ⏳ Loading...
@@ -102,7 +156,9 @@ const AllUsersView = () => {
                   onClick={() => navigate(`/admin/all-users/${u.id}`)}
                   className="cursor-pointer border-b hover:bg-orange-50"
                 >
-                  <td className="p-3 text-center">{(page - 1) * limit + idx + 1}</td>
+                  <td className="p-3 text-center">
+                    {(page - 1) * limit + idx + 1}
+                  </td>
                   <td className="p-3 font-medium text-[#002244]">{u.name}</td>
                   <td className="p-3 text-gray-700">
                     {u.profile?.displayName || "—"}
@@ -129,7 +185,7 @@ const AllUsersView = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setPage((p) => p - 1)}
-            disabled={!hasPrevPage}
+            disabled={!hasPrevPage || isLoading}
             className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
           >
             Prev
@@ -142,7 +198,7 @@ const AllUsersView = () => {
 
           <button
             onClick={() => setPage((p) => p + 1)}
-            disabled={!hasNextPage}
+            disabled={!hasNextPage || isLoading}
             className="rounded bg-gray-200 px-3 py-1 disabled:opacity-40"
           >
             Next

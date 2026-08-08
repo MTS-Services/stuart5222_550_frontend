@@ -1,7 +1,7 @@
 import api, { FILE_UPLOAD_TIMEOUT } from './axiosInstance';
 
-export const GET = async (url, params) => {
-  const { data: responseData } = await api.get(url, { params });
+export const GET = async (url, params, config = {}) => {
+  const { data: responseData } = await api.get(url, { params, ...config });
   return responseData;
 };
 

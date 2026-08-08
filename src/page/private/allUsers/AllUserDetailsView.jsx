@@ -46,18 +46,25 @@ const AllUserDetailsView = () => {
   });
 
   const loadUser = () => {
-    if (userId) dispatch(fetchAllUserById(userId));
+    if (userId) return dispatch(fetchAllUserById(userId));
+    return null;
   };
 
   useEffect(() => {
     setBrokenImages({});
-    loadUser();
+    const request = loadUser();
+    return () => {
+      request?.abort?.();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   useEffect(() => {
     if (routerLocation.state?.refresh) {
-      loadUser();
+      const request = loadUser();
+      return () => {
+        request?.abort?.();
+      };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [routerLocation.state?.refresh]);
@@ -257,10 +264,6 @@ const AllUserDetailsView = () => {
           <p>
             <span className="font-medium text-gray-600">Phone:</span>{" "}
             {user.phone || profile?.phone || "—"}
-          </p>
-          <p>
-            <span className="font-medium text-gray-600">Setup fee paid:</span>{" "}
-            {user.paidSetupFee ? "Yes" : "No"}
           </p>
           <p>
             <span className="font-medium text-gray-600">Joined:</span>{" "}

@@ -33,14 +33,22 @@ const allUserSlice = createSlice({
       })
       .addCase(allUserList.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.allUsers = action.payload.users;
-        state.pagination = action.payload.pagination;
-        state.stats = action.payload.stats;
+        state.allUsers = action.payload?.users || [];
+        state.pagination = action.payload?.pagination || {};
+        state.stats = action.payload?.stats || {};
         state.error = null;
       })
       .addCase(allUserList.rejected, (state, action) => {
+        // Ignore aborted/stale requests from navigation away
+        if (action.meta?.aborted || action.payload?.aborted) {
+          state.isLoading = false;
+          return;
+        }
         state.isLoading = false;
-        state.error = action.payload;
+        state.error =
+          typeof action.payload === "string"
+            ? action.payload
+            : action.payload?.message || "Failed to fetch all users list";
       })
       .addCase(fetchAllUserById.pending, (state) => {
         state.detailLoading = true;
@@ -52,8 +60,15 @@ const allUserSlice = createSlice({
         state.detailError = null;
       })
       .addCase(fetchAllUserById.rejected, (state, action) => {
+        if (action.meta?.aborted || action.payload?.aborted) {
+          state.detailLoading = false;
+          return;
+        }
         state.detailLoading = false;
-        state.detailError = action.payload;
+        state.detailError =
+          typeof action.payload === "string"
+            ? action.payload
+            : action.payload?.message || "Failed to fetch user details";
         state.selectedUser = null;
       });
   },
