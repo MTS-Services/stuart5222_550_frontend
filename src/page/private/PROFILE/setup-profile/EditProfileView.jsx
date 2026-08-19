@@ -28,6 +28,7 @@ import {
   buildImageSlotsFromProfile,
   getPhotoSlotLabel,
   imagesJsonHasUrls,
+  isUsableProfileImageUrl,
   slotsHaveImageData,
 } from "../../../../utils/profileImages";
 import PhotoReorderGrid from "../../../../components/common/PhotoReorderGrid";
@@ -246,6 +247,7 @@ const EditProfileView = () => {
     const updatedSlots = [...imageSlots];
 
     if (slot.isExisting && slot.originalUrl) {
+      const isStaleLocalPhoto = !isUsableProfileImageUrl(slot.originalUrl);
       try {
         const response = await fetch(
           `${import.meta.env.VITE_API_BASE_URL}/profile/${email}/image`,
@@ -258,14 +260,22 @@ const EditProfileView = () => {
 
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.message || "Failed to delete image");
+          const message = errorData.message || "Failed to delete image";
+          // Stale pre-R2 records may still be blocked on older backends; clear them locally.
+          if (!isStaleLocalPhoto) {
+            throw new Error(message);
+          }
+          toast.success("Removed unavailable photo");
+        } else {
+          toast.success("Image deleted successfully");
         }
-
-        toast.success("Image deleted successfully");
       } catch (error) {
         console.error("Error deleting image:", error);
-        toast.error(error.message || "Failed to delete image");
-        return;
+        if (!isStaleLocalPhoto) {
+          toast.error(error.message || "Failed to delete image");
+          return;
+        }
+        toast.success("Removed unavailable photo");
       }
     }
 
@@ -391,22 +401,18 @@ const EditProfileView = () => {
       return;
     }
 
-    // Check minimum photo count (positions 0–2 are face, full body, toothy grin when filled)
+    // Count live R2 photos + newly selected files (ignore stale local-server URLs)
+    const usableExistingCount = imageSlots.filter(
+      (slot) =>
+        !slot.isEmpty &&
+        slot.isExisting &&
+        isUsableProfileImageUrl(slot.originalUrl),
+    ).length;
+    const newFileCount = imageSlots.filter(
+      (slot) => !slot.isEmpty && slot.file && !slot.isExisting,
+    ).length;
+    const totalImageCount = usableExistingCount + newFileCount;
     const activeSlots = imageSlots.filter((slot) => !slot.isEmpty);
-
-    if (activeSlots.length < 3) {
-      const needed = 3 - activeSlots.length;
-      setErrors({
-        images: `Minimum 3 images required. You need ${needed} more image${needed > 1 ? "s" : ""}`,
-      });
-      toast.warn(
-        `Please upload ${needed} more image${needed > 1 ? "s" : ""} before submitting`,
-      );
-      return;
-    }
-
-    // Calculate total image count (existing + new)
-    const totalImageCount = existingImages.length + files.length;
 
     if (totalImageCount < 3) {
       const needed = 3 - totalImageCount;

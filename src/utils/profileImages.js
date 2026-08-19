@@ -2,6 +2,20 @@
  * Shared helpers for structured profile images (face, fullbody, toothyGrin, extras).
  */
 
+/** Pre-R2 / local-server URLs are not usable after the Cloudflare migration. */
+export const isUsableProfileImageUrl = (url) => {
+  if (!url || typeof url !== "string") return false;
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    return (
+      host.endsWith(".r2.dev") ||
+      host.endsWith(".r2.cloudflarestorage.com")
+    );
+  } catch {
+    return false;
+  }
+};
+
 export const getExtrasFromStructured = (extras) => {
   if (!extras) return [];
   if (Array.isArray(extras)) {
@@ -111,7 +125,7 @@ export const buildImagesJsonFromSlots = (slots) => {
 
   filled.forEach((slot, index) => {
     const url = slot.isExisting ? slot.originalUrl : null;
-    if (!url) return;
+    if (!url || !isUsableProfileImageUrl(url)) return;
 
     if (index === 0) json.face = url;
     else if (index === 1) json.fullbody = url;
