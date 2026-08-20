@@ -66,6 +66,7 @@ const EditProfileView = () => {
   const [heightFeet, setHeightFeet] = useState("");
   const [heightInches, setHeightInches] = useState("");
   const [draggedSlotIndex, setDraggedSlotIndex] = useState(null);
+  const [isFileDragOver, setIsFileDragOver] = useState(false);
   const fileInputRef = useRef(null);
   const { email } = useParams();
 
@@ -85,18 +86,48 @@ const EditProfileView = () => {
   // ============================================
   // 📸 Improved Image Management
   // ============================================
-  const handleFileChange = async (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    const filledSlots = imageSlots.filter((slot) => !slot.isEmpty).length;
-    const maxNewFiles = 13 - filledSlots;
-    const inputEl = e.target;
+  const isStaleExistingSlot = (slot) =>
+    !slot.isEmpty &&
+    slot.isExisting &&
+    !isUsableProfileImageUrl(slot.originalUrl);
+
+  const syncSlotArrays = (slots) => {
+    const newFiles = slots
+      .filter((slot) => !slot.isEmpty && !slot.isExisting)
+      .map((slot) => slot.file);
+    const existingImgs = slots
+      .filter(
+        (slot) =>
+          !slot.isEmpty &&
+          slot.isExisting &&
+          isUsableProfileImageUrl(slot.originalUrl),
+      )
+      .map((slot) => ({ url: slot.originalUrl }));
+    setFiles(newFiles);
+    setExistingImages(existingImgs);
+  };
+
+  const processSelectedFiles = async (selectedFiles) => {
+    if (!selectedFiles?.length) return;
+
+    // Broken/local (pre-R2) slots can be replaced so Mac users aren't blocked.
+    const keepableFilled = imageSlots.filter(
+      (slot) => !slot.isEmpty && !isStaleExistingSlot(slot),
+    ).length;
+    const maxNewFiles = 13 - keepableFilled;
 
     const validFiles = selectedFiles.filter((file) => {
+      const name = (file.name || "").toLowerCase();
       return (
-        file.type.startsWith("image/") ||
+        (file.type || "").startsWith("image/") ||
         isHeicFile(file) ||
-        file.name.toLowerCase().endsWith(".heif") ||
-        file.name.toLowerCase().endsWith(".heic")
+        name.endsWith(".heif") ||
+        name.endsWith(".heic") ||
+        name.endsWith(".jpg") ||
+        name.endsWith(".jpeg") ||
+        name.endsWith(".png") ||
+        name.endsWith(".webp") ||
+        name.endsWith(".gif")
       );
     });
 
@@ -107,10 +138,8 @@ const EditProfileView = () => {
       );
     }
 
-    // Check file sizes (max 90MB per file)
     const maxSize = 90 * 1024 * 1024;
     const oversizedFiles = validFiles.filter((file) => file.size > maxSize);
-
     if (oversizedFiles.length > 0) {
       const oversizedNames = oversizedFiles
         .map((f) => `${f.name} (${(f.size / 1024 / 1024).toFixed(2)}MB)`)
@@ -118,17 +147,22 @@ const EditProfileView = () => {
       toast.error(
         `Files too large: ${oversizedNames}. Maximum 90MB per file allowed.`,
       );
-      inputEl.value = "";
       return;
     }
 
-    const finalFiles = validFiles.filter((file) => file.size <= maxSize);
+    let finalFiles = validFiles.filter((file) => file.size <= maxSize);
+    if (finalFiles.length === 0) return;
+
+    if (maxNewFiles <= 0) {
+      toast.warn("You already have the maximum of 13 usable images.");
+      return;
+    }
 
     if (finalFiles.length > maxNewFiles) {
       toast.warn(
-        `You can only upload ${maxNewFiles} more image${maxNewFiles > 1 ? "s" : ""} (you already have ${filledSlots})`,
+        `Only ${maxNewFiles} of ${finalFiles.length} photo${finalFiles.length > 1 ? "s" : ""} added (max 13).`,
       );
-      return;
+      finalFiles = finalFiles.slice(0, maxNewFiles);
     }
 
     const hasHeic = finalFiles.some((file) => isHeicFile(file));
@@ -146,7 +180,7 @@ const EditProfileView = () => {
           } catch (error) {
             console.error("HEIC preview conversion failed:", error);
             toast.error(
-              `Could not convert ${file.name}. Please export as JPG/PNG.`,
+              `Could not convert ${file.name}. Please export as JPG or PNG.`,
             );
             return null;
           }
@@ -156,84 +190,112 @@ const EditProfileView = () => {
     } catch (error) {
       console.error("HEIC conversion failed:", error);
       toast.error("Failed to convert HEIC photos. Please use JPG or PNG.");
-      inputEl.value = "";
       return;
     }
 
+    if (preparedFiles.length === 0) return;
+
     const updatedSlots = [...imageSlots];
+    const findTargetIndex = () => {
+      const emptyIdx = updatedSlots.findIndex((slot) => slot.isEmpty);
+      if (emptyIdx !== -1) return emptyIdx;
+      return updatedSlots.findIndex((slot) => isStaleExistingSlot(slot));
+    };
 
     preparedFiles.forEach((file) => {
-      // Find first empty slot or add new slot
-      let emptySlotIndex = updatedSlots.findIndex((slot) => slot.isEmpty);
-
-      let imageType, extraKey;
-      if (emptySlotIndex !== -1) {
-        // Filling existing empty slot - determine type based on position
-        if (emptySlotIndex === 0) {
-          imageType = "face";
-        } else if (emptySlotIndex === 1) {
-          imageType = "fullbody";
-        } else if (emptySlotIndex === 2) {
-          imageType = "toothyGrin";
-        } else {
-          imageType = "extra";
-          extraKey = `${updatedSlots.filter((s) => !s.isEmpty && s.imageType === "extra").length + 1}`;
-        }
-      } else {
-        // Adding new slot - it will be an extra
-        imageType = "extra";
-        extraKey = `${updatedSlots.filter((s) => !s.isEmpty && s.imageType === "extra").length + 1}`;
-      }
+      const targetIndex = findTargetIndex();
+      const imageType =
+        (targetIndex !== -1 ? targetIndex : updatedSlots.length) === 0
+          ? "face"
+          : (targetIndex !== -1 ? targetIndex : updatedSlots.length) === 1
+            ? "fullbody"
+            : (targetIndex !== -1 ? targetIndex : updatedSlots.length) === 2
+              ? "toothyGrin"
+              : "extra";
+      const slotIndex =
+        targetIndex !== -1 ? targetIndex : updatedSlots.length;
+      const extraKey =
+        imageType === "extra" ? String(Math.max(0, slotIndex - 2)) : undefined;
 
       const newSlot = {
-        file: file,
+        file,
         preview: URL.createObjectURL(file),
         id: Date.now() + Math.random(),
         isEmpty: false,
         isExisting: false,
         originalUrl: null,
-        imageType: imageType,
-        extraKey: extraKey,
+        imageType,
+        extraKey,
       };
 
-      if (emptySlotIndex !== -1) {
-        // Fill empty slot
-        if (updatedSlots[emptySlotIndex].preview) {
-          URL.revokeObjectURL(updatedSlots[emptySlotIndex].preview);
+      if (targetIndex !== -1) {
+        const prev = updatedSlots[targetIndex];
+        if (prev?.preview && !prev.isExisting) {
+          URL.revokeObjectURL(prev.preview);
         }
-        updatedSlots[emptySlotIndex] = newSlot;
+        updatedSlots[targetIndex] = newSlot;
       } else {
-        // Add new slot
         updatedSlots.push(newSlot);
       }
     });
 
     setImageSlots(updatedSlots);
-    inputEl.value = "";
+    syncSlotArrays(updatedSlots);
 
-    // Update legacy arrays for backward compatibility
-    const newFiles = updatedSlots
-      .filter((slot) => !slot.isEmpty && !slot.isExisting)
-      .map((slot) => slot.file);
-    const existingImgs = updatedSlots
-      .filter((slot) => !slot.isEmpty && slot.isExisting)
-      .map((slot) => ({ url: slot.originalUrl }));
-    setFiles(newFiles);
-    setExistingImages(existingImgs);
+    const usableCount =
+      updatedSlots.filter(
+        (slot) =>
+          !slot.isEmpty &&
+          ((slot.isExisting && isUsableProfileImageUrl(slot.originalUrl)) ||
+            (!slot.isExisting && slot.file)),
+      ).length;
 
-    // Check requirements after upload and show status
-    const activeSlots = updatedSlots.filter((slot) => !slot.isEmpty);
-
-    if (activeSlots.length < 3) {
-      const needed = 3 - activeSlots.length;
+    if (usableCount < 3) {
       toast.info(
-        `Please upload ${needed} more photo${needed > 1 ? "s" : ""} (minimum 3 required)`,
+        `Please upload ${3 - usableCount} more photo${3 - usableCount > 1 ? "s" : ""} (minimum 3 required)`,
       );
     } else {
-      toast.success(`${activeSlots.length} photo${activeSlots.length > 1 ? "s" : ""} uploaded`);
+      toast.success(
+        `${preparedFiles.length} photo${preparedFiles.length > 1 ? "s" : ""} ready`,
+      );
     }
+  };
 
-    e.target.value = "";
+  const handleFileChange = async (e) => {
+    const inputEl = e.target;
+    const selectedFiles = Array.from(inputEl.files || []);
+    try {
+      await processSelectedFiles(selectedFiles);
+    } finally {
+      inputEl.value = "";
+    }
+  };
+
+  const handleFilesDropped = async (fileList) => {
+    await processSelectedFiles(Array.from(fileList || []));
+  };
+
+  const handleUploadDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
+    setIsFileDragOver(true);
+  };
+
+  const handleUploadDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsFileDragOver(false);
+  };
+
+  const handleUploadDrop = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsFileDragOver(false);
+    const dropped = e.dataTransfer?.files
+      ? Array.from(e.dataTransfer.files)
+      : [];
+    await processSelectedFiles(dropped);
   };
 
   const removeImage = async (index) => {
@@ -303,28 +365,12 @@ const EditProfileView = () => {
     }
 
     setImageSlots(updatedSlots);
-
-    // Update legacy arrays for backward compatibility
-    const newFiles = updatedSlots
-      .filter((slot) => !slot.isEmpty && !slot.isExisting)
-      .map((slot) => slot.file);
-    const existingImgs = updatedSlots
-      .filter((slot) => !slot.isEmpty && slot.isExisting)
-      .map((slot) => ({ url: slot.originalUrl }));
-    setFiles(newFiles);
-    setExistingImages(existingImgs);
+    syncSlotArrays(updatedSlots);
   };
 
   const handleSlotsReorder = (reordered) => {
     setImageSlots(reordered);
-    const newFiles = reordered
-      .filter((slot) => !slot.isEmpty && !slot.isExisting)
-      .map((slot) => slot.file);
-    const existingImgs = reordered
-      .filter((slot) => !slot.isEmpty && slot.isExisting)
-      .map((slot) => ({ url: slot.originalUrl }));
-    setFiles(newFiles);
-    setExistingImages(existingImgs);
+    syncSlotArrays(reordered);
   };
 
   const handleClick = () => {
@@ -556,7 +602,12 @@ const EditProfileView = () => {
           setImageSlots(slots);
 
           const existingImagesArray = slots
-            .filter((slot) => !slot.isEmpty && slot.isExisting && slot.originalUrl)
+            .filter(
+              (slot) =>
+                !slot.isEmpty &&
+                slot.isExisting &&
+                isUsableProfileImageUrl(slot.originalUrl),
+            )
             .map((slot) => ({ url: slot.originalUrl }));
           setExistingImages(existingImagesArray);
         } else {
@@ -831,7 +882,17 @@ const EditProfileView = () => {
           {/* 🖼️ File Upload - FINALIZED SECTION */}
           <div className="flex items-center justify-center">
             <div className="w-full space-y-4">
-              <div className="flex flex-col items-center justify-center rounded-xl bg-white p-8 shadow-md">
+              <div
+                className={`flex flex-col items-center justify-center rounded-xl bg-white p-8 shadow-md transition ${
+                  isFileDragOver
+                    ? "outline outline-2 outline-orange-500 ring-4 ring-orange-200"
+                    : ""
+                }`}
+                onDragEnter={handleUploadDragOver}
+                onDragOver={handleUploadDragOver}
+                onDragLeave={handleUploadDragLeave}
+                onDrop={handleUploadDrop}
+              >
                 {/* Upload Button */}
                 <div
                   className="mb-4 flex h-16 w-16 cursor-pointer items-center justify-center rounded-2xl bg-orange-500 transition hover:bg-orange-600"
@@ -843,6 +904,10 @@ const EditProfileView = () => {
                 <h2 className="mb-2 font-raleway text-lg font-semibold text-gray-800">
                   Upload Photos
                 </h2>
+                <p className="mx-auto mb-2 max-w-[320px] text-center font-raleway text-sm text-gray-600">
+                  Drag and drop photos here, or click the button to choose
+                  files.
+                </p>
                 <p className="mx-auto mb-4 max-w-[288px] text-center font-raleway text-[10px] text-gray-500">
                   Minimum 3 photos required • Maximum 13 photos allowed
                 </p>
@@ -882,11 +947,14 @@ const EditProfileView = () => {
                 {/* Hidden File Input */}
                 <input
                   type="file"
-                  accept="image/*,.heic,.heif,image/heic,image/heif"
+                  accept="image/*,.heic,.heif,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.gif"
                   multiple
                   ref={fileInputRef}
                   className="hidden"
                   onChange={handleFileChange}
+                  onClick={(e) => {
+                    e.target.value = null;
+                  }}
                 />
 
                 {/* Image Previews */}
@@ -901,10 +969,11 @@ const EditProfileView = () => {
                       imageSlots={imageSlots}
                       onSlotsChange={handleSlotsReorder}
                       onRemove={removeImage}
+                      onFilesDrop={handleFilesDropped}
                       draggedSlotIndex={draggedSlotIndex}
                       onDragIndexChange={setDraggedSlotIndex}
                       getLabel={(slot, idx) =>
-                        `${slot.isExisting ? "Existing" : "New"} - ${getPhotoSlotLabel(slot, idx)}`
+                        `${slot.isExisting ? (isUsableProfileImageUrl(slot.originalUrl) ? "Existing" : "Unavailable") : "New"} - ${getPhotoSlotLabel(slot, idx)}`
                       }
                     />
 
@@ -939,19 +1008,23 @@ const EditProfileView = () => {
 
                 {/* Upload Instructions */}
                 <div className="mt-4 text-center">
-                  <p className="flex items-center gap-1 font-raleway text-sm font-semibold text-gray-600">
+                  <p className="flex items-center justify-center gap-1 font-raleway text-sm font-semibold text-gray-600">
                     <span>
                       <FaCamera />
                     </span>
-                    How to upload multiple images:
+                    How to add photos:
                   </p>
                   <p className="mt-1 font-raleway text-xs text-gray-500">
-                    • Hold <kbd className="rounded bg-gray-200 px-1">Ctrl</kbd>{" "}
-                    (Windows) or{" "}
-                    <kbd className="rounded bg-gray-200 px-1">Cmd</kbd> (Mac)
+                    • Drag and drop image files onto this area
                   </p>
                   <p className="font-raleway text-xs text-gray-500">
-                    • Click and drag to select multiple files
+                    • Or click the orange button and select files
+                  </p>
+                  <p className="font-raleway text-xs text-gray-500">
+                    • Hold{" "}
+                    <kbd className="rounded bg-gray-200 px-1">Cmd</kbd> (Mac)
+                    or <kbd className="rounded bg-gray-200 px-1">Ctrl</kbd>{" "}
+                    (Windows) to select multiple files
                   </p>
                 </div>
 

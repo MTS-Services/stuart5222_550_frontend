@@ -25,6 +25,7 @@ export const endpoints = {
     APPROVED_DRAFT: "/admin/profiles",
     REJECTED_DRAFT: "/admin/profiles",
     TOGGLE_PROFILE_ACTIVE: "/admin/profiles",
+    DELETE_PROFILE: "/admin/profiles",
 
     GET_USER_DETAILS: `/admin/profiles`,
     GET_USER_VERIFIED_PROFILE: `/admin/profiles/verified`,

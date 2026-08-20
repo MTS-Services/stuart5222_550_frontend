@@ -147,6 +147,7 @@ const ImagePreviews = ({
   files,
   onImageRemove,
   onSlotsChange,
+  onFilesDrop,
   draggedSlotIndex,
   onDragIndexChange,
 }) => (
@@ -155,6 +156,7 @@ const ImagePreviews = ({
       imageSlots={imageSlots}
       onSlotsChange={onSlotsChange}
       onRemove={onImageRemove}
+      onFilesDrop={onFilesDrop}
       draggedSlotIndex={draggedSlotIndex}
       onDragIndexChange={onDragIndexChange}
     />
@@ -188,19 +190,20 @@ const ImagePreviews = ({
 // Upload Instructions Component
 const UploadInstructions = () => (
   <div className="mt-4 text-center">
-    <p className="flex items-center gap-1 font-raleway text-sm font-semibold text-gray-600">
+    <p className="flex items-center justify-center gap-1 font-raleway text-sm font-semibold text-gray-600">
       <FaCamera />
-      How to upload multiple images:
+      How to add photos:
     </p>
     <p className="mt-1 font-raleway text-xs text-gray-500">
-      • Hold <kbd className="rounded bg-gray-200 px-1">Ctrl</kbd> (Windows) or{" "}
-      <kbd className="rounded bg-gray-200 px-1">Cmd</kbd> (Mac)
+      • Drag and drop image files onto this area
     </p>
     <p className="font-raleway text-xs text-gray-500">
-      • Click and drag to select multiple files
+      • Or click the orange button and select files
     </p>
     <p className="font-raleway text-xs text-gray-500">
-      • Drag photos in the grid to reorder them
+      • Hold <kbd className="rounded bg-gray-200 px-1">Cmd</kbd> (Mac) or{" "}
+      <kbd className="rounded bg-gray-200 px-1">Ctrl</kbd> (Windows) to select
+      multiple files
     </p>
   </div>
 );
@@ -214,14 +217,51 @@ const ImageUploadSection = ({
   onFileChange,
   onImageRemove,
   onSlotsChange,
+  onFilesDrop,
   fileInputRef,
   isIOS,
   draggedSlotIndex,
   onDragIndexChange,
-}) => (
+}) => {
+  const [isFileDragOver, setIsFileDragOver] = useState(false);
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
+    setIsFileDragOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsFileDragOver(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsFileDragOver(false);
+    const dropped = e.dataTransfer?.files
+      ? Array.from(e.dataTransfer.files)
+      : [];
+    if (dropped.length && onFilesDrop) onFilesDrop(dropped);
+  };
+
+  return (
   <div className="flex items-center justify-center">
     <div className="w-full space-y-4">
-      <div className="flex flex-col items-center justify-center bg-white p-8 shadow-md md:rounded-xl">
+      <div
+        className={`flex flex-col items-center justify-center bg-white p-8 shadow-md transition md:rounded-xl ${
+          isFileDragOver
+            ? "outline outline-2 outline-orange-500 ring-4 ring-orange-200"
+            : ""
+        }`}
+        onDragEnter={handleDragOver}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
         {/* Upload Button */}
         <div
           className="mb-4 flex h-16 w-16 cursor-pointer items-center justify-center rounded-2xl bg-orange-500 transition hover:bg-orange-600"
@@ -233,6 +273,9 @@ const ImageUploadSection = ({
         <h2 className="mb-2 font-raleway text-lg font-semibold text-gray-800">
           Upload Photos
         </h2>
+        <p className="mx-auto mb-2 max-w-[320px] text-center font-raleway text-sm text-gray-600">
+          Drag and drop photos here, or click the button to choose files.
+        </p>
         <p className="mx-auto mb-4 max-w-[288px] text-center font-raleway text-[10px] text-gray-500">
           Minimum {MIN_REQUIRED_IMAGES} photos required • Maximum {MAX_IMAGES}{" "}
           photos allowed
@@ -244,7 +287,11 @@ const ImageUploadSection = ({
         {/* Hidden File Input */}
         <input
           type="file"
-          accept={isIOS ? "image/*,image/heic,image/heif" : "image/*"}
+          accept={
+            isIOS
+              ? "image/*,image/heic,image/heif,.heic,.heif,.jpg,.jpeg,.png,.webp,.gif"
+              : "image/*,.heic,.heif,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.gif"
+          }
           multiple
           ref={fileInputRef}
           className="hidden"
@@ -261,6 +308,7 @@ const ImageUploadSection = ({
             files={files}
             onImageRemove={onImageRemove}
             onSlotsChange={onSlotsChange}
+            onFilesDrop={onFilesDrop}
             draggedSlotIndex={draggedSlotIndex}
             onDragIndexChange={onDragIndexChange}
           />
@@ -281,7 +329,8 @@ const ImageUploadSection = ({
       </div>
     </div>
   </div>
-);
+  );
+};
 
 // Contact Information Component
 const ContactInformationSection = ({ errors }) => (
@@ -542,12 +591,12 @@ const SetupProfileView = () => {
 
   const handleFileChange = useCallback(
     async (e) => {
-      const selectedFiles = Array.from(e.target.files);
+      const selectedFiles = Array.from(e.target.files || []);
       const inputEl = e.target;
       const filesToAdd = validateFiles(selectedFiles, imageSlots);
 
       if (!filesToAdd) {
-        inputEl.value = "";
+        if (inputEl && "value" in inputEl) inputEl.value = "";
         return;
       }
 
@@ -576,7 +625,7 @@ const SetupProfileView = () => {
       } catch (error) {
         console.error("HEIC conversion failed:", error);
         toast.error("Failed to convert HEIC photos. Please use JPG or PNG.");
-        inputEl.value = "";
+        if (inputEl && "value" in inputEl) inputEl.value = "";
         return;
       }
 
@@ -616,9 +665,18 @@ const SetupProfileView = () => {
       setImageSlots(updatedSlots);
       updateLegacyArrays(updatedSlots);
       validateImageRequirements(updatedSlots);
-      inputEl.value = "";
+      if (inputEl && "value" in inputEl) inputEl.value = "";
     },
-    [imageSlots, validateFiles, updateLegacyArrays, validateImageRequirements],
+    [imageSlots, validateFiles, updateLegacyArrays, validateImageRequirements, setImageSlots],
+  );
+
+  const handleFilesDropped = useCallback(
+    async (fileList) => {
+      await handleFileChange({
+        target: { files: fileList, value: "" },
+      });
+    },
+    [handleFileChange],
   );
 
   const removeImage = useCallback(
@@ -1084,6 +1142,7 @@ const SetupProfileView = () => {
             onFileChange={handleFileChange}
             onImageRemove={removeImage}
             onSlotsChange={handleSlotsReorder}
+            onFilesDrop={handleFilesDropped}
             fileInputRef={fileInputRef}
             isIOS={isIOS}
             draggedSlotIndex={draggedSlotIndex}

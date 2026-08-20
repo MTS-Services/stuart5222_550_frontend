@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { endpoints } from "../../../config/api/httpEndpoint";
-import { GET, POST, PUT } from "../../../config/api/httpMethods";
+import { DELETE, GET, POST, PUT } from "../../../config/api/httpMethods";
 
 // ========== Toggle Profile Active/Deactive ==========
 export const toggleProfileActive = createAsyncThunk(
@@ -15,6 +15,23 @@ export const toggleProfileActive = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(
         err.response?.data?.message || "Failed to toggle profile status",
+      );
+    }
+  },
+);
+
+// ========== Delete Profile ==========
+export const adminDeleteProfile = createAsyncThunk(
+  "admin/deleteProfile",
+  async ({ profileId }, { rejectWithValue }) => {
+    try {
+      const res = await DELETE(
+        `${endpoints.admin.DELETE_PROFILE}/${profileId}`,
+      );
+      return { ...res, profileId };
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to delete profile",
       );
     }
   },

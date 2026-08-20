@@ -1,12 +1,13 @@
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FaCamera } from "react-icons/fa";
 import { GripVertical, ChevronLeft, ChevronRight } from "lucide-react";
-import { getPhotoSlotLabel, movePhotoSlot, reassignSlotTypes } from "../../utils/profileImages";
+import { getPhotoSlotLabel, movePhotoSlot } from "../../utils/profileImages";
 
 const PhotoReorderGrid = ({
   imageSlots,
   onSlotsChange,
   onRemove,
+  onFilesDrop,
   getLabel = getPhotoSlotLabel,
   showDelete = true,
   draggedSlotIndex,
@@ -26,11 +27,27 @@ const PhotoReorderGrid = ({
 
   const handleDragOver = (e) => {
     e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
+    e.stopPropagation();
+    if (e.dataTransfer?.types?.includes("Files")) {
+      e.dataTransfer.dropEffect = "copy";
+    } else {
+      e.dataTransfer.dropEffect = "move";
+    }
   };
 
   const handleDrop = (e, dropIndex) => {
     e.preventDefault();
+    e.stopPropagation();
+
+    const droppedFiles = e.dataTransfer?.files
+      ? Array.from(e.dataTransfer.files)
+      : [];
+    if (droppedFiles.length > 0 && onFilesDrop) {
+      onFilesDrop(droppedFiles);
+      onDragIndexChange?.(null);
+      return;
+    }
+
     const fromIndex = Number(e.dataTransfer.getData("text/plain"));
     if (Number.isNaN(fromIndex)) return;
     applyReorder(fromIndex, dropIndex);
@@ -52,7 +69,8 @@ const PhotoReorderGrid = ({
   return (
     <div className="w-full">
       <p className="mb-3 text-center font-raleway text-xs text-gray-500">
-        Use the grip icon to drag, or the arrows to move photos.
+        Use the grip icon to drag, or the arrows to move photos. You can also
+        drop new image files onto this grid.
       </p>
       <div className="mb-4 grid grid-cols-3 gap-3">
         {imageSlots.map((slot, idx) => (
@@ -69,10 +87,12 @@ const PhotoReorderGrid = ({
                   alt={`Photo ${idx + 1}`}
                   draggable={false}
                   onDragStart={(e) => e.preventDefault()}
+                  onError={(e) => {
+                    e.currentTarget.src = "/img/placeholder.jpg";
+                  }}
                   className="pointer-events-none h-24 w-full select-none rounded-lg border-2 border-gray-200 object-cover"
                 />
 
-                {/* Drag handle */}
                 <div
                   draggable
                   onDragStart={(e) => handleDragStart(e, idx)}
@@ -83,7 +103,6 @@ const PhotoReorderGrid = ({
                   <GripVertical className="h-4 w-4" />
                 </div>
 
-                {/* Move arrows */}
                 <div className="absolute right-1 top-1 z-20 flex gap-0.5">
                   {idx > 0 && (
                     <button
@@ -111,7 +130,7 @@ const PhotoReorderGrid = ({
                   <button
                     type="button"
                     onClick={() => onRemove(idx)}
-                    className="absolute bottom-8 right-1 z-20 rounded-full bg-red-500 p-1 text-white opacity-0 transition hover:bg-red-600 group-hover:opacity-100"
+                    className="absolute bottom-8 right-1 z-20 rounded-full bg-red-500 p-1 text-white shadow transition hover:bg-red-600"
                     title="Delete photo"
                   >
                     <RiDeleteBinLine className="h-4 w-4" />
@@ -125,7 +144,9 @@ const PhotoReorderGrid = ({
             ) : (
               <div className="flex h-24 w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50">
                 <FaCamera className="mb-1 h-6 w-6 text-gray-400" />
-                <span className="text-xs text-gray-500">{getLabel(slot, idx)}</span>
+                <span className="text-xs text-gray-500">
+                  {getLabel(slot, idx)}
+                </span>
               </div>
             )}
           </div>

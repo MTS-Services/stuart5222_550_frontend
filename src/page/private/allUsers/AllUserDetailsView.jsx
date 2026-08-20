@@ -9,6 +9,7 @@ import {
   adminUserApprovedProfile,
   adminUserRejectedProfile,
   toggleProfileActive,
+  adminDeleteProfile,
 } from "../../../features/admin/management/usreFetch";
 import {
   shouldShowTravelMode,
@@ -43,6 +44,7 @@ const AllUserDetailsView = () => {
     approveWaitlist: false,
     rejectWaitlist: false,
     toggleActive: false,
+    deleteProfile: false,
   });
 
   const loadUser = () => {
@@ -215,6 +217,25 @@ const AllUserDetailsView = () => {
     }
   };
 
+  const handleDeleteProfile = async () => {
+    if (!profile?.id) return;
+    const confirmed = window.confirm(
+      `Delete the public profile for ${profile.displayName || user.email}?\n\nThis permanently removes the profile and QR cards. The account remains so they can set up again.`,
+    );
+    if (!confirmed) return;
+
+    setLoading((s) => ({ ...s, deleteProfile: true }));
+    try {
+      await dispatch(adminDeleteProfile({ profileId: profile.id })).unwrap();
+      toast.success("Profile deleted successfully");
+      navigate("/admin/all-users");
+    } catch (err) {
+      toast.error(err?.message || err || "Failed to delete profile");
+    } finally {
+      setLoading((s) => ({ ...s, deleteProfile: false }));
+    }
+  };
+
   const travelProfile = profile
     ? {
         startDate: profile.startDate,
@@ -302,6 +323,17 @@ const AllUserDetailsView = () => {
               : profile.isActive
                 ? "Deactivate Profile"
                 : "Activate Profile"}
+          </button>
+        )}
+
+        {profile?.id && (
+          <button
+            type="button"
+            onClick={handleDeleteProfile}
+            disabled={loading.deleteProfile}
+            className="rounded-lg bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700 disabled:opacity-50"
+          >
+            {loading.deleteProfile ? "Deleting..." : "Delete Profile"}
           </button>
         )}
 
