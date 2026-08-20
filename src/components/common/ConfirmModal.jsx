@@ -1,7 +1,11 @@
+import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { FaTimes } from "react-icons/fa";
 
 /**
  * Shared confirmation dialog for destructive admin actions.
+ * Portaled to document.body so the backdrop covers the full viewport
+ * (including sticky admin header / sidebar).
  */
 const ConfirmModal = ({
   isOpen,
@@ -14,6 +18,15 @@ const ConfirmModal = ({
   confirmVariant = "danger",
   loading = false,
 }) => {
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const confirmClass =
@@ -23,10 +36,11 @@ const ConfirmModal = ({
         ? "bg-orange-500 hover:bg-orange-600"
         : "bg-red-600 hover:bg-red-700";
 
-  return (
+  const modal = (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4"
-      onClick={onClose}
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 p-4"
+      style={{ top: 0, left: 0, right: 0, bottom: 0 }}
+      onClick={loading ? undefined : onClose}
       role="presentation"
     >
       <div
@@ -80,6 +94,8 @@ const ConfirmModal = ({
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 };
 
 export default ConfirmModal;
