@@ -11,6 +11,7 @@ import {
   adminUserApprovedProfile,
   adminUserRejectedProfile,
   toggleProfileActive,
+  adminDeleteProfile,
 } from "./usreFetch";
 
 const initialState = {
@@ -255,6 +256,32 @@ const adminUserManagementSlice = createSlice({
       .addCase(toggleProfileActive.rejected, (state, action) => {
         state.error = action.payload;
         toast.error(action.payload || "Failed to toggle profile status");
+      })
+
+      // ======================================================
+      // ===== Delete Profile =====
+      // ======================================================
+      .addCase(adminDeleteProfile.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(adminDeleteProfile.fulfilled, (state, action) => {
+        const { profileId } = action.meta.arg;
+        if (state.verified.list) {
+          state.verified.list = state.verified.list.filter(
+            (profile) => profile.id !== profileId,
+          );
+        }
+        if (state.userProfiles?.length) {
+          state.userProfiles = state.userProfiles.filter(
+            (profile) => profile.id !== profileId,
+          );
+        }
+        toast.success("Profile deleted successfully!");
+        state.error = null;
+      })
+      .addCase(adminDeleteProfile.rejected, (state, action) => {
+        state.error = action.payload;
+        toast.error(action.payload || "Failed to delete profile");
       })
 
       // ===================================
