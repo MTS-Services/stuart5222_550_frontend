@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { fetchAllUserById } from "../../../features/admin/all-user/allUserFetch";
+import { fetchAllUserById, adminDeleteUser } from "../../../features/admin/all-user/allUserFetch";
 import {
   adminApprove,
   adminReject,
@@ -39,7 +39,7 @@ const AllUserDetailsView = () => {
 
   const [rejectionReason, setRejectionReason] = useState("");
   const [brokenImages, setBrokenImages] = useState({});
-  const [confirmModal, setConfirmModal] = useState(null); // 'toggle' | 'delete' | null
+  const [confirmModal, setConfirmModal] = useState(null); // 'toggle' | 'delete' | 'deleteUser' | null
   const [loading, setLoading] = useState({
     approveProfile: false,
     rejectProfile: false,
@@ -47,6 +47,7 @@ const AllUserDetailsView = () => {
     rejectWaitlist: false,
     toggleActive: false,
     deleteProfile: false,
+    deleteUser: false,
   });
 
   const loadUser = () => {
@@ -227,11 +228,25 @@ const AllUserDetailsView = () => {
       await dispatch(adminDeleteProfile({ profileId: profile.id })).unwrap();
       toast.success("Profile deleted successfully");
       setConfirmModal(null);
-      navigate("/admin/all-users");
+      loadUser();
     } catch (err) {
       toast.error(err?.message || err || "Failed to delete profile");
     } finally {
       setLoading((s) => ({ ...s, deleteProfile: false }));
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    if (!user?.id) return;
+    setLoading((s) => ({ ...s, deleteUser: true }));
+    try {
+      await dispatch(adminDeleteUser({ userId: user.id })).unwrap();
+      setConfirmModal(null);
+      navigate("/admin/all-users");
+    } catch (err) {
+      toast.error(err?.message || err || "Failed to delete user");
+    } finally {
+      setLoading((s) => ({ ...s, deleteUser: false }));
     }
   };
 
@@ -330,11 +345,20 @@ const AllUserDetailsView = () => {
             type="button"
             onClick={() => setConfirmModal("delete")}
             disabled={loading.deleteProfile}
-            className="rounded-lg bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700 disabled:opacity-50"
+            className="rounded-lg border border-red-300 px-4 py-2 font-semibold text-red-700 hover:bg-red-50 disabled:opacity-50"
           >
             {loading.deleteProfile ? "Deleting..." : "Delete Profile"}
           </button>
         )}
+
+        <button
+          type="button"
+          onClick={() => setConfirmModal("deleteUser")}
+          disabled={loading.deleteUser}
+          className="rounded-lg bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700 disabled:opacity-50"
+        >
+          {loading.deleteUser ? "Deleting..." : "Delete User"}
+        </button>
 
         {isWaitlist && (
           <>
@@ -562,7 +586,20 @@ const AllUserDetailsView = () => {
         loading={loading.deleteProfile}
         title="Delete profile?"
         message={`Delete the public profile for "${profile?.displayName || user.email}"? This permanently removes the profile and QR cards. The account remains so they can set up again.`}
-        confirmLabel="Yes, delete"
+        confirmLabel="Yes, delete profile"
+        confirmVariant="danger"
+      />
+
+      <ConfirmModal
+        isOpen={confirmModal === "deleteUser"}
+        onClose={() =>
+          !loading.deleteUser ? setConfirmModal(null) : undefined
+        }
+        onConfirm={handleDeleteUser}
+        loading={loading.deleteUser}
+        title="Delete user?"
+        message={`Permanently delete "${user.name || user.email}"? This removes the account, profile, and QR cards. This cannot be undone.`}
+        confirmLabel="Yes, delete user"
         confirmVariant="danger"
       />
     </div>

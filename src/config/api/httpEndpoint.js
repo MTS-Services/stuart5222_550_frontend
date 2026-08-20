@@ -13,6 +13,7 @@ export const endpoints = {
     HOME_DATA: "/admin/dashboard",
     GET_ALL_USERS: "/admin/users/all",
     GET_USER_BY_ID: "/admin/users",
+    DELETE_USER: "/admin/users",
     GET_USER_LIST: "/admin/profiles/all",
     GET_WAITLIST: "/admin/users/waitlist",
     APPROVED_WAITLIST_USERS: `/admin/users/approve`,

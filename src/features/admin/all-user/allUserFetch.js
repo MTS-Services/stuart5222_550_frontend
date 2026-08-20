@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { endpoints } from "../../../config/api/httpEndpoint";
-import { GET } from "../../../config/api/httpMethods";
+import { DELETE, GET } from "../../../config/api/httpMethods";
 
 const isAbortError = (err) =>
   err?.name === "CanceledError" ||
@@ -26,7 +26,6 @@ export const allUserList = createAsyncThunk(
       return res;
     } catch (err) {
       if (isAbortError(err) || signal?.aborted) {
-        // Returning nothing with a special reject keeps aborted requests out of UI errors
         return rejectWithValue({ aborted: true });
       }
       return rejectWithValue(
@@ -53,6 +52,21 @@ export const fetchAllUserById = createAsyncThunk(
       }
       return rejectWithValue(
         err.response?.data?.message || "Failed to fetch user details",
+      );
+    }
+  },
+);
+
+// ========== Delete user account (any status, with or without profile) ==========
+export const adminDeleteUser = createAsyncThunk(
+  "admin/deleteUser",
+  async ({ userId }, { rejectWithValue }) => {
+    try {
+      const res = await DELETE(`${endpoints.admin.DELETE_USER}/${userId}`);
+      return { ...res, userId };
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to delete user",
       );
     }
   },

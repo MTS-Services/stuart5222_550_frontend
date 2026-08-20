@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { allUserList } from "../../../features/admin/all-user/allUserFetch";
+import {
+  allUserList,
+  adminDeleteUser,
+} from "../../../features/admin/all-user/allUserFetch";
 import { resetUsersError } from "../../../features/admin/all-user/allUserSlice";
 import { TableDropDown } from "./components/TableDropDown";
 import { FaSearch } from "react-icons/fa";
@@ -10,6 +13,7 @@ import {
   formatUserStatusLabel,
   getUserStatusColor,
 } from "../../../utils/userStatus";
+import ConfirmModal from "../../../components/common/ConfirmModal";
 
 const AllUsersView = () => {
   const dispatch = useDispatch();
@@ -18,6 +22,8 @@ const AllUsersView = () => {
   const [status, setStatus] = useState("ALL");
   const [username, setUsername] = useState("");
   const [debouncedUsername, setDebouncedUsername] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const [page, setPage] = useState(1);
   const limit = 10;
@@ -29,7 +35,6 @@ const AllUsersView = () => {
   const hasPrevPage = pagination?.page > 1;
   const hasNextPage = pagination?.page < pagination?.totalPages;
 
-  // Debounce legal-name search so rapid typing doesn't race API calls
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedUsername(username.trim());
@@ -37,7 +42,6 @@ const AllUsersView = () => {
     return () => clearTimeout(timer);
   }, [username]);
 
-  // Reset to first page when filters change
   useEffect(() => {
     setPage(1);
   }, [debouncedUsername, status]);
@@ -54,7 +58,6 @@ const AllUsersView = () => {
     );
 
     return () => {
-      // Abort in-flight list request when leaving the page or filters change
       request.abort();
     };
   }, [dispatch, page, status, debouncedUsername]);
@@ -69,6 +72,19 @@ const AllUsersView = () => {
         username: debouncedUsername,
       }),
     );
+  };
+
+  const handleConfirmDeleteUser = async () => {
+    if (!deleteTarget?.id) return;
+    setDeleting(true);
+    try {
+      await dispatch(adminDeleteUser({ userId: deleteTarget.id })).unwrap();
+      setDeleteTarget(null);
+    } catch {
+      // toast from slice
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return (
@@ -106,8 +122,8 @@ const AllUsersView = () => {
       </div>
 
       <p className="mb-4 text-sm text-gray-600">
-        Click any user to view profile, edit, review photos, approve/reject, and
-        manage status.
+        Click a row to view details, or use Delete for Active / incomplete users
+        with no usable profile.
       </p>
 
       {error && (
@@ -133,19 +149,20 @@ const AllUsersView = () => {
               <th className="p-3">Email</th>
               <th className="p-3">Date</th>
               <th className="p-3 text-center">Status</th>
+              <th className="p-3 text-center">Action</th>
             </tr>
           </thead>
 
           <tbody>
             {isLoading && (!allUsers || allUsers.length === 0) ? (
               <tr className="h-96">
-                <td colSpan={6} className="p-4 text-center text-gray-700">
+                <td colSpan={7} className="p-4 text-center text-gray-700">
                   ⏳ Loading...
                 </td>
               </tr>
             ) : !allUsers || allUsers.length === 0 ? (
               <tr>
-                <td colSpan={6} className="p-4 text-center text-gray-500">
+                <td colSpan={7} className="p-4 text-center text-gray-500">
                   No users found
                 </td>
               </tr>
@@ -153,22 +170,67 @@ const AllUsersView = () => {
               allUsers.map((u, idx) => (
                 <tr
                   key={u.id}
-                  onClick={() => navigate(`/admin/all-users/${u.id}`)}
-                  className="cursor-pointer border-b hover:bg-orange-50"
+                  className="border-b hover:bg-orange-50"
                 >
-                  <td className="p-3 text-center">
+                  <td
+                    className="cursor-pointer p-3 text-center"
+                    onClick={() => navigate(`/admin/all-users/${u.id}`)}
+                  >
                     {(page - 1) * limit + idx + 1}
                   </td>
-                  <td className="p-3 font-medium text-[#002244]">{u.name}</td>
-                  <td className="p-3 text-gray-700">
+                  <td
+                    className="cursor-pointer p-3 font-medium text-[#002244]"
+                    onClick={() => navigate(`/admin/all-users/${u.id}`)}
+                  >
+                    {u.name}
+                  </td>
+                  <td
+                    className="cursor-pointer p-3 text-gray-700"
+                    onClick={() => navigate(`/admin/all-users/${u.id}`)}
+                  >
                     {u.profile?.displayName || "—"}
                   </td>
-                  <td className="p-3">{u.email}</td>
-                  <td className="p-3">{formatDate(u.createdAt)}</td>
                   <td
-                    className={`p-3 text-center text-sm ${getUserStatusColor(u.status)}`}
+                    className="cursor-pointer p-3"
+                    onClick={() => navigate(`/admin/all-users/${u.id}`)}
+                  >
+                    {u.email}
+                  </td>
+                  <td
+                    className="cursor-pointer p-3"
+                    onClick={() => navigate(`/admin/all-users/${u.id}`)}
+                  >
+                    {formatDate(u.createdAt)}
+                  </td>
+                  <td
+                    className={`cursor-pointer p-3 text-center text-sm ${getUserStatusColor(u.status)}`}
+                    onClick={() => navigate(`/admin/all-users/${u.id}`)}
                   >
                     {formatUserStatusLabel(u.status)}
+                  </td>
+                  <td className="p-3 text-center">
+                    <div className="flex flex-wrap items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/admin/all-users/${u.id}`)}
+                        className="rounded-xl bg-[#F07400] px-3 py-2 text-xs font-semibold text-white hover:bg-[#d16200]"
+                      >
+                        Details
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setDeleteTarget({
+                            id: u.id,
+                            name: u.name || u.email,
+                            email: u.email,
+                          })
+                        }
+                        className="rounded-xl bg-red-600 px-3 py-2 text-xs font-semibold text-white hover:bg-red-700"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -205,6 +267,17 @@ const AllUsersView = () => {
           </button>
         </div>
       </div>
+
+      <ConfirmModal
+        isOpen={Boolean(deleteTarget)}
+        onClose={() => (!deleting ? setDeleteTarget(null) : undefined)}
+        onConfirm={handleConfirmDeleteUser}
+        loading={deleting}
+        title="Delete user?"
+        message={`Permanently delete "${deleteTarget?.name}" (${deleteTarget?.email})? This removes the account, profile, and QR cards. This cannot be undone.`}
+        confirmLabel="Yes, delete user"
+        confirmVariant="danger"
+      />
     </div>
   );
 };

@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { allUserList, fetchAllUserById } from "./allUserFetch";
+import { toast } from "react-toastify";
+import {
+  allUserList,
+  fetchAllUserById,
+  adminDeleteUser,
+} from "./allUserFetch";
 
 const initialState = {
   allUsers: [],
@@ -39,7 +44,6 @@ const allUserSlice = createSlice({
         state.error = null;
       })
       .addCase(allUserList.rejected, (state, action) => {
-        // Ignore aborted/stale requests from navigation away
         if (action.meta?.aborted || action.payload?.aborted) {
           state.isLoading = false;
           return;
@@ -70,6 +74,17 @@ const allUserSlice = createSlice({
             ? action.payload
             : action.payload?.message || "Failed to fetch user details";
         state.selectedUser = null;
+      })
+      .addCase(adminDeleteUser.fulfilled, (state, action) => {
+        const userId = action.meta.arg.userId;
+        state.allUsers = (state.allUsers || []).filter((u) => u.id !== userId);
+        if (state.selectedUser?.id === userId) {
+          state.selectedUser = null;
+        }
+        toast.success("User deleted successfully!");
+      })
+      .addCase(adminDeleteUser.rejected, (state, action) => {
+        toast.error(action.payload || "Failed to delete user");
       });
   },
 });
