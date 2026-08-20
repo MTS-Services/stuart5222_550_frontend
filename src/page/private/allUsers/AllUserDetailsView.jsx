@@ -25,6 +25,7 @@ import {
 } from "../../../utils/userStatus";
 import { GrLocation } from "react-icons/gr";
 import { FaRegCalendar } from "react-icons/fa";
+import ConfirmModal from "../../../components/common/ConfirmModal";
 
 const AllUserDetailsView = () => {
   const { userId } = useParams();
@@ -38,6 +39,7 @@ const AllUserDetailsView = () => {
 
   const [rejectionReason, setRejectionReason] = useState("");
   const [brokenImages, setBrokenImages] = useState({});
+  const [confirmModal, setConfirmModal] = useState(null); // 'toggle' | 'delete' | null
   const [loading, setLoading] = useState({
     approveProfile: false,
     rejectProfile: false,
@@ -209,6 +211,7 @@ const AllUserDetailsView = () => {
       toast.success(
         profile.isActive ? "Profile deactivated" : "Profile activated",
       );
+      setConfirmModal(null);
       loadUser();
     } catch (err) {
       toast.error(err?.message || err || "Failed to update profile visibility");
@@ -219,15 +222,11 @@ const AllUserDetailsView = () => {
 
   const handleDeleteProfile = async () => {
     if (!profile?.id) return;
-    const confirmed = window.confirm(
-      `Delete the public profile for ${profile.displayName || user.email}?\n\nThis permanently removes the profile and QR cards. The account remains so they can set up again.`,
-    );
-    if (!confirmed) return;
-
     setLoading((s) => ({ ...s, deleteProfile: true }));
     try {
       await dispatch(adminDeleteProfile({ profileId: profile.id })).unwrap();
       toast.success("Profile deleted successfully");
+      setConfirmModal(null);
       navigate("/admin/all-users");
     } catch (err) {
       toast.error(err?.message || err || "Failed to delete profile");
@@ -314,7 +313,7 @@ const AllUserDetailsView = () => {
         {profile?.status === "APPROVED" && (
           <button
             type="button"
-            onClick={handleToggleActive}
+            onClick={() => setConfirmModal("toggle")}
             disabled={loading.toggleActive}
             className="rounded-lg border border-gray-300 px-4 py-2 font-semibold hover:bg-gray-50 disabled:opacity-50"
           >
@@ -329,7 +328,7 @@ const AllUserDetailsView = () => {
         {profile?.id && (
           <button
             type="button"
-            onClick={handleDeleteProfile}
+            onClick={() => setConfirmModal("delete")}
             disabled={loading.deleteProfile}
             className="rounded-lg bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700 disabled:opacity-50"
           >
@@ -536,6 +535,36 @@ const AllUserDetailsView = () => {
           )}
         </>
       ) : null}
+
+      <ConfirmModal
+        isOpen={confirmModal === "toggle"}
+        onClose={() =>
+          !loading.toggleActive ? setConfirmModal(null) : undefined
+        }
+        onConfirm={handleToggleActive}
+        loading={loading.toggleActive}
+        title={profile?.isActive ? "Deactivate profile?" : "Activate profile?"}
+        message={
+          profile?.isActive
+            ? `Are you sure you want to deactivate "${profile?.displayName || user.email}"? Their profile and QR cards will be hidden until activated again.`
+            : `Are you sure you want to activate "${profile?.displayName || user.email}"? Their profile and QR cards will become visible again.`
+        }
+        confirmLabel={profile?.isActive ? "Yes, deactivate" : "Yes, activate"}
+        confirmVariant={profile?.isActive ? "danger" : "success"}
+      />
+
+      <ConfirmModal
+        isOpen={confirmModal === "delete"}
+        onClose={() =>
+          !loading.deleteProfile ? setConfirmModal(null) : undefined
+        }
+        onConfirm={handleDeleteProfile}
+        loading={loading.deleteProfile}
+        title="Delete profile?"
+        message={`Delete the public profile for "${profile?.displayName || user.email}"? This permanently removes the profile and QR cards. The account remains so they can set up again.`}
+        confirmLabel="Yes, delete"
+        confirmVariant="danger"
+      />
     </div>
   );
 };
