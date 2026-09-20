@@ -20,6 +20,7 @@ import BioText from "../../../components/common/BioText";
 import { buildOrderedImagesFromProfile } from "../../../utils/profileImages";
 import {
   formatUserStatusLabel,
+  formatProfileStatusLabel,
   getUserStatusColor,
   splitLegalName,
 } from "../../../utils/userStatus";
@@ -272,6 +273,14 @@ const AllUserDetailsView = () => {
         </button>
         <span className={`text-sm ${getUserStatusColor(user.status)}`}>
           Account status: {formatUserStatusLabel(user.status)}
+          {profile ? (
+            <>
+              {" · "}
+              Profile: {formatProfileStatusLabel(profile.status)}
+            </>
+          ) : (
+            " · Profile: No Profile"
+          )}
         </span>
       </div>
 
