@@ -532,14 +532,21 @@ const EditProfileView = () => {
         console.error("Failed to fetch updated user data:", error);
       }
 
-      toast.success("Profile updated successfully!");
+      toast.success(
+        isAdmin
+          ? "Profile updated successfully!"
+          : "Your profile has been successfully submitted for review!",
+      );
       setSuccess(true);
       setFiles([]);
       setImagePreviews([]);
     } catch (err) {
       console.error("Submission error:", err);
       toast.error(
-        getApiErrorMessage(err, "Failed to submit profile. Please try again."),
+        getApiErrorMessage(
+          err,
+          "Submission failed. Your changes were not saved — please try again.",
+        ),
       );
     } finally {
       setSubmitLoading(false);
@@ -645,11 +652,15 @@ const EditProfileView = () => {
   if (success) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#3B3B3D] px-[10px] py-10 font-raleway text-white sm:py-4 md:py-6 lg:py-8">
-        <h2 className="mb-4 font-raleway text-xl font-bold md:text-[32px]">
-          Profile Updated Successfully!
+        <h2 className="mb-4 text-center font-raleway text-xl font-bold md:text-[32px]">
+          {isAdmin
+            ? "Profile Updated Successfully!"
+            : "Your profile has been successfully submitted for review"}
         </h2>
-        <p className="font-raleway text-gray-400">
-          Profile changes have been saved{isAdmin ? '.' : ' and submitted for review.'}
+        <p className="mb-2 max-w-md text-center font-raleway text-gray-400">
+          {isAdmin
+            ? "Profile changes have been saved."
+            : "An admin will review your updates shortly. You can check your status from your home page."}
         </p>
         <button
           onClick={() => {
@@ -1143,7 +1154,11 @@ const EditProfileView = () => {
             disabled={submitLoading}
             className="mt-10 w-full rounded-lg bg-orange-500 px-6 py-3 text-lg font-semibold text-white transition hover:bg-orange-600"
           >
-            {submitLoading ? "Submitting..." : isAdmin ? "Update Profile" : "Submit Profile for Review"}
+            {submitLoading
+              ? "Submitting… please wait"
+              : isAdmin
+                ? "Update Profile"
+                : "Submit Profile for Review"}
           </button>
         </div>
       </form>
