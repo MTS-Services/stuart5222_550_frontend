@@ -11,7 +11,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { formatDate } from "../../../utils/formatDate";
 import {
   formatUserStatusLabel,
+  formatProfileStatusLabel,
   getUserStatusColor,
+  getProfileStatusColor,
 } from "../../../utils/userStatus";
 import ConfirmModal from "../../../components/common/ConfirmModal";
 
@@ -122,8 +124,11 @@ const AllUsersView = () => {
       </div>
 
       <p className="mb-4 text-sm text-gray-600">
-        Click a row to view details, or use Delete for Active / incomplete users
-        with no usable profile.
+        Account status is separate from profile status.{" "}
+        <span className="font-medium">Account Active</span> means the login is
+        ready — it does not mean a profile was submitted. Submitted profiles
+        appear under Management (Pending Review); approved ones appear under
+        Profile List. Click a row for details.
       </p>
 
       {error && (
@@ -148,7 +153,8 @@ const AllUsersView = () => {
               <th className="p-3">Display Name</th>
               <th className="p-3">Email</th>
               <th className="p-3">Date</th>
-              <th className="p-3 text-center">Status</th>
+              <th className="p-3 text-center">Account Status</th>
+              <th className="p-3 text-center">Profile Status</th>
               <th className="p-3 text-center">Action</th>
             </tr>
           </thead>
@@ -156,13 +162,13 @@ const AllUsersView = () => {
           <tbody>
             {isLoading && (!allUsers || allUsers.length === 0) ? (
               <tr className="h-96">
-                <td colSpan={7} className="p-4 text-center text-gray-700">
+                <td colSpan={8} className="p-4 text-center text-gray-700">
                   ⏳ Loading...
                 </td>
               </tr>
             ) : !allUsers || allUsers.length === 0 ? (
               <tr>
-                <td colSpan={7} className="p-4 text-center text-gray-500">
+                <td colSpan={8} className="p-4 text-center text-gray-500">
                   No users found
                 </td>
               </tr>
@@ -207,6 +213,12 @@ const AllUsersView = () => {
                     onClick={() => navigate(`/admin/all-users/${u.id}`)}
                   >
                     {formatUserStatusLabel(u.status)}
+                  </td>
+                  <td
+                    className={`cursor-pointer p-3 text-center text-sm ${getProfileStatusColor(u.profile?.status)}`}
+                    onClick={() => navigate(`/admin/all-users/${u.id}`)}
+                  >
+                    {formatProfileStatusLabel(u.profile?.status)}
                   </td>
                   <td className="p-3 text-center">
                     <div className="flex flex-wrap items-center justify-center gap-2">
