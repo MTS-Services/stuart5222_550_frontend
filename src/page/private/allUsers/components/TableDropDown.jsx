@@ -7,7 +7,7 @@ export const TableDropDown = ({ value, onChange }) => {
     >
       <option value="ALL">ALL</option>
       <option value="WAITLIST">Waitlist</option>
-      <option value="ACTIVE">Active</option>
+      <option value="ACTIVE">Account Active</option>
       <option value="REJECTED">Rejected</option>
       <option value="PAID_SETUP">Needs Edits</option>
       <option value="PROFILE_PENDING">Awaiting Approval</option>

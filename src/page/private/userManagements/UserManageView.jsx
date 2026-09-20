@@ -18,9 +18,15 @@ const UserManageView = () => {
       <Overviews />
       <div className="">
         <div className="my-8 flex items-center justify-between">
-          <h2 className="font-raleway text-2xl font-semibold uppercase text-[#002244]">
-            Approved User
-          </h2>
+          <div>
+            <h2 className="font-raleway text-2xl font-semibold uppercase text-[#002244]">
+              Profile Review
+            </h2>
+            <p className="mt-1 text-sm text-gray-600">
+              Draft = submitted and waiting for approve/reject. These do not
+              appear on Profile List until approved.
+            </p>
+          </div>
           <TableDropDown value={status} onChange={setStatus} />
         </div>
         <RequestUserTable />
