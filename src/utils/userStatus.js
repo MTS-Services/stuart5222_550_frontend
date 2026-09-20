@@ -1,4 +1,4 @@
-/** Frontend-only labels for user statuses (DB enum values unchanged). */
+/** Frontend-only labels for user (account) statuses — DB enum values unchanged. */
 export function formatUserStatusLabel(status) {
   switch (status) {
     case "PAID_SETUP":
@@ -8,13 +8,43 @@ export function formatUserStatusLabel(status) {
     case "WAITLIST":
       return "Waitlist";
     case "ACTIVE":
-      return "Active";
+      return "Account Active";
     case "REJECTED":
       return "Rejected";
     case "VERIFIED":
       return "Verified";
     default:
       return status || "—";
+  }
+}
+
+/** Frontend-only labels for profile review statuses. */
+export function formatProfileStatusLabel(status) {
+  switch (status) {
+    case "DRAFT":
+      return "Pending Review";
+    case "PENDING_REVIEW":
+      return "Pending Review";
+    case "APPROVED":
+      return "Approved";
+    case "REJECTED":
+      return "Rejected";
+    default:
+      return status || "No Profile";
+  }
+}
+
+export function getProfileStatusColor(status) {
+  switch (status) {
+    case "DRAFT":
+    case "PENDING_REVIEW":
+      return "text-blue-600 font-semibold";
+    case "APPROVED":
+      return "text-green-600 font-semibold";
+    case "REJECTED":
+      return "text-red-600 font-semibold";
+    default:
+      return "text-gray-500 font-medium";
   }
 }
 
