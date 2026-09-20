@@ -26,7 +26,10 @@ import { validateForm } from "../../../../utils/validateForm";
 import { compressImage, convertHeicToJpeg, isHeicFile } from "../../../../utils/imageUtils";
 import { GET } from "../../../../config/api/httpMethods";
 import { endpoints } from "../../../../config/api/httpEndpoint";
-import { submitProfile } from "../../../../features/public/profile/profileFetch";
+import {
+  getApiErrorMessage,
+  submitProfile,
+} from "../../../../features/public/profile/profileFetch";
 import { updateUser } from "../../../../features/auth/authSlice";
 import PhotoReorderGrid from "../../../../components/common/PhotoReorderGrid";
 
@@ -818,7 +821,9 @@ const SetupProfileView = () => {
 
         const activeSlots = imageSlots.filter((slot) => !slot.isEmpty);
         if (activeSlots.length > 0) {
-          toast.info("Compressing images for faster upload...");
+          toast.info("Preparing photos… this is not submission yet.", {
+            autoClose: 2500,
+          });
 
           const processImage = async (slot) => {
             if (!slot.file) return null;
@@ -852,8 +857,18 @@ const SetupProfileView = () => {
             }
           }
         }
-        console.log("submitData entries:", Array.from(submitData.entries()));
-        await dispatch(submitProfile(submitData)).unwrap();
+
+        toast.info("Uploading your profile… please wait.", {
+          autoClose: false,
+          toastId: "profile-upload",
+        });
+
+        try {
+          await dispatch(submitProfile(submitData)).unwrap();
+        } finally {
+          toast.dismiss("profile-upload");
+        }
+
         // Refresh user data after submission
         try {
           const response = await GET(endpoints.user.USER_PROFILE);
@@ -864,7 +879,9 @@ const SetupProfileView = () => {
           console.error("Failed to fetch updated user data:", error);
         }
 
-        toast.success("Profile submitted successfully for review!");
+        toast.success(
+          "Your profile has been successfully submitted for review!",
+        );
         setSuccess(true);
 
         imageSlots.forEach((slot) => {
@@ -872,9 +889,13 @@ const SetupProfileView = () => {
         });
         setImageSlots([]);
       } catch (err) {
-        const errorMessage =
-          err?.message || err || "Failed to submit profile. Please try again.";
-        toast.error(errorMessage);
+        toast.dismiss("profile-upload");
+        toast.error(
+          getApiErrorMessage(
+            err,
+            "Submission failed. Your profile was not submitted — please try again.",
+          ),
+        );
       } finally {
         setSubmitLoading(false);
       }
@@ -930,14 +951,19 @@ const SetupProfileView = () => {
   if (success) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#3B3B3D] px-[10px] py-10 font-raleway text-white sm:py-4 md:py-6 lg:py-8">
-        <h2 className="mb-4 text-xl font-bold md:text-[32px]">
-          Profile Setup Successful!
+        <h2 className="mb-4 text-center text-xl font-bold md:text-[32px]">
+          Your profile has been successfully submitted for review
         </h2>
-        <p className="text-gray-400">
-          Your profile has been submitted for review.
+        <p className="mb-6 max-w-md text-center text-gray-400">
+          An admin will review your profile shortly. You can check your status
+          from your home page.
         </p>
-        <Link to="/user" replace className="border px-4 py-2 text-white">
-          Go to profile
+        <Link
+          to="/user"
+          replace
+          className="rounded-md bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
+        >
+          Go to home
         </Link>
       </div>
     );
@@ -1181,7 +1207,9 @@ const SetupProfileView = () => {
             disabled={submitLoading}
             className="mt-10 w-full rounded-lg bg-orange-500 px-6 py-3 text-lg font-semibold text-white transition hover:bg-orange-600 disabled:opacity-50"
           >
-            {submitLoading ? "Submitting..." : "Submit Profile for Review"}
+            {submitLoading
+              ? "Submitting… please wait"
+              : "Submit Profile for Review"}
           </button>
         </div>
       </form>
