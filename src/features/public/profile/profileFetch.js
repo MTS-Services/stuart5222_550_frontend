@@ -3,7 +3,8 @@ import { GET, POST, UPDATE } from "../../../config/api/httpMethods";
 import { endpoints } from "../../../config/api/httpEndpoint";
 
 export const getApiErrorMessage = (err, fallback) => {
-  const message = err?.response?.data?.message;
+  if (typeof err === "string" && err.trim()) return err;
+  const message = err?.response?.data?.message ?? err?.payload;
   if (Array.isArray(message)) return message.join(", ");
   if (typeof message === "string" && message.trim()) return message;
   if (typeof err?.message === "string" && err.message.trim()) return err.message;
@@ -53,7 +54,7 @@ export const submitProfile = createAsyncThunk(
     } catch (err) {
       console.error("Failed to submit profile:", err);
       return rejectWithValue(
-        err.response?.data?.message || "Failed to submit profile",
+        getApiErrorMessage(err, "Failed to submit profile"),
       );
     }
   },

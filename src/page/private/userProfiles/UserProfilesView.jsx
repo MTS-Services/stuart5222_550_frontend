@@ -112,6 +112,10 @@ const UserProfilesView = () => {
         </div>
       </div>
 
+      <p className="mb-4 text-sm text-gray-600">
+        Shows approved profiles only. Profiles waiting for review are under
+        Management.
+      </p>
       {/* Table */}
       <UserEditTable list={list} isLoading={isLoading} error={error} />
 
