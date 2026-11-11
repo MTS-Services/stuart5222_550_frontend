@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node init && vite --host",
+    "dev": "vite --host",
     "share": "vite & ngrok http 5173",
-    "build": "node init && vite build",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "json-server --watch db.json --port 5000"
