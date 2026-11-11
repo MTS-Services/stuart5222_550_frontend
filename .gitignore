@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 
+temp_auto_push.bat
 # Editor directories and files
 .idea
 .DS_Store
@@ -22,8 +23,9 @@ dist-ssr
 *.sw?
 
 
-branch_structure.json
-temp_auto_push.bat
-temp_interactive_push.bat
-config.bat
+
+# Environment variables
+!.env.example
 .gitignore
+branch_structure.json
+config.bat
